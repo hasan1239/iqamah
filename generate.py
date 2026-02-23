@@ -235,7 +235,7 @@ def main():
     """
     script_dir = Path(__file__).resolve().parent
     data_dir = script_dir / "data"
-    template_path = script_dir / "templates" / "lockscreen.html"
+    template_path = script_dir / "templates" / "lockscreen_v2.html"
     output_dir = os.environ.get("OUTPUT_DIR", str(script_dir / "output"))
 
     # Load all mosque configs (builtin + extracted)
