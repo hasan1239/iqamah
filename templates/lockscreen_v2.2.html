@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, height=844">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 390px;
+    height: 844px;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+    color: #e0f7ff;
+    position: relative;
+    background: linear-gradient(180deg, #020d1a, #0a1f35 40%, #051728);
+  }
+
+  /* Gradient overlays - Ocean theme */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% -10%, #1a4d5c, transparent 60%),
+      radial-gradient(ellipse at 100% 50%, #0d2d4a, transparent 50%),
+      radial-gradient(ellipse at 0% 80%, #12384d, transparent 50%);
+    z-index: 0;
+  }
+
+  /* Islamic geometric pattern overlay */
+  body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(64,224,208,0.03) 28px, rgba(64,224,208,0.03) 29px),
+      repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(64,224,208,0.03) 28px, rgba(64,224,208,0.03) 29px);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Stars container */
+  .stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #a8e6f5;
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+  }
+
+  /* Crescent moon - Cyan/Turquoise */
+  .moon {
+    position: absolute;
+    top: 38px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #40e0d0, #7fffd4);
+    box-shadow: 0 0 20px rgba(64,224,208,0.5), 0 0 60px rgba(64,224,208,0.2);
+    z-index: 3;
+    opacity: 0.45;
+  }
+  .moon::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #0a1f35;
+  }
+
+  /* Lantern */
+  .lantern {
+    position: absolute;
+    top: 42px;
+    left: 30px;
+    font-size: 26px;
+    opacity: 0.30;
+    z-index: 3;
+    animation: sway 4s ease-in-out infinite;
+  }
+  @keyframes sway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  /* Date info section */
+  .date-info {
+    text-align: center;
+    margin-bottom: 8px;
+    z-index: 5;
+  }
+  .date-line {
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: #e0f7ff;
+  }
+
+  /* Bottom zone */
+  .bottom-zone {
+    position: absolute;
+    top: 310px;
+    left: 0;
+    right: 0;
+    bottom: 120px;
+    padding: 0 22px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Cyan divider with diamond */
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .gold-divider .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(64,224,208,0.5), transparent);
+  }
+  .gold-divider .diamond {
+    width: 8px;
+    height: 8px;
+    background: #40e0d0;
+    transform: rotate(45deg);
+    margin: 0 8px;
+    opacity: 0.6;
+  }
+
+  /* Banners row */
+  .banners {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .banner {
+    flex: 1;
+    border-radius: 12px;
+    padding: 8px 10px;
+    text-align: center;
+    background: rgba(255,255,255,0.03);
+  }
+  .banner-sehri {
+    border: 1px solid rgba(64,224,208,0.4);
+  }
+  .banner-maghrib {
+    border: 1px solid rgba(100,200,230,0.35);
+  }
+  .banner-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
+  .banner-subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 7px;
+    opacity: 0.45;
+    margin-bottom: 4px;
+  }
+  .banner-time-gold {
+    font-family: 'Cinzel', serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: #7fffd4;
+  }
+  .banner-time-green {
+    font-family: 'Cinzel', serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: #5ec5e6;
+  }
+
+  /* Main card */
+  .main-card {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(64,224,208,0.25);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(64,224,208,0.55);
+    text-align: center;
+    padding: 6px 0 0 0;
+  }
+
+  .times-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(64,224,208,0.25), transparent);
+    margin: 0 16px;
+  }
+
+  .time-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(64,224,208,0.08);
+  }
+  .time-row:last-child {
+    border-bottom: none;
+  }
+  .time-row .label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    color: #e0f7ff;
+    opacity: 0.85;
+  }
+  .time-row .label .emoji {
+    font-size: 14px;
+    width: 20px;
+    text-align: center;
+  }
+  .time-row .label .subtitle {
+    font-size: 7px;
+    opacity: 0.5;
+    display: block;
+    margin-top: 1px;
+  }
+  .time-row .value {
+    font-family: 'Cinzel', serif;
+    font-size: 16px;
+    color: #40e0d0;
+  }
+  .time-row .value.bright {
+    font-size: 17px;
+    color: #7fffd4;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 6px 0 0 0;
+    z-index: 5;
+  }
+  .footer-text {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    color: rgba(64,224,208,0.45);
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Moon -->
+<div class="moon"></div>
+
+<!-- Lantern -->
+<div class="lantern">🏮</div>
+
+<!-- Bottom Zone -->
+<div class="bottom-zone">
+  <!-- Date info -->
+  <div class="date-info">
+    <div class="date-line">{{DATE_LINE}}</div>
+  </div>
+
+  <div class="gold-divider">
+    <div class="line"></div>
+    <div class="diamond"></div>
+    <div class="line"></div>
+  </div>
+
+  <div class="banners">
+    <div class="banner banner-sehri">
+      <div class="banner-label">Sehri Ends</div>
+      <div class="banner-subtitle">Stop eating before</div>
+      <div class="banner-time-gold">{{SEHRI_ENDS}}</div>
+    </div>
+    <div class="banner banner-maghrib">
+      <div class="banner-label">Maghrib Iftari</div>
+      <div class="banner-subtitle">Break your fast</div>
+      <div class="banner-time-green">{{MAGHRIB_IFTARI}}</div>
+    </div>
+  </div>
+
+  <div class="main-card">
+    <div class="section-label">Beginning Times</div>
+    <div class="times-section">
+      <div class="time-row">
+        <div class="label"><span class="emoji">🌄</span>Sunrise</div>
+        <div class="value">{{SUNRISE}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🕛</span>Zohr</div>
+        <div class="value">{{ZOHR}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🌤</span>Asr</div>
+        <div class="value">{{ASR}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🌙</span>Esha</div>
+        <div class="value">{{ESHA}}</div>
+      </div>
+    </div>
+
+    <div class="card-divider"></div>
+
+    <div class="section-label">Jama'at Times</div>
+    <div class="times-section">
+      <div class="time-row">
+        <div class="label">
+          <span class="emoji">🕌</span>
+          <div>Fajr Jama'at<span class="subtitle">15 mins after Sehri ends</span></div>
+        </div>
+        <div class="value bright">{{FAJR_JAMAAT}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🕌</span>Zohar Jama'at</div>
+        <div class="value bright">{{ZOHAR_JAMAAT}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🕌</span>Asr Jama'at</div>
+        <div class="value bright">{{ASR_JAMAAT}}</div>
+      </div>
+      <div class="time-row">
+        <div class="label"><span class="emoji">🕌</span>Esha Jama'at</div>
+        <div class="value bright">{{ESHA_JAMAAT}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-text">{{MOSQUE_NAME}}</div>
+  </div>
+</div>
+
+<script>
+  // Generate twinkling stars
+  const starsContainer = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = (Math.random() * 3) + 's';
+    star.style.animationDuration = (2 + Math.random() * 2) + 's';
+    const size = Math.random() > 0.85 ? 3 : (Math.random() > 0.5 ? 2 : 1);
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    starsContainer.appendChild(star);
+  }
+</script>
+</body>
+</html>

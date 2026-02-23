@@ -228,21 +228,33 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
 def main():
     """
     Usage:
-        python generate.py                     # Both mosques, today's date
-        python generate.py faizul              # One mosque, today's date
-        python generate.py faizul 2026-02-22   # One mosque, specific date
-        python generate.py all 2026-02-22      # Both mosques, specific date
+        python generate.py                                   # All mosques, today's date, v2 template
+        python generate.py faizul                            # One mosque, today's date, v2 template
+        python generate.py faizul 2026-02-22                 # One mosque, specific date, v2 template
+        python generate.py all 2026-02-22                    # All mosques, specific date, v2 template
+        python generate.py all 2026-02-22 --template v2.1    # With specific template
     """
     script_dir = Path(__file__).resolve().parent
     data_dir = script_dir / "data"
-    template_path = script_dir / "templates" / "lockscreen_v2.html"
     output_dir = os.environ.get("OUTPUT_DIR", str(script_dir / "output"))
+
+    # Parse arguments
+    mosque_arg = sys.argv[1] if len(sys.argv) > 1 else "all"
+    date_arg = sys.argv[2] if len(sys.argv) > 2 else None
+
+    # Parse template argument (--template v2, v2.1, v2.2, v2.3, v1)
+    template_version = "v2"  # default
+    if len(sys.argv) > 3 and sys.argv[3] == "--template" and len(sys.argv) > 4:
+        template_version = sys.argv[4]
+
+    template_path = script_dir / "templates" / f"lockscreen_{template_version}.html"
+    if not template_path.exists():
+        print(f"❌ Template not found: {template_path}")
+        print(f"   Available templates: v1, v2, v2.1, v2.2, v2.3")
+        sys.exit(1)
 
     # Load all mosque configs (builtin + extracted)
     mosques = load_mosques(str(data_dir))
-
-    mosque_arg = sys.argv[1] if len(sys.argv) > 1 else "all"
-    date_arg = sys.argv[2] if len(sys.argv) > 2 else None
 
     if date_arg:
         target_date = datetime.strptime(date_arg, "%Y-%m-%d").date()
@@ -252,6 +264,7 @@ def main():
     mosque_keys = list(mosques.keys()) if mosque_arg == "all" else [mosque_arg]
 
     print(f"🌙 Generating lockscreens for {target_date}")
+    print(f"   Template: {template_version}")
     print(f"   Mosques: {', '.join(mosque_keys)}")
     print()
 

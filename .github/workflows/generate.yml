@@ -12,9 +12,13 @@ on:
         description: 'Date to generate (YYYY-MM-DD), leave blank for today'
         required: false
       mosque:
-        description: 'Mosque (faizul / quba / all)'
+        description: 'Mosque (faizul / quba / masjid_aisha / all)'
         required: false
         default: 'all'
+      template:
+        description: 'Template version (e.g. v2, v2.1, v2.2, v2.3, v1)'
+        required: false
+        default: 'v2'
 
 permissions:
   contents: write
@@ -37,7 +41,7 @@ jobs:
           pip install playwright Pillow
           playwright install --with-deps chromium
 
-      - name: Determine date and mosque
+      - name: Determine date, mosque, and template
         id: params
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
@@ -47,6 +51,13 @@ jobs:
           fi
           MOSQUE="${{ github.event.inputs.mosque }}"
           echo "mosque=${MOSQUE:-all}" >> $GITHUB_OUTPUT
+          TEMPLATE="${{ github.event.inputs.template }}"
+          echo "template=${TEMPLATE:-v2}" >> $GITHUB_OUTPUT
+
+      - name: List available templates
+        run: |
+          echo "📋 Available templates:"
+          ls -1 templates/lockscreen_*.html | sed 's/templates\/lockscreen_/  - /' | sed 's/\.html//'
 
       - name: Check if date is within Ramadan
         id: check
@@ -65,7 +76,7 @@ jobs:
         env:
           OUTPUT_DIR: ${{ github.workspace }}/output
         run: |
-          python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }}
+          python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }} --template ${{ steps.params.outputs.template }}
 
       - name: Copy to 'latest' folder for stable URLs
         if: steps.check.outputs.skip == 'false'
