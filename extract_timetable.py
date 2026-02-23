@@ -95,7 +95,7 @@ def extract_with_claude(image_path: str, api_key: str) -> dict:
     client = anthropic.Anthropic(api_key=api_key)
 
     message = client.messages.create(
-        model="claude-sonnet-4-5-20250514",
+        model="claude-sonnet-4-5-20250929",
         max_tokens=8000,
         messages=[
             {
