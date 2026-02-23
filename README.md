@@ -5,8 +5,9 @@ Automatically generates a beautiful phone lockscreen wallpaper (1080×2400) with
 Supports any mosque from [eSalaat.com](https://esalaat.com) — just add the timetable code and it extracts the data automatically using Claude's vision API.
 
 **Built-in mosques:**
-- Masjid Faizul Islam (Perry Barr, Birmingham)
-- Masjid Quba Trust (Handsworth, Birmingham)
+- [Masjid Faizul Islam](https://raw.githubusercontent.com/hasan1239/ramadan-lockscreen/main/latest/ramadan_lockscreen_faizul_latest.png)
+- [Masjid Quba Trust](https://raw.githubusercontent.com/hasan1239/ramadan-lockscreen/main/latest/ramadan_lockscreen_quba_latest.png)
+- [Masjid Aisha](https://raw.githubusercontent.com/hasan1239/ramadan-lockscreen/main/latest/ramadan_lockscreen_aisha_latest.png)
 
 ## How It Works
 
@@ -25,41 +26,21 @@ You can add any mosque from eSalaat in a couple of clicks:
 5. The workflow downloads the image, extracts all 30 days of times using Claude API, saves a CSV, and commits it
 6. From the next daily run onwards, lockscreens will be generated for that mosque too
 
-## Stable URLs for Phone Automation
+## Phone Automation
 
-The latest lockscreen for each mosque is always at:
+The latest lockscreen for each mosque is always available at a stable URL:
 
 ```
-https://raw.githubusercontent.com/<user>/ramadan-lockscreen/main/latest/ramadan_lockscreen_<slug>_latest.png
+https://raw.githubusercontent.com/hasan1239/ramadan-lockscreen/main/latest/ramadan_lockscreen_<slug>_latest.png
 ```
 
-Use these in iOS Shortcuts or Android Tasker to auto-set your wallpaper each morning.
+### Android (Tasker)
 
-## Setup
+1. Create a profile triggered at 3:00am daily
+2. Task: **HTTP Get** → download your mosque's `latest/` PNG URL
+3. Task: **Set Wallpaper** → apply to lock screen
 
-### 1. Create the GitHub repo
-
-```bash
-gh repo create ramadan-lockscreen --public --source=. --push
-```
-
-### 2. Add your Anthropic API key (for adding new mosques)
-
-Go to **Settings → Secrets and variables → Actions → New repository secret**
-- Name: `ANTHROPIC_API_KEY`
-- Value: your `sk-ant-...` key from [console.anthropic.com](https://console.anthropic.com)
-
-### 3. Manual generation
-
-You can generate any day manually from the **Actions** tab:
-- Click "Generate Daily Ramadan Lockscreen" → "Run workflow"
-- Optionally set a specific date and mosque
-
-### 4. Phone automation (Android — Tasker)
-
-1. Create a profile triggered at 3:00am
-2. Task: HTTP Get → download the `latest/` PNG URL
-3. Task: Set Wallpaper → apply to lock screen
+Your lockscreen will update itself every morning without any manual effort.
 
 ## Running Locally
 
