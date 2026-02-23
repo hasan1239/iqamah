@@ -5,6 +5,7 @@ Generates a 1080x2400 phone lockscreen PNG with daily prayer times.
 """
 
 import csv
+import json
 import os
 import sys
 from datetime import datetime, date
@@ -14,7 +15,8 @@ from PIL import Image
 
 # ── Configuration ──────────────────────────────────────────────────────────
 
-MOSQUES = {
+# Hardcoded mosques (original two with custom column mappings)
+BUILTIN_MOSQUES = {
     "faizul": {
         "csv": "masjid_faizul_islam_ramadan_2026.csv",
         "display_name": "Masjid Faizul Islam",
@@ -57,8 +59,48 @@ MOSQUES = {
     },
 }
 
+# Standard column mapping for mosques extracted from eSalaat via extract_timetable.py
+STANDARD_COLUMNS = {
+    "date": "Date",
+    "day": "Day",
+    "hijri": "Ramadan",
+    "sehri_ends": "Sehri Ends",
+    "sunrise": "Sunrise",
+    "zohr": "Zohr",
+    "asr": "Asr",
+    "esha": "Esha",
+    "fajr_jamaat": "Fajr Jama'at",
+    "zohar_jamaat": "Zohar Jama'at",
+    "asr_jamaat": "Asr Jama'at",
+    "maghrib_iftari": "Maghrib Iftari",
+    "esha_jamaat": "Esha Jama'at",
+}
+
 YEAR = 2026
 HIJRI_YEAR = 1447
+
+
+def load_mosques(data_dir: str) -> dict:
+    """Load all mosque configs: builtins + any JSON configs in data/mosques/."""
+    mosques = dict(BUILTIN_MOSQUES)
+
+    config_dir = os.path.join(data_dir, "mosques")
+    if os.path.isdir(config_dir):
+        for f in sorted(os.listdir(config_dir)):
+            if not f.endswith(".json"):
+                continue
+            config_path = os.path.join(config_dir, f)
+            with open(config_path, encoding="utf-8") as fh:
+                config = json.load(fh)
+            slug = config["slug"]
+            mosques[slug] = {
+                "csv": config["csv"],
+                "display_name": config["display_name"],
+                "slug": slug,
+                "columns": STANDARD_COLUMNS,
+            }
+
+    return mosques
 
 
 def parse_csv_date(date_str: str) -> date:
@@ -158,9 +200,9 @@ def render_to_png(html_content: str, output_path: str):
     print(f"  ✅ Saved: {output_path}")
 
 
-def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str):
+def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict):
     """Full pipeline: CSV → HTML → PNG for one mosque and date."""
-    config = MOSQUES[mosque_key]
+    config = mosques[mosque_key]
     csv_path = os.path.join(data_dir, config["csv"])
 
     rows = load_timetable(csv_path)
@@ -196,6 +238,9 @@ def main():
     template_path = script_dir / "templates" / "lockscreen.html"
     output_dir = os.environ.get("OUTPUT_DIR", str(script_dir / "output"))
 
+    # Load all mosque configs (builtin + extracted)
+    mosques = load_mosques(str(data_dir))
+
     mosque_arg = sys.argv[1] if len(sys.argv) > 1 else "all"
     date_arg = sys.argv[2] if len(sys.argv) > 2 else None
 
@@ -204,7 +249,7 @@ def main():
     else:
         target_date = date.today()
 
-    mosque_keys = list(MOSQUES.keys()) if mosque_arg == "all" else [mosque_arg]
+    mosque_keys = list(mosques.keys()) if mosque_arg == "all" else [mosque_arg]
 
     print(f"🌙 Generating lockscreens for {target_date}")
     print(f"   Mosques: {', '.join(mosque_keys)}")
@@ -212,11 +257,11 @@ def main():
 
     generated = []
     for key in mosque_keys:
-        if key not in MOSQUES:
-            print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(MOSQUES.keys())}")
+        if key not in mosques:
+            print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
             continue
-        print(f"  📐 {MOSQUES[key]['display_name']}...")
-        path = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir))
+        print(f"  📐 {mosques[key]['display_name']}...")
+        path = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques)
         if path:
             generated.append(path)
 

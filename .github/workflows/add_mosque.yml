@@ -1,0 +1,49 @@
+name: Add Mosque from eSalaat
+
+on:
+  workflow_dispatch:
+    inputs:
+      esalaat_code:
+        description: 'eSalaat timetable code (e.g. 1003 from esalaat.com/timetables/1003.jpg)'
+        required: true
+      mosque_name:
+        description: 'Mosque name override (leave blank to auto-detect from image)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install anthropic
+
+      - name: Extract timetable
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.mosque_name }}" ]; then
+            python extract_timetable.py "${{ github.event.inputs.esalaat_code }}" "${{ github.event.inputs.mosque_name }}"
+          else
+            python extract_timetable.py "${{ github.event.inputs.esalaat_code }}"
+          fi
+
+      - name: Commit new mosque data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/
+          git commit -m "🕌 Add mosque: eSalaat code ${{ github.event.inputs.esalaat_code }}" || echo "No changes to commit"
+          git push
