@@ -137,8 +137,8 @@ def extract_times(row: dict, mosque_config: dict) -> dict:
     return times
 
 
-def format_date_line(row: dict, mosque_config: dict) -> str:
-    """Build the date line, e.g. 'Sunday 22 Feb 2026 · 5 Ramadan 1447'."""
+def format_date_line(row: dict, mosque_config: dict) -> tuple[str, str]:
+    """Build the date line parts for alignment with diamond divider."""
     cols = mosque_config["columns"]
     day_name = row[cols["day"]].strip()
     date_str = row[cols["date"]].strip()
@@ -148,15 +148,21 @@ def format_date_line(row: dict, mosque_config: dict) -> str:
                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
     full_day = day_map.get(day_name, day_name)
 
-    return f"{full_day} {date_str} {YEAR} · {hijri_day} Ramadan {HIJRI_YEAR}"
+    english_date = f"{full_day} {date_str} {YEAR}"
+    islamic_date = f"{hijri_day} Ramadan {HIJRI_YEAR}"
+
+    return english_date, islamic_date
 
 
-def build_html(template_path: str, times: dict, date_line: str, mosque_name: str) -> str:
+def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mosque_name: str) -> str:
     """Replace placeholders in the HTML template with actual values."""
     html = Path(template_path).read_text(encoding="utf-8")
 
+    english_date, islamic_date = date_parts
+
     replacements = {
-        "{{DATE_LINE}}": date_line,
+        "{{ENGLISH_DATE}}": english_date,
+        "{{ISLAMIC_DATE}}": islamic_date,
         "{{MOSQUE_NAME}}": mosque_name,
         "{{SEHRI_ENDS}}": times["sehri_ends"],
         "{{MAGHRIB_IFTARI}}": times["maghrib_iftari"],
@@ -213,8 +219,8 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
         return None
 
     times = extract_times(row, config)
-    date_line = format_date_line(row, config)
-    html = build_html(template_path, times, date_line, config["display_name"])
+    date_parts = format_date_line(row, config)
+    html = build_html(template_path, times, date_parts, config["display_name"])
 
     date_slug = target_date.strftime("%d%b").lower()
     filename = f"ramadan_lockscreen_{config['slug']}_{date_slug}.png"

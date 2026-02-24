@@ -105,15 +105,30 @@
 
   /* Date info section */
   .date-info {
-    text-align: center;
+    display: flex;
+    align-items: center;
     margin-bottom: 8px;
     z-index: 5;
   }
-  .date-line {
+  .date-part {
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     font-size: 10px;
     color: #e0f7ff;
+    flex: 1;
+  }
+  .date-part.english {
+    text-align: right;
+    padding-right: 8px;
+  }
+  .date-part.islamic {
+    text-align: left;
+    padding-left: 8px;
+  }
+  .date-dot {
+    font-size: 10px;
+    color: #e0f7ff;
+    opacity: 0.5;
   }
 
   /* Bottom zone */
@@ -298,7 +313,9 @@
 <div class="bottom-zone">
   <!-- Date info -->
   <div class="date-info">
-    <div class="date-line">{{DATE_LINE}}</div>
+    <div class="date-part english">{{ENGLISH_DATE}}</div>
+    <div class="date-dot">·</div>
+    <div class="date-part islamic">{{ISLAMIC_DATE}}</div>
   </div>
 
   <div class="gold-divider">
