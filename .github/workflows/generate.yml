@@ -5,6 +5,15 @@ on:
   schedule:
     - cron: '0 2 * * *'
 
+  # Run on push to main branch when relevant files change
+  push:
+    branches:
+      - main
+    paths:
+      - 'templates/**'
+      - 'generate.py'
+      - '.github/workflows/generate.yml'
+
   # Allow manual trigger from the Actions tab
   workflow_dispatch:
     inputs:
