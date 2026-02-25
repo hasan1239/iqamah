@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="favicon.ico">
+  <meta name="theme-color" content="#050c18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <title>SalahDaily - Prayer Times</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -559,6 +563,35 @@
         if (!configRes.ok) throw new Error('Masjid not found');
         config = await configRes.json();
 
+        // Inject dynamic PWA manifest with this masjid's start URL
+        const manifest = {
+          name: `SalahDaily - ${config.display_name}`,
+          short_name: config.display_name,
+          start_url: `masjid.html?id=${masjidId}`,
+          scope: './',
+          display: 'standalone',
+          orientation: 'portrait',
+          background_color: '#050c18',
+          theme_color: '#050c18',
+          icons: [
+            { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+            { src: 'icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+            { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          ]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+        const manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(blob);
+        document.head.appendChild(manifestLink);
+
+        // Set iOS app title to mosque name
+        const appleMeta = document.createElement('meta');
+        appleMeta.name = 'apple-mobile-web-app-title';
+        appleMeta.content = config.display_name;
+        document.head.appendChild(appleMeta);
+
         // Update title
         document.title = `${config.display_name} - SalahDaily`;
 
@@ -810,6 +843,12 @@
 
     // Load data on page load
     loadData();
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
   </script>
 
   <!-- GoatCounter Analytics -->
