@@ -1,0 +1,20 @@
+{
+  "display_name": "Masjid Faizul Islam",
+  "slug": "faizul",
+  "csv": "masjid_faizul_islam_ramadan_2026.csv",
+  "columns": {
+    "date": "Date",
+    "day": "Day",
+    "hijri": "Hijri",
+    "sehri_ends": "Sehri Ends",
+    "sunrise": "Sunrise",
+    "zohr": "Zohr",
+    "asr": "Asr",
+    "esha": "Esha",
+    "fajr_jamaat": "Fajr Jama'at",
+    "zohar_jamaat": "Zohar Jama'at",
+    "asr_jamaat": "Asr Jama'at",
+    "maghrib_iftari": "Maghrib Iftari",
+    "esha_jamaat": "Esha Jama'at"
+  }
+}

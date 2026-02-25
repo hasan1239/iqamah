@@ -7,7 +7,9 @@ Generates a 1080x2400 phone lockscreen PNG with daily prayer times.
 import csv
 import json
 import os
+import shutil
 import sys
+import tempfile
 from datetime import datetime, date
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -87,7 +89,7 @@ def load_mosques(data_dir: str) -> dict:
     config_dir = os.path.join(data_dir, "mosques")
     if os.path.isdir(config_dir):
         for f in sorted(os.listdir(config_dir)):
-            if not f.endswith(".json"):
+            if not f.endswith(".json") or f == "index.json":
                 continue
             config_path = os.path.join(config_dir, f)
             with open(config_path, encoding="utf-8") as fh:
@@ -97,7 +99,7 @@ def load_mosques(data_dir: str) -> dict:
                 "csv": config["csv"],
                 "display_name": config["display_name"],
                 "slug": slug,
-                "columns": STANDARD_COLUMNS,
+                "columns": config.get("columns", STANDARD_COLUMNS),
             }
 
     return mosques
@@ -184,8 +186,9 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
 
 def render_to_png(html_content: str, output_path: str):
     """Render HTML to a 1080x2400 PNG using Playwright + Pillow."""
-    tmp_html = "/tmp/lockscreen_render.html"
-    tmp_screenshot = "/tmp/lockscreen_hires.png"
+    tmp_dir = tempfile.gettempdir()
+    tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
+    tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
 
     Path(tmp_html).write_text(html_content, encoding="utf-8")
 
@@ -195,7 +198,7 @@ def render_to_png(html_content: str, output_path: str):
             viewport={"width": 390, "height": 844},
             device_scale_factor=3,
         )
-        page.goto(f"file://{tmp_html}")
+        page.goto(Path(tmp_html).as_uri())
         page.wait_for_timeout(2000)
         page.screenshot(path=tmp_screenshot, full_page=False)
         browser.close()
@@ -231,6 +234,25 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
     return output_path
 
 
+def copy_to_latest(generated_files: list[str], script_dir: Path):
+    """Copy generated files to latest/ folder with stable names."""
+    latest_dir = script_dir / "latest"
+    os.makedirs(latest_dir, exist_ok=True)
+
+    for filepath in generated_files:
+        # Extract slug from filename: ramadan_lockscreen_{slug}_{date}.png
+        filename = os.path.basename(filepath)
+        parts = filename.replace("ramadan_lockscreen_", "").split("_")
+        slug = parts[0]  # First part is the slug
+
+        latest_filename = f"ramadan_lockscreen_{slug}_latest.png"
+        latest_path = latest_dir / latest_filename
+
+        # Copy file
+        shutil.copy2(filepath, latest_path)
+        print(f"  📋 Copied to latest/{latest_filename}")
+
+
 def main():
     """
     Usage:
@@ -245,13 +267,20 @@ def main():
     output_dir = os.environ.get("OUTPUT_DIR", str(script_dir / "output"))
 
     # Parse arguments
-    mosque_arg = sys.argv[1] if len(sys.argv) > 1 else "all"
-    date_arg = sys.argv[2] if len(sys.argv) > 2 else None
+    args = sys.argv[1:]
 
-    # Parse template argument (--template v2, v2.1, v2.2, v2.3, v1)
+    # Extract --template flag and value
     template_version = "v2"  # default
-    if len(sys.argv) > 3 and sys.argv[3] == "--template" and len(sys.argv) > 4:
-        template_version = sys.argv[4]
+    if "--template" in args:
+        template_idx = args.index("--template")
+        if template_idx + 1 < len(args):
+            template_version = args[template_idx + 1]
+            # Remove --template and its value from args
+            args = args[:template_idx] + args[template_idx + 2:]
+
+    # Now parse remaining positional arguments
+    mosque_arg = args[0] if len(args) > 0 else "all"
+    date_arg = args[1] if len(args) > 1 else None
 
     template_path = script_dir / "templates" / f"lockscreen_{template_version}.html"
     if not template_path.exists():
@@ -287,6 +316,9 @@ def main():
     print()
     if generated:
         print(f"🎉 Done! {len(generated)} image(s) generated in {output_dir}/")
+        print()
+        print("📋 Copying to latest/ folder...")
+        copy_to_latest(generated, script_dir)
     else:
         print("⚠️  No images generated. Check the date is within Ramadan 2026 (18 Feb – 19 Mar).")
         sys.exit(1)

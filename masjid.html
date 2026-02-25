@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
+  <title>Prayer Times - Ramadan 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
+      color: #e8e8e8;
+      min-height: 100vh;
+      padding: 16px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Gradient overlays */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% -10%, #1a4a3a, transparent 60%),
+        radial-gradient(ellipse at 100% 50%, #0d2d40, transparent 50%),
+        radial-gradient(ellipse at 0% 80%, #1a2a0d, transparent 50%);
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* Islamic pattern */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(212,175,55,0.02) 28px, rgba(212,175,55,0.02) 29px),
+        repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(212,175,55,0.02) 28px, rgba(212,175,55,0.02) 29px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.7; }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      border: none;
+      color: #0a0a0a;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .download-btn:hover {
+      background: linear-gradient(135deg, #f0cd5a, #d4af37);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: #d4af37;
+      margin-bottom: 6px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .date-line {
+      font-size: 0.85rem;
+      color: #a0a0a0;
+      margin-bottom: 4px;
+    }
+
+    .hijri-line {
+      font-family: 'Amiri', serif;
+      font-size: 0.95rem;
+      color: #90c090;
+      margin-bottom: 10px;
+    }
+
+    /* View toggle */
+    .view-toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .toggle-container {
+      position: relative;
+      display: flex;
+      padding: 4px;
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+      width: 100%;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 4px);
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+    }
+
+    .toggle-slider.monthly {
+      transform: translateX(100%);
+    }
+
+    .toggle-btn {
+      position: relative;
+      flex: 1;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .toggle-btn.active {
+      color: #0a0a0a;
+      font-weight: 700;
+    }
+
+    .toggle-btn:hover:not(.active) {
+      color: #e2e8f0;
+    }
+
+    /* Content sections */
+    .view-container {
+      display: none;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    /* Today's times table */
+    .times-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 14px;
+      padding: 12px 16px 6px 16px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: #d4af37;
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .times-table {
+      width: 100%;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .time-row:last-child {
+      border-bottom: none;
+    }
+
+    .time-label {
+      font-size: 1rem;
+      color: #c0c0c0;
+      font-weight: 400;
+    }
+
+    .time-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.15rem;
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    /* Divider between sections */
+    .gold-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+
+    .gold-divider .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    }
+
+    .gold-divider .diamond {
+      width: 8px;
+      height: 8px;
+      background: #d4af37;
+      transform: rotate(45deg);
+      margin: 0 12px;
+    }
+
+    /* Lockscreen-style layout */
+    .lockscreen-section {
+      margin: 12px 0;
+    }
+
+    .section-banner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .banner-item {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .banner-label {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.75rem;
+      color: #a0a0a0;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+
+    .banner-time {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      color: #d4af37;
+      font-weight: 700;
+    }
+
+    .times-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .time-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .time-item:last-child {
+      border-bottom: none;
+    }
+
+    .time-item .time-label {
+      font-size: 0.9rem;
+      color: #c0c0c0;
+      font-weight: 400;
+    }
+
+    .time-item .time-value {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    /* Monthly calendar view */
+    .calendar-grid {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .calendar-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .calendar-table thead th {
+      font-family: 'Cinzel', serif;
+      color: #d4af37;
+      font-weight: 600;
+      padding: 10px 8px;
+      text-align: center;
+      border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+      font-size: 0.75rem;
+      white-space: nowrap;
+    }
+
+    .calendar-table tbody td {
+      padding: 10px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #c0c0c0;
+      white-space: nowrap;
+    }
+
+    .calendar-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .calendar-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .calendar-table tbody tr.today {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .calendar-table tbody tr.today td {
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    .date-col {
+      color: #a0a0a0;
+      font-weight: 500;
+    }
+
+    /* Loading & error states */
+    .loading, .error {
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 1.1rem;
+      color: #a0a0a0;
+    }
+
+    .error {
+      color: #e88080;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #808080;
+      font-size: 0.85rem;
+    }
+
+    /* Desktop styles */
+    @media (min-width: 768px) {
+      body {
+        padding: 40px 30px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .date-line {
+        font-size: 1.05rem;
+      }
+
+      .hijri-line {
+        font-size: 1.15rem;
+      }
+
+      .toggle-btn {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+      }
+
+      .times-card {
+        padding: 35px 40px;
+      }
+
+      .time-row {
+        padding: 15px 0;
+      }
+
+      .time-label {
+        font-size: 1.1rem;
+      }
+
+      .time-value {
+        font-size: 1.3rem;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
+
+      .banner-item {
+        padding: 22px 18px;
+      }
+
+      .banner-label {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+      }
+
+      .banner-time {
+        font-size: 1.85rem;
+      }
+
+      .time-item {
+        padding: 16px 0;
+      }
+
+      .time-item .time-label {
+        font-size: 1.1rem;
+      }
+
+      .time-item .time-value {
+        font-size: 1.3rem;
+      }
+
+      .download-btn {
+        width: auto;
+        min-width: 240px;
+        max-width: 280px;
+        display: block;
+        margin: 15px auto 0 auto;
+      }
+
+      .calendar-table {
+        font-size: 0.9rem;
+      }
+
+      .calendar-table thead th {
+        font-size: 0.85rem;
+        padding: 12px 10px;
+      }
+
+      .calendar-table tbody td {
+        padding: 12px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <div class="container">
+    <div id="content">
+      <div class="loading">Loading prayer times...</div>
+    </div>
+
+    <footer>
+      <p>Updates daily at 4:30am GMT</p>
+    </footer>
+  </div>
+
+  <script>
+    // Generate stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      const size = Math.random() > 0.85 ? 3 : (Math.random() > 0.5 ? 2 : 1);
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      starsContainer.appendChild(star);
+    }
+
+    // Parse URL parameter
+    const params = new URLSearchParams(window.location.search);
+    const masjidId = params.get('id');
+
+    if (!masjidId) {
+      document.getElementById('content').innerHTML = '<div class="error">❌ No masjid specified. Please select a masjid from the home page.</div>';
+      throw new Error('No masjid ID provided');
+    }
+
+    let config = null;
+    let csvData = [];
+    let currentView = 'today';
+
+    // Load masjid config and CSV
+    async function loadData() {
+      try {
+        // Load config
+        const configRes = await fetch(`data/mosques/${masjidId}.json`);
+        if (!configRes.ok) throw new Error('Masjid not found');
+        config = await configRes.json();
+
+        // Update title
+        document.title = `${config.display_name} - Prayer Times`;
+
+        // Load CSV
+        const csvRes = await fetch(`data/${config.csv}`);
+        if (!csvRes.ok) throw new Error('Timetable not found');
+        const csvText = await csvRes.text();
+
+        // Parse CSV
+        csvData = parseCSV(csvText);
+
+        // Render initial view
+        renderContent();
+      } catch (error) {
+        document.getElementById('content').innerHTML = `<div class="error">❌ ${error.message}</div>`;
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const values = lines[i].split(',').map(v => v.trim());
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index];
+        });
+        rows.push(row);
+      }
+
+      return rows;
+    }
+
+    function parseDate(dateStr) {
+      // Parse "18 Feb" format
+      const parts = dateStr.trim().split(' ');
+      const day = parseInt(parts[0]);
+      const month = parts[1];
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const monthIndex = monthNames.indexOf(month);
+      return new Date(2026, monthIndex, day);
+    }
+
+    function getTodayRow() {
+      const today = new Date();
+      for (const row of csvData) {
+        const rowDate = parseDate(row['Date']);
+        if (rowDate.toDateString() === today.toDateString()) {
+          return row;
+        }
+      }
+      return null;
+    }
+
+    function formatFullDate(dateStr, dayStr) {
+      const dayMap = {
+        'Mon': 'Monday', 'Tue': 'Tuesday', 'Wed': 'Wednesday',
+        'Thu': 'Thursday', 'Fri': 'Friday', 'Sat': 'Saturday', 'Sun': 'Sunday'
+      };
+      const fullDay = dayMap[dayStr] || dayStr;
+      return `${fullDay} ${dateStr} 2026`;
+    }
+
+    function renderContent() {
+      if (currentView === 'today') {
+        renderTodayView();
+      } else {
+        renderMonthlyView();
+      }
+    }
+
+    function renderTodayView() {
+      const todayRow = getTodayRow();
+
+      if (!todayRow) {
+        document.getElementById('content').innerHTML = `
+          <div class="error">
+            ❌ No prayer times available for today.<br>
+            <small>Ramadan 2026: 18 Feb – 19 Mar</small>
+          </div>
+        `;
+        return;
+      }
+
+      const englishDate = formatFullDate(todayRow['Date'], todayRow['Day']);
+      const hijriDate = `${todayRow['Ramadan'] || todayRow['Hijri']} Ramadan 1447`;
+
+      const html = `
+        <header>
+          <h1>${config.display_name}</h1>
+          <div class="date-line">${englishDate}</div>
+          <div class="hijri-line">${hijriDate}</div>
+        </header>
+
+        <div class="view-toggle">
+          <div class="toggle-container">
+            <div class="toggle-slider" id="toggleSlider"></div>
+            <button class="toggle-btn active" onclick="switchView('today')">Today</button>
+            <button class="toggle-btn" onclick="switchView('monthly')">Month</button>
+          </div>
+        </div>
+
+        <div class="times-card">
+          <div class="lockscreen-section">
+            <div class="section-banner">
+              <div class="banner-item">
+                <div class="banner-label">Sehri Ends</div>
+                <div class="banner-time">${todayRow['Sehri Ends'] || todayRow['End of Suhoor']}</div>
+              </div>
+              <div class="banner-item">
+                <div class="banner-label">Maghrib Iftari</div>
+                <div class="banner-time">${todayRow['Maghrib Iftari'] || todayRow['Iftaar Maghrib']}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gold-divider">
+            <div class="line"></div>
+            <div class="diamond"></div>
+            <div class="line"></div>
+          </div>
+
+          <div class="lockscreen-section">
+            <div class="section-title">Prayer Start Times</div>
+            <div class="times-grid">
+              <div class="time-item">
+                <div class="time-label">Sunrise</div>
+                <div class="time-value">${todayRow['Sunrise']}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Dhuhr</div>
+                <div class="time-value">${todayRow['Zohr'] || todayRow['Zuhr Start']}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Asr</div>
+                <div class="time-value">${todayRow['Asr'] || todayRow['Asr Start']}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Esha</div>
+                <div class="time-value">${todayRow['Esha'] || todayRow['Isha Start']}</div>
+              </div>
+            </div>
+
+            <div class="section-title" style="margin-top: 16px;">Jama'at Times</div>
+            <div class="times-grid">
+              <div class="time-item">
+                <div class="time-label">Fajr</div>
+                <div class="time-value">${todayRow["Fajr Jama'at"] || todayRow["Fajr Jamaat"]}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Dhuhr</div>
+                <div class="time-value">${todayRow["Zohar Jama'at"] || todayRow["Zohar Jamaat"] || '1:00'}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Asr</div>
+                <div class="time-value">${todayRow["Asr Jama'at"] || todayRow["Asr Jamaat"]}</div>
+              </div>
+              <div class="time-item">
+                <div class="time-label">Esha</div>
+                <div class="time-value">${todayRow["Esha Jama'at"] || todayRow["Isha Jama'at"] || todayRow["Esha Jamaat"] || todayRow["Isha Jamaat"]}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download>Download Lockscreen</a>
+      `;
+
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function renderMonthlyView() {
+      const html = `
+        <header>
+          <h1>${config.display_name}</h1>
+          <div class="date-line">Ramadan 2026 Timetable</div>
+          <div class="hijri-line">1-30 Ramadan 1447</div>
+        </header>
+
+        <div class="view-toggle">
+          <div class="toggle-container">
+            <div class="toggle-slider monthly" id="toggleSlider"></div>
+            <button class="toggle-btn" onclick="switchView('today')">Today</button>
+            <button class="toggle-btn active" onclick="switchView('monthly')">Month</button>
+          </div>
+        </div>
+
+        <div class="calendar-grid">
+          <table class="calendar-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Day</th>
+                <th>Ramadan</th>
+                <th>Sehri Ends</th>
+                <th>Fajr Jama'at</th>
+                <th>Dhuhr</th>
+                <th>Asr</th>
+                <th>Maghrib</th>
+                <th>Esha</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${csvData.map(row => {
+                const rowDate = parseDate(row['Date']);
+                const today = new Date();
+                const isToday = rowDate.toDateString() === today.toDateString();
+
+                return `
+                  <tr ${isToday ? 'class="today"' : ''}>
+                    <td class="date-col">${row['Date']}</td>
+                    <td>${row['Day']}</td>
+                    <td>${row['Ramadan'] || row['Hijri']}</td>
+                    <td>${row['Sehri Ends'] || row['End of Suhoor']}</td>
+                    <td>${row["Fajr Jama'at"] || row["Fajr Jamaat"]}</td>
+                    <td>${row['Zohr'] || row['Zuhr Start']}</td>
+                    <td>${row['Asr'] || row['Asr Start']}</td>
+                    <td>${row['Maghrib Iftari'] || row['Iftaar Maghrib']}</td>
+                    <td>${row["Esha Jama'at"] || row["Isha Jama'at"] || row["Esha Jamaat"] || row["Isha Jamaat"]}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function switchView(view) {
+      currentView = view;
+      renderContent();
+    }
+
+    // Make switchView available globally
+    window.switchView = switchView;
+
+    // Load data on page load
+    loadData();
+  </script>
+</body>
+</html>

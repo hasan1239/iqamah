@@ -240,26 +240,26 @@
   <div class="container">
     <header>
       <h1>🌙 Ramadan Daily Prayer Times</h1>
-      <p class="subtitle">Daily lockscreen wallpapers for your masjid</p>
       <p class="dates">18 February – 19 March 2026 · 1-30 Ramadan 1447</p>
     </header>
 
-    <div class="info-box">
-      <p><span class="icon">💡</span>Tap any masjid to view today's daily prayer times. Save to your phone and set as lockscreen/wallpaper for quick access.</p>
+    <div class="masjid-grid" id="masjidGrid">
+      <!-- Fallback cards (will be replaced by JavaScript) -->
+      <a href="masjid.html?id=faizul" class="masjid-card">
+        <div class="masjid-name">Masjid Faizul Islam</div>
+      </a>
+
+      <a href="masjid.html?id=quba" class="masjid-card">
+        <div class="masjid-name">Masjid Quba Trust</div>
+      </a>
+
+      <a href="masjid.html?id=aisha" class="masjid-card">
+        <div class="masjid-name">Masjid Aisha</div>
+      </a>
     </div>
 
-    <div class="masjid-grid">
-      <a href="latest/ramadan_lockscreen_faizul_latest.png" class="masjid-card" target="_blank">
-        <div class="masjid-name">🕌 Masjid Faizul Islam</div>
-      </a>
-
-      <a href="latest/ramadan_lockscreen_quba_latest.png" class="masjid-card" target="_blank">
-        <div class="masjid-name">🕌 Masjid Quba Trust</div>
-      </a>
-
-      <a href="latest/ramadan_lockscreen_aisha_latest.png" class="masjid-card" target="_blank">
-        <div class="masjid-name">🕌 Masjid Aisha</div>
-      </a>
+    <div class="info-box">
+      <p><span class="icon">💡</span>Tap any masjid to view today's daily prayer times. Save to your phone and set as lockscreen/wallpaper for quick access.</p>
     </div>
 
     <footer>
@@ -282,6 +282,61 @@
       star.style.height = size + 'px';
       starsContainer.appendChild(star);
     }
+
+    // Auto-generate masjid cards from JSON configs
+    async function loadMasjids() {
+      try {
+        // Fetch list of masjids
+        const indexRes = await fetch('data/mosques/index.json');
+        if (!indexRes.ok) {
+          console.warn('Could not load masjid index, using fallback cards');
+          return;
+        }
+        const masjidIds = await indexRes.json();
+
+        // Fetch each masjid's config
+        const masjidConfigs = await Promise.all(
+          masjidIds.map(async (id) => {
+            try {
+              const configRes = await fetch(`data/mosques/${id}.json`);
+              if (!configRes.ok) throw new Error(`Config not found for ${id}`);
+              const config = await configRes.json();
+              return config;
+            } catch (err) {
+              console.error(`Failed to load ${id}:`, err);
+              return null;
+            }
+          })
+        );
+
+        // Filter out failed loads
+        const validConfigs = masjidConfigs.filter(c => c !== null);
+
+        if (validConfigs.length === 0) {
+          console.warn('No masjid configs loaded, using fallback cards');
+          return;
+        }
+
+        // Generate HTML for cards
+        const cardsHTML = validConfigs
+          .map(config => `
+            <a href="masjid.html?id=${config.slug}" class="masjid-card">
+              <div class="masjid-name">${config.display_name}</div>
+            </a>
+          `)
+          .join('');
+
+        // Replace fallback cards with dynamic cards
+        document.getElementById('masjidGrid').innerHTML = cardsHTML;
+
+      } catch (error) {
+        console.error('Error loading masjids:', error);
+        // Fallback cards remain visible
+      }
+    }
+
+    // Load masjids on page load
+    loadMasjids();
   </script>
 </body>
 </html>

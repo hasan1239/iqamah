@@ -40,6 +40,14 @@ jobs:
             python extract_timetable.py "${{ github.event.inputs.esalaat_code }}"
           fi
 
+      - name: Regenerate mosque index
+        run: |
+          # List all JSON files in data/mosques/ except index.json, extract slugs, and create JSON array
+          cd data/mosques
+          ls *.json | grep -v "index.json" | sed 's/\.json$//' | sort | jq -R -s -c 'split("\n") | map(select(length > 0))' > index.json
+          cd ../..
+          echo "✅ Regenerated data/mosques/index.json"
+
       - name: Commit new mosque data
         run: |
           git config user.name "github-actions[bot]"
