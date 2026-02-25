@@ -357,6 +357,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 0.85rem;
+      table-layout: fixed;
     }
 
     .calendar-table thead th {
@@ -640,7 +641,7 @@
         // Inject dynamic PWA manifest with this masjid's start URL
         const manifest = {
           name: `SalahDaily - ${config.display_name}`,
-          short_name: config.display_name,
+          short_name: 'SalahDaily',
           start_url: `masjid.html?id=${masjidId}`,
           scope: './',
           display: 'standalone',
@@ -663,7 +664,7 @@
         // Set iOS app title to mosque name
         const appleMeta = document.createElement('meta');
         appleMeta.name = 'apple-mobile-web-app-title';
-        appleMeta.content = config.display_name;
+        appleMeta.content = 'SalahDaily';
         document.head.appendChild(appleMeta);
 
         // Update title
