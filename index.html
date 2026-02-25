@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
-  <title>Ramadan Daily Prayer Times</title>
+  <link rel="icon" href="favicon.ico">
+  <title>SalahDaily - Daily Prayer Times</title>
   <style>
     * {
       margin: 0;
@@ -84,10 +84,24 @@
       margin-bottom: 25px;
     }
 
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
     h1 {
       font-size: 1.75rem;
       color: #d4af37;
-      margin-bottom: 12px;
+      margin: 0;
       font-weight: 700;
       line-height: 1.25;
       letter-spacing: -0.5px;
@@ -167,8 +181,8 @@
 
     footer {
       text-align: center;
-      margin-top: 50px;
-      padding-top: 25px;
+      margin-top: 20px;
+      padding-top: 20px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       color: #808080;
       font-size: 0.85rem;
@@ -180,10 +194,14 @@
         padding: 50px 30px;
       }
 
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
       h1 {
         font-size: 3rem;
         letter-spacing: -1px;
-        margin-bottom: 15px;
       }
 
       .subtitle {
@@ -226,8 +244,8 @@
       }
 
       footer {
-        margin-top: 70px;
-        padding-top: 35px;
+        margin-top: 20px;
+        padding-top: 20px;
         font-size: 0.95rem;
       }
     }
@@ -239,8 +257,10 @@
 
   <div class="container">
     <header>
-      <h1>🌙 Ramadan Daily Prayer Times</h1>
-      <p class="dates">18 February – 19 March 2026 · 1-30 Ramadan 1447</p>
+      <div class="header-content">
+        <img src="salahdaily_icon.png" alt="SalahDaily" class="logo">
+        <h1>SalahDaily</h1>
+      </div>
     </header>
 
     <div class="masjid-grid" id="masjidGrid">
@@ -263,7 +283,7 @@
     </div>
 
     <footer>
-      <p>Updates daily at 4:30am GMT</p>
+      <p>Updates daily at 4:30am GMT · © SalahDaily</p>
     </footer>
   </div>
 

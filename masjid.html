@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌙</text></svg>">
-  <title>Prayer Times - Ramadan 2026</title>
+  <link rel="icon" href="favicon.ico">
+  <title>SalahDaily - Prayer Times</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -518,7 +518,7 @@
     </div>
 
     <footer>
-      <p>Updates daily at 4:30am GMT</p>
+      <p>Updates daily at 4:30am GMT · © SalahDaily</p>
     </footer>
   </div>
 
@@ -560,7 +560,7 @@
         config = await configRes.json();
 
         // Update title
-        document.title = `${config.display_name} - Prayer Times`;
+        document.title = `${config.display_name} - SalahDaily`;
 
         // Load CSV
         const csvRes = await fetch(`data/${config.csv}`);
