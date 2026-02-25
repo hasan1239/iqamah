@@ -1,4 +1,4 @@
-# SalahDaily
+# Prayerly
 
 **Daily Ramadan prayer times for your local masjid.**
 
@@ -98,4 +98,4 @@ ANTHROPIC_API_KEY=sk-ant-... python extract_timetable.py 1003
 
 ---
 
-© SalahDaily
+© Prayerly

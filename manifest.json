@@ -1,6 +1,6 @@
 {
-  "name": "SalahDaily - Daily Prayer Times",
-  "short_name": "SalahDaily",
+  "name": "Prayerly - Daily Prayer Times",
+  "short_name": "Prayerly",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

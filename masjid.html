@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <title>SalahDaily - Prayer Times</title>
+  <title>Prayerly - Prayer Times</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -344,6 +344,31 @@
       font-weight: 600;
     }
 
+    /* Next prayer highlight */
+    .time-item.next-prayer {
+      background: rgba(212, 175, 55, 0.08);
+      border-left: 3px solid #d4af37;
+      margin: 0 -12px;
+      padding-left: 12px;
+      padding-right: 12px;
+      border-radius: 6px;
+    }
+
+    .banner-item.next-prayer {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.15));
+      border-color: rgba(212, 175, 55, 0.5);
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    .countdown {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.7rem;
+      color: #90c090;
+      font-weight: 400;
+      margin-left: 6px;
+    }
+
     /* Monthly calendar view */
     .calendar-grid {
       background: rgba(255, 255, 255, 0.05);
@@ -553,6 +578,10 @@
         font-size: 1.3rem;
       }
 
+      .countdown {
+        font-size: 0.8rem;
+      }
+
       .download-btn {
         width: auto;
         min-width: 240px;
@@ -591,7 +620,7 @@
     </div>
 
     <footer>
-      <p>Updates daily at 4:30am GMT · © SalahDaily <span id="appVersion"></span></p>
+      <p>Updates daily at 4:30am GMT · © Prayerly <span id="appVersion"></span></p>
     </footer>
   </div>
 
@@ -639,8 +668,8 @@
 
         // Inject dynamic PWA manifest with this masjid's start URL
         const manifest = {
-          name: `SalahDaily - ${config.display_name}`,
-          short_name: 'SalahDaily',
+          name: `Prayerly - ${config.display_name}`,
+          short_name: 'Prayerly',
           start_url: `masjid.html?id=${masjidId}`,
           scope: './',
           display: 'standalone',
@@ -663,11 +692,11 @@
         // Set iOS app title to mosque name
         const appleMeta = document.createElement('meta');
         appleMeta.name = 'apple-mobile-web-app-title';
-        appleMeta.content = 'SalahDaily';
+        appleMeta.content = 'Prayerly';
         document.head.appendChild(appleMeta);
 
         // Update title
-        document.title = `${config.display_name} - SalahDaily`;
+        document.title = `${config.display_name} - Prayerly`;
 
         // Load CSV
         const csvRes = await fetch(`data/${config.csv}`);
@@ -736,6 +765,104 @@
         renderTodayView();
       } else {
         renderMonthlyView();
+      }
+    }
+
+    let countdownInterval = null;
+
+    function parseTimeToDate(timeStr, isAM) {
+      const parts = timeStr.trim().split(':');
+      let hours = parseInt(parts[0]);
+      const minutes = parseInt(parts[1]);
+      if (!isAM && hours !== 12) hours += 12;
+      if (isAM && hours === 12) hours = 0;
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+    }
+
+    function formatCountdown(prayerDate) {
+      const now = new Date();
+      const diffMs = prayerDate - now;
+      if (diffMs <= 0) return null;
+      const diffMinutes = Math.ceil(diffMs / 60000);
+      const hours = Math.floor(diffMinutes / 60);
+      const minutes = diffMinutes % 60;
+      if (diffMinutes < 1) return 'in <1m';
+      if (hours === 0) return `in ${minutes}m`;
+      return `in ${hours}h ${minutes}m`;
+    }
+
+    function getNextPrayer(todayRow) {
+      const prayers = [
+        { name: 'Fajr', keys: ["Fajr Jama'at", "Fajr Jamaat"], isAM: true },
+        { name: 'Dhuhr', keys: ["Zohar Jama'at", "Zohar Jamaat"], isAM: false, defaultTime: '1:00' },
+        { name: 'Asr', keys: ["Asr Jama'at", "Asr Jamaat"], isAM: false },
+        { name: 'Maghrib', keys: ["Maghrib Iftari", "Iftaar Maghrib"], isAM: false },
+        { name: 'Esha', keys: ["Esha Jama'at", "Isha Jama'at", "Esha Jamaat", "Isha Jamaat"], isAM: false },
+      ];
+
+      const now = new Date();
+
+      for (const prayer of prayers) {
+        let timeStr = null;
+        for (const key of prayer.keys) {
+          if (todayRow[key]) { timeStr = todayRow[key]; break; }
+        }
+        if (!timeStr && prayer.defaultTime) timeStr = prayer.defaultTime;
+        if (!timeStr) continue;
+
+        const prayerDate = parseTimeToDate(timeStr, prayer.isAM);
+        if (prayerDate > now) {
+          return { name: prayer.name, date: prayerDate };
+        }
+      }
+      return null;
+    }
+
+    function applyNextPrayerHighlight(todayRow) {
+      document.querySelectorAll('.next-prayer').forEach(el => el.classList.remove('next-prayer'));
+      document.querySelectorAll('.countdown').forEach(el => el.remove());
+
+      const next = getNextPrayer(todayRow);
+      if (!next) {
+        if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        return;
+      }
+
+      const countdown = formatCountdown(next.date);
+
+      // Highlight matching rows in both Start Times and Jama'at grids
+      const grids = document.querySelectorAll('.times-grid');
+      grids.forEach((grid, gridIndex) => {
+        grid.querySelectorAll('.time-item').forEach(item => {
+          const label = item.querySelector('.time-label');
+          if (label && label.textContent.trim() === next.name) {
+            item.classList.add('next-prayer');
+            // Add countdown only to Jama'at section (second grid)
+            if (gridIndex === 1 && countdown) {
+              const span = document.createElement('span');
+              span.className = 'countdown';
+              span.textContent = countdown;
+              label.appendChild(span);
+            }
+          }
+        });
+      });
+
+      // Highlight Maghrib in banner if it's next
+      if (next.name === 'Maghrib') {
+        document.querySelectorAll('.banner-item').forEach(item => {
+          const label = item.querySelector('.banner-label');
+          if (label && label.textContent.includes('Maghrib')) {
+            item.classList.add('next-prayer');
+            if (countdown) {
+              const span = document.createElement('span');
+              span.className = 'countdown';
+              span.textContent = countdown;
+              label.appendChild(span);
+            }
+          }
+        });
       }
     }
 
@@ -837,6 +964,16 @@
       `;
 
       document.getElementById('content').innerHTML = html;
+
+      // Apply next prayer highlight and start countdown
+      applyNextPrayerHighlight(todayRow);
+      if (countdownInterval) clearInterval(countdownInterval);
+      countdownInterval = setInterval(() => {
+        const row = getTodayRow();
+        if (row && currentView === 'today') {
+          applyNextPrayerHighlight(row);
+        }
+      }, 60000);
     }
 
     function renderMonthlyView() {
@@ -896,9 +1033,27 @@
       `;
 
       document.getElementById('content').innerHTML = html;
+
+      // Highlight next prayer cell in today's row
+      const todayRow = getTodayRow();
+      if (todayRow) {
+        const next = getNextPrayer(todayRow);
+        if (next) {
+          const colMap = { 'Fajr': 4, 'Dhuhr': 5, 'Asr': 6, 'Maghrib': 7, 'Esha': 8 };
+          const colIndex = colMap[next.name];
+          if (colIndex !== undefined) {
+            const row = document.querySelector('.calendar-table tbody tr.today');
+            if (row) {
+              const cell = row.children[colIndex];
+              if (cell) cell.style.color = '#90c090';
+            }
+          }
+        }
+      }
     }
 
     function switchView(view) {
+      if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
       currentView = view;
       renderContent();
 
