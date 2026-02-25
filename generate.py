@@ -15,6 +15,12 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 from PIL import Image
 
+# Configure UTF-8 encoding for Windows console
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # ── Configuration ──────────────────────────────────────────────────────────
 
 # Hardcoded mosques (original two with custom column mappings)
@@ -184,11 +190,17 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
     return html
 
 
-def render_to_png(html_content: str, output_path: str):
+def render_to_png(html_content: str, output_path: str, script_dir: Path):
     """Render HTML to a 1080x2400 PNG using Playwright + Pillow."""
     tmp_dir = tempfile.gettempdir()
     tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
     tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
+
+    # Copy logo to temp directory so relative paths work
+    logo_src = script_dir / "salahdaily_icon.png"
+    if logo_src.exists():
+        logo_dst = os.path.join(tmp_dir, "salahdaily_icon.png")
+        shutil.copy2(logo_src, logo_dst)
 
     Path(tmp_html).write_text(html_content, encoding="utf-8")
 
@@ -209,7 +221,7 @@ def render_to_png(html_content: str, output_path: str):
     print(f"  ✅ Saved: {output_path}")
 
 
-def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict):
+def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, script_dir: Path):
     """Full pipeline: CSV → HTML → PNG for one mosque and date."""
     config = mosques[mosque_key]
     csv_path = os.path.join(data_dir, config["csv"])
@@ -230,7 +242,7 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
     output_path = os.path.join(output_dir, filename)
 
     os.makedirs(output_dir, exist_ok=True)
-    render_to_png(html, output_path)
+    render_to_png(html, output_path, script_dir)
     return output_path
 
 
@@ -309,7 +321,7 @@ def main():
             print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
             continue
         print(f"  📐 {mosques[key]['display_name']}...")
-        path = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques)
+        path = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, script_dir)
         if path:
             generated.append(path)
 
