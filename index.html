@@ -289,11 +289,16 @@
     </div>
 
     <footer>
-      <p>Updates daily at 4:30am GMT · © SalahDaily</p>
+      <p>Updates daily at 4:30am GMT · © SalahDaily <span id="appVersion"></span></p>
     </footer>
   </div>
 
   <script>
+    // Load version
+    fetch('version.json').then(r => r.json()).then(d => {
+      document.getElementById('appVersion').textContent = 'v' + d.version;
+    }).catch(() => {});
+
     // Generate twinkling stars
     const starsContainer = document.getElementById('stars');
     for (let i = 0; i < 60; i++) {

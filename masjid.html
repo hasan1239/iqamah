@@ -400,6 +400,66 @@
       font-weight: 500;
     }
 
+    /* Install banner */
+    .install-banner {
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .install-banner.visible {
+      display: flex;
+    }
+
+    .install-banner-text {
+      flex: 1;
+      font-size: 0.85rem;
+      color: #c0c0c0;
+      line-height: 1.5;
+    }
+
+    .install-banner-text strong {
+      color: #d4af37;
+    }
+
+    .install-btn {
+      background: linear-gradient(135deg, #d4af37, #b8941f);
+      border: none;
+      color: #0a0a0a;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .install-btn:hover {
+      background: linear-gradient(135deg, #f0cd5a, #d4af37);
+    }
+
+    .install-dismiss {
+      background: none;
+      border: none;
+      color: #808080;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 2px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .install-dismiss:hover {
+      color: #c0c0c0;
+    }
+
     /* Loading & error states */
     .loading, .error {
       text-align: center;
@@ -521,12 +581,23 @@
       <div class="loading">Loading prayer times...</div>
     </div>
 
+    <div class="install-banner" id="installBanner">
+      <div class="install-banner-text" id="installText"></div>
+      <button class="install-btn" id="installBtn" style="display:none;"></button>
+      <button class="install-dismiss" id="installDismiss" title="Dismiss">&times;</button>
+    </div>
+
     <footer>
-      <p>Updates daily at 4:30am GMT · © SalahDaily</p>
+      <p>Updates daily at 4:30am GMT · © SalahDaily <span id="appVersion"></span></p>
     </footer>
   </div>
 
   <script>
+    // Load version
+    fetch('version.json').then(r => r.json()).then(d => {
+      document.getElementById('appVersion').textContent = 'v' + d.version;
+    }).catch(() => {});
+
     // Generate stars
     const starsContainer = document.getElementById('stars');
     for (let i = 0; i < 60; i++) {
@@ -849,6 +920,52 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
+
+    // Install prompt logic
+    (function() {
+      // Don't show if already installed as standalone
+      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+
+      // Don't show if previously dismissed
+      if (localStorage.getItem('installDismissed')) return;
+
+      const banner = document.getElementById('installBanner');
+      const text = document.getElementById('installText');
+      const btn = document.getElementById('installBtn');
+      const dismiss = document.getElementById('installDismiss');
+
+      let deferredPrompt = null;
+
+      // Android: capture the beforeinstallprompt event
+      window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        text.innerHTML = '<strong>Add to Home Screen</strong> — Get quick access to prayer times as a standalone app.';
+        btn.textContent = 'Install';
+        btn.style.display = '';
+        banner.classList.add('visible');
+
+        btn.addEventListener('click', function() {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(function() {
+            deferredPrompt = null;
+            banner.classList.remove('visible');
+          });
+        });
+      });
+
+      // iOS: detect Safari on iOS (no beforeinstallprompt)
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS && !navigator.standalone) {
+        text.innerHTML = '<strong>Add to Home Screen</strong> — Tap the <strong>Share</strong> button, then <strong>"Add to Home Screen"</strong> for quick access as a standalone app.';
+        banner.classList.add('visible');
+      }
+
+      dismiss.addEventListener('click', function() {
+        banner.classList.remove('visible');
+        localStorage.setItem('installDismissed', '1');
+      });
+    })();
   </script>
 
   <!-- GoatCounter Analytics -->
