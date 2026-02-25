@@ -726,7 +726,7 @@
           </div>
         </div>
 
-        <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download>Download Lockscreen</a>
+        <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download Lockscreen</a>
       `;
 
       document.getElementById('content').innerHTML = html;
@@ -794,6 +794,15 @@
     function switchView(view) {
       currentView = view;
       renderContent();
+
+      // Track view switching in GoatCounter
+      if (window.goatcounter) {
+        window.goatcounter.count({
+          path: `/masjid/${view}`,
+          title: `${config.display_name} - ${view} view`,
+          event: true,
+        });
+      }
     }
 
     // Make switchView available globally
@@ -802,5 +811,9 @@
     // Load data on page load
     loadData();
   </script>
+
+  <!-- GoatCounter Analytics -->
+  <script data-goatcounter="https://hasan1239.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
