@@ -256,11 +256,11 @@ def copy_to_latest(generated_files: list[str], script_dir: Path):
 def main():
     """
     Usage:
-        python generate.py                                   # All mosques, today's date, v2 template
-        python generate.py faizul                            # One mosque, today's date, v2 template
-        python generate.py faizul 2026-02-22                 # One mosque, specific date, v2 template
-        python generate.py all 2026-02-22                    # All mosques, specific date, v2 template
-        python generate.py all 2026-02-22 --template v2.1    # With specific template
+        python generate.py                                   # All mosques, today's date, v3 template
+        python generate.py faizul                            # One mosque, today's date, v3 template
+        python generate.py faizul 2026-02-22                 # One mosque, specific date, v3 template
+        python generate.py all 2026-02-22                    # All mosques, specific date, v3 template
+        python generate.py all 2026-02-22 --template v2      # With specific template
     """
     script_dir = Path(__file__).resolve().parent
     data_dir = script_dir / "data"
@@ -270,7 +270,7 @@ def main():
     args = sys.argv[1:]
 
     # Extract --template flag and value
-    template_version = "v2"  # default
+    template_version = "v3"  # default
     if "--template" in args:
         template_idx = args.index("--template")
         if template_idx + 1 < len(args):
@@ -285,7 +285,7 @@ def main():
     template_path = script_dir / "templates" / f"lockscreen_{template_version}.html"
     if not template_path.exists():
         print(f"❌ Template not found: {template_path}")
-        print(f"   Available templates: v1, v2, v2.1, v2.2, v2.3")
+        print(f"   Available templates: v1, v2, v2.1, v2.2, v2.3, v3")
         sys.exit(1)
 
     # Load all mosque configs (builtin + extracted)
