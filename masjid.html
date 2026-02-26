@@ -11,11 +11,16 @@
   <title>Prayerly - Prayer Times</title>
   <script>
     (function() {
-      var stored = localStorage.getItem('prayerly-theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (stored === 'light' || (!stored && !prefersDark)) {
-        document.documentElement.classList.add('light-mode');
+      function syncTheme() {
+        var stored = localStorage.getItem('prayerly-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
+        var isLight = document.documentElement.classList.contains('light-mode');
+        if (shouldBeLight && !isLight) document.documentElement.classList.add('light-mode');
+        else if (!shouldBeLight && isLight) document.documentElement.classList.remove('light-mode');
       }
+      syncTheme();
+      window.addEventListener('pageshow', function(e) { if (e.persisted) syncTheme(); });
     })();
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -1394,6 +1399,9 @@
         }, { passive: true });
       }
 
+      // Update download link for current theme
+      if (window.updateDownloadLink) window.updateDownloadLink();
+
       // Apply next prayer highlight and start countdown
       applyNextPrayerHighlight(todayRow);
       if (countdownInterval) clearInterval(countdownInterval);
@@ -1669,17 +1677,30 @@
         });
       }
 
+      // Expose for use after dynamic content renders
+      window.updateDownloadLink = updateDownloadLink;
+
       // Set initial download link based on current theme
       updateDownloadLink();
 
       toggle.addEventListener('click', function() {
+        // Crossfade overlay: capture current bg gradient, fade it out over the new theme
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:3;pointer-events:none;transition:opacity 0.4s ease;';
+        overlay.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+        document.body.appendChild(overlay);
+
         root.classList.add('theme-transitioning');
         root.classList.toggle('light-mode');
         var isLight = root.classList.contains('light-mode');
         localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
         updateThemeColor();
         updateDownloadLink();
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() { overlay.style.opacity = '0'; });
+        });
         setTimeout(function() {
+          overlay.remove();
           root.classList.remove('theme-transitioning');
         }, 400);
         if (window.goatcounter) {
@@ -1701,17 +1722,12 @@
         updateThemeColor();
       });
 
-      // Sync theme when page is restored from bfcache (back/forward navigation)
+      // Sync theme-color meta and download link on bfcache restore
+      // (the <head> script already handles the light-mode class toggle)
       window.addEventListener('pageshow', function(e) {
         if (e.persisted) {
-          var stored = localStorage.getItem('prayerly-theme');
-          var shouldBeLight = stored === 'light' || (!stored && !window.matchMedia('(prefers-color-scheme: dark)').matches);
-          var isLight = root.classList.contains('light-mode');
-          if (shouldBeLight !== isLight) {
-            root.classList.toggle('light-mode');
-            updateThemeColor();
-            updateDownloadLink();
-          }
+          updateThemeColor();
+          updateDownloadLink();
         }
       });
 

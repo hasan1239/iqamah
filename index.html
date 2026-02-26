@@ -13,11 +13,16 @@
   <title>Prayerly - Daily Prayer Times</title>
   <script>
     (function() {
-      var stored = localStorage.getItem('prayerly-theme');
-      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (stored === 'light' || (!stored && !prefersDark)) {
-        document.documentElement.classList.add('light-mode');
+      function syncTheme() {
+        var stored = localStorage.getItem('prayerly-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
+        var isLight = document.documentElement.classList.contains('light-mode');
+        if (shouldBeLight && !isLight) document.documentElement.classList.add('light-mode');
+        else if (!shouldBeLight && isLight) document.documentElement.classList.remove('light-mode');
       }
+      syncTheme();
+      window.addEventListener('pageshow', function(e) { if (e.persisted) syncTheme(); });
     })();
   </script>
   <style>
@@ -566,12 +571,22 @@
       }
 
       toggle.addEventListener('click', function() {
+        // Crossfade overlay: capture current bg gradient, fade it out over the new theme
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:3;pointer-events:none;transition:opacity 0.4s ease;';
+        overlay.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+        document.body.appendChild(overlay);
+
         root.classList.add('theme-transitioning');
         root.classList.toggle('light-mode');
         var isLight = root.classList.contains('light-mode');
         localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
         updateThemeColor();
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() { overlay.style.opacity = '0'; });
+        });
         setTimeout(function() {
+          overlay.remove();
           root.classList.remove('theme-transitioning');
         }, 400);
         if (window.goatcounter) {
@@ -591,19 +606,6 @@
           root.classList.add('light-mode');
         }
         updateThemeColor();
-      });
-
-      // Sync theme when page is restored from bfcache (back/forward navigation)
-      window.addEventListener('pageshow', function(e) {
-        if (e.persisted) {
-          var stored = localStorage.getItem('prayerly-theme');
-          var shouldBeLight = stored === 'light' || (!stored && !window.matchMedia('(prefers-color-scheme: dark)').matches);
-          var isLight = root.classList.contains('light-mode');
-          if (shouldBeLight !== isLight) {
-            root.classList.toggle('light-mode');
-            updateThemeColor();
-          }
-        }
       });
 
       updateThemeColor();
