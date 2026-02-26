@@ -28,6 +28,7 @@ CRITICAL RULES:
 3. If a Zohar/Dhuhr Jama'at column says "NO SALAH" or similar, set it to the value noted elsewhere (often "1:00" for daily Zuhr jama'at) or "1:00" if unclear.
 4. Use 24-hour times if the timetable does, otherwise keep the format as shown.
 5. Include the year 2026 context: Ramadan starts 18 Feb 2026.
+6. IMPORTANT: Look for notes, footnotes, or text OUTSIDE the main table (often at the bottom or sides of the image). These frequently contain fixed daily jama'at times (e.g. "Daily Zuhr Jama'at: 1:00pm") or day-specific overrides (e.g. "Jummah: 12:45pm"). Include these as proper column data in each row, applying the correct value per day (e.g. Friday gets the Jummah time, other days get the daily time).
 
 Extract into this exact JSON structure:
 {

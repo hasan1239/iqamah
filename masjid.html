@@ -404,6 +404,13 @@
       margin-left: 6px;
     }
 
+    @media (max-width: 767px) {
+      .banner-label .countdown {
+        display: block;
+        margin-left: 0;
+      }
+    }
+
     /* Monthly calendar view */
     .calendar-grid {
       background: rgba(255, 255, 255, 0.05);
@@ -453,6 +460,19 @@
     .calendar-table tbody tr.today td {
       color: #d4af37;
       font-weight: 600;
+    }
+
+    .calendar-table .section-header {
+      font-size: 0.7rem;
+      color: rgba(212, 175, 55, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      padding: 6px 8px;
+    }
+
+    .calendar-table .section-divider {
+      border-left: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     .date-col {
@@ -1039,6 +1059,11 @@
     }
 
     function renderMonthlyView() {
+      const hasZawal = csvData.length > 0 && csvData[0]['Zawal'] != null;
+      const startColspan = hasZawal ? 6 : 5;
+
+      const zawalHeader = hasZawal ? '<th>Zawal</th>' : '';
+
       const html = `
         <header>
           <h1>${config.display_name}</h1>
@@ -1058,14 +1083,26 @@
           <table class="calendar-table">
             <thead>
               <tr>
+                <th class="section-header"></th>
+                <th class="section-header"></th>
+                <th class="section-header"></th>
+                <th class="section-header section-divider" colspan="${startColspan}">Start Times</th>
+                <th class="section-header section-divider" colspan="5">Jama'at Times</th>
+              </tr>
+              <tr>
                 <th>Date</th>
                 <th>Day</th>
-                <th>Ramadan</th>
-                <th>Sehri Ends</th>
-                <th>Fajr Jama'at</th>
+                <th>Hijri</th>
+                <th class="section-divider">Sehri</th>
+                <th>Sunrise</th>
+                ${zawalHeader}
                 <th>Dhuhr</th>
                 <th>Asr</th>
-                <th>Maghrib/Iftari</th>
+                <th>Esha</th>
+                <th class="section-divider">Fajr</th>
+                <th>Dhuhr</th>
+                <th>Asr</th>
+                <th>Maghrib</th>
                 <th>Esha</th>
               </tr>
             </thead>
@@ -1074,16 +1111,22 @@
                 const rowDate = parseDate(row['Date']);
                 const today = new Date();
                 const isToday = rowDate.toDateString() === today.toDateString();
+                const zawalCell = hasZawal ? `<td>${row['Zawal']}</td>` : '';
 
                 return `
                   <tr ${isToday ? 'class="today"' : ''}>
                     <td class="date-col">${row['Date']}</td>
                     <td>${row['Day']}</td>
                     <td>${row['Ramadan'] || row['Hijri']}</td>
-                    <td>${row['Sehri Ends'] || row['End of Suhoor']}</td>
-                    <td>${row["Fajr Jama'at"] || row["Fajr Jamaat"]}</td>
+                    <td class="section-divider">${row['Sehri Ends'] || row['End of Suhoor']}</td>
+                    <td>${row['Sunrise']}</td>
+                    ${zawalCell}
                     <td>${row['Zohr'] || row['Zuhr Start']}</td>
                     <td>${row['Asr'] || row['Asr Start']}</td>
+                    <td>${row['Esha'] || row['Isha Start']}</td>
+                    <td class="section-divider">${row["Fajr Jama'at"] || row["Fajr Jamaat"]}</td>
+                    <td>${row["Zohar Jama'at"] || row["Zohar Jamaat"] || '\u2014'}</td>
+                    <td>${row["Asr Jama'at"] || row["Asr Jamaat"]}</td>
                     <td>${row['Maghrib Iftari'] || row['Iftaar Maghrib']}</td>
                     <td>${row["Esha Jama'at"] || row["Isha Jama'at"] || row["Esha Jamaat"] || row["Isha Jamaat"]}</td>
                   </tr>
@@ -1101,7 +1144,15 @@
       if (todayRow) {
         const next = getNextPrayer(todayRow);
         if (next) {
-          const colMap = { 'Fajr': 4, 'Dhuhr': 5, 'Asr': 6, 'Maghrib': 7, 'Esha': 8 };
+          const dhuhrStartIdx = hasZawal ? 6 : 5;
+          const jamaatIdx = hasZawal ? 9 : 8;
+          const colMap = {
+            'Fajr': jamaatIdx,
+            'Dhuhr': dhuhrStartIdx,
+            'Asr': dhuhrStartIdx + 1,
+            'Maghrib': jamaatIdx + 3,
+            'Esha': jamaatIdx + 4
+          };
           const colIndex = colMap[next.name];
           if (colIndex !== undefined) {
             const row = document.querySelector('.calendar-table tbody tr.today');
