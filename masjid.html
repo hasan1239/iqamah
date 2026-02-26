@@ -887,16 +887,37 @@
         });
       });
 
-      // Highlight Maghrib in banner if it's next
-      if (next.name === 'Maghrib') {
+      // Sehri countdown — always visible on banner before sehri time
+      const sehriTime = todayRow['Sehri Ends'] || todayRow['End of Suhoor'];
+      if (sehriTime) {
+        const sehriDate = parseTimeToDate(sehriTime, true);
+        const sehriCountdown = formatCountdown(sehriDate);
+        document.querySelectorAll('.banner-item').forEach(item => {
+          const label = item.querySelector('.banner-label');
+          if (label && label.textContent.includes('Sehri')) {
+            if (sehriCountdown) {
+              const span = document.createElement('span');
+              span.className = 'countdown';
+              span.textContent = sehriCountdown;
+              label.appendChild(span);
+            }
+          }
+        });
+      }
+
+      // Iftari countdown — always visible on banner before maghrib time
+      const maghribTime = todayRow['Maghrib Iftari'] || todayRow['Iftaar Maghrib'];
+      if (maghribTime) {
+        const maghribDate = parseTimeToDate(maghribTime, false);
+        const iftariCountdown = formatCountdown(maghribDate);
         document.querySelectorAll('.banner-item').forEach(item => {
           const label = item.querySelector('.banner-label');
           if (label && label.textContent.includes('Maghrib')) {
-            item.classList.add('next-prayer');
-            if (countdown) {
+            if (next && next.name === 'Maghrib') item.classList.add('next-prayer');
+            if (iftariCountdown) {
               const span = document.createElement('span');
               span.className = 'countdown';
-              span.textContent = countdown;
+              span.textContent = iftariCountdown;
               label.appendChild(span);
             }
           }
@@ -999,8 +1020,8 @@
         </div>
 
         <div class="btn-row">
-          <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download Wallpaper</a>
-          <button class="share-btn" onclick="shareTimes()">Share Times</button>
+          <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download</a>
+          <button class="share-btn" onclick="shareTimes()">Share</button>
         </div>
       `;
 
