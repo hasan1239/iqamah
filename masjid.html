@@ -460,6 +460,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-bottom: 12px;
+      align-items: stretch;
     }
 
     .banner-item {
@@ -468,6 +469,9 @@
       border-radius: 10px;
       padding: 12px 10px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .banner-label {
@@ -489,12 +493,14 @@
     .flip-card {
       perspective: 600px;
       cursor: pointer;
+      display: flex;
     }
 
     .flip-card-inner {
       position: relative;
       transition: transform 0.5s ease;
       transform-style: preserve-3d;
+      flex: 1;
     }
 
     .flip-card.flipped .flip-card-inner {
@@ -506,6 +512,7 @@
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       position: relative;
+      min-height: 100%;
     }
 
     .flip-card-back {
@@ -586,6 +593,12 @@
       .banner-label .countdown {
         display: block;
         margin-left: 0;
+      }
+      .banner-label {
+        min-height: 2.4em;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
     }
 
