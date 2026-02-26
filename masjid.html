@@ -111,6 +111,41 @@
       transform: translateY(0);
     }
 
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-row .download-btn {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    .share-btn {
+      background: transparent;
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .share-btn:hover {
+      background: rgba(212, 175, 55, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+    }
+
+    .share-btn:active {
+      transform: translateY(0);
+    }
+
     /* Header */
     header {
       text-align: center;
@@ -582,12 +617,15 @@
         font-size: 0.8rem;
       }
 
+      .btn-row {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+      }
+
       .download-btn {
         width: auto;
-        min-width: 240px;
-        max-width: 280px;
-        display: block;
-        margin: 15px auto 0 auto;
       }
 
       .calendar-table {
@@ -960,7 +998,10 @@
           </div>
         </div>
 
-        <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download Wallpaper</a>
+        <div class="btn-row">
+          <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download Wallpaper</a>
+          <button class="share-btn" onclick="shareTimes()">Share Times</button>
+        </div>
       `;
 
       document.getElementById('content').innerHTML = html;
@@ -1069,6 +1110,42 @@
 
     // Make switchView available globally
     window.switchView = switchView;
+
+    async function shareTimes() {
+      const shareUrl = window.location.href;
+      const shareText = `Prayer times for ${config.display_name} on Prayerly\n${shareUrl}`;
+
+      if (window.goatcounter) {
+        window.goatcounter.count({
+          path: `/share/${masjidId}`,
+          title: `Share - ${config.display_name}`,
+          event: true,
+        });
+      }
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `${config.display_name} - Prayerly`,
+            text: `Prayer times for ${config.display_name} on Prayerly`,
+            url: shareUrl,
+          });
+        } catch (err) {
+          // User cancelled or share failed silently
+        }
+      } else if (navigator.clipboard) {
+        try {
+          await navigator.clipboard.writeText(shareText);
+          const btn = document.querySelector('.share-btn');
+          const original = btn.textContent;
+          btn.textContent = 'Copied!';
+          setTimeout(() => { btn.textContent = original; }, 2000);
+        } catch (err) {
+          // Clipboard failed silently
+        }
+      }
+    }
+    window.shareTimes = shareTimes;
 
     // Load data on page load
     loadData();
