@@ -182,6 +182,32 @@
       50% { opacity: 0.7; }
     }
 
+    /* Golden dust motes for light mode */
+    .dust-motes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    :root.light-mode .dust-motes { opacity: 1; }
+
+    .mote {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,140,30,0.4), rgba(180,140,30,0) 70%);
+      animation: drift 8s ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+      33% { transform: translateY(-12px) translateX(5px); opacity: 0.5; }
+      66% { transform: translateY(-6px) translateX(-3px); opacity: 0.3; }
+    }
+
     .container {
       max-width: 900px;
       margin: 0 auto;
@@ -565,6 +591,21 @@
       border-radius: 14px;
       padding: 20px;
       overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-tint-30) transparent;
+    }
+    .calendar-grid::-webkit-scrollbar {
+      height: 6px;
+    }
+    .calendar-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .calendar-grid::-webkit-scrollbar-thumb {
+      background: var(--gold-tint-30);
+      border-radius: 3px;
+    }
+    .calendar-grid::-webkit-scrollbar-thumb:hover {
+      background: var(--gold-tint-50);
     }
 
     .calendar-table {
@@ -862,6 +903,8 @@
   </button>
 
   <div class="stars" id="stars"></div>
+  <!-- Golden dust motes (light mode) -->
+  <div class="dust-motes" id="dustMotes"></div>
 
   <div class="container">
     <div id="content">
@@ -898,6 +941,21 @@
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       starsContainer.appendChild(star);
+    }
+
+    // Generate golden dust motes (light mode)
+    const motesContainer = document.getElementById('dustMotes');
+    for (let i = 0; i < 60; i++) {
+      const mote = document.createElement('div');
+      mote.className = 'mote';
+      mote.style.left = Math.random() * 100 + '%';
+      mote.style.top = Math.random() * 100 + '%';
+      mote.style.animationDelay = (Math.random() * 8) + 's';
+      mote.style.animationDuration = (6 + Math.random() * 6) + 's';
+      const size = 3 + Math.random() * 5;
+      mote.style.width = size + 'px';
+      mote.style.height = size + 'px';
+      motesContainer.appendChild(mote);
     }
 
     // Parse URL parameter
@@ -1641,6 +1699,20 @@
           root.classList.add('light-mode');
         }
         updateThemeColor();
+      });
+
+      // Sync theme when page is restored from bfcache (back/forward navigation)
+      window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+          var stored = localStorage.getItem('prayerly-theme');
+          var shouldBeLight = stored === 'light' || (!stored && !window.matchMedia('(prefers-color-scheme: dark)').matches);
+          var isLight = root.classList.contains('light-mode');
+          if (shouldBeLight !== isLight) {
+            root.classList.toggle('light-mode');
+            updateThemeColor();
+            updateDownloadLink();
+          }
+        }
       });
 
       updateThemeColor();
