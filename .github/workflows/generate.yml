@@ -104,8 +104,12 @@ jobs:
         run: |
           mkdir -p latest
           for f in output/ramadan_lockscreen_*.png; do
-            slug=$(echo "$f" | sed 's/.*ramadan_lockscreen_\([a-z]*\)_.*/\1/')
-            cp "$f" "latest/ramadan_lockscreen_${slug}_latest.png"
+            base=$(basename "$f" .png)
+            # Remove prefix and date suffix, keep slug + optional _light
+            inner=${base#ramadan_lockscreen_}
+            # Last segment is the date (e.g., 18feb) — remove it
+            latest_name="ramadan_lockscreen_${inner%_*}_latest.png"
+            cp "$f" "latest/$latest_name"
           done
           echo "📁 Latest folder:"
           ls -la latest/

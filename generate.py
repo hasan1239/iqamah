@@ -221,7 +221,7 @@ def render_to_png(html_content: str, output_path: str, script_dir: Path):
     print(f"  ✅ Saved: {output_path}")
 
 
-def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, script_dir: Path):
+def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, script_dir: Path, suffix: str = ""):
     """Full pipeline: CSV → HTML → PNG for one mosque and date."""
     config = mosques[mosque_key]
     csv_path = os.path.join(data_dir, config["csv"])
@@ -238,31 +238,25 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
     html = build_html(template_path, times, date_parts, config["display_name"])
 
     date_slug = target_date.strftime("%d%b").lower()
-    filename = f"ramadan_lockscreen_{config['slug']}_{date_slug}.png"
+    filename = f"ramadan_lockscreen_{config['slug']}{suffix}_{date_slug}.png"
     output_path = os.path.join(output_dir, filename)
 
     os.makedirs(output_dir, exist_ok=True)
     render_to_png(html, output_path, script_dir)
-    return output_path
+
+    latest_name = f"ramadan_lockscreen_{config['slug']}{suffix}_latest.png"
+    return output_path, latest_name
 
 
-def copy_to_latest(generated_files: list[str], script_dir: Path):
+def copy_to_latest(generated_files: list[tuple[str, str]], script_dir: Path):
     """Copy generated files to latest/ folder with stable names."""
     latest_dir = script_dir / "latest"
     os.makedirs(latest_dir, exist_ok=True)
 
-    for filepath in generated_files:
-        # Extract slug from filename: ramadan_lockscreen_{slug}_{date}.png
-        filename = os.path.basename(filepath)
-        parts = filename.replace("ramadan_lockscreen_", "").split("_")
-        slug = parts[0]  # First part is the slug
-
-        latest_filename = f"ramadan_lockscreen_{slug}_latest.png"
-        latest_path = latest_dir / latest_filename
-
-        # Copy file
+    for filepath, latest_name in generated_files:
+        latest_path = latest_dir / latest_name
         shutil.copy2(filepath, latest_path)
-        print(f"  📋 Copied to latest/{latest_filename}")
+        print(f"  📋 Copied to latest/{latest_name}")
 
 
 def main():
@@ -321,9 +315,22 @@ def main():
             print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
             continue
         print(f"  📐 {mosques[key]['display_name']}...")
-        path = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, script_dir)
-        if path:
-            generated.append(path)
+        result = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, script_dir)
+        if result:
+            generated.append(result)
+
+    # Generate light variant if a matching _light template exists
+    light_template_path = script_dir / "templates" / f"lockscreen_{template_version}_light.html"
+    if light_template_path.exists():
+        print()
+        print(f"🌤️  Generating light variants...")
+        for key in mosque_keys:
+            if key not in mosques:
+                continue
+            print(f"  📐 {mosques[key]['display_name']} (light)...")
+            result = generate_lockscreen(key, target_date, output_dir, str(light_template_path), str(data_dir), mosques, script_dir, suffix="_light")
+            if result:
+                generated.append(result)
 
     print()
     if generated:

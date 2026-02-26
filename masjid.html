@@ -9,8 +9,112 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
   <title>Prayerly - Prayer Times</title>
+  <script>
+    (function() {
+      var stored = localStorage.getItem('prayerly-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'light' || (!stored && !prefersDark)) {
+        document.documentElement.classList.add('light-mode');
+      }
+    })();
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
+      --overlay-1: #1a4a3a;
+      --overlay-2: #0d2d40;
+      --overlay-3: #1a2a0d;
+      --pattern-line: rgba(212,175,55,0.02);
+      --text-primary: #e8e8e8;
+      --text-secondary: #c0c0c0;
+      --text-tertiary: #a0a0a0;
+      --text-muted: #808080;
+      --gold: #d4af37;
+      --gold-dark: #b8941f;
+      --gold-hover: #f0cd5a;
+      --green: #90c090;
+      --error: #e88080;
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(212,175,55,0.2);
+      --card-hover-bg: rgba(255,255,255,0.1);
+      --star-opacity: 1;
+      --gold-tint-08: rgba(212,175,55,0.08);
+      --gold-tint-15: rgba(212,175,55,0.15);
+      --gold-tint-25: rgba(212,175,55,0.25);
+      --gold-tint-30: rgba(212,175,55,0.3);
+      --gold-tint-50: rgba(212,175,55,0.5);
+      --gold-tint-70: rgba(212,175,55,0.7);
+      --toggle-bg: rgba(30,41,59,0.5);
+      --toggle-border: rgba(100,116,139,0.3);
+      --toggle-inactive: #94a3b8;
+      --toggle-inactive-hover: #e2e8f0;
+      --divider: rgba(255,255,255,0.08);
+      --divider-subtle: rgba(255,255,255,0.05);
+      --divider-footer: rgba(255,255,255,0.1);
+      --table-row-hover: rgba(255,255,255,0.03);
+      --today-row-bg: rgba(212,175,55,0.1);
+      --gold-shadow: rgba(212,175,55,0.4);
+      --gold-shadow-light: rgba(212,175,55,0.2);
+      --gold-shadow-glow: rgba(212,175,55,0.3);
+      --section-divider-border: rgba(212,175,55,0.2);
+      --section-header-border: rgba(212,175,55,0.15);
+      --table-header-border: rgba(212,175,55,0.3);
+      --install-border: rgba(212,175,55,0.25);
+      --theme-color-value: #050c18;
+    }
+
+    :root.light-mode {
+      --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
+      --overlay-1: #d4e8d0;
+      --overlay-2: #cce0ec;
+      --overlay-3: #e8e0c8;
+      --pattern-line: rgba(180,140,30,0.04);
+      --text-primary: #1a1a2e;
+      --text-secondary: #3d3d50;
+      --text-tertiary: #5a5a6e;
+      --text-muted: #7a7a8a;
+      --gold: #b8941f;
+      --gold-dark: #9a7a10;
+      --gold-hover: #d4af37;
+      --green: #2d7a4f;
+      --error: #c0392b;
+      --card-bg: rgba(255,255,255,0.75);
+      --card-border: rgba(180,140,30,0.2);
+      --card-hover-bg: rgba(255,255,255,0.9);
+      --star-opacity: 0;
+      --gold-tint-08: rgba(180,140,30,0.08);
+      --gold-tint-15: rgba(180,140,30,0.15);
+      --gold-tint-25: rgba(180,140,30,0.2);
+      --gold-tint-30: rgba(180,140,30,0.25);
+      --gold-tint-50: rgba(180,140,30,0.4);
+      --gold-tint-70: rgba(180,140,30,0.5);
+      --toggle-bg: rgba(200,190,170,0.4);
+      --toggle-border: rgba(160,140,100,0.3);
+      --toggle-inactive: #7a7a8a;
+      --toggle-inactive-hover: #3d3d50;
+      --divider: rgba(0,0,0,0.08);
+      --divider-subtle: rgba(0,0,0,0.05);
+      --divider-footer: rgba(0,0,0,0.1);
+      --table-row-hover: rgba(0,0,0,0.03);
+      --today-row-bg: rgba(180,140,30,0.1);
+      --gold-shadow: rgba(180,140,30,0.3);
+      --gold-shadow-light: rgba(180,140,30,0.15);
+      --gold-shadow-glow: rgba(180,140,30,0.2);
+      --section-divider-border: rgba(180,140,30,0.2);
+      --section-header-border: rgba(180,140,30,0.15);
+      --table-header-border: rgba(180,140,30,0.3);
+      --install-border: rgba(180,140,30,0.25);
+      --theme-color-value: #faf6ef;
+    }
+
+    .theme-transitioning,
+    .theme-transitioning *,
+    .theme-transitioning *::before,
+    .theme-transitioning *::after {
+      transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease !important;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -19,8 +123,8 @@
 
     body {
       font-family: 'Lato', sans-serif;
-      background: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
-      color: #e8e8e8;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
       min-height: 100vh;
       padding: 16px 16px;
       position: relative;
@@ -33,9 +137,9 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse at 50% -10%, #1a4a3a, transparent 60%),
-        radial-gradient(ellipse at 100% 50%, #0d2d40, transparent 50%),
-        radial-gradient(ellipse at 0% 80%, #1a2a0d, transparent 50%);
+        radial-gradient(ellipse at 50% -10%, var(--overlay-1), transparent 60%),
+        radial-gradient(ellipse at 100% 50%, var(--overlay-2), transparent 50%),
+        radial-gradient(ellipse at 0% 80%, var(--overlay-3), transparent 50%);
       z-index: 0;
       opacity: 0.5;
     }
@@ -46,8 +150,8 @@
       position: fixed;
       inset: 0;
       background:
-        repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(212,175,55,0.02) 28px, rgba(212,175,55,0.02) 29px),
-        repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(212,175,55,0.02) 28px, rgba(212,175,55,0.02) 29px);
+        repeating-linear-gradient(60deg, transparent, transparent 28px, var(--pattern-line) 28px, var(--pattern-line) 29px),
+        repeating-linear-gradient(-60deg, transparent, transparent 28px, var(--pattern-line) 28px, var(--pattern-line) 29px);
       z-index: 1;
       pointer-events: none;
     }
@@ -60,6 +164,8 @@
       height: 100%;
       z-index: 2;
       pointer-events: none;
+      opacity: var(--star-opacity);
+      transition: opacity 0.4s ease;
     }
 
     .star {
@@ -84,7 +190,7 @@
     }
 
     .download-btn {
-      background: linear-gradient(135deg, #d4af37, #b8941f);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       border: none;
       color: #0a0a0a;
       padding: 10px 24px;
@@ -102,9 +208,9 @@
     }
 
     .download-btn:hover {
-      background: linear-gradient(135deg, #f0cd5a, #d4af37);
+      background: linear-gradient(135deg, var(--gold-hover), var(--gold));
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 4px 12px var(--gold-shadow);
     }
 
     .download-btn:active {
@@ -125,8 +231,8 @@
 
     .share-btn {
       background: transparent;
-      border: 2px solid #d4af37;
-      color: #d4af37;
+      border: 2px solid var(--gold);
+      color: var(--gold);
       padding: 10px 24px;
       border-radius: 8px;
       font-size: 0.95rem;
@@ -137,9 +243,9 @@
     }
 
     .share-btn:hover {
-      background: rgba(212, 175, 55, 0.15);
+      background: var(--gold-tint-15);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
+      box-shadow: 0 4px 12px var(--gold-shadow-light);
     }
 
     .share-btn:active {
@@ -155,7 +261,7 @@
     h1 {
       font-family: 'Cinzel', serif;
       font-size: 1.5rem;
-      color: #d4af37;
+      color: var(--gold);
       margin-bottom: 6px;
       font-weight: 700;
       line-height: 1.2;
@@ -163,14 +269,14 @@
 
     .date-line {
       font-size: 0.85rem;
-      color: #a0a0a0;
+      color: var(--text-tertiary);
       margin-bottom: 4px;
     }
 
     .hijri-line {
       font-family: 'Amiri', serif;
       font-size: 0.95rem;
-      color: #90c090;
+      color: var(--green);
       margin-bottom: 10px;
     }
 
@@ -188,10 +294,10 @@
       position: relative;
       display: flex;
       padding: 4px;
-      background: rgba(30, 41, 59, 0.5);
+      background: var(--toggle-bg);
       backdrop-filter: blur(8px);
       border-radius: 10px;
-      border: 1px solid rgba(100, 116, 139, 0.3);
+      border: 1px solid var(--toggle-border);
       width: 100%;
     }
 
@@ -201,10 +307,10 @@
       left: 4px;
       width: calc(50% - 4px);
       height: calc(100% - 8px);
-      background: linear-gradient(135deg, #d4af37, #b8941f);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       border-radius: 8px;
       transition: transform 0.3s ease;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+      box-shadow: 0 2px 8px var(--gold-shadow-glow);
     }
 
     .toggle-slider.monthly {
@@ -217,7 +323,7 @@
       padding: 10px 20px;
       font-size: 0.85rem;
       font-weight: 500;
-      color: #94a3b8;
+      color: var(--toggle-inactive);
       background: transparent;
       border: none;
       cursor: pointer;
@@ -232,7 +338,7 @@
     }
 
     .toggle-btn:hover:not(.active) {
-      color: #e2e8f0;
+      color: var(--toggle-inactive-hover);
     }
 
     /* Content sections */
@@ -246,8 +352,8 @@
 
     /* Today's times table */
     .times-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 14px;
       padding: 12px 16px 6px 16px;
       margin-bottom: 20px;
@@ -256,7 +362,7 @@
     .section-title {
       font-family: 'Cinzel', serif;
       font-size: 1rem;
-      color: #d4af37;
+      color: var(--gold);
       margin-bottom: 12px;
       text-align: center;
       font-weight: 600;
@@ -271,7 +377,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--divider);
     }
 
     .time-row:last-child {
@@ -280,14 +386,14 @@
 
     .time-label {
       font-size: 1rem;
-      color: #c0c0c0;
+      color: var(--text-secondary);
       font-weight: 400;
     }
 
     .time-value {
       font-family: 'Cinzel', serif;
       font-size: 1.15rem;
-      color: #d4af37;
+      color: var(--gold);
       font-weight: 600;
     }
 
@@ -302,13 +408,13 @@
     .gold-divider .line {
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
     .gold-divider .diamond {
       width: 8px;
       height: 8px;
-      background: #d4af37;
+      background: var(--gold);
       transform: rotate(45deg);
       margin: 0 12px;
     }
@@ -326,8 +432,8 @@
     }
 
     .banner-item {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.08));
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: linear-gradient(135deg, var(--gold-tint-15), var(--gold-tint-08));
+      border: 1px solid var(--gold-tint-30);
       border-radius: 10px;
       padding: 12px 10px;
       text-align: center;
@@ -336,7 +442,7 @@
     .banner-label {
       font-family: 'Lato', sans-serif;
       font-size: 0.75rem;
-      color: #a0a0a0;
+      color: var(--text-tertiary);
       margin-bottom: 6px;
       font-weight: 400;
     }
@@ -344,7 +450,7 @@
     .banner-time {
       font-family: 'Cinzel', serif;
       font-size: 1.35rem;
-      color: #d4af37;
+      color: var(--gold);
       font-weight: 700;
     }
 
@@ -385,7 +491,7 @@
       top: 6px;
       right: 8px;
       font-size: 0.65rem;
-      color: rgba(212, 175, 55, 0.5);
+      color: var(--gold-tint-50);
       line-height: 1;
     }
 
@@ -400,7 +506,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 10px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--divider);
     }
 
     .time-item:last-child {
@@ -409,21 +515,21 @@
 
     .time-item .time-label {
       font-size: 0.9rem;
-      color: #c0c0c0;
+      color: var(--text-secondary);
       font-weight: 400;
     }
 
     .time-item .time-value {
       font-family: 'Cinzel', serif;
       font-size: 1.05rem;
-      color: #d4af37;
+      color: var(--gold);
       font-weight: 600;
     }
 
     /* Next prayer highlight */
     .time-item.next-prayer {
-      background: rgba(212, 175, 55, 0.08);
-      border-left: 3px solid #d4af37;
+      background: var(--gold-tint-08);
+      border-left: 3px solid var(--gold);
       margin: 0 -12px;
       padding-left: 12px;
       padding-right: 12px;
@@ -431,8 +537,8 @@
     }
 
     .banner-item.next-prayer {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(212, 175, 55, 0.15));
-      border-color: rgba(212, 175, 55, 0.5);
+      background: linear-gradient(135deg, var(--gold-tint-25), var(--gold-tint-15));
+      border-color: var(--gold-tint-50);
       box-sizing: border-box;
       min-width: 0;
     }
@@ -440,7 +546,7 @@
     .countdown {
       font-family: 'Lato', sans-serif;
       font-size: 0.7rem;
-      color: #90c090;
+      color: var(--green);
       font-weight: 400;
       margin-left: 6px;
     }
@@ -454,8 +560,8 @@
 
     /* Monthly calendar view */
     .calendar-grid {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 14px;
       padding: 20px;
       overflow-x: auto;
@@ -469,11 +575,11 @@
 
     .calendar-table thead th {
       font-family: 'Cinzel', serif;
-      color: #d4af37;
+      color: var(--gold);
       font-weight: 600;
       padding: 10px 8px;
       text-align: center;
-      border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+      border-bottom: 2px solid var(--table-header-border);
       font-size: 0.75rem;
       white-space: nowrap;
     }
@@ -481,8 +587,8 @@
     .calendar-table tbody td {
       padding: 10px 8px;
       text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      color: #c0c0c0;
+      border-bottom: 1px solid var(--divider-subtle);
+      color: var(--text-secondary);
       white-space: nowrap;
     }
 
@@ -491,40 +597,44 @@
     }
 
     .calendar-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--table-row-hover);
     }
 
     .calendar-table tbody tr.today {
-      background: rgba(212, 175, 55, 0.1);
+      background: var(--today-row-bg);
     }
 
     .calendar-table tbody tr.today td {
-      color: #d4af37;
+      color: var(--gold);
       font-weight: 600;
     }
 
     .calendar-table .section-header {
       font-size: 0.7rem;
-      color: rgba(212, 175, 55, 0.7);
+      color: var(--gold-tint-70);
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+      border-bottom: 1px solid var(--section-header-border);
       padding: 6px 8px;
     }
 
     .calendar-table .section-divider {
-      border-left: 1px solid rgba(212, 175, 55, 0.2);
+      border-left: 1px solid var(--section-divider-border);
     }
 
     .date-col {
-      color: #a0a0a0;
+      color: var(--text-tertiary);
       font-weight: 500;
+    }
+
+    .next-prayer-cell {
+      color: var(--green) !important;
     }
 
     /* Install banner */
     .install-banner {
-      background: rgba(212, 175, 55, 0.08);
-      border: 1px solid rgba(212, 175, 55, 0.25);
+      background: var(--gold-tint-08);
+      border: 1px solid var(--install-border);
       border-radius: 10px;
       padding: 14px 16px 48px 16px;
       margin-top: 14px;
@@ -538,17 +648,17 @@
 
     .install-banner-text {
       font-size: 0.85rem;
-      color: #c0c0c0;
+      color: var(--text-secondary);
       line-height: 1.5;
       padding-right: 24px;
     }
 
     .install-banner-text strong {
-      color: #d4af37;
+      color: var(--gold);
     }
 
     .install-btn {
-      background: linear-gradient(135deg, #d4af37, #b8941f);
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
       border: none;
       color: #0a0a0a;
       padding: 8px 18px;
@@ -564,13 +674,13 @@
     }
 
     .install-btn:hover {
-      background: linear-gradient(135deg, #f0cd5a, #d4af37);
+      background: linear-gradient(135deg, var(--gold-hover), var(--gold));
     }
 
     .install-dismiss {
       background: none;
       border: none;
-      color: #808080;
+      color: var(--text-muted);
       font-size: 1.2rem;
       cursor: pointer;
       padding: 0;
@@ -581,7 +691,7 @@
     }
 
     .install-dismiss:hover {
-      color: #c0c0c0;
+      color: var(--text-secondary);
     }
 
     /* Loading & error states */
@@ -589,11 +699,11 @@
       text-align: center;
       padding: 60px 20px;
       font-size: 1.1rem;
-      color: #a0a0a0;
+      color: var(--text-tertiary);
     }
 
     .error {
-      color: #e88080;
+      color: var(--error);
     }
 
     /* Footer */
@@ -601,10 +711,45 @@
       text-align: center;
       margin-top: 20px;
       padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      color: #808080;
+      border-top: 1px solid var(--divider-footer);
+      color: var(--text-muted);
       font-size: 0.85rem;
     }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 16px);
+      right: 16px;
+      z-index: 100;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-hover-bg);
+      border-color: var(--gold-tint-50);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .theme-icon--sun { display: block; color: var(--gold); }
+    .theme-icon--moon { display: none; color: var(--gold); }
+    :root.light-mode .theme-icon--sun { display: none; }
+    :root.light-mode .theme-icon--moon { display: block; }
 
     /* Desktop styles */
     @media (min-width: 768px) {
@@ -711,6 +856,11 @@
   </style>
 </head>
 <body>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+    <svg class="theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+
   <div class="stars" id="stars"></div>
 
   <div class="container">
@@ -779,8 +929,8 @@
           scope: './',
           display: 'standalone',
           orientation: 'portrait',
-          background_color: '#050c18',
-          theme_color: '#050c18',
+          background_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
+          theme_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
           icons: [
             { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
             { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
@@ -1310,7 +1460,7 @@
             const row = document.querySelector('.calendar-table tbody tr.today');
             if (row) {
               const cell = row.children[colIndex];
-              if (cell) cell.style.color = '#90c090';
+              if (cell) cell.classList.add('next-prayer-cell');
             }
           }
         }
@@ -1430,6 +1580,70 @@
         banner.classList.remove('visible');
         localStorage.setItem('installDismissed', '1');
       });
+    })();
+  </script>
+
+  <script>
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      var root = document.documentElement;
+      var meta = document.querySelector('meta[name="theme-color"]');
+
+      function updateThemeColor() {
+        var isLight = root.classList.contains('light-mode');
+        if (meta) meta.content = isLight ? '#faf6ef' : '#050c18';
+      }
+
+      function updateDownloadLink() {
+        var downloadLink = document.querySelector('.download-btn');
+        if (!downloadLink) return;
+        var id = new URLSearchParams(window.location.search).get('id');
+        var darkUrl = 'latest/ramadan_lockscreen_' + id + '_latest.png';
+        if (!root.classList.contains('light-mode')) {
+          downloadLink.href = darkUrl;
+          return;
+        }
+        var lightUrl = 'latest/ramadan_lockscreen_' + id + '_light_latest.png';
+        fetch(lightUrl, { method: 'HEAD' }).then(function(res) {
+          downloadLink.href = res.ok ? lightUrl : darkUrl;
+        }).catch(function() {
+          downloadLink.href = darkUrl;
+        });
+      }
+
+      // Set initial download link based on current theme
+      updateDownloadLink();
+
+      toggle.addEventListener('click', function() {
+        root.classList.add('theme-transitioning');
+        root.classList.toggle('light-mode');
+        var isLight = root.classList.contains('light-mode');
+        localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
+        updateThemeColor();
+        updateDownloadLink();
+        setTimeout(function() {
+          root.classList.remove('theme-transitioning');
+        }, 400);
+        if (window.goatcounter) {
+          window.goatcounter.count({
+            path: '/theme/' + (isLight ? 'light' : 'dark'),
+            title: 'Theme toggle',
+            event: true,
+          });
+        }
+      });
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (localStorage.getItem('prayerly-theme')) return;
+        if (e.matches) {
+          root.classList.remove('light-mode');
+        } else {
+          root.classList.add('light-mode');
+        }
+        updateThemeColor();
+      });
+
+      updateThemeColor();
     })();
   </script>
 
