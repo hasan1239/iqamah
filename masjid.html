@@ -1179,15 +1179,47 @@
 
       const countdown = formatCountdown(next.date);
 
+      // Find the next upcoming start time independently
+      const startTimes = [
+        { name: 'Sunrise', keys: ['Sunrise'], isAM: true },
+        { name: 'Dhuhr', keys: ['Zohr', 'Zuhr Start'], isAM: false },
+        { name: 'Asr', keys: ['Asr', 'Asr Start'], isAM: false },
+        { name: 'Esha', keys: ['Esha', 'Isha Start'], isAM: false },
+      ];
+      let nextStart = null;
+      for (const st of startTimes) {
+        let timeStr = null;
+        for (const key of st.keys) {
+          if (todayRow[key]) { timeStr = todayRow[key]; break; }
+        }
+        if (!timeStr) continue;
+        const startDate = parseTimeToDate(timeStr, st.isAM);
+        if (startDate > new Date()) {
+          nextStart = { name: st.name, date: startDate };
+          break;
+        }
+      }
+
       // Highlight matching rows in both Start Times and Jama'at grids
       const grids = document.querySelectorAll('.times-grid');
       grids.forEach((grid, gridIndex) => {
         grid.querySelectorAll('.time-item').forEach(item => {
           const label = item.querySelector('.time-label');
-          if (label && label.textContent.trim() === next.name) {
+          const labelText = label && label.textContent.trim();
+          if (gridIndex === 0 && nextStart && labelText === nextStart.name) {
+            // Start Times grid — highlight and countdown for next start time
             item.classList.add('next-prayer');
-            // Add countdown only to Jama'at section (second grid)
-            if (gridIndex === 1 && countdown) {
+            const startCountdown = formatCountdown(nextStart.date);
+            if (startCountdown) {
+              const span = document.createElement('span');
+              span.className = 'countdown';
+              span.textContent = startCountdown;
+              label.appendChild(span);
+            }
+          } else if (gridIndex === 1 && labelText === next.name) {
+            // Jama'at grid — highlight and countdown for next jama'at
+            item.classList.add('next-prayer');
+            if (countdown) {
               const span = document.createElement('span');
               span.className = 'countdown';
               span.textContent = countdown;
@@ -1351,7 +1383,7 @@
           </div>
 
           <div class="lockscreen-section">
-            <div class="section-title">Prayer Start Times</div>
+            <div class="section-title">Start Times</div>
             <div class="times-grid">
               <div class="time-item">
                 <div class="time-label">Sunrise</div>
