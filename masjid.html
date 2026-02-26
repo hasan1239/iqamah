@@ -695,10 +695,14 @@
       background: var(--gold-tint-08);
       border: 1px solid var(--install-border);
       border-radius: 10px;
-      padding: 14px 16px 48px 16px;
+      padding: 14px 16px;
       margin-top: 14px;
       display: none;
       position: relative;
+    }
+
+    .install-banner.has-button {
+      padding-bottom: 48px;
     }
 
     .install-banner.visible {
@@ -1637,7 +1641,7 @@
         text.innerHTML = '<strong>Add to Home Screen</strong> - Get quick access to prayer times as a standalone app.';
         btn.textContent = 'Install';
         btn.style.display = '';
-        banner.classList.add('visible');
+        banner.classList.add('visible', 'has-button');
 
         btn.addEventListener('click', function() {
           deferredPrompt.prompt();
@@ -1650,8 +1654,13 @@
 
       // iOS: detect Safari on iOS (no beforeinstallprompt)
       var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      var isSafari = isIOS && /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS|OPiOS|EdgiOS/.test(navigator.userAgent);
       if (isIOS && !navigator.standalone) {
-        text.innerHTML = 'Tap the <strong>Share</strong> button, then <strong>Add to Home Screen</strong> for quick access as a standalone app.';
+        if (isSafari) {
+          text.innerHTML = 'Tap the <strong>Share icon</strong> (<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>) in Safari\'s toolbar, then <strong>Add to Home Screen</strong> for quick access as a standalone app.';
+        } else {
+          text.innerHTML = 'Tap the <strong>menu icon</strong> (&#8942;) in your browser\'s toolbar, then <strong>Add to Home Screen</strong> for quick access as a standalone app.';
+        }
         banner.classList.add('visible');
       }
 
