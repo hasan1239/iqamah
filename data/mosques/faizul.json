@@ -1,20 +1,15 @@
 {
   "display_name": "Masjid Faizul Islam",
   "slug": "faizul",
-  "csv": "masjid_faizul_islam_ramadan_2026.csv",
-  "columns": {
-    "date": "Date",
-    "day": "Day",
-    "hijri": "Hijri",
-    "sehri_ends": "Sehri Ends",
-    "sunrise": "Sunrise",
-    "zohr": "Zohr",
-    "asr": "Asr",
-    "esha": "Esha",
-    "fajr_jamaat": "Fajr Jama'at",
-    "zohar_jamaat": "Zohar Jama'at",
-    "asr_jamaat": "Asr Jama'at",
-    "maghrib_iftari": "Maghrib Iftari",
-    "esha_jamaat": "Esha Jama'at"
-  }
+  "csv": "faizul.csv",
+  "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
+  "phone": "07812372352",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan-Shawwal 1447",
+  "jummah_times": "",
+  "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
+  "sadaqatul_fitr": "Minimum \u00a36.00 for adults & children",
+  "radio_frequency": "454 7000",
+  "is_stale": false,
+  "notes": "During the Month of Ramadhan Fajr Jamaat will be 15 mins after Sehri Ends. Zohr 1:00PM & Jumuah @ 1:15PM. As a precaution please close your fast 5 minutes before Sehri ends."
 }

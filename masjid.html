@@ -769,6 +769,47 @@
       color: var(--error);
     }
 
+    /* Stale timetable notice */
+    .stale-notice {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .stale-notice h2 {
+      color: var(--gold);
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .stale-notice p {
+      color: var(--text-tertiary);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .upload-btn {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+    .upload-btn .coming-soon-label {
+      font-size: 0.75rem;
+      display: block;
+      margin-top: 4px;
+      color: var(--coming-soon-text);
+    }
+
+    /* Update times nudge (shown when timetable is nearing end) */
+    .update-nudge {
+      text-align: center;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
     /* Footer */
     footer {
       text-align: center;
@@ -1142,11 +1183,11 @@
 
     function getNextPrayer(todayRow) {
       const prayers = [
-        { name: 'Fajr', keys: ["Fajr Jama'at", "Fajr Jamaat"], isAM: true },
-        { name: 'Dhuhr', keys: ["Zohar Jama'at", "Zohar Jamaat"], isAM: false, defaultTime: '1:00' },
-        { name: 'Asr', keys: ["Asr Jama'at", "Asr Jamaat"], isAM: false },
-        { name: 'Maghrib', keys: ["Maghrib Iftari", "Iftaar Maghrib"], isAM: false },
-        { name: 'Esha', keys: ["Esha Jama'at", "Isha Jama'at", "Esha Jamaat", "Isha Jamaat"], isAM: false },
+        { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
+        { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
+        { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
+        { name: 'Maghrib', keys: ["Maghrib Iftari"], isAM: false },
+        { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
       ];
 
       const now = new Date();
@@ -1182,9 +1223,9 @@
       // Find the next upcoming start time independently
       const startTimes = [
         { name: 'Sunrise', keys: ['Sunrise'], isAM: true },
-        { name: 'Dhuhr', keys: ['Zohr', 'Zuhr Start'], isAM: false },
-        { name: 'Asr', keys: ['Asr', 'Asr Start'], isAM: false },
-        { name: 'Esha', keys: ['Esha', 'Isha Start'], isAM: false },
+        { name: 'Dhuhr', keys: ['Zohr'], isAM: false },
+        { name: 'Asr', keys: ['Asr'], isAM: false },
+        { name: 'Esha', keys: ['Esha'], isAM: false },
       ];
       let nextStart = null;
       for (const st of startTimes) {
@@ -1230,7 +1271,7 @@
       });
 
       // Sehri countdown — today's sehri (only if not yet passed)
-      const sehriTime = todayRow['Sehri Ends'] || todayRow['End of Suhoor'];
+      const sehriTime = todayRow['Sehri Ends'];
       if (sehriTime) {
         const sehriDate = parseTimeToDate(sehriTime, true);
         const sehriCountdown = formatCountdown(sehriDate);
@@ -1247,13 +1288,13 @@
       }
 
       // Tomorrow's sehri countdown — only after Esha jama'at has passed
-      const eshaJamaatTime = todayRow["Esha Jama'at"] || todayRow["Isha Jama'at"] || todayRow["Esha Jamaat"] || todayRow["Isha Jamaat"];
+      const eshaJamaatTime = todayRow["Esha Jama'at"];
       if (eshaJamaatTime) {
         const eshaDate = parseTimeToDate(eshaJamaatTime, false);
         if (new Date() > eshaDate) {
           const tomorrowRow = getTomorrowRow();
           if (tomorrowRow) {
-            const tomorrowSehriTime = tomorrowRow['Sehri Ends'] || tomorrowRow['End of Suhoor'];
+            const tomorrowSehriTime = tomorrowRow['Sehri Ends'];
             if (tomorrowSehriTime) {
               const tomorrow = new Date();
               tomorrow.setDate(tomorrow.getDate() + 1);
@@ -1279,7 +1320,7 @@
       }
 
       // Iftari countdown — only visible on banner before maghrib time
-      const maghribTime = todayRow['Maghrib Iftari'] || todayRow['Iftaar Maghrib'];
+      const maghribTime = todayRow['Maghrib Iftari'];
       if (maghribTime) {
         const maghribDate = parseTimeToDate(maghribTime, false);
         const iftariCountdown = formatCountdown(maghribDate);
@@ -1304,23 +1345,50 @@
       const todayRow = getTodayRow();
 
       if (!todayRow) {
-        document.getElementById('content').innerHTML = `
-          <div class="error">
-            ❌ No prayer times available for today.<br>
-            <small>Ramadan 2026: 18 Feb – 19 Mar</small>
-          </div>
-        `;
+        // Check if timetable is stale (last date in the past)
+        const lastRow = csvData[csvData.length - 1];
+        const lastDate = lastRow ? parseDate(lastRow['Date']) : null;
+        const isStale = lastDate && lastDate < new Date();
+        const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+
+        if (isStale) {
+          document.getElementById('content').innerHTML = `
+            <header>
+              <h1>${config.display_name}</h1>
+            </header>
+            <div class="view-toggle">
+              <div class="toggle-container">
+                <div class="toggle-slider" id="toggleSlider"></div>
+                <button class="toggle-btn active" onclick="switchView('today')">Today</button>
+                <button class="toggle-btn" onclick="switchView('monthly')">Month</button>
+              </div>
+            </div>
+            <div class="stale-notice">
+              <h2>Times for ${currentMonth} are not yet available</h2>
+              <p>The current timetable has ended. New times will be added soon.</p>
+              <div class="upload-btn">
+                Upload new timetable
+                <span class="coming-soon-label">Coming soon</span>
+              </div>
+            </div>
+          `;
+        } else {
+          document.getElementById('content').innerHTML = `
+            <div class="error">
+              No prayer times available for today.<br>
+              <small>Check back when the timetable period begins.</small>
+            </div>
+          `;
+        }
         return;
       }
 
       const englishDate = formatFullDate(todayRow['Date'], todayRow['Day']);
-      const hijriDate = `${todayRow['Ramadan'] || todayRow['Hijri']} Ramadan 1447`;
+      const hijriDate = `${todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri']} Ramadan 1447`;
 
       const tomorrowRow = getTomorrowRow();
-      const tomorrowSehri = tomorrowRow
-        ? (tomorrowRow['Sehri Ends'] || tomorrowRow['End of Suhoor'])
-        : null;
-      const todaySehri = todayRow['Sehri Ends'] || todayRow['End of Suhoor'];
+      const tomorrowSehri = tomorrowRow ? tomorrowRow['Sehri Ends'] : null;
+      const todaySehri = todayRow['Sehri Ends'];
       const sehriPassed = todaySehri && parseTimeToDate(todaySehri, true) < new Date();
 
       let sehriBannerHtml;
@@ -1371,7 +1439,7 @@
               ${sehriBannerHtml}
               <div class="banner-item">
                 <div class="banner-label">Maghrib/Iftari</div>
-                <div class="banner-time">${todayRow['Maghrib Iftari'] || todayRow['Iftaar Maghrib']}</div>
+                <div class="banner-time">${todayRow['Maghrib Iftari']}</div>
               </div>
             </div>
           </div>
@@ -1391,15 +1459,15 @@
               </div>
               <div class="time-item">
                 <div class="time-label">Dhuhr</div>
-                <div class="time-value">${todayRow['Zohr'] || todayRow['Zuhr Start']}</div>
+                <div class="time-value">${todayRow['Zohr']}</div>
               </div>
               <div class="time-item">
                 <div class="time-label">Asr</div>
-                <div class="time-value">${todayRow['Asr'] || todayRow['Asr Start']}</div>
+                <div class="time-value">${todayRow['Asr']}</div>
               </div>
-              ${(todayRow['Esha'] || todayRow['Isha Start']) ? `<div class="time-item">
+              ${todayRow['Esha'] ? `<div class="time-item">
                 <div class="time-label">Esha</div>
-                <div class="time-value">${todayRow['Esha'] || todayRow['Isha Start']}</div>
+                <div class="time-value">${todayRow['Esha']}</div>
               </div>` : ''}
             </div>
 
@@ -1407,23 +1475,38 @@
             <div class="times-grid">
               <div class="time-item">
                 <div class="time-label">Fajr</div>
-                <div class="time-value">${todayRow["Fajr Jama'at"] || todayRow["Fajr Jamaat"]}</div>
+                <div class="time-value">${todayRow["Fajr Jama'at"]}</div>
               </div>
               <div class="time-item">
                 <div class="time-label">Dhuhr</div>
-                <div class="time-value">${todayRow["Zohar Jama'at"] || todayRow["Zohar Jamaat"] || '1:00'}</div>
+                <div class="time-value">${todayRow["Zohar Jama'at"] || '1:00'}</div>
               </div>
               <div class="time-item">
                 <div class="time-label">Asr</div>
-                <div class="time-value">${todayRow["Asr Jama'at"] || todayRow["Asr Jamaat"]}</div>
+                <div class="time-value">${todayRow["Asr Jama'at"]}</div>
               </div>
               <div class="time-item">
                 <div class="time-label">Esha</div>
-                <div class="time-value">${todayRow["Esha Jama'at"] || todayRow["Isha Jama'at"] || todayRow["Esha Jamaat"] || todayRow["Isha Jamaat"]}</div>
+                <div class="time-value">${todayRow["Esha Jama'at"]}</div>
               </div>
             </div>
           </div>
         </div>
+
+        ${(() => {
+          // Show update nudge if 5 or fewer days remaining in timetable
+          const todayIdx = csvData.findIndex(r => parseDate(r['Date']).toDateString() === new Date().toDateString());
+          const remaining = todayIdx >= 0 ? csvData.length - 1 - todayIdx : -1;
+          if (remaining >= 0 && remaining <= 5) {
+            return `<div class="update-nudge">
+              <div class="upload-btn">
+                Update times
+                <span class="coming-soon-label">Coming soon</span>
+              </div>
+            </div>`;
+          }
+          return '';
+        })()}
 
         <div class="btn-row">
           <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download</a>
@@ -1463,7 +1546,7 @@
 
       // Schedule a re-render after Esha so the flip card swaps to tomorrow's sehri
       if (eshaRerenderId) clearTimeout(eshaRerenderId);
-      const eshaTime = todayRow["Esha Jama'at"] || todayRow["Isha Jama'at"] || todayRow["Esha Jamaat"] || todayRow["Isha Jamaat"];
+      const eshaTime = todayRow["Esha Jama'at"];
       if (eshaTime) {
         const eshaDate = parseTimeToDate(eshaTime, false);
         const msUntilEsha = eshaDate - new Date();
@@ -1477,7 +1560,7 @@
 
     function renderMonthlyView() {
       const hasZawal = csvData.length > 0 && csvData[0]['Zawal'] != null;
-      const hasEshaStart = csvData.some(row => row['Esha'] || row['Isha Start']);
+      const hasEshaStart = csvData.some(row => row['Esha']);
       const startColspan = (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4);
 
       const zawalHeader = hasZawal ? '<th>Zawal</th>' : '';
@@ -1535,18 +1618,18 @@
                   <tr ${isToday ? 'class="today"' : ''}>
                     <td class="date-col">${row['Date']}</td>
                     <td>${row['Day']}</td>
-                    <td>${row['Ramadan'] || row['Hijri']}</td>
-                    <td class="section-divider">${row['Sehri Ends'] || row['End of Suhoor']}</td>
+                    <td>${row['Islamic Day'] || row['Ramadan'] || row['Hijri']}</td>
+                    <td class="section-divider">${row['Sehri Ends']}</td>
                     <td>${row['Sunrise']}</td>
                     ${zawalCell}
-                    <td>${row['Zohr'] || row['Zuhr Start']}</td>
-                    <td>${row['Asr'] || row['Asr Start']}</td>
-                    ${hasEshaStart ? `<td>${row['Esha'] || row['Isha Start']}</td>` : ''}
-                    <td class="section-divider">${row["Fajr Jama'at"] || row["Fajr Jamaat"]}</td>
-                    <td>${row["Zohar Jama'at"] || row["Zohar Jamaat"] || '\u2014'}</td>
-                    <td>${row["Asr Jama'at"] || row["Asr Jamaat"]}</td>
-                    <td>${row['Maghrib Iftari'] || row['Iftaar Maghrib']}</td>
-                    <td>${row["Esha Jama'at"] || row["Isha Jama'at"] || row["Esha Jamaat"] || row["Isha Jamaat"]}</td>
+                    <td>${row['Zohr']}</td>
+                    <td>${row['Asr']}</td>
+                    ${hasEshaStart ? `<td>${row['Esha']}</td>` : ''}
+                    <td class="section-divider">${row["Fajr Jama'at"]}</td>
+                    <td>${row["Zohar Jama'at"] || '\u2014'}</td>
+                    <td>${row["Asr Jama'at"]}</td>
+                    <td>${row['Maghrib Iftari']}</td>
+                    <td>${row["Esha Jama'at"]}</td>
                   </tr>
                 `;
               }).join('')}

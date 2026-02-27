@@ -1,4 +1,4 @@
-const CACHE_NAME = 'salahdaily-v1';
+const CACHE_NAME = 'prayerly-v1';
 
 const PRECACHE_URLS = [
   './',

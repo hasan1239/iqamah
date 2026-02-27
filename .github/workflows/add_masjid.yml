@@ -1,13 +1,13 @@
-name: Add Mosque from eSalaat
+name: Add Masjid from Image
 
 on:
   workflow_dispatch:
     inputs:
-      esalaat_code:
-        description: 'eSalaat timetable code (e.g. 1003 from esalaat.com/timetables/1003.jpg)'
+      image_url:
+        description: 'URL of the timetable image (JPG/PNG)'
         required: true
-      mosque_name:
-        description: 'Mosque name override (leave blank to auto-detect from image)'
+      name:
+        description: 'Masjid name override (leave blank to auto-detect from image)'
         required: false
 
 permissions:
@@ -30,20 +30,24 @@ jobs:
         run: |
           pip install anthropic
 
+      - name: Download timetable image
+        run: |
+          curl -L -o /tmp/timetable.jpg "${{ github.event.inputs.image_url }}"
+
       - name: Extract timetable
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          if [ -n "${{ github.event.inputs.mosque_name }}" ]; then
-            python extract_timetable.py esalaat --code "${{ github.event.inputs.esalaat_code }}" --name "${{ github.event.inputs.mosque_name }}"
+          if [ -n "${{ github.event.inputs.name }}" ]; then
+            python extract_timetable.py add --image /tmp/timetable.jpg --name "${{ github.event.inputs.name }}"
           else
-            python extract_timetable.py esalaat --code "${{ github.event.inputs.esalaat_code }}"
+            python extract_timetable.py add --image /tmp/timetable.jpg
           fi
 
-      - name: Commit new mosque data
+      - name: Commit new masjid data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/
-          git commit -m "🕌 Add mosque: eSalaat code ${{ github.event.inputs.esalaat_code }}" || echo "No changes to commit"
+          git commit -m "🕌 Add masjid from image" || echo "No changes to commit"
           git push

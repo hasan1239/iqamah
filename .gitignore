@@ -1,6 +1,8 @@
 __pycache__/
 *.pyc
 /tmp/
+.env
+data/*_raw.json
 
 # Claude Code files
 CLAUDE.md

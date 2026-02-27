@@ -23,55 +23,11 @@ if sys.stderr.encoding != 'utf-8':
 
 # ── Configuration ──────────────────────────────────────────────────────────
 
-# Hardcoded mosques (original two with custom column mappings)
-BUILTIN_MOSQUES = {
-    "faizul": {
-        "csv": "masjid_faizul_islam_ramadan_2026.csv",
-        "display_name": "Masjid Faizul Islam",
-        "slug": "faizul",
-        "columns": {
-            "date": "Date",
-            "day": "Day",
-            "hijri": "Hijri",
-            "sehri_ends": "Sehri Ends",
-            "sunrise": "Sunrise",
-            "zohr": "Zohr",
-            "asr": "Asr",
-            "esha": "Esha",
-            "fajr_jamaat": "Fajr Jama'at",
-            "zohar_jamaat": "Zohar Jama'at",
-            "asr_jamaat": "Asr Jama'at",
-            "maghrib_iftari": "Maghrib Iftari",
-            "esha_jamaat": "Esha Jama'at",
-        },
-    },
-    "quba": {
-        "csv": "masjid_quba_ramadan_2026.csv",
-        "display_name": "Masjid Quba Trust",
-        "slug": "quba",
-        "columns": {
-            "date": "Date",
-            "day": "Day",
-            "hijri": "Ramadan",
-            "sehri_ends": "End of Suhoor",
-            "sunrise": "Sunrise",
-            "zohr": "Zuhr Start",
-            "asr": "Asr Start",
-            "esha": "Isha Start",
-            "fajr_jamaat": "Fajr Jama'at",
-            "zohar_jamaat": None,  # Quba uses fixed 1:00pm
-            "asr_jamaat": "Asr Jama'at",
-            "maghrib_iftari": "Iftaar Maghrib",
-            "esha_jamaat": "Isha Jama'at",
-        },
-    },
-}
-
-# Standard column mapping for mosques extracted from eSalaat via extract_timetable.py
+# Standard column mapping — all mosques now use these standardised CSV headers
 STANDARD_COLUMNS = {
     "date": "Date",
     "day": "Day",
-    "hijri": "Ramadan",
+    "hijri": "Islamic Day",
     "sehri_ends": "Sehri Ends",
     "sunrise": "Sunrise",
     "zohr": "Zohr",
@@ -89,8 +45,8 @@ HIJRI_YEAR = 1447
 
 
 def load_mosques(data_dir: str) -> dict:
-    """Load all mosque configs: builtins + any JSON configs in data/mosques/."""
-    mosques = dict(BUILTIN_MOSQUES)
+    """Load all mosque configs from data/mosques/*.json."""
+    mosques = {}
 
     config_dir = os.path.join(data_dir, "mosques")
     if os.path.isdir(config_dir):
@@ -105,7 +61,7 @@ def load_mosques(data_dir: str) -> dict:
                 "csv": config["csv"],
                 "display_name": config["display_name"],
                 "slug": slug,
-                "columns": config.get("columns", STANDARD_COLUMNS),
+                "columns": STANDARD_COLUMNS,
             }
 
     return mosques

@@ -1,20 +1,6 @@
 {
   "display_name": "Masjid Quba Trust",
   "slug": "quba",
-  "csv": "masjid_quba_ramadan_2026.csv",
-  "columns": {
-    "date": "Date",
-    "day": "Day",
-    "hijri": "Ramadan",
-    "sehri_ends": "End of Suhoor",
-    "sunrise": "Sunrise",
-    "zohr": "Zuhr Start",
-    "asr": "Asr Start",
-    "esha": "Isha Start",
-    "fajr_jamaat": "Fajr Jama'at",
-    "zohar_jamaat": "Zohar Jama'at",
-    "asr_jamaat": "Asr Jama'at",
-    "maghrib_iftari": "Iftaar Maghrib",
-    "esha_jamaat": "Isha Jama'at"
-  }
+  "csv": "quba.csv",
+  "notes": "Zuhr Jama'at is a fixed daily time from the notes. Quba has an extra pre-Ramadan row (17 Feb). Maghrib Jama'at is 10 minutes after Iftaar."
 }
