@@ -99,21 +99,6 @@ jobs:
         run: |
           python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }} --template ${{ steps.params.outputs.template }}
 
-      - name: Copy to 'latest' folder for stable URLs
-        if: steps.check.outputs.skip == 'false'
-        run: |
-          mkdir -p latest
-          for f in output/ramadan_lockscreen_*.png; do
-            base=$(basename "$f" .png)
-            # Remove prefix and date suffix, keep slug + optional _light
-            inner=${base#ramadan_lockscreen_}
-            # Last segment is the date (e.g., 18feb) — remove it
-            latest_name="ramadan_lockscreen_${inner%_*}_latest.png"
-            cp "$f" "latest/$latest_name"
-          done
-          echo "📁 Latest folder:"
-          ls -la latest/
-
       - name: Commit and push
         if: steps.check.outputs.skip == 'false'
         run: |
