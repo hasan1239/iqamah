@@ -1124,9 +1124,18 @@
       motesContainer.appendChild(mote);
     }
 
-    // Parse URL parameter
-    const params = new URLSearchParams(window.location.search);
-    const masjidId = params.get('id');
+    // Parse masjid ID from clean URL path (e.g. /aisha) or query param (e.g. ?id=aisha)
+    window.getMasjidId = getMasjidId;
+    function getMasjidId() {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id');
+      if (id) return id;
+      // Try clean URL path: /aisha -> "aisha"
+      var path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+      if (path && path !== 'masjid.html' && !path.includes('.') && !path.includes('/')) return path;
+      return null;
+    }
+    const masjidId = getMasjidId();
 
     if (!masjidId) {
       document.getElementById('content').innerHTML = '<div class="error">❌ No masjid specified. Please select a masjid from the home page.</div>';
@@ -1149,7 +1158,7 @@
         const manifest = {
           name: `Prayerly - ${config.display_name}`,
           short_name: 'Prayerly',
-          start_url: `masjid.html?id=${masjidId}`,
+          start_url: `/${masjidId}`,
           scope: './',
           display: 'standalone',
           orientation: 'portrait',
@@ -1959,7 +1968,7 @@
       function updateDownloadLink() {
         var downloadLink = document.querySelector('.download-btn');
         if (!downloadLink) return;
-        var id = new URLSearchParams(window.location.search).get('id');
+        var id = getMasjidId();
         var darkUrl = 'latest/ramadan_lockscreen_' + id + '_latest.png';
         if (!root.classList.contains('light-mode')) {
           downloadLink.href = darkUrl;
