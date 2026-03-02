@@ -571,15 +571,15 @@
 
     <div class="masjid-grid" id="masjidGrid">
       <!-- Fallback cards (will be replaced by JavaScript) -->
-      <a href="masjid.html?id=faizul" class="masjid-card">
+      <a href="/faizul" class="masjid-card">
         <div class="masjid-name">Masjid Faizul Islam</div>
       </a>
 
-      <a href="masjid.html?id=quba" class="masjid-card">
+      <a href="/quba" class="masjid-card">
         <div class="masjid-name">Masjid Quba Trust</div>
       </a>
 
-      <a href="masjid.html?id=aisha" class="masjid-card">
+      <a href="/aisha" class="masjid-card">
         <div class="masjid-name">Masjid Aisha</div>
       </a>
     </div>
@@ -673,7 +673,7 @@
           var label = d < 0.1 ? '< 0.1 mi' : d.toFixed(1) + ' mi';
           distBadge = '<span class="distance-badge">' + label + '</span>';
         }
-        return '<a href="masjid.html?id=' + config.slug + '" class="masjid-card' + (isPinned ? ' pinned' : '') + '">'
+        return '<a href="/' + config.slug + '" class="masjid-card' + (isPinned ? ' pinned' : '') + '">'
           + '<button class="pin-btn" data-slug="' + config.slug + '" aria-label="' + (isPinned ? 'Unpin' : 'Pin') + ' ' + config.display_name + '" title="' + (isPinned ? 'Unpin masjid' : 'Pin as my masjid') + '">'
           + '<svg viewBox="0 0 24 24" fill="' + (isPinned ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
           + '<path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>'
