@@ -647,15 +647,20 @@ def save_mosque_config(mosque_name: str, slug: str, csv_filename: str, data: dic
 
 
 def _regenerate_index(config_dir: str):
-    """Regenerate data/mosques/index.json from the config files on disk."""
-    slugs = sorted(
-        p.stem for p in Path(config_dir).glob("*.json")
-        if p.name != "index.json"
-    )
+    """Regenerate data/mosques/index.json from the config files on disk.
+
+    Embeds full config objects so the landing page needs only one fetch.
+    """
+    configs = []
+    for p in sorted(Path(config_dir).glob("*.json"), key=lambda p: p.stem):
+        if p.name == "index.json":
+            continue
+        with open(p, encoding="utf-8") as f:
+            configs.append(json.load(f))
     index_path = os.path.join(config_dir, "index.json")
     with open(index_path, "w", encoding="utf-8") as f:
-        json.dump(slugs, f)
-    print(f"  \u2705 Index updated: {index_path} ({len(slugs)} mosques)")
+        json.dump(configs, f)
+    print(f"  \u2705 Index updated: {index_path} ({len(configs)} mosques)")
 
 
 def slugify(name: str) -> str:
@@ -876,6 +881,9 @@ def parse_args():
     esalaat_parser.add_argument("--code", required=True, help="eSalaat timetable code (e.g. 1003)")
     esalaat_parser.add_argument("--name", help="Override masjid name (optional)")
 
+    # Reindex mode
+    subparsers.add_parser("reindex", help="Regenerate data/mosques/index.json")
+
     return parser.parse_args()
 
 
@@ -1079,13 +1087,17 @@ def main_esalaat(args, api_key, data_dir, config_dir):
 def main():
     args = parse_args()
 
+    _, data_dir, config_dir = _get_dirs()
+
+    if args.mode == "reindex":
+        _regenerate_index(str(config_dir))
+        return
+
     _load_env()
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
         print("\u274c ANTHROPIC_API_KEY not set. Add it to .env or set the environment variable.")
         sys.exit(1)
-
-    _, data_dir, config_dir = _get_dirs()
 
     if args.mode == "add":
         main_add(args, api_key, str(data_dir), str(config_dir))

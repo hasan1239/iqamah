@@ -42,10 +42,10 @@ jobs:
 
       - name: Regenerate mosque index
         run: |
-          # List all JSON files in data/mosques/ except index.json, extract slugs, and create JSON array
+          # Bundle all mosque configs into index.json so the landing page needs one fetch
           cd data/mosques
           if ls *.json 1> /dev/null 2>&1; then
-            ls *.json | grep -v "index.json" | sed 's/\.json$//' | sort | jq -R -s -c 'split("\n") | map(select(length > 0))' > index.json
+            jq -s '.' $(ls *.json | grep -v "index.json" | sort) > index.json
             echo "✅ Regenerated data/mosques/index.json"
           else
             echo "⚠️ No mosque configs found, skipping index regeneration"
