@@ -99,6 +99,35 @@ jobs:
         run: |
           python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }} --template ${{ steps.params.outputs.template }}
 
+      - name: Clean up old lockscreens
+        if: steps.check.outputs.skip == 'false'
+        run: |
+          # Compute the 3 dates to keep (today, -1d, -2d) in ddmmm format
+          KEEP_DATES=""
+          for i in 0 1 2; do
+            KEEP_DATES="$KEEP_DATES $(date -d "${{ steps.params.outputs.date }} - $i days" +%d%b | tr '[:upper:]' '[:lower:]')"
+          done
+          echo "Keeping dates: $KEEP_DATES"
+
+          # Remove output files not matching any kept date
+          removed=0
+          for f in output/ramadan_lockscreen_*.png; do
+            [ -e "$f" ] || continue
+            keep=false
+            for d in $KEEP_DATES; do
+              if [[ "$f" == *"_${d}.png" ]]; then
+                keep=true
+                break
+              fi
+            done
+            if [ "$keep" = false ]; then
+              echo "Removing: $f"
+              rm "$f"
+              removed=$((removed + 1))
+            fi
+          done
+          echo "🧹 Removed $removed old lockscreen(s)"
+
       - name: Commit and push
         if: steps.check.outputs.skip == 'false'
         run: |

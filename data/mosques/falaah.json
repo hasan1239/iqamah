@@ -1,6 +1,14 @@
 {
   "display_name": "Masjid Al Falaah",
   "slug": "falaah",
+  "address": "32 Trinity Rd, Handsworth, Birmingham B6 6AL",
+  "phone": "0121 630 1325",
   "csv": "falaah.csv",
-  "notes": "Fajr Jamat column shows times, not SEHRI+15. Zuhr Jamaat: 12:40pm Mon-Thu/Sat-Sun, 12:30pm Fri (Jummah). No Esha start time available. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight."
+  "notes": "Zuhr Jamaat 12:40pm. Jumu'ah at 12:30pm & 1:40pm. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight. Fidya/Kaffarah \u00a31.50 per fast. Pay Fitrana by 25th Ramadan. 100% of all Zakat funds will be distributed to the needy. Bank: Lloyds Bank, S/C: 30-93-09, A/C: 01195888. Taraweeh recitation of Surah/Ayah listed per night. Pay Your Zakat.",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "12:30pm & 1:40pm",
+  "eid_salah": "7:30am & 9:00am",
+  "sadaqatul_fitr": "\u00a36 per person (min)",
+  "is_stale": false
 }

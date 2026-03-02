@@ -855,6 +855,91 @@
     :root.light-mode .theme-icon--sun { display: none; }
     :root.light-mode .theme-icon--moon { display: block; }
 
+    /* Collapsible masjid info section */
+    .info-section {
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .info-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 22px;
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .info-header .chevron {
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid var(--gold);
+      border-bottom: 2px solid var(--gold);
+      transform: rotate(45deg);
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .info-header.expanded .chevron {
+      transform: rotate(-135deg);
+    }
+
+    .info-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+
+    .info-body-inner {
+      padding: 0 22px 16px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--card-border);
+      gap: 12px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .info-row-label {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .info-row-value {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .info-row a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .info-row a:hover {
+      text-decoration: underline;
+    }
+
     /* Desktop styles */
     @media (min-width: 768px) {
       body {
@@ -955,6 +1040,24 @@
 
       .calendar-table tbody td {
         padding: 12px 10px;
+      }
+
+      .info-header {
+        font-size: 1.05rem;
+        padding: 18px 28px;
+      }
+
+      .info-body-inner {
+        padding: 0 28px 18px;
+      }
+
+      .info-row-label,
+      .info-row-value {
+        font-size: 0.95rem;
+      }
+
+      .mobile-br {
+        display: none;
       }
     }
   </style>
@@ -1508,6 +1611,45 @@
           return '';
         })()}
 
+        ${(() => {
+          const hasInfo = config.address || config.phone || config.eid_salah || config.sadaqatul_fitr;
+          if (!hasInfo) return '';
+          let rows = '';
+          if (config.address) {
+            const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(config.address);
+            const addrHtml = config.address.split(', ').join(',<br class="mobile-br"> ');
+            rows += `<div class="info-row"><span class="info-row-label">Address</span><span class="info-row-value"><a href="${mapUrl}" target="_blank" rel="noopener">${addrHtml}</a></span></div>`;
+          }
+          if (config.phone) {
+            const phoneParts = config.phone.split(/\s*[|\/]\s*/);
+            const phoneHtml = phoneParts.map(part => {
+              const numberMatch = part.match(/[\d\s]{10,}/);
+              if (numberMatch) {
+                const digits = numberMatch[0].replace(/\s+/g, '');
+                return `<a href="tel:${digits}">${part.trim()}</a>`;
+              }
+              return part.trim();
+            }).join('<br class="mobile-br"> ');
+            rows += `<div class="info-row"><span class="info-row-label">Contact</span><span class="info-row-value">${phoneHtml}</span></div>`;
+          }
+          if (config.eid_salah) {
+            const eidHtml = config.eid_salah.split(', ').join(',<br class="mobile-br"> ');
+            rows += `<div class="info-row"><span class="info-row-label">Eid Salah</span><span class="info-row-value">${eidHtml}</span></div>`;
+          }
+          if (config.sadaqatul_fitr) {
+            rows += `<div class="info-row"><span class="info-row-label">Fitrana</span><span class="info-row-value">${config.sadaqatul_fitr}</span></div>`;
+          }
+          return `<div class="info-section">
+            <div class="info-header" onclick="toggleInfo()">
+              <span>Masjid Info</span>
+              <div class="chevron"></div>
+            </div>
+            <div class="info-body" id="infoBody">
+              <div class="info-body-inner">${rows}</div>
+            </div>
+          </div>`;
+        })()}
+
         <div class="btn-row">
           <a href="latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" download onclick="if(window.goatcounter){window.goatcounter.count({path: '/download/${masjidId}', title: 'Download - ${config.display_name}', event: true});}">Download</a>
           <button class="share-btn" onclick="shareTimes()">Share</button>
@@ -1690,6 +1832,18 @@
       document.getElementById('sehriFlip').classList.toggle('flipped');
     }
     window.flipSehriCard = flipSehriCard;
+
+    function toggleInfo() {
+      const body = document.getElementById('infoBody');
+      const header = body.previousElementSibling;
+      header.classList.toggle('expanded');
+      if (body.style.maxHeight) {
+        body.style.maxHeight = null;
+      } else {
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    }
+    window.toggleInfo = toggleInfo;
 
     async function shareTimes() {
       const shareUrl = window.location.href;
