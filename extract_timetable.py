@@ -20,6 +20,7 @@ import os
 import re
 import sys
 import tempfile
+import urllib.parse
 import urllib.request
 from pathlib import Path
 
@@ -588,6 +589,29 @@ def save_csv(data: dict, output_path: str, notes: str = ""):
     print(f"  ✅ CSV saved: {output_path}")
 
 
+def geocode_address(address: str) -> tuple:
+    """Geocode an address to (lat, lon) using OpenStreetMap Nominatim.
+
+    Returns (None, None) on failure so it never blocks mosque creation.
+    """
+    try:
+        query = urllib.parse.quote(address)
+        url = f"https://nominatim.openstreetmap.org/search?q={query}&format=json&limit=1"
+        req = urllib.request.Request(url, headers={"User-Agent": "Prayerly/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            results = json.loads(resp.read().decode())
+        if results:
+            lat = float(results[0]["lat"])
+            lon = float(results[0]["lon"])
+            print(f"  📍 Geocoded: {lat}, {lon}")
+            return lat, lon
+        print("  ⚠️  Could not geocode address (no results)")
+        return None, None
+    except Exception as e:
+        print(f"  ⚠️  Could not geocode address: {e}")
+        return None, None
+
+
 def save_mosque_config(mosque_name: str, slug: str, csv_filename: str, data: dict, config_dir: str):
     """Save a JSON config file for this mosque so generate.py can pick it up."""
     config = {
@@ -605,6 +629,14 @@ def save_mosque_config(mosque_name: str, slug: str, csv_filename: str, data: dic
         "is_stale": data.get("is_stale", False),
         "notes": data.get("notes", ""),
     }
+
+    # Geocode address to lat/lon
+    if config["address"]:
+        lat, lon = geocode_address(config["address"])
+        if lat is not None:
+            config["lat"] = lat
+            config["lon"] = lon
+
     config_path = os.path.join(config_dir, f"{slug}.json")
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
@@ -802,6 +834,20 @@ def update_mosque_config(slug: str, data: dict, config_dir: str):
 
     # Always update is_stale (False is meaningful)
     config["is_stale"] = data.get("is_stale", False)
+
+    # Geocode if address changed or lat/lon are missing
+    address = config.get("address", "")
+    if address:
+        old_address = ""
+        with open(config_path, encoding="utf-8") as f:
+            old_address = json.load(f).get("address", "")
+        address_changed = address != old_address
+        missing_coords = "lat" not in config or "lon" not in config
+        if address_changed or missing_coords:
+            lat, lon = geocode_address(address)
+            if lat is not None:
+                config["lat"] = lat
+                config["lon"] = lon
 
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)

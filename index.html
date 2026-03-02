@@ -255,7 +255,7 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
-      margin-top: 30px;
+      margin-top: 12px;
     }
 
     .masjid-card {
@@ -315,6 +315,7 @@
     }
     @media (max-width: 767px) {
       .pin-btn { opacity: 0.5; }
+      .location-btn { display: inline-flex; }
     }
     @media (min-width: 768px) {
       .masjid-card:hover .pin-btn { opacity: 0.5; }
@@ -408,6 +409,71 @@
     :root.light-mode .theme-icon--sun { display: none; }
     :root.light-mode .theme-icon--moon { display: block; }
 
+    /* Grid controls / Nearby button */
+    .grid-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    .location-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+
+    .location-btn:hover {
+      background: var(--card-hover-bg);
+      border-color: var(--gold-tint-40);
+      color: var(--gold);
+    }
+
+    .location-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-tint-08);
+    }
+
+    .location-btn.loading .location-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    .location-btn.error {
+      border-color: #c0392b;
+      color: #e74c3c;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .location-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Distance badge on cards */
+    .distance-badge {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
     /* Desktop/Tablet styles */
     @media (min-width: 768px) {
       body {
@@ -490,6 +556,16 @@
       </div>
     </header>
 
+    <div class="grid-controls">
+      <button class="location-btn" id="locationBtn">
+        <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="location-btn-text">Nearby</span>
+      </button>
+    </div>
+
     <div class="masjid-grid" id="masjidGrid">
       <!-- Fallback cards (will be replaced by JavaScript) -->
       <a href="masjid.html?id=faizul" class="masjid-card">
@@ -552,22 +628,53 @@
 
     // Auto-generate masjid cards from JSON configs
     var cachedConfigs = [];
+    var userLocation = null;
+    var distanceMap = {};
+    var locationActive = false;
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      var R = 3958.8; // Earth radius in miles
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLon = (lon2 - lon1) * Math.PI / 180;
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+        + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
+        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
 
     function renderMasjidCards(configs) {
       var pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
       var sorted = configs.slice().sort(function(a, b) {
-        if (a.slug === pinnedSlug) return -1;
-        if (b.slug === pinnedSlug) return 1;
+        // If location active, sort purely by distance
+        if (locationActive) {
+          var distA = distanceMap[a.slug];
+          var distB = distanceMap[b.slug];
+          if (distA == null && distB == null) return 0;
+          if (distA == null) return 1;
+          if (distB == null) return -1;
+          return distA - distB;
+        }
+        // Otherwise, pinned first
+        if (a.slug === pinnedSlug && b.slug !== pinnedSlug) return -1;
+        if (b.slug === pinnedSlug && a.slug !== pinnedSlug) return 1;
         return 0;
       });
 
       var cardsHTML = sorted.map(function(config) {
         var isPinned = config.slug === pinnedSlug;
+        var distBadge = '';
+        if (locationActive && distanceMap[config.slug] != null) {
+          var d = distanceMap[config.slug];
+          var label = d < 0.1 ? '< 0.1 mi' : d.toFixed(1) + ' mi';
+          distBadge = '<span class="distance-badge">' + label + '</span>';
+        }
         return '<a href="masjid.html?id=' + config.slug + '" class="masjid-card' + (isPinned ? ' pinned' : '') + '">'
           + '<button class="pin-btn" data-slug="' + config.slug + '" aria-label="' + (isPinned ? 'Unpin' : 'Pin') + ' ' + config.display_name + '" title="' + (isPinned ? 'Unpin masjid' : 'Pin as my masjid') + '">'
           + '<svg viewBox="0 0 24 24" fill="' + (isPinned ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
           + '<path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>'
           + '</svg></button>'
+          + distBadge
           + '<div>'
           + '<div class="pinned-label">My Masjid</div>'
           + '<div class="masjid-name">' + config.display_name + '</div>'
@@ -634,6 +741,70 @@
 
       renderMasjidCards(cachedConfigs);
     });
+
+    // Location / Nearby button
+    document.getElementById('locationBtn').addEventListener('click', function() {
+      var btn = this;
+      var textEl = btn.querySelector('.location-btn-text');
+
+      // Toggle off if already active
+      if (locationActive) {
+        locationActive = false;
+        userLocation = null;
+        distanceMap = {};
+        btn.classList.remove('active');
+        textEl.textContent = 'Nearby';
+        renderMasjidCards(cachedConfigs);
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        showLocationError(btn, textEl, 'Not supported');
+        return;
+      }
+
+      btn.classList.add('loading');
+      textEl.textContent = 'Locating...';
+
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          btn.classList.remove('loading');
+          userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+
+          // Compute distances
+          distanceMap = {};
+          cachedConfigs.forEach(function(config) {
+            if (config.lat != null && config.lon != null) {
+              distanceMap[config.slug] = haversineDistance(
+                userLocation.lat, userLocation.lon, config.lat, config.lon
+              );
+            }
+          });
+
+          locationActive = true;
+          btn.classList.add('active');
+          textEl.textContent = 'Nearby';
+          renderMasjidCards(cachedConfigs);
+        },
+        function(err) {
+          btn.classList.remove('loading');
+          var msg = err.code === 1 ? 'Location denied'
+            : err.code === 3 ? 'Timed out'
+            : 'Location error';
+          showLocationError(btn, textEl, msg);
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+      );
+    });
+
+    function showLocationError(btn, textEl, msg) {
+      btn.classList.add('error');
+      textEl.textContent = msg;
+      setTimeout(function() {
+        btn.classList.remove('error');
+        textEl.textContent = 'Nearby';
+      }, 3000);
+    }
   </script>
 
   <script>
