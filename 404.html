@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script>
+    // GitHub Pages fallback: redirect clean URLs like /aisha to masjid.html?id=aisha
+    var path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+    if (path && !path.includes('.') && !path.includes('/')) {
+      window.location.replace('/masjid.html?id=' + path);
+    }
+  </script>
+</head>
+<body>
+  <p>Page not found. <a href="/">Go home</a></p>
+</body>
+</html>
