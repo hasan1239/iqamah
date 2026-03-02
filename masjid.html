@@ -1612,7 +1612,7 @@
         })()}
 
         ${(() => {
-          const hasInfo = config.address || config.phone || config.eid_salah || config.sadaqatul_fitr;
+          const hasInfo = config.address || config.phone || config.eid_salah || config.sadaqatul_fitr || config.radio_frequency;
           if (!hasInfo) return '';
           let rows = '';
           if (config.address) {
@@ -1631,6 +1631,9 @@
               return part.trim();
             }).join('<br class="mobile-br"> ');
             rows += `<div class="info-row"><span class="info-row-label">Contact</span><span class="info-row-value">${phoneHtml}</span></div>`;
+          }
+          if (config.radio_frequency) {
+            rows += `<div class="info-row"><span class="info-row-label">Radio</span><span class="info-row-value">${config.radio_frequency}</span></div>`;
           }
           if (config.eid_salah) {
             const eidHtml = config.eid_salah.split(', ').join(',<br class="mobile-br"> ');
