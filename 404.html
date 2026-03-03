@@ -1,16 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico">
+  <title>Page Not Found - Prayerly</title>
   <script>
-    // GitHub Pages fallback: redirect clean URLs like /aisha to masjid.html?id=aisha
-    var path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
-    if (path && !path.includes('.') && !path.includes('/')) {
-      window.location.replace('/masjid.html?id=' + path);
-    }
+    (function() {
+      var stored = localStorage.getItem('prayerly-theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
+      if (shouldBeLight) document.documentElement.classList.add('light-mode');
+    })();
   </script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
+      --text-primary: #e8e8e8;
+      --text-muted: #808080;
+      --gold: #d4af37;
+    }
+    :root.light-mode {
+      --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
+      --text-primary: #1a1a2e;
+      --text-muted: #7a7a8a;
+      --gold: #b8941f;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .container { max-width: 400px; }
+    .code {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .message {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .home-link {
+      display: inline-block;
+      padding: 10px 28px;
+      border: 1px solid var(--gold);
+      border-radius: 20px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+    .home-link:hover {
+      background: rgba(212,175,55,0.1);
+    }
+  </style>
 </head>
 <body>
-  <p>Page not found. <a href="/">Go home</a></p>
+  <div class="container">
+    <div class="code">404</div>
+    <p class="message">This page could not be found.<br>The masjid you're looking for may not exist yet.</p>
+    <a href="/" class="home-link">Go Home</a>
+  </div>
 </body>
 </html>
