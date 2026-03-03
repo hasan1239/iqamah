@@ -277,6 +277,7 @@
     .upload-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
     .upload-text strong { color: var(--gold); }
     .upload-hint { color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; }
+    .upload-tip { color: var(--text-tertiary); font-size: 0.75rem; margin-top: 10px; line-height: 1.4; border-top: 1px solid var(--card-border); padding-top: 10px; }
     .upload-input { display: none; }
 
     /* Image preview */
@@ -697,9 +698,10 @@
           <label>Timetable Image <span class="required">*</span></label>
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">&#128247;</div>
-            <div class="upload-text"><strong>Tap to upload</strong> or drag and drop</div>
+            <div class="upload-text"><strong>Tap to upload or take a photo</strong></div>
             <div class="upload-hint">JPG or PNG, max 10MB, at least 800px on shortest side</div>
-            <input type="file" class="upload-input" id="fileInput" accept="image/jpeg,image/png,image/webp">
+            <div class="upload-tip">Hold your phone directly above the timetable. Make sure all columns and rows are visible, with good lighting and no shadows.</div>
+            <input type="file" class="upload-input" id="fileInput" accept="image/*">
           </div>
           <div class="error-msg" id="uploadError"></div>
 
