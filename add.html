@@ -811,8 +811,8 @@
 
         <div class="btn-row">
           <button class="btn btn-secondary" id="backToUploadBtn">Back</button>
-          <button class="btn btn-secondary" id="reextractBtn">Re-extract</button>
-          <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
+          <button class="btn btn-secondary" id="reextractBtn" disabled title="Temporarily disabled">Re-extract</button>
+          <button class="btn btn-primary" id="submitBtn" disabled title="Temporarily disabled">Submit Masjid</button>
         </div>
         <div class="error-msg" id="submitError"></div>
       </div>
@@ -1073,9 +1073,10 @@
         doExtract();
       });
 
-      reextractBtn.addEventListener('click', function() {
-        goToStep(1);
-      });
+      // reextractBtn temporarily disabled
+      // reextractBtn.addEventListener('click', function() {
+      //   goToStep(1);
+      // });
 
       // Set to true to skip API call and use dummy data for UI testing
       var USE_DUMMY_DATA = true;
@@ -1241,7 +1242,8 @@
 
       // --- Submit ---
 
-      submitBtn.addEventListener('click', function() { doSubmit(); });
+      // submitBtn temporarily disabled
+      // submitBtn.addEventListener('click', function() { doSubmit(); });
       backToUploadBtn.addEventListener('click', function() { goToStep(1); });
 
       async function doSubmit() {
