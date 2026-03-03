@@ -686,10 +686,9 @@
       }).join('');
 
       document.getElementById('masjidGrid').innerHTML = cardsHTML
-        + '<div class="masjid-card coming-soon add-masjid-card"><div>'
-        + '<div class="masjid-name">Add Your Masjid</div>'
-        + '<div class="coming-soon-text">Coming soon</div>'
-        + '</div></div>';
+        + '<a href="/add" class="masjid-card add-masjid-card">'
+        + '<div class="masjid-name">+ Add Your Masjid</div>'
+        + '</a>';
     }
 
     async function loadMasjids() {
