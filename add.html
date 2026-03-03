@@ -362,7 +362,7 @@
       border: 1px solid var(--card-border);
       overflow: auto;
       height: 40vh;
-      touch-action: pan-x pan-y pinch-zoom;
+      touch-action: none;
       scrollbar-width: thin;
       scrollbar-color: var(--gold-tint-50) transparent;
     }
@@ -1277,6 +1277,56 @@
       img.style.width = (currentZoom * 100) + '%';
       document.getElementById('zoomLevel').textContent = currentZoom + 'x';
     }
+
+    /* Mobile pinch-to-zoom and pan on review image */
+    (function() {
+      var container = document.getElementById('reviewImageContainer');
+      if (!container) return;
+      var img = document.getElementById('reviewImg');
+      var startDist = 0;
+      var startZoom = 1;
+      var lastTouch = null;
+
+      function getTouchDist(e) {
+        var t = e.touches;
+        var dx = t[0].clientX - t[1].clientX;
+        var dy = t[0].clientY - t[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      container.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          startDist = getTouchDist(e);
+          startZoom = currentZoom;
+          lastTouch = null;
+        } else if (e.touches.length === 1) {
+          lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          var dist = getTouchDist(e);
+          var scale = dist / startDist;
+          currentZoom = Math.min(4, Math.max(0.5, startZoom * scale));
+          img.style.width = (currentZoom * 100) + '%';
+          document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 10) / 10 + 'x';
+        } else if (e.touches.length === 1 && lastTouch) {
+          var dx = e.touches[0].clientX - lastTouch.x;
+          var dy = e.touches[0].clientY - lastTouch.y;
+          container.scrollLeft -= dx;
+          container.scrollTop -= dy;
+          lastTouch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+          if (currentZoom > 1) e.preventDefault();
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchend', function() {
+        lastTouch = null;
+      });
+    })();
 
     /* On desktop, match image container height to table height */
     function syncImageHeight() {
