@@ -364,6 +364,29 @@
       text-align: center;
     }
 
+    /* Skeleton cards */
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .skeleton-card .skeleton-bone {
+      width: 55%;
+      height: 1.3rem;
+      background: var(--divider);
+      border-radius: 6px;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+
     footer {
       text-align: center;
       margin-top: 20px;
@@ -569,20 +592,15 @@
       </button>
     </div>
 
-    <div class="masjid-grid" id="masjidGrid">
-      <!-- Fallback cards (will be replaced by JavaScript) -->
-      <a href="/faizul" class="masjid-card">
-        <div class="masjid-name">Masjid Faizul Islam</div>
-      </a>
-
-      <a href="/quba" class="masjid-card">
-        <div class="masjid-name">Masjid Quba Trust</div>
-      </a>
-
-      <a href="/aisha" class="masjid-card">
-        <div class="masjid-name">Masjid Aisha</div>
-      </a>
-    </div>
+    <div class="masjid-grid" id="masjidGrid"></div>
+    <script>
+      (function() {
+        var count = parseInt(localStorage.getItem('prayerly-masjid-count')) || 3;
+        var html = '';
+        for (var i = 0; i < count; i++) html += '<div class="skeleton-card"><div class="skeleton-bone"></div></div>';
+        document.getElementById('masjidGrid').innerHTML = html;
+      })();
+    </script>
 
     <div class="info-box">
       <p><span class="icon">💡</span>Tap a masjid to view prayer times, switch between today and month views, and download a matching lockscreen/wallpaper.</p>
@@ -694,6 +712,8 @@
 
     async function loadMasjids() {
       try {
+        // TEMP: simulate slow load to test skeleton
+        await new Promise(r => setTimeout(r, 5000));
         var indexRes = await fetch('data/mosques/index.json');
         if (!indexRes.ok) {
           console.warn('Could not load masjid index, using fallback cards');
@@ -704,9 +724,14 @@
           console.warn('No masjid configs loaded, using fallback cards');
           return;
         }
+        localStorage.setItem('prayerly-masjid-count', cachedConfigs.length);
         renderMasjidCards(cachedConfigs);
       } catch (error) {
         console.error('Error loading masjids:', error);
+        document.getElementById('masjidGrid').innerHTML =
+          '<a href="/faizul" class="masjid-card"><div class="masjid-name">Masjid Faizul Islam</div></a>'
+          + '<a href="/quba" class="masjid-card"><div class="masjid-name">Masjid Quba Trust</div></a>'
+          + '<a href="/aisha" class="masjid-card"><div class="masjid-name">Masjid Aisha</div></a>';
       }
     }
 
