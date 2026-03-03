@@ -605,10 +605,6 @@ async function handleExtract(request, env) {
     return errorResponse('Image too large (max 10MB)');
   }
 
-  if (!mosqueName) {
-    return errorResponse('Masjid name is required');
-  }
-
   // Convert image to base64
   const imageBuffer = await imageFile.arrayBuffer();
   // Chunk the conversion to avoid call stack overflow on large images
@@ -622,8 +618,9 @@ async function handleExtract(request, env) {
   // Determine media type
   const fileName = imageFile.name || '';
   const ext = fileName.split('.').pop().toLowerCase();
-  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
+  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', pdf: 'application/pdf' };
   const mediaType = mediaTypeMap[ext] || 'image/jpeg';
+  const isPdf = mediaType === 'application/pdf';
 
   // Call Claude API
   try {
@@ -640,7 +637,14 @@ async function handleExtract(request, env) {
         messages: [{
           role: 'user',
           content: [
-            {
+            isPdf ? {
+              type: 'document',
+              source: {
+                type: 'base64',
+                media_type: 'application/pdf',
+                data: imageBase64,
+              },
+            } : {
               type: 'image',
               source: {
                 type: 'base64',
@@ -683,8 +687,8 @@ async function handleExtract(request, env) {
     const { rows } = validateAndFixRows(extracted.rows || [], notes);
     extracted.rows = rows;
 
-    // Override mosque name with user-provided name
-    extracted.mosque_name = mosqueName;
+    // Override mosque name with user-provided name if given
+    if (mosqueName) extracted.mosque_name = mosqueName;
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
