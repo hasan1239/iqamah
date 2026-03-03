@@ -2,6 +2,8 @@ __pycache__/
 *.pyc
 /tmp/
 .env
+.dev.vars
+.wrangler/
 data/*_raw.json
 
 # Claude Code files
