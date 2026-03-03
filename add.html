@@ -276,13 +276,17 @@
     .upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
     .upload-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
     .upload-text strong { color: var(--gold); }
-    .upload-or { color: var(--text-muted); font-size: 0.8rem; margin: 6px 0; }
+    .camera-row {
+      text-align: center;
+      margin-top: 10px;
+    }
+    .upload-or { color: var(--text-muted); font-size: 0.8rem; display: block; margin-bottom: 8px; }
     .camera-btn {
       background: transparent; border: 1px solid var(--gold); color: var(--gold);
       padding: 8px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer;
       font-family: inherit; transition: background 0.2s, color 0.2s;
     }
-    .camera-btn:hover { background: var(--gold); color: #000; }
+    .camera-btn:active { background: var(--gold); color: #000; }
     .upload-hint { color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; }
     .upload-tip { color: var(--text-tertiary); font-size: 0.75rem; margin-top: 10px; line-height: 1.4; border-top: 1px solid var(--card-border); padding-top: 10px; }
     .upload-input { display: none; }
@@ -600,6 +604,7 @@
       .logo { width: 60px; height: 60px; }
       h1 { font-size: 2.5rem; letter-spacing: -1px; }
       .card { padding: 30px; }
+      .camera-row { display: none; }
       #step2 > .card {
         width: calc(100vw - 60px);
         max-width: none;
@@ -706,11 +711,13 @@
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">&#128247;</div>
             <div class="upload-text"><strong>Upload from gallery</strong></div>
-            <div class="upload-or">or</div>
-            <button type="button" class="camera-btn" id="cameraBtn">Take a photo</button>
             <div class="upload-hint">JPG or PNG, max 10MB, at least 800px on shortest side</div>
-            <div class="upload-tip">Hold your phone directly above the timetable. Make sure all columns and rows are visible, with good lighting and no shadows.</div>
             <input type="file" class="upload-input" id="fileInput" accept="image/*">
+          </div>
+          <div class="camera-row" id="cameraRow">
+            <span class="upload-or">or</span>
+            <button type="button" class="camera-btn" id="cameraBtn">Take a photo</button>
+            <div class="upload-tip">Hold your phone directly above the timetable. Make sure all columns and rows are visible, with good lighting and no shadows.</div>
             <input type="file" class="upload-input" id="cameraInput" accept="image/*" capture="environment">
           </div>
           <div class="error-msg" id="uploadError"></div>
@@ -1007,6 +1014,7 @@
             fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
             imagePreview.classList.add('visible');
             uploadArea.style.display = 'none';
+            cameraRow.style.display = 'none';
             updateExtractBtn();
           };
           reader.readAsDataURL(file);
@@ -1021,17 +1029,10 @@
 
       var cameraInput = document.getElementById('cameraInput');
       var cameraBtn = document.getElementById('cameraBtn');
+      var cameraRow = document.getElementById('cameraRow');
 
-      uploadArea.addEventListener('click', function(e) {
-        if (e.target.closest('.camera-btn')) return;
-        fileInput.click();
-      });
-      cameraBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        e.stopImmediatePropagation();
-        cameraInput.click();
-      });
+      uploadArea.addEventListener('click', function() { fileInput.click(); });
+      cameraBtn.addEventListener('click', function() { cameraInput.click(); });
       changeBtn.addEventListener('click', function() {
         selectedFile = null;
         imageDataUrl = null;
@@ -1039,6 +1040,7 @@
         cameraInput.value = '';
         imagePreview.classList.remove('visible');
         uploadArea.style.display = '';
+        cameraRow.style.display = '';
         updateExtractBtn();
       });
 
