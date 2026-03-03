@@ -214,7 +214,7 @@
       width: 28px; height: 28px; border-radius: 50%;
       border: 2px solid var(--text-muted); display: flex;
       align-items: center; justify-content: center;
-      font-weight: 600; font-size: 0.8rem; transition: all 0.3s;
+      font-weight: 600; font-size: 0.8rem; line-height: 1; transition: all 0.3s;
     }
     .progress-step.active .step-number { border-color: var(--gold); color: var(--gold); background: var(--gold-tint-08); }
     .progress-step.done .step-number { border-color: var(--success-color); color: white; background: var(--success-color); }
@@ -678,6 +678,7 @@
         <h1>Add Your Masjid</h1>
       </div>
       <p class="subtitle">Upload a timetable image and we'll extract the prayer times automatically</p>
+      <p class="subtitle ai-disclaimer" id="aiDisclaimer" style="display:none; font-size:0.8rem; margin-top:6px;">Times were extracted using AI and may contain errors. Please verify and fix any mistakes.</p>
     </header>
 
     <!-- Progress bar -->
@@ -702,17 +703,12 @@
     <div class="step-panel active" id="step1">
       <div class="card">
         <div class="form-group">
-          <label for="masjidName">Masjid Name <span class="required">*</span></label>
-          <input type="text" id="masjidName" placeholder="e.g. Masjid Al-Noor" maxlength="100" autocomplete="off">
-        </div>
-
-        <div class="form-group">
           <label>Timetable Image <span class="required">*</span></label>
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">&#128247;</div>
-            <div class="upload-text"><strong>Upload from gallery</strong></div>
-            <div class="upload-hint">JPG or PNG, max 10MB, at least 800px on shortest side</div>
-            <input type="file" class="upload-input" id="fileInput" accept="image/*">
+            <div class="upload-text"><strong>Upload timetable</strong></div>
+            <div class="upload-hint">JPG, PNG, or PDF, max 10MB</div>
+            <input type="file" class="upload-input" id="fileInput" accept="image/*,.pdf,application/pdf">
           </div>
           <div class="camera-row" id="cameraRow">
             <span class="upload-or">or</span>
@@ -725,7 +721,7 @@
           <div class="image-preview" id="imagePreview">
             <img id="previewImg" alt="Timetable preview">
             <div class="file-info" id="fileInfo"></div>
-            <span class="change-btn" id="changeBtn">Change image</span>
+            <span class="change-btn" id="changeBtn">Change file</span>
           </div>
         </div>
 
@@ -751,9 +747,7 @@
     <div class="step-panel" id="step2">
       <div class="card">
         <div class="section-label">Extracted Timetable</div>
-        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
-          Review and correct any values. Click any cell to edit.
-        </p>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Tap any cell to edit.</p>
 
         <div class="review-layout">
           <div class="review-image-wrap" id="reviewImageWrap">
@@ -777,6 +771,10 @@
         </div>
 
         <div class="section-label">Masjid Details</div>
+        <div class="form-group">
+          <label for="masjidName">Masjid Name <span class="required">*</span></label>
+          <input type="text" id="masjidName" placeholder="e.g. Masjid Al-Noor" maxlength="100" autocomplete="off">
+        </div>
         <div class="meta-grid">
           <div class="form-group">
             <label for="metaAddress">Address</label>
@@ -811,8 +809,8 @@
 
         <div class="btn-row">
           <button class="btn btn-secondary" id="backToUploadBtn">Back</button>
-          <button class="btn btn-secondary" id="reextractBtn" disabled title="Temporarily disabled">Re-extract</button>
-          <button class="btn btn-primary" id="submitBtn" disabled title="Temporarily disabled">Submit Masjid</button>
+          <button class="btn btn-secondary" id="reextractBtn">Re-extract</button>
+          <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
         </div>
         <div class="error-msg" id="submitError"></div>
       </div>
@@ -961,6 +959,7 @@
           conn.classList.toggle('done', c < num);
         }
 
+        document.getElementById('aiDisclaimer').style.display = num === 2 ? '' : 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
@@ -968,8 +967,8 @@
 
       function validateFile(file) {
         if (!file) return 'Please select an image file.';
-        var validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (validTypes.indexOf(file.type) === -1) return 'Please upload a JPG, PNG, or WebP image.';
+        var validTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+        if (validTypes.indexOf(file.type) === -1) return 'Please upload a JPG, PNG, WebP, or PDF file.';
         if (file.size > 10 * 1024 * 1024) return 'Image is too large. Maximum size is 10MB.';
         return null;
       }
@@ -1000,6 +999,23 @@
         var error = validateFile(file);
         if (error) { showUploadError(error); return; }
 
+        if (file.type === 'application/pdf') {
+          clearUploadError();
+          selectedFile = file;
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            imageDataUrl = e.target.result;
+            previewImg.style.display = 'none';
+            fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
+            imagePreview.classList.add('visible');
+            uploadArea.style.display = 'none';
+            cameraRow.style.display = 'none';
+            updateExtractBtn();
+          };
+          reader.readAsDataURL(file);
+          return;
+        }
+
         checkImageResolution(file, function(resError) {
           if (resError) { showUploadError(resError); return; }
 
@@ -1022,7 +1038,7 @@
       }
 
       function updateExtractBtn() {
-        extractBtn.disabled = !(selectedFile && masjidNameInput.value.trim());
+        extractBtn.disabled = !selectedFile;
       }
 
       // --- Upload events ---
@@ -1038,6 +1054,7 @@
         imageDataUrl = null;
         fileInput.value = '';
         cameraInput.value = '';
+        previewImg.style.display = '';
         imagePreview.classList.remove('visible');
         uploadArea.style.display = '';
         cameraRow.style.display = '';
@@ -1064,8 +1081,6 @@
         if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
       });
 
-      masjidNameInput.addEventListener('input', updateExtractBtn);
-
       // --- Extract ---
 
       extractBtn.addEventListener('click', function() {
@@ -1073,13 +1088,12 @@
         doExtract();
       });
 
-      // reextractBtn temporarily disabled
-      // reextractBtn.addEventListener('click', function() {
-      //   goToStep(1);
-      // });
+      reextractBtn.addEventListener('click', function() {
+        goToStep(1);
+      });
 
       // Set to true to skip API call and use dummy data for UI testing
-      var USE_DUMMY_DATA = true;
+      var USE_DUMMY_DATA = false;
 
       var DUMMY_EXTRACTED = {
         mosque_name: 'Masjid Al-Noor',
@@ -1116,7 +1130,6 @@
         if (USE_DUMMY_DATA) {
           await new Promise(function(r) { setTimeout(r, 500); }); // simulate brief delay
           extractedData = JSON.parse(JSON.stringify(DUMMY_EXTRACTED));
-          extractedData.mosque_name = masjidNameInput.value.trim();
           populateReview();
           goToStep(2);
           extractBtn.disabled = false;
@@ -1127,7 +1140,6 @@
 
         var formData = new FormData();
         formData.append('image', selectedFile);
-        formData.append('name', masjidNameInput.value.trim());
 
         try {
           var resp = await fetch('/api/extract', { method: 'POST', body: formData });
@@ -1169,8 +1181,31 @@
       ];
 
       function populateReview() {
-        // Image
-        reviewImg.src = imageDataUrl;
+        // Remove any previous PDF embed
+        var oldEmbed = document.getElementById('reviewPdfEmbed');
+        if (oldEmbed) oldEmbed.remove();
+
+        if (selectedFile && selectedFile.type === 'application/pdf') {
+          reviewImg.style.display = 'none';
+          var embed = document.createElement('embed');
+          embed.id = 'reviewPdfEmbed';
+          embed.src = imageDataUrl;
+          embed.type = 'application/pdf';
+          embed.style.width = '100%';
+          embed.style.height = '100%';
+          embed.style.minHeight = window.innerWidth >= 768 ? '80vh' : '400px';
+          reviewImg.parentNode.insertBefore(embed, reviewImg);
+          document.querySelector('.zoom-hint').style.display = 'none';
+          document.getElementById('zoomControls').style.display = 'none';
+        } else {
+          reviewImg.style.display = '';
+          reviewImg.src = imageDataUrl;
+          document.querySelector('.zoom-hint').style.display = '';
+          document.getElementById('zoomControls').style.display = '';
+        }
+
+        // Masjid name
+        masjidNameInput.value = extractedData.mosque_name || '';
 
         // Metadata fields
         document.getElementById('metaAddress').value = extractedData.address || '';
@@ -1242,8 +1277,7 @@
 
       // --- Submit ---
 
-      // submitBtn temporarily disabled
-      // submitBtn.addEventListener('click', function() { doSubmit(); });
+      submitBtn.addEventListener('click', function() { doSubmit(); });
       backToUploadBtn.addEventListener('click', function() { goToStep(1); });
 
       async function doSubmit() {
