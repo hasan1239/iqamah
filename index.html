@@ -380,11 +380,14 @@
       justify-content: center;
     }
     .skeleton-card .skeleton-bone {
-      width: 55%;
-      height: 1.3rem;
-      background: var(--divider);
+      width: 70%;
+      height: 1.35rem;
+      background: rgba(255,255,255,0.2);
       border-radius: 6px;
       animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+    :root.light-mode .skeleton-card .skeleton-bone {
+      background: rgba(0,0,0,0.1);
     }
 
     footer {
@@ -595,10 +598,14 @@
     <div class="masjid-grid" id="masjidGrid"></div>
     <script>
       (function() {
-        var count = parseInt(localStorage.getItem('prayerly-masjid-count')) || 3;
-        var html = '';
-        for (var i = 0; i < count; i++) html += '<div class="skeleton-card"><div class="skeleton-bone"></div></div>';
-        document.getElementById('masjidGrid').innerHTML = html;
+        fetch('data/mosques/index.json').then(function(r) { return r.json(); }).then(function(configs) {
+          var html = '';
+          for (var i = 0; i < configs.length; i++) html += '<div class="skeleton-card"><div class="skeleton-bone"></div></div>';
+          document.getElementById('masjidGrid').innerHTML = html;
+        }).catch(function() {
+          document.getElementById('masjidGrid').innerHTML =
+            '<div class="skeleton-card"><div class="skeleton-bone"></div></div>'.repeat(3);
+        });
       })();
     </script>
 
@@ -712,8 +719,6 @@
 
     async function loadMasjids() {
       try {
-        // TEMP: simulate slow load to test skeleton
-        await new Promise(r => setTimeout(r, 5000));
         var indexRes = await fetch('data/mosques/index.json');
         if (!indexRes.ok) {
           console.warn('Could not load masjid index, using fallback cards');
@@ -724,7 +729,6 @@
           console.warn('No masjid configs loaded, using fallback cards');
           return;
         }
-        localStorage.setItem('prayerly-masjid-count', cachedConfigs.length);
         renderMasjidCards(cachedConfigs);
       } catch (error) {
         console.error('Error loading masjids:', error);
