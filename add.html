@@ -276,6 +276,13 @@
     .upload-icon { font-size: 2.5rem; margin-bottom: 8px; }
     .upload-text { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; }
     .upload-text strong { color: var(--gold); }
+    .upload-or { color: var(--text-muted); font-size: 0.8rem; margin: 6px 0; }
+    .camera-btn {
+      background: transparent; border: 1px solid var(--gold); color: var(--gold);
+      padding: 8px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer;
+      font-family: inherit; transition: background 0.2s, color 0.2s;
+    }
+    .camera-btn:hover { background: var(--gold); color: #000; }
     .upload-hint { color: var(--text-muted); font-size: 0.8rem; margin-top: 6px; }
     .upload-tip { color: var(--text-tertiary); font-size: 0.75rem; margin-top: 10px; line-height: 1.4; border-top: 1px solid var(--card-border); padding-top: 10px; }
     .upload-input { display: none; }
@@ -698,10 +705,13 @@
           <label>Timetable Image <span class="required">*</span></label>
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">&#128247;</div>
-            <div class="upload-text"><strong>Tap to upload or take a photo</strong></div>
+            <div class="upload-text"><strong>Upload from gallery</strong></div>
+            <div class="upload-or">or</div>
+            <button type="button" class="camera-btn" id="cameraBtn">Take a photo</button>
             <div class="upload-hint">JPG or PNG, max 10MB, at least 800px on shortest side</div>
             <div class="upload-tip">Hold your phone directly above the timetable. Make sure all columns and rows are visible, with good lighting and no shadows.</div>
             <input type="file" class="upload-input" id="fileInput" accept="image/*">
+            <input type="file" class="upload-input" id="cameraInput" accept="image/*" capture="environment">
           </div>
           <div class="error-msg" id="uploadError"></div>
 
@@ -1009,11 +1019,22 @@
 
       // --- Upload events ---
 
-      uploadArea.addEventListener('click', function() { fileInput.click(); });
+      var cameraInput = document.getElementById('cameraInput');
+      var cameraBtn = document.getElementById('cameraBtn');
+
+      uploadArea.addEventListener('click', function(e) {
+        if (e.target === cameraBtn || cameraBtn.contains(e.target)) return;
+        fileInput.click();
+      });
+      cameraBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        cameraInput.click();
+      });
       changeBtn.addEventListener('click', function() {
         selectedFile = null;
         imageDataUrl = null;
         fileInput.value = '';
+        cameraInput.value = '';
         imagePreview.classList.remove('visible');
         uploadArea.style.display = '';
         updateExtractBtn();
@@ -1021,6 +1042,9 @@
 
       fileInput.addEventListener('change', function() {
         if (fileInput.files.length) setFile(fileInput.files[0]);
+      });
+      cameraInput.addEventListener('change', function() {
+        if (cameraInput.files.length) setFile(cameraInput.files[0]);
       });
 
       uploadArea.addEventListener('dragover', function(e) {
