@@ -1023,11 +1023,13 @@
       var cameraBtn = document.getElementById('cameraBtn');
 
       uploadArea.addEventListener('click', function(e) {
-        if (e.target === cameraBtn || cameraBtn.contains(e.target)) return;
+        if (e.target.closest('.camera-btn')) return;
         fileInput.click();
       });
       cameraBtn.addEventListener('click', function(e) {
+        e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         cameraInput.click();
       });
       changeBtn.addEventListener('click', function() {
