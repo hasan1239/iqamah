@@ -20,170 +20,6 @@ function isRateLimited(ip) {
   return false;
 }
 
-// --- Extraction prompt (ported from extract_timetable.py) ---
-const EXTRACTION_PROMPT = `You are extracting prayer times from a mosque timetable image into a standardised JSON format. Your goal is 100% accuracy — every time value must exactly match what is printed on the timetable.
-
-This prompt works for ANY mosque timetable — any month, any location, any format.
-
-STEP 1: SURVEY THE ENTIRE IMAGE
-Before extracting any data, scan the FULL image including:
-- The main table with rows and columns
-- Column headers (which may be in Arabic, English, or both)
-- Vertical/rotated text running alongside columns (commonly used for Fajr Jama'at rules, Zuhr Jama'at times, and Maghrib Jama'at rules)
-- Footnotes, bottom text, and side notes (these frequently contain fixed jama'at times, Jumu'ah times, Eid salah times, Sadaqatul Fitr amounts, and radio frequencies)
-- The mosque name, address, and contact details (usually at the top or bottom)
-- The month, year, and Islamic month/year (e.g. "Ramadan 1447 AH", "June 2025", "Dhul Hijjah 1446")
-
-STEP 2: IDENTIFY COLUMN MAPPING
-Timetables vary widely in column names. Map each column you see to the correct output field:
-
-  Sehri Ends / End of Suhoor / Suhur End / End of Sehri / Sehri / Fajr Begins / Fajr Start / Subha Sadiq → "sehri_ends"
-  Sunrise / Sun-Rise → "sunrise"
-  Zohr / Zuhr / Dhuhr Start / Dhuhr Begins / Zuhr Start / Zuhr Begins → "zohr"
-  Asr Start / Asr Begins → "asr"
-  Esha / Isha Start / Isha Begins → "esha"
-  Fajr Jama'at / Fajr Jamaat / Fajar Jamaat → "fajr_jamaat"
-  Zohar Jama'at / Zuhr Jama'at / Dhuhr Jama'at / Dhuhr Jamaat / Zuhr Jamaat / Zohr & Juma → "zohar_jamaat"
-  Asr Jama'at / Asr Jamaat → "asr_jamaat"
-  Maghrib / Iftaar / Iftar / Maghrib Azan / Iftaar Maghrib / Maghrib Azan & Iftari → "maghrib_iftari"
-  Esha Jama'at / Isha Jama'at / Isha Jamaat / Taraweeh Jamaat → "esha_jamaat"
-
-IMPORTANT COLUMN DISAMBIGUATION:
-
-Sunset vs Maghrib/Iftar: Some timetables have BOTH a "Sunset" column AND a separate "Maghrib" or "Iftar" column. These are different values — Sunset is the astronomical event, while Maghrib/Iftar is a few minutes later when the prayer begins and the fast is broken. If both columns exist, ALWAYS use the Maghrib/Iftar column for "maghrib_iftari", NOT the Sunset column. If only one of these columns exists, use whichever is available.
-
-Sehri Ends vs Fajr Start: Some timetables have both "End of Suhoor" and "Fajr Start" as separate columns. Others only have one (treating them as the same). Use whichever column represents the earliest pre-dawn time — typically "End of Suhoor/Sehri Ends" if both exist. If only "Fajr Start" exists, use that.
-
-Zawal/Zenith vs Zohr/Zuhr: Some timetables have BOTH a "Zawal" / "Zenith" / "After Zenith" column AND a separate "Zohr" / "Zuhr" / "Dhuhr Start" column. These are different — Zawal is when the sun passes its zenith (and prayer is NOT permitted), while Zohr/Zuhr is when the Dhuhr prayer window begins (a few minutes later). If both columns exist, ALWAYS use the Zohr/Zuhr/Dhuhr column for "zohr", NOT the Zawal/Zenith column. If only one exists, use whichever is available.
-
-NOTE ON PRE-MONTH ROWS:
-Some timetables include rows before the main month begins (e.g. a Ramadan timetable starting from the day before Ramadan). Include ALL rows shown in the timetable — do not skip or renumber them.
-
-STEP 3: HANDLE SPECIAL PATTERNS
-
-DITTO MARKS — CRITICAL:
-Many timetables use ditto marks to mean "same as the row above". These appear as:
-  " (double quote)
-  '' (two single quotes)
-  "" (two double quotes)
-  « (guillemet)
-  ″ (double prime)
-  Empty/blank cells that clearly should have a value
-You MUST resolve ALL of these to the actual repeated value. Walk down each column: if a cell has a ditto mark, copy the value from the nearest non-ditto row above it. NEVER output a ditto mark — every cell must have an explicit time value or be genuinely empty.
-
-VERTICAL/ROTATED TEXT:
-Some columns have a rule written vertically instead of individual values per row. Common examples:
-  - "FIFTEEN MINUTES AFTER SEHRI ENDS" / "Fajr will be 15 minutes after suhur end" / "TEN MINUTES AFTER SEHRI ENDS" / "15 minutes after Fajr start" → for fajr_jamaat, calculate the actual time for each row by adding the stated minutes to the value the rule references. Pay close attention to what the rule says: if it says "after Sehri ends" add to the sehri_ends value; if it says "after Fajr start" or "after Fajr beginning time" add to the Fajr Start column (even if that is a different column from sehri_ends). Output the calculated time, not a formula (e.g. Sehri 5:42 + 15 mins → fajr_jamaat "5:57"). HOWEVER: if the Fajr Jama'at column also contains explicit per-row time values, ALWAYS use the explicit values from the table — they take priority over any rule or note. The rule may be approximate guidance while the table values are the mosque's actual scheduled times.
-  - "Zuhar Jamat 1:00" / "Jumu'ah Jamat 1:00" → set zohar_jamaat to "1:00" for all rows (or apply Jumu'ah-specific time on Fridays if different). ALSO extract any Jumu'ah time mentioned here into the "jummah_times" metadata field — do not just put it in "notes".
-  - "Maghrib Jama'at, 10 minutes after Azan" / "5 minutes after Iftar" / "straight after breaking fast" → there is no maghrib_jamaat field in the output. Note the rule in the "notes" field instead.
-
-HEADER NOTES AND ANNOUNCEMENTS:
-Some timetables show key information in large text ABOVE the table (not in footnotes). For example:
-  - "ZOHR 1:00PM & JUMUAH @ 1:15PM" → extract into jummah_times metadata (e.g. "1:15pm") AND apply: zohar_jamaat = "1:00" on non-Fridays, "1:15" on Fridays.
-  - "Fajr Jamaat will be 15 mins after Sehri Ends" → apply the rule (but explicit table values take priority if present).
-  Treat these header notes the same as footnotes — extract relevant data into the correct metadata fields.
-
-FOOTNOTES AND BOTTOM NOTES:
-Look carefully at text below or beside the table. Common patterns:
-  - "Daily Zuhr Jama'at: 1:00pm" / "Zuhr Jamaat - 12:40pm" → apply this time to zohar_jamaat for all non-Friday rows
-  - "Jumu'ah at 12:30pm & 1:40pm" / "First Jamaat @ 12:45pm Second Jamaat @ 1:30pm" → extract into jummah_times metadata AND use the FIRST jumu'ah time as zohar_jamaat on Fridays
-  - "Eid Salah: 7:30am & 9:00am" → extract into eid_salah metadata
-  - "Sadaqatul Fitr: £X" / "Sadq-E-Fitr £5.00" / "Fitrana £6 per person" → extract into sadaqatul_fitr metadata
-  - "Radio Frequency: 454.3500" / "Freq: 461.2375" → extract into radio_frequency metadata
-
-FRIDAY OVERRIDES FOR ZOHAR JAMA'AT:
-On Fridays, the Zuhr/Dhuhr Jama'at time often changes to a Jumu'ah time. Check:
-1. Does the table show explicit different values on Friday rows? → Use those values.
-2. Does a footnote specify a Jumu'ah time different from the daily Zuhr Jama'at? → Use the first Jumu'ah time on Fridays, the daily time on other days.
-3. If no distinction is made, use the same time for all days.
-
-DATE FORMATTING:
-Some timetables show full dates ("18 Feb"), others show only day numbers ("18", "19", "20"...) without the month. If only day numbers are shown, you must infer the month from context: look at the timetable title, headers, or footnotes for the month/year information, and combine it with the day numbers. If the timetable spans two months (e.g. February into March), determine where the month changes by looking at when day numbers reset from a high number back to 1 (e.g. 28 → 1 means Feb → Mar). Always output dates in "DD Mon" format (e.g. "18 Feb", "1 Mar").
-
-STEP 4: OUTPUT FORMAT
-
-Return this exact JSON structure:
-{
-  "mosque_name": "Full Mosque Name as shown on the timetable",
-  "suggested_slug": "faizul",
-  "address": "Full address as shown on the timetable",
-  "phone": "Phone number as shown on the timetable",
-  "month": "February-March 2026",
-  "islamic_month": "Ramadan 1447",
-  "jummah_times": "1st Jumu'ah: 12:30pm, 2nd Jumu'ah: 1:40pm",
-  "eid_salah": "7:30am & 9:00am",
-  "sadaqatul_fitr": "£7 per person",
-  "radio_frequency": "454.3500",
-  "notes": "Any other relevant notes not captured above: Maghrib jama'at rules, Taraweeh details, etc.",
-  "rows": [
-    {
-      "date": "18 Feb",
-      "day": "Wed",
-      "islamic_day": 1,
-      "sehri_ends": "5:42",
-      "sunrise": "7:17",
-      "zohr": "12:27",
-      "asr": "2:55",
-      "esha": "",
-      "fajr_jamaat": "5:57",
-      "zohar_jamaat": "12:40",
-      "asr_jamaat": "4:30",
-      "maghrib_iftari": "5:28",
-      "esha_jamaat": "7:15"
-    }
-  ]
-}
-
-METADATA FIELD DEFINITIONS:
-- "mosque_name": Full name as shown on the image
-- "suggested_slug": A short, URL-safe slug (lowercase, no spaces, underscores only) derived from the most distinctive word(s) in the mosque name. Strip common prefixes like Masjid, Masjid-e, Masjid-al, Jam-e, Jamia, Al, and common suffixes like Trust, Foundation, Association, Society, Centre, Mosque, Islamic Centre. Use what remains as the slug. If the remaining word is very long, abbreviate sensibly. Examples: "Masjid Faizul Islam" → "faizul", "Birmingham Jam-e-Masjid" → "jame", "Eden Foundation" → "eden", "Masjid Al Falaah" → "falaah", "Masjid Abu Bakr" → "abubakr", "Great Barr Muslim Foundation" → "gbmf", "Madinatul Uloom Al-Islamyah" → "muai".
-- "address": Full street address including postcode/ZIP if visible. Set to "" if not shown.
-- "phone": Phone number(s) as shown. Include multiple if listed (e.g. "0121 554 9157 / 07980 924 816"). Set to "" if not shown.
-- "month": The Gregorian month(s) and year covered (e.g. "June 2025", "February-March 2026")
-- "islamic_month": The Islamic month and Hijri year if shown (e.g. "Ramadan 1447", "Dhul Hijjah 1446"). Set to "" if not shown.
-- "jummah_times": Jumu'ah/Friday prayer time(s) exactly as stated. Many mosques have multiple Jumu'ah salahs — include all with khutbah/speech times if listed (e.g. "1st: 12:30pm (Khutbah 12:10pm), 2nd: 1:30pm"). Set to "" if not shown.
-- "eid_salah": Eid salah time(s) exactly as stated (e.g. "7:30am & 9:00am", "1st Salah: 7:00am, 2nd Salah: 8:00am"). Include all listed times. Set to "" if not shown.
-- "sadaqatul_fitr": Sadaqatul Fitr / Sadqa-e-Fitr / Fitrana amount exactly as stated including currency (e.g. "£7 per person", "£4.50", "£6 per person (min)"). Set to "" if not shown.
-- "radio_frequency": Radio receiver frequency if shown (e.g. "454.3500", "461.2375"). Set to "" if not shown.
-- "notes": Any other relevant notes not captured by the fields above: Maghrib jama'at rules, Taraweeh details, special programmes, etc.
-
-ROW FIELD DEFINITIONS:
-- "date": "DD Mon" format (e.g. "18 Feb", "1 Mar", "15 Jun"). Always include the month abbreviation even if the timetable only shows day numbers.
-- "day": Three-letter day name (e.g. "Wed", "Thu", "Fri")
-- "islamic_day": The Islamic/Hijri day number if shown in the timetable. Set to null if not present.
-- "sehri_ends": When suhoor/sehri must stop OR Fajr start time (pre-dawn time)
-- "sunrise": Sunrise time
-- "zohr": Dhuhr/Zuhr START time (beginning of prayer window, NOT jama'at)
-- "asr": Asr START time (beginning of prayer window, NOT jama'at)
-- "esha": Esha/Isha START time (beginning of prayer window, NOT jama'at). Set to "" if the timetable does not have this column.
-- "fajr_jamaat": Fajr congregational prayer time. If the Fajr Jama'at column has explicit per-row values, ALWAYS use those — even if a note or header also states a rule like "15 minutes after Sehri ends". Only calculate from the rule if the column itself has no individual values (e.g. vertical text only, or all ditto marks with no starting value). Set to "" if not present.
-- "zohar_jamaat": Dhuhr/Zuhr congregational prayer time. Apply Friday Jumu'ah overrides if applicable. Set to "" if not present.
-- "asr_jamaat": Asr congregational prayer time. Set to "" if not present.
-- "maghrib_iftari": Maghrib/Iftar time (when the fast breaks and Maghrib prayer begins). If both Sunset and Maghrib columns exist, use the Maghrib/Iftar column.
-- "esha_jamaat": Esha/Isha congregational prayer time. Set to "" if not present.
-
-EVERY row must include ALL 13 fields listed above (date through esha_jamaat), even if the value is "" (empty string) because the timetable doesn't have that column.
-
-TIME FORMAT RULES:
-- Always use colons, not dots (convert "5.40" to "5:40")
-- Keep the same hour format as the timetable (if it shows "5:24" for Fajr and "12:28" for Dhuhr, keep that — do not convert between 12h/24h)
-- Do not add leading zeros unless the timetable uses them
-- If a column genuinely doesn't exist in the timetable, use "" (empty string)
-
-STEP 5: VALIDATE YOUR OUTPUT
-
-Before returning, check:
-1. Row count: Count the rows in the timetable image and ensure your output matches exactly.
-2. Monotonic trends: Over any given month, sehri/fajr times should trend consistently (getting earlier or later depending on season and hemisphere) and maghrib should trend consistently the opposite way. If values jump erratically, re-read the image.
-3. Day sequence: Days should follow a consistent weekly cycle (Mon, Tue, Wed, Thu, Fri, Sat, Sun). Verify the first date's day matches what is shown.
-4. No ditto marks remain: Every cell must be a time value or "". No " or '' ditto characters anywhere in the output.
-5. Every row has all 13 fields with no missing keys.
-6. Fajr Jama'at values are actual calculated times, never "SEHRI+15" or similar formulas.
-7. Zohar Jama'at on Fridays reflects any Jumu'ah override found in the timetable.
-8. All dates include month abbreviation in "DD Mon" format.
-
-Return ONLY valid JSON, no markdown fences, no explanation, no preamble.`;
-
 // --- Validation helpers (ported from extract_timetable.py) ---
 
 function timeToMinutes(t, forcePm = false) {
@@ -241,7 +77,7 @@ function parseZoharJamaatFromNotes(notes) {
 }
 
 function validateAndFixRows(rows, notes) {
-  const fixCounts = { zohar_shift: 0, esha_move: 0, asr_swap: 0, esha_swap: 0, zohar_notes: 0 };
+  const fixCounts = { zohar_shift: 0, esha_move: 0, asr_swap: 0, esha_swap: 0, maghrib_swap: 0, zohar_notes: 0 };
 
   for (const row of rows) {
     let zohrMins = timeToMinutes(row.zohr || '', true);
@@ -278,7 +114,15 @@ function validateAndFixRows(rows, notes) {
       fixCounts.asr_swap++;
     }
 
-    // Fix 4: Esha start > Esha jamaat
+    // Fix 4: Maghrib iftari > Maghrib jamaat (swap if confused)
+    let maghribMins = timeToMinutes(row.maghrib_iftari || '', false);
+    let maghribJMins = timeToMinutes(row.maghrib_jamaat || '', false);
+    if (maghribMins !== null && maghribJMins !== null && maghribMins > maghribJMins) {
+      [row.maghrib_iftari, row.maghrib_jamaat] = [row.maghrib_jamaat, row.maghrib_iftari];
+      fixCounts.maghrib_swap++;
+    }
+
+    // Fix 5: Esha start > Esha jamaat
     eshaMins = timeToMinutes(row.esha || '', false);
     eshaJMins = timeToMinutes(row.esha_jamaat || '', false);
     if (eshaMins !== null && eshaJMins !== null && eshaMins > eshaJMins) {
@@ -287,7 +131,7 @@ function validateAndFixRows(rows, notes) {
     }
   }
 
-  // Fix 5: Fill zohar_jamaat from notes if empty
+  // Fix 6: Fill zohar_jamaat from notes if empty
   const zoharFromNotes = parseZoharJamaatFromNotes(notes);
   if (Object.keys(zoharFromNotes).length > 0) {
     for (const row of rows) {
@@ -371,7 +215,7 @@ function generateCsvString(rows) {
     'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Sunrise',
     'Zohr', 'Asr', 'Esha',
     'Fajr Jama\'at', 'Zohar Jama\'at', 'Asr Jama\'at',
-    'Maghrib Iftari', 'Esha Jama\'at',
+    'Maghrib Iftari', 'Maghrib Jama\'at', 'Esha Jama\'at',
   ];
 
   const fieldMap = {
@@ -387,6 +231,7 @@ function generateCsvString(rows) {
     "Zohar Jama'at": 'zohar_jamaat',
     "Asr Jama'at": 'asr_jamaat',
     'Maghrib Iftari': 'maghrib_iftari',
+    "Maghrib Jama'at": 'maghrib_jamaat',
     "Esha Jama'at": 'esha_jamaat',
   };
 
@@ -622,6 +467,16 @@ async function handleExtract(request, env) {
   const mediaType = mediaTypeMap[ext] || 'image/jpeg';
   const isPdf = mediaType === 'application/pdf';
 
+  // Load extraction prompt from static asset
+  let extractionPrompt;
+  try {
+    const promptRes = await env.ASSETS.fetch(new URL('/prompts/extraction.txt', request.url));
+    extractionPrompt = await promptRes.text();
+  } catch (e) {
+    console.error('Failed to load extraction prompt:', e);
+    return errorResponse('Server configuration error: missing extraction prompt', 500);
+  }
+
   // Call Claude API
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -654,7 +509,7 @@ async function handleExtract(request, env) {
             },
             {
               type: 'text',
-              text: EXTRACTION_PROMPT,
+              text: extractionPrompt,
             },
           ],
         }],

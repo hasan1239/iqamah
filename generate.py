@@ -37,6 +37,7 @@ STANDARD_COLUMNS = {
     "zohar_jamaat": "Zohar Jama'at",
     "asr_jamaat": "Asr Jama'at",
     "maghrib_iftari": "Maghrib Iftari",
+    "maghrib_jamaat": "Maghrib Jama'at",
     "esha_jamaat": "Esha Jama'at",
 }
 
@@ -96,6 +97,9 @@ def extract_times(row: dict, mosque_config: dict) -> dict:
         if col_name is None:
             # Quba has no Zohar Jama'at column — fixed at 1:00
             times[key] = "1:00"
+        elif col_name not in row:
+            # Column not in CSV (e.g. older CSVs without Maghrib Jama'at)
+            times[key] = ""
         else:
             times[key] = row[col_name].strip()
     return times
@@ -139,6 +143,18 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
         "{{ASR_JAMAAT}}": times["asr_jamaat"],
         "{{ESHA_JAMAAT}}": times["esha_jamaat"],
     }
+
+    maghrib_jamaat = times.get("maghrib_jamaat", "")
+    if maghrib_jamaat:
+        maghrib_row = (
+            '<div class="time-row">'
+            '<div class="label"><span class="emoji">\U0001f54c</span>Maghrib Jama\'at</div>'
+            f'<div class="value bright">{maghrib_jamaat}</div>'
+            '</div>'
+        )
+    else:
+        maghrib_row = ""
+    replacements["{{MAGHRIB_JAMAAT_ROW}}"] = maghrib_row
 
     for placeholder, value in replacements.items():
         html = html.replace(placeholder, value)

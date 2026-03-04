@@ -1298,7 +1298,7 @@
         { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
         { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
         { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
-        { name: 'Maghrib', keys: ["Maghrib Iftari"], isAM: false },
+        { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
         { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
       ];
 
@@ -1597,6 +1597,10 @@
                 <div class="time-label">Asr</div>
                 <div class="time-value">${todayRow["Asr Jama'at"]}</div>
               </div>
+              ${todayRow["Maghrib Jama'at"] ? `<div class="time-item">
+                <div class="time-label">Maghrib</div>
+                <div class="time-value">${todayRow["Maghrib Jama'at"]}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Esha</div>
                 <div class="time-value">${todayRow["Esha Jama'at"]}</div>
@@ -1715,7 +1719,9 @@
     function renderMonthlyView() {
       const hasZawal = csvData.length > 0 && csvData[0]['Zawal'] != null;
       const hasEshaStart = csvData.some(row => row['Esha']);
+      const hasMaghribJamaat = csvData.some(row => row["Maghrib Jama'at"]);
       const startColspan = (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4);
+      const jamaatColspan = 5 + (hasMaghribJamaat ? 1 : 0);
 
       const zawalHeader = hasZawal ? '<th>Zawal</th>' : '';
 
@@ -1742,7 +1748,7 @@
                 <th class="section-header"></th>
                 <th class="section-header"></th>
                 <th class="section-header section-divider" colspan="${startColspan}">Start Times</th>
-                <th class="section-header section-divider" colspan="5">Jama'at Times</th>
+                <th class="section-header section-divider" colspan="${jamaatColspan}">Jama'at Times</th>
               </tr>
               <tr>
                 <th>Date</th>
@@ -1758,6 +1764,7 @@
                 <th>Dhuhr</th>
                 <th>Asr</th>
                 <th>Maghrib</th>
+                ${hasMaghribJamaat ? '<th>Magh J</th>' : ''}
                 <th>Esha</th>
               </tr>
             </thead>
@@ -1783,6 +1790,7 @@
                     <td>${row["Zohar Jama'at"] || '\u2014'}</td>
                     <td>${row["Asr Jama'at"]}</td>
                     <td>${row['Maghrib Iftari']}</td>
+                    ${hasMaghribJamaat ? `<td>${row["Maghrib Jama'at"] || '\u2014'}</td>` : ''}
                     <td>${row["Esha Jama'at"]}</td>
                   </tr>
                 `;
