@@ -1148,22 +1148,29 @@
 
       // --- Review table ---
 
-      var tableColumns = [
-        { key: 'date', label: 'Date', width: '58px' },
-        { key: 'day', label: 'Day', width: '40px' },
-        { key: 'islamic_day', label: 'Hijri', width: '36px' },
-        { key: 'sehri_ends', label: 'Sehri', width: '52px' },
-        { key: 'sunrise', label: 'Sunrise', width: '52px' },
-        { key: 'zohr', label: 'Dhuhr', width: '52px' },
-        { key: 'asr', label: 'Asr', width: '52px' },
-        { key: 'esha', label: 'Esha', width: '52px' },
-        { key: 'fajr_jamaat', label: 'Fajr J', width: '52px' },
-        { key: 'zohar_jamaat', label: 'Dhuhr J', width: '52px' },
-        { key: 'asr_jamaat', label: 'Asr J', width: '52px' },
-        { key: 'maghrib_iftari', label: 'Maghrib', width: '56px' },
-        { key: 'maghrib_jamaat', label: 'Magh J', width: '52px' },
-        { key: 'esha_jamaat', label: 'Esha J', width: '52px' },
-      ];
+      function getTableColumns(rows) {
+        var cols = [
+          { key: 'date', label: 'Date', width: '58px' },
+          { key: 'day', label: 'Day', width: '40px' },
+          { key: 'islamic_day', label: 'Hijri', width: '36px' },
+          { key: 'sehri_ends', label: 'Sehri', width: '52px' },
+          { key: 'sunrise', label: 'Sunrise', width: '52px' },
+          { key: 'zohr', label: 'Dhuhr', width: '52px' },
+          { key: 'asr', label: 'Asr', width: '52px' },
+          { key: 'esha', label: 'Esha', width: '52px' },
+          { key: 'fajr_jamaat', label: 'Fajr J', width: '52px' },
+          { key: 'zohar_jamaat', label: 'Dhuhr J', width: '52px' },
+          { key: 'asr_jamaat', label: 'Asr J', width: '52px' },
+          { key: 'maghrib_iftari', label: 'Maghrib', width: '56px' },
+          { key: 'maghrib_jamaat', label: 'Magh J', width: '52px' },
+          { key: 'esha_jamaat', label: 'Esha J', width: '52px' },
+        ];
+        var hasMaghribJamaat = rows && rows.some(function(r) { return r.maghrib_jamaat; });
+        if (!hasMaghribJamaat) {
+          cols = cols.filter(function(c) { return c.key !== 'maghrib_jamaat'; });
+        }
+        return cols;
+      }
 
       function populateReview() {
         // Remove any previous PDF embed
@@ -1202,8 +1209,9 @@
         document.getElementById('metaNotes').value = extractedData.notes || '';
 
         // Table header
+        var cols = getTableColumns(extractedData.rows);
         var headerHtml = '<tr><th>#</th>';
-        tableColumns.forEach(function(col) {
+        cols.forEach(function(col) {
           headerHtml += '<th>' + col.label + '</th>';
         });
         headerHtml += '</tr>';
@@ -1214,7 +1222,7 @@
         extractedData.rows.forEach(function(row, idx) {
           bodyHtml += '<tr>';
           bodyHtml += '<td class="row-num">' + (idx + 1) + '</td>';
-          tableColumns.forEach(function(col) {
+          cols.forEach(function(col) {
             var val = row[col.key] != null ? String(row[col.key]) : '';
             bodyHtml += '<td><input type="text" data-row="' + idx + '" data-key="' + col.key + '" value="' + escapeAttr(val) + '" style="max-width:' + col.width + '"></td>';
           });
@@ -1228,13 +1236,18 @@
       }
 
       function gatherReviewData() {
-        // Gather edited rows
+        // Gather edited rows (use current visible columns + preserve hidden fields)
+        var cols = getTableColumns(extractedData.rows);
         var rows = extractedData.rows.map(function(row, idx) {
           var newRow = {};
-          tableColumns.forEach(function(col) {
+          cols.forEach(function(col) {
             var input = reviewTbody.querySelector('input[data-row="' + idx + '"][data-key="' + col.key + '"]');
             newRow[col.key] = input ? input.value : (row[col.key] || '');
           });
+          // Preserve maghrib_jamaat from original data if column was hidden
+          if (!newRow.hasOwnProperty('maghrib_jamaat')) {
+            newRow.maghrib_jamaat = row.maghrib_jamaat || '';
+          }
           // Preserve islamic_day as number or null
           if (newRow.islamic_day === '' || newRow.islamic_day === 'null') {
             newRow.islamic_day = null;
