@@ -758,16 +758,48 @@
     }
 
     /* Loading & error states */
-    .loading, .error {
+    .error {
       text-align: center;
       padding: 60px 20px;
       font-size: 1.1rem;
-      color: var(--text-tertiary);
-    }
-
-    .error {
       color: var(--error);
     }
+
+    /* Skeleton loader */
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    .skeleton-bone {
+      background: var(--divider);
+      border-radius: 6px;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+    .skeleton-header { text-align: center; margin-bottom: 16px; padding-top: 6px; }
+    .skeleton-header .skeleton-bone:first-child { width: 60%; height: 1.6rem; margin: 0 auto 10px; }
+    .skeleton-header .skeleton-bone:nth-child(2) { width: 40%; height: 0.85rem; margin: 0 auto 6px; }
+    .skeleton-header .skeleton-bone:nth-child(3) { width: 30%; height: 0.75rem; margin: 0 auto; }
+    .skeleton-toggle { display: flex; justify-content: center; margin-bottom: 16px; }
+    .skeleton-toggle .skeleton-bone { width: 180px; height: 38px; border-radius: 10px; }
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 16px 6px 16px;
+      margin-bottom: 20px;
+    }
+    .skeleton-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+    .skeleton-banner .skeleton-bone { height: 70px; border-radius: 10px; }
+    .skeleton-divider { display: flex; align-items: center; margin: 16px 0; }
+    .skeleton-divider .line { flex: 1; height: 1px; background: var(--divider); }
+    .skeleton-divider .diamond { width: 8px; height: 8px; background: var(--divider); transform: rotate(45deg); margin: 0 12px; }
+    .skeleton-section-title { width: 100px; height: 0.9rem; margin: 0 auto 12px; }
+    .skeleton-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--divider); }
+    .skeleton-row:last-child { border-bottom: none; }
+    .skeleton-row .skeleton-bone:first-child { width: 60px; height: 0.85rem; }
+    .skeleton-row .skeleton-bone:last-child { width: 45px; height: 0.95rem; }
+    .skeleton-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+    .skeleton-buttons .skeleton-bone { height: 42px; border-radius: 10px; }
 
     /* Stale timetable notice */
     .stale-notice {
@@ -1074,7 +1106,36 @@
 
   <div class="container">
     <div id="content">
-      <div class="loading">Loading prayer times...</div>
+      <div class="skeleton-loader">
+        <div class="skeleton-header">
+          <div class="skeleton-bone"></div>
+          <div class="skeleton-bone"></div>
+          <div class="skeleton-bone"></div>
+        </div>
+        <div class="skeleton-toggle"><div class="skeleton-bone"></div></div>
+        <div class="skeleton-card">
+          <div class="skeleton-banner">
+            <div class="skeleton-bone"></div>
+            <div class="skeleton-bone"></div>
+          </div>
+          <div class="skeleton-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+          <div class="skeleton-bone skeleton-section-title"></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
+          <div class="skeleton-bone skeleton-section-title"></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+          <div class="skeleton-row"><div class="skeleton-bone"></div><div class="skeleton-bone"></div></div>
+        </div>
+        <div class="skeleton-buttons">
+          <div class="skeleton-bone"></div>
+          <div class="skeleton-bone"></div>
+        </div>
+      </div>
     </div>
 
     <div class="install-banner" id="installBanner">

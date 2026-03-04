@@ -1,9 +1,9 @@
 name: Generate Daily Ramadan Lockscreen
 
 on:
-  # Run daily at 11:17pm UK time (GMT during Ramadan 2026)
+  # Run daily at 12:07am UK time (GMT during Ramadan 2026)
   schedule:
-    - cron: '17 23 * * *'
+    - cron: '07 0 * * *'
 
   # Run on push to main branch when relevant files change
   push:
