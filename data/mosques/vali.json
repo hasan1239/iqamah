@@ -1,0 +1,17 @@
+{
+  "display_name": "Masjid E Vali",
+  "slug": "vali",
+  "csv": "vali.csv",
+  "address": "Preston New Road, Blackburn, BB2 6PS",
+  "phone": "",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "Jumu'ah Bayan: 12:40pm, Jumu'ah Khutbah: 1:00pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "is_stale": false,
+  "notes": "Jama'at times are subject to changes. Changes will be displayed on display screens. Maghrib Jama'at times are shown in the Maghrib Jama'at column. Listen live by visiting emasjid.live/masjidevali.",
+  "lat": 53.7516084,
+  "lon": -2.5086968
+}
