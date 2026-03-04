@@ -598,11 +598,11 @@ async function handleExtract(request, env) {
   const mosqueName = sanitiseMasjidName(formData.get('name') || '');
 
   if (!imageFile || !imageFile.size) {
-    return errorResponse('No image provided');
+    return errorResponse('No file provided');
   }
 
   if (imageFile.size > 10 * 1024 * 1024) {
-    return errorResponse('Image too large (max 10MB)');
+    return errorResponse('File too large (max 10MB)');
   }
 
   // Convert image to base64
@@ -679,7 +679,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
-      return errorResponse('Failed to parse AI response. Please try with a clearer image.', 502);
+      return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
     // Apply validation fixes

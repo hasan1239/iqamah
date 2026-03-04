@@ -605,7 +605,7 @@
       h1 { font-size: 2.5rem; letter-spacing: -1px; }
       .card { padding: 30px; }
       .camera-row { display: none; }
-      #step2 > .card {
+      #step3 > .card {
         width: calc(100vw - 60px);
         max-width: none;
         position: relative;
@@ -677,7 +677,7 @@
         <img src="salahdaily_icon.png" alt="Prayerly" class="logo">
         <h1>Add Your Masjid</h1>
       </div>
-      <p class="subtitle">Upload a timetable image and we'll extract the prayer times automatically</p>
+      <p class="subtitle">Upload a timetable file and we'll extract the prayer times automatically</p>
       <p class="subtitle ai-disclaimer" id="aiDisclaimer" style="display:none; font-size:0.8rem; margin-top:6px;">Times were extracted using AI and may contain errors. Please verify and fix any mistakes.</p>
     </header>
 
@@ -690,11 +690,16 @@
       <div class="progress-connector" id="progConn1"></div>
       <div class="progress-step" id="progStep2">
         <span class="step-number">2</span>
-        <span class="step-label">Review</span>
+        <span class="step-label">Extract</span>
       </div>
       <div class="progress-connector" id="progConn2"></div>
       <div class="progress-step" id="progStep3">
         <span class="step-number">3</span>
+        <span class="step-label">Review</span>
+      </div>
+      <div class="progress-connector" id="progConn3"></div>
+      <div class="progress-step" id="progStep4">
+        <span class="step-number">4</span>
         <span class="step-label">Done</span>
       </div>
     </div>
@@ -703,7 +708,7 @@
     <div class="step-panel active" id="step1">
       <div class="card">
         <div class="form-group">
-          <label>Timetable Image <span class="required">*</span></label>
+          <label>Timetable File <span class="required">*</span></label>
           <div class="upload-area" id="uploadArea">
             <div class="upload-icon">&#128247;</div>
             <div class="upload-text"><strong>Upload timetable</strong></div>
@@ -732,19 +737,21 @@
         </div>
         <div class="error-msg" id="extractError"></div>
       </div>
+    </div>
 
-      <!-- Extracting status -->
-      <div class="card" id="extractingStatus" style="display:none; margin-top:16px;">
+    <!-- ==================== STEP 2: Extract ==================== -->
+    <div class="step-panel" id="step2">
+      <div class="card" id="extractingStatus">
         <div class="status-msg">
           <div class="spinner"></div>
-          <div>Extracting prayer times from image...</div>
+          <div>Extracting prayer times from file...</div>
           <div style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">This usually takes 15-30 seconds</div>
         </div>
       </div>
     </div>
 
-    <!-- ==================== STEP 2: Review ==================== -->
-    <div class="step-panel" id="step2">
+    <!-- ==================== STEP 3: Review ==================== -->
+    <div class="step-panel" id="step3">
       <div class="card">
         <div class="section-label">Extracted Timetable</div>
         <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">Tap any cell to edit.</p>
@@ -754,7 +761,7 @@
             <div class="review-image" id="reviewImageContainer">
               <img id="reviewImg" alt="Original timetable" onclick="openLightbox()">
             </div>
-            <div class="zoom-hint">Tap image to zoom</div>
+            <div class="zoom-hint">Tap to zoom</div>
             <div class="zoom-controls" id="zoomControls">
               <button onclick="zoomImage(0.5)" title="Zoom in">+</button>
               <div class="zoom-level" id="zoomLevel">1x</div>
@@ -810,6 +817,7 @@
         <div class="btn-row">
           <button class="btn btn-secondary" id="backToUploadBtn">Back</button>
           <button class="btn btn-secondary" id="reextractBtn">Re-extract</button>
+          <button class="btn btn-secondary" id="downloadJsonBtn">Download JSON</button>
           <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
         </div>
         <div class="error-msg" id="submitError"></div>
@@ -824,8 +832,8 @@
       </div>
     </div>
 
-    <!-- ==================== STEP 3: Confirmation ==================== -->
-    <div class="step-panel" id="step3">
+    <!-- ==================== STEP 4: Confirmation ==================== -->
+    <div class="step-panel" id="step4">
       <div class="card">
         <div class="confirmation">
           <div class="check-icon">
@@ -929,7 +937,6 @@
       var uploadError = document.getElementById('uploadError');
       var extractBtn = document.getElementById('extractBtn');
       var extractError = document.getElementById('extractError');
-      var extractingStatus = document.getElementById('extractingStatus');
       var masjidNameInput = document.getElementById('masjidName');
       var reviewImg = document.getElementById('reviewImg');
       var reviewThead = document.getElementById('reviewThead');
@@ -948,28 +955,28 @@
         document.querySelectorAll('.step-panel').forEach(function(p) { p.classList.remove('active'); });
         document.getElementById('step' + num).classList.add('active');
 
-        for (var s = 1; s <= 3; s++) {
+        for (var s = 1; s <= 4; s++) {
           var stepEl = document.getElementById('progStep' + s);
           stepEl.classList.remove('active', 'done');
           if (s < num) stepEl.classList.add('done');
           else if (s === num) stepEl.classList.add('active');
         }
-        for (var c = 1; c <= 2; c++) {
+        for (var c = 1; c <= 3; c++) {
           var conn = document.getElementById('progConn' + c);
           conn.classList.toggle('done', c < num);
         }
 
-        document.getElementById('aiDisclaimer').style.display = num === 2 ? '' : 'none';
+        document.getElementById('aiDisclaimer').style.display = num === 3 ? '' : 'none';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       // --- File validation ---
 
       function validateFile(file) {
-        if (!file) return 'Please select an image file.';
+        if (!file) return 'Please select a file.';
         var validTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
         if (validTypes.indexOf(file.type) === -1) return 'Please upload a JPG, PNG, WebP, or PDF file.';
-        if (file.size > 10 * 1024 * 1024) return 'Image is too large. Maximum size is 10MB.';
+        if (file.size > 10 * 1024 * 1024) return 'File is too large. Maximum size is 10MB.';
         return null;
       }
 
@@ -1093,7 +1100,7 @@
       });
 
       // Set to true to skip API call and use dummy data for UI testing
-      var USE_DUMMY_DATA = false;
+      var USE_DUMMY_DATA = true;
 
       var DUMMY_EXTRACTED = {
         mosque_name: 'Masjid Al-Noor',
@@ -1124,16 +1131,15 @@
       async function doExtract() {
         extractError.classList.remove('visible');
         extractBtn.disabled = true;
-        extractingStatus.style.display = '';
+        goToStep(2);
 
         // --- Dummy data mode: skip API call ---
         if (USE_DUMMY_DATA) {
           await new Promise(function(r) { setTimeout(r, 500); }); // simulate brief delay
           extractedData = JSON.parse(JSON.stringify(DUMMY_EXTRACTED));
           populateReview();
-          goToStep(2);
+          goToStep(3);
           extractBtn.disabled = false;
-          extractingStatus.style.display = 'none';
           updateExtractBtn();
           return;
         }
@@ -1151,13 +1157,13 @@
 
           extractedData = result.data;
           populateReview();
-          goToStep(2);
+          goToStep(3);
         } catch (e) {
           extractError.textContent = e.message;
           extractError.classList.add('visible');
+          goToStep(1);
         } finally {
           extractBtn.disabled = false;
-          extractingStatus.style.display = 'none';
           updateExtractBtn();
         }
       }
@@ -1279,6 +1285,15 @@
 
       submitBtn.addEventListener('click', function() { doSubmit(); });
       backToUploadBtn.addEventListener('click', function() { goToStep(1); });
+      document.getElementById('downloadJsonBtn').addEventListener('click', function() {
+        if (!extractedData) return;
+        var blob = new Blob([JSON.stringify(extractedData, null, 2)], { type: 'application/json' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (extractedData.suggested_slug || 'extraction') + '.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
 
       async function doSubmit() {
         submitError.classList.remove('visible');
@@ -1303,7 +1318,7 @@
           confirmationText.textContent = result.message || 'Your masjid has been added!';
           masjidLink.href = result.url || '/';
           masjidLink.innerHTML = 'View ' + data.mosque_name + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:middle"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>';
-          goToStep(3);
+          goToStep(4);
         } catch (e) {
           submitError.textContent = e.message;
           submitError.classList.add('visible');
