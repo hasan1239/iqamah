@@ -77,10 +77,40 @@ function parseZoharJamaatFromNotes(notes) {
 }
 
 function validateAndFixRows(rows, notes) {
-  const fixCounts = { zohar_shift: 0, esha_move: 0, asr_swap: 0, esha_swap: 0, maghrib_swap: 0, zohar_notes: 0 };
+  const fixCounts = { day_fix: 0, fajr_start_swap: 0, zawal_swap: 0, zohar_shift: 0, esha_move: 0, asr_swap: 0, esha_swap: 0, maghrib_swap: 0, zohar_notes: 0 };
+
+  const validDays = new Set(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']);
+  const dayFixes = { 'Thur': 'Thu', 'Tues': 'Tue', 'Weds': 'Wed' };
 
   for (const row of rows) {
+    // Fix day: standardise to exactly three letters
+    const day = (row.day || '').trim();
+    if (day && !validDays.has(day)) {
+      const fixed = dayFixes[day] || day.substring(0, 3);
+      if (validDays.has(fixed)) {
+        row.day = fixed;
+        fixCounts.day_fix++;
+      }
+    }
+
+    // Fix: Sehri Ends > Fajr Start — swap them
+    let sehriMins = timeToMinutes(row.sehri_ends || '', false);
+    let fajrStartMins = timeToMinutes(row.fajr_start || '', false);
+    if (sehriMins !== null && fajrStartMins !== null && sehriMins > fajrStartMins) {
+      [row.sehri_ends, row.fajr_start] = [row.fajr_start, row.sehri_ends];
+      fixCounts.fajr_start_swap++;
+    }
+
+    // Fix 0: Zawal > Zohr — swap them (model confused the columns)
+    let zawalMins = timeToMinutes(row.zawal || '', true);
     let zohrMins = timeToMinutes(row.zohr || '', true);
+    if (zawalMins !== null && zohrMins !== null && zawalMins > zohrMins) {
+      [row.zawal, row.zohr] = [row.zohr, row.zawal];
+      fixCounts.zawal_swap++;
+      zohrMins = timeToMinutes(row.zohr || '', true);
+    }
+
+    zohrMins = timeToMinutes(row.zohr || '', true);
     let zoharJMins = timeToMinutes(row.zohar_jamaat || '', true);
     let asrMins = timeToMinutes(row.asr || '', true);
     let asrJMins = timeToMinutes(row.asr_jamaat || '', true);
@@ -212,8 +242,8 @@ async function deduplicateSlug(slug, address, env) {
 
 function generateCsvString(rows) {
   const headers = [
-    'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Sunrise',
-    'Zohr', 'Asr', 'Esha',
+    'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Fajr Start', 'Sunrise',
+    'Zawal', 'Zohr', 'Asr', 'Esha',
     'Fajr Jama\'at', 'Zohar Jama\'at', 'Asr Jama\'at',
     'Maghrib Iftari', 'Maghrib Jama\'at', 'Esha Jama\'at',
   ];
@@ -223,7 +253,9 @@ function generateCsvString(rows) {
     'Day': 'day',
     'Islamic Day': r => (r.islamic_day != null ? String(r.islamic_day) : (r.ramadan_day || '')),
     'Sehri Ends': 'sehri_ends',
+    'Fajr Start': 'fajr_start',
     'Sunrise': 'sunrise',
+    'Zawal': 'zawal',
     'Zohr': 'zohr',
     'Asr': 'asr',
     'Esha': 'esha',

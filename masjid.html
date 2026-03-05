@@ -1626,10 +1626,18 @@
           <div class="lockscreen-section">
             <div class="section-title">Start Times</div>
             <div class="times-grid">
+              ${todayRow['Fajr Start'] ? `<div class="time-item">
+                <div class="time-label">Fajr</div>
+                <div class="time-value">${todayRow['Fajr Start']}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Sunrise</div>
                 <div class="time-value">${todayRow['Sunrise']}</div>
               </div>
+              ${todayRow['Zawal'] ? `<div class="time-item">
+                <div class="time-label">Zawal</div>
+                <div class="time-value">${todayRow['Zawal']}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Dhuhr</div>
                 <div class="time-value">${todayRow['Zohr']}</div>
@@ -1778,12 +1786,14 @@
     }
 
     function renderMonthlyView() {
-      const hasZawal = csvData.length > 0 && csvData[0]['Zawal'] != null;
+      const hasFajrStart = csvData.some(row => row['Fajr Start']);
+      const hasZawal = csvData.some(row => row['Zawal']);
       const hasEshaStart = csvData.some(row => row['Esha']);
       const hasMaghribJamaat = csvData.some(row => row["Maghrib Jama'at"]);
-      const startColspan = (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4);
-      const jamaatColspan = 5 + (hasMaghribJamaat ? 1 : 0);
+      const startColspan = (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4) + (hasMaghribJamaat ? 1 : 0);
+      const jamaatColspan = 5;
 
+      const fajrStartHeader = hasFajrStart ? '<th>Fajr</th>' : '';
       const zawalHeader = hasZawal ? '<th>Zawal</th>' : '';
 
       const html = `
@@ -1816,16 +1826,17 @@
                 <th>Day</th>
                 <th>Hijri</th>
                 <th class="section-divider">Sehri</th>
+                ${fajrStartHeader}
                 <th>Sunrise</th>
                 ${zawalHeader}
                 <th>Dhuhr</th>
                 <th>Asr</th>
+                ${hasMaghribJamaat ? '<th>Maghrib</th>' : ''}
                 ${hasEshaStart ? '<th>Esha</th>' : ''}
                 <th class="section-divider">Fajr</th>
                 <th>Dhuhr</th>
                 <th>Asr</th>
                 <th>Maghrib</th>
-                ${hasMaghribJamaat ? '<th>Magh J</th>' : ''}
                 <th>Esha</th>
               </tr>
             </thead>
@@ -1834,6 +1845,7 @@
                 const rowDate = parseDate(row['Date']);
                 const today = new Date();
                 const isToday = rowDate.toDateString() === today.toDateString();
+                const fajrStartCell = hasFajrStart ? `<td>${row['Fajr Start']}</td>` : '';
                 const zawalCell = hasZawal ? `<td>${row['Zawal']}</td>` : '';
 
                 return `
@@ -1842,16 +1854,17 @@
                     <td>${row['Day']}</td>
                     <td>${row['Islamic Day'] || row['Ramadan'] || row['Hijri']}</td>
                     <td class="section-divider">${row['Sehri Ends']}</td>
+                    ${fajrStartCell}
                     <td>${row['Sunrise']}</td>
                     ${zawalCell}
                     <td>${row['Zohr']}</td>
                     <td>${row['Asr']}</td>
+                    ${hasMaghribJamaat ? `<td>${row['Maghrib Iftari']}</td>` : ''}
                     ${hasEshaStart ? `<td>${row['Esha']}</td>` : ''}
                     <td class="section-divider">${row["Fajr Jama'at"]}</td>
                     <td>${row["Zohar Jama'at"] || '\u2014'}</td>
                     <td>${row["Asr Jama'at"]}</td>
-                    <td>${row['Maghrib Iftari']}</td>
-                    ${hasMaghribJamaat ? `<td>${row["Maghrib Jama'at"] || '\u2014'}</td>` : ''}
+                    <td>${hasMaghribJamaat ? (row["Maghrib Jama'at"] || '\u2014') : row['Maghrib Iftari']}</td>
                     <td>${row["Esha Jama'at"]}</td>
                   </tr>
                 `;
@@ -1868,7 +1881,7 @@
       if (todayRow) {
         const next = getNextPrayer(todayRow);
         if (next) {
-          const dhuhrStartIdx = hasZawal ? 6 : 5;
+          const dhuhrStartIdx = 5 + (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0);
           const eshaOffset = hasEshaStart ? 1 : 0;
           const jamaatIdx = dhuhrStartIdx + 2 + eshaOffset;
           const colMap = {
