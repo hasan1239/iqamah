@@ -1,0 +1,17 @@
+{
+  "display_name": "Amanah Masjid",
+  "slug": "amanah",
+  "csv": "amanah.csv",
+  "address": "29-33 Henley St, Birmingham, B11 1JB",
+  "phone": "0121 772 7370",
+  "month": "March 2026",
+  "islamic_month": "Ramadan - Shawwal 1447",
+  "jummah_times": "Jumu'ah Khutba starts at 1:00pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "is_stale": false,
+  "notes": "Clocks go forward 1 hour on 29th March 2026. Jum'a Speech (Khutba) starts at 1:00pm.",
+  "lat": 52.4670705,
+  "lon": -1.8761104
+}
