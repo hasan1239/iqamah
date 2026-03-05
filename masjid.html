@@ -1359,7 +1359,7 @@
         { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
         { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
         { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
-        { name: 'Maghrib', keys: ["Maghrib Iftari"], isAM: false },
+        { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
         { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
       ];
 
@@ -1557,7 +1557,12 @@
       }
 
       const englishDate = formatFullDate(todayRow['Date'], todayRow['Day']);
-      const hijriDate = `${todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri']} Ramadan 1447`;
+      const hijriRaw = todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '';
+      const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha'ban" };
+      const hijriParts = hijriRaw.trim().split(' ');
+      const hijriDate = (hijriParts.length === 2 && monthAbbrevMap[hijriParts[1]])
+        ? `${hijriParts[0]} ${monthAbbrevMap[hijriParts[1]]} 1447`
+        : `${hijriRaw} Ramadan 1447`;
 
       const tomorrowRow = getTomorrowRow();
       const tomorrowSehri = tomorrowRow ? tomorrowRow['Sehri Ends'] : null;
@@ -1626,10 +1631,18 @@
           <div class="lockscreen-section">
             <div class="section-title">Start Times</div>
             <div class="times-grid">
+              ${todayRow['Fajr Start'] ? `<div class="time-item">
+                <div class="time-label">Fajr</div>
+                <div class="time-value">${todayRow['Fajr Start']}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Sunrise</div>
                 <div class="time-value">${todayRow['Sunrise']}</div>
               </div>
+              ${todayRow['Zawal'] ? `<div class="time-item">
+                <div class="time-label">Zawal</div>
+                <div class="time-value">${todayRow['Zawal']}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Dhuhr</div>
                 <div class="time-value">${todayRow['Zohr']}</div>
@@ -1658,6 +1671,10 @@
                 <div class="time-label">Asr</div>
                 <div class="time-value">${todayRow["Asr Jama'at"]}</div>
               </div>
+              ${todayRow["Maghrib Jama'at"] ? `<div class="time-item">
+                <div class="time-label">Maghrib</div>
+                <div class="time-value">${todayRow["Maghrib Jama'at"]}</div>
+              </div>` : ''}
               <div class="time-item">
                 <div class="time-label">Esha</div>
                 <div class="time-value">${todayRow["Esha Jama'at"]}</div>
@@ -1773,18 +1790,45 @@
       }
     }
 
-    function renderMonthlyView() {
-      const hasZawal = csvData.length > 0 && csvData[0]['Zawal'] != null;
-      const hasEshaStart = csvData.some(row => row['Esha']);
-      const startColspan = (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4);
+    function getHijriRange() {
+      const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha\u2019ban" };
+      const getIslamic = row => (row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '').trim();
+      const firstRaw = getIslamic(csvData[0]);
+      const lastRaw = getIslamic(csvData[csvData.length - 1]);
 
+      const parseParts = raw => {
+        const parts = raw.split(' ');
+        if (parts.length === 2 && monthAbbrevMap[parts[1]]) {
+          return { day: parts[0], month: monthAbbrevMap[parts[1]] };
+        }
+        return { day: parseInt(raw), month: 'Ramadan' };
+      };
+
+      const first = parseParts(firstRaw);
+      const last = parseParts(lastRaw);
+
+      if (first.month === last.month) {
+        return `${first.day}-${last.day} ${first.month} 1447`;
+      }
+      return `${first.day} ${first.month} \u2013 ${last.day} ${last.month} 1447`;
+    }
+
+    function renderMonthlyView() {
+      const hasFajrStart = csvData.some(row => row['Fajr Start']);
+      const hasZawal = csvData.some(row => row['Zawal']);
+      const hasEshaStart = csvData.some(row => row['Esha']);
+      const hasMaghribJamaat = csvData.some(row => row["Maghrib Jama'at"]);
+      const startColspan = (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4) + (hasMaghribJamaat ? 1 : 0);
+      const jamaatColspan = 5;
+
+      const fajrStartHeader = hasFajrStart ? '<th>Fajr</th>' : '';
       const zawalHeader = hasZawal ? '<th>Zawal</th>' : '';
 
       const html = `
         <header>
           <h1>${config.display_name}</h1>
           <div class="date-line">Ramadan 2026 Timetable</div>
-          <div class="hijri-line">1-30 Ramadan 1447</div>
+          <div class="hijri-line">${getHijriRange()}</div>
         </header>
 
         <div class="view-toggle">
@@ -1803,17 +1847,19 @@
                 <th class="section-header"></th>
                 <th class="section-header"></th>
                 <th class="section-header section-divider" colspan="${startColspan}">Start Times</th>
-                <th class="section-header section-divider" colspan="5">Jama'at Times</th>
+                <th class="section-header section-divider" colspan="${jamaatColspan}">Jama'at Times</th>
               </tr>
               <tr>
                 <th>Date</th>
                 <th>Day</th>
                 <th>Hijri</th>
                 <th class="section-divider">Sehri</th>
+                ${fajrStartHeader}
                 <th>Sunrise</th>
                 ${zawalHeader}
                 <th>Dhuhr</th>
                 <th>Asr</th>
+                ${hasMaghribJamaat ? '<th>Maghrib</th>' : ''}
                 ${hasEshaStart ? '<th>Esha</th>' : ''}
                 <th class="section-divider">Fajr</th>
                 <th>Dhuhr</th>
@@ -1827,6 +1873,7 @@
                 const rowDate = parseDate(row['Date']);
                 const today = new Date();
                 const isToday = rowDate.toDateString() === today.toDateString();
+                const fajrStartCell = hasFajrStart ? `<td>${row['Fajr Start']}</td>` : '';
                 const zawalCell = hasZawal ? `<td>${row['Zawal']}</td>` : '';
 
                 return `
@@ -1835,15 +1882,17 @@
                     <td>${row['Day']}</td>
                     <td>${row['Islamic Day'] || row['Ramadan'] || row['Hijri']}</td>
                     <td class="section-divider">${row['Sehri Ends']}</td>
+                    ${fajrStartCell}
                     <td>${row['Sunrise']}</td>
                     ${zawalCell}
                     <td>${row['Zohr']}</td>
                     <td>${row['Asr']}</td>
+                    ${hasMaghribJamaat ? `<td>${row['Maghrib Iftari']}</td>` : ''}
                     ${hasEshaStart ? `<td>${row['Esha']}</td>` : ''}
                     <td class="section-divider">${row["Fajr Jama'at"]}</td>
                     <td>${row["Zohar Jama'at"] || '\u2014'}</td>
                     <td>${row["Asr Jama'at"]}</td>
-                    <td>${row['Maghrib Iftari']}</td>
+                    <td>${hasMaghribJamaat ? (row["Maghrib Jama'at"] || '\u2014') : row['Maghrib Iftari']}</td>
                     <td>${row["Esha Jama'at"]}</td>
                   </tr>
                 `;
@@ -1860,7 +1909,7 @@
       if (todayRow) {
         const next = getNextPrayer(todayRow);
         if (next) {
-          const dhuhrStartIdx = hasZawal ? 6 : 5;
+          const dhuhrStartIdx = 5 + (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0);
           const eshaOffset = hasEshaStart ? 1 : 0;
           const jamaatIdx = dhuhrStartIdx + 2 + eshaOffset;
           const colMap = {
