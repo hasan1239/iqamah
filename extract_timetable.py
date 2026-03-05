@@ -209,9 +209,34 @@ def validate_and_fix_rows(rows: list[dict], notes: str) -> list[dict]:
     6. Fill zohar_jamaat from notes if still empty
     7. Warn about remaining ordering violations
     """
-    fix_counts = {"zohar_shift": 0, "esha_move": 0, "asr_swap": 0, "maghrib_swap": 0, "esha_swap": 0, "zohar_notes": 0}
+    fix_counts = {"day_fix": 0, "fajr_start_swap": 0, "zawal_swap": 0, "zohar_shift": 0, "esha_move": 0, "asr_swap": 0, "maghrib_swap": 0, "esha_swap": 0, "zohar_notes": 0}
+
+    valid_days = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
+    day_fixes = {"Thur": "Thu", "Tues": "Tue", "Weds": "Wed"}
 
     for row in rows:
+        # Fix day: standardise to exactly three letters
+        day = row.get("day", "").strip()
+        if day and day not in valid_days:
+            fixed = day_fixes.get(day, day[:3])
+            if fixed in valid_days:
+                row["day"] = fixed
+                fix_counts["day_fix"] += 1
+
+        # Fix: Sehri Ends > Fajr Start — swap them
+        sehri_mins = time_to_minutes(row.get("sehri_ends", ""), force_pm=False)
+        fajr_start_mins = time_to_minutes(row.get("fajr_start", ""), force_pm=False)
+        if sehri_mins and fajr_start_mins and sehri_mins > fajr_start_mins:
+            row["sehri_ends"], row["fajr_start"] = row["fajr_start"], row["sehri_ends"]
+            fix_counts["fajr_start_swap"] += 1
+
+        # Fix 0: Zawal > Zohr — swap them (model confused the columns)
+        zawal_mins = time_to_minutes(row.get("zawal", ""), force_pm=True)
+        zohr_mins = time_to_minutes(row.get("zohr", ""), force_pm=True)
+        if zawal_mins and zohr_mins and zawal_mins > zohr_mins:
+            row["zawal"], row["zohr"] = row["zohr"], row["zawal"]
+            fix_counts["zawal_swap"] += 1
+
         zohr_mins = time_to_minutes(row.get("zohr", ""), force_pm=True)
         zohar_j_mins = time_to_minutes(row.get("zohar_jamaat", ""), force_pm=True)
         asr_mins = time_to_minutes(row.get("asr", ""), force_pm=True)
@@ -277,10 +302,25 @@ def validate_and_fix_rows(rows: list[dict], notes: str) -> list[dict]:
 
     # Fix 7: Warn about remaining cross-prayer ordering violations
     for i, row in enumerate(rows):
+        sehri_mins = time_to_minutes(row.get("sehri_ends", ""), force_pm=False)
+        fajr_start_mins = time_to_minutes(row.get("fajr_start", ""), force_pm=False)
+        fajr_j_mins = time_to_minutes(row.get("fajr_jamaat", ""), force_pm=False)
+        sunrise_mins = time_to_minutes(row.get("sunrise", ""), force_pm=False)
+        zawal_mins = time_to_minutes(row.get("zawal", ""), force_pm=True)
         zohr_mins = time_to_minutes(row.get("zohr", ""), force_pm=True)
         asr_mins = time_to_minutes(row.get("asr", ""), force_pm=True)
         maghrib_mins = time_to_minutes(row.get("maghrib_iftari", ""), force_pm=True)
 
+        if fajr_start_mins and sehri_mins and fajr_start_mins <= sehri_mins:
+            print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Fajr Start ({row.get('fajr_start')}) <= Sehri Ends ({row.get('sehri_ends')})")
+        if fajr_start_mins and sunrise_mins and fajr_start_mins >= sunrise_mins:
+            print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Fajr Start ({row.get('fajr_start')}) >= Sunrise ({row.get('sunrise')})")
+        if fajr_start_mins and fajr_j_mins and fajr_start_mins >= fajr_j_mins:
+            print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Fajr Start ({row.get('fajr_start')}) >= Fajr Jama'at ({row.get('fajr_jamaat')})")
+        if zawal_mins and sunrise_mins and zawal_mins <= sunrise_mins:
+            print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Zawal ({row.get('zawal')}) <= Sunrise ({row.get('sunrise')})")
+        if zawal_mins and zohr_mins and zawal_mins >= zohr_mins:
+            print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Zawal ({row.get('zawal')}) >= Zohr ({row.get('zohr')})")
         if zohr_mins and asr_mins and zohr_mins >= asr_mins:
             print(f"  ⚠️  Row {i+1} ({row.get('date', '?')}): Zohr ({row.get('zohr')}) >= Asr ({row.get('asr')})")
         if asr_mins and maghrib_mins and asr_mins >= maghrib_mins:
@@ -295,8 +335,8 @@ def save_csv(data: dict, output_path: str, notes: str = ""):
     rows = validate_and_fix_rows(rows, notes)
 
     fieldnames = [
-        "Date", "Day", "Islamic Day", "Sehri Ends", "Sunrise",
-        "Zohr", "Asr", "Esha",
+        "Date", "Day", "Islamic Day", "Sehri Ends", "Fajr Start", "Sunrise",
+        "Zawal", "Zohr", "Asr", "Esha",
         "Fajr Jama'at", "Zohar Jama'at", "Asr Jama'at",
         "Maghrib Iftari", "Maghrib Jama'at", "Esha Jama'at",
     ]
@@ -310,7 +350,9 @@ def save_csv(data: dict, output_path: str, notes: str = ""):
                 "Day": row.get("day", ""),
                 "Islamic Day": row.get("islamic_day", "") or row.get("ramadan_day", ""),
                 "Sehri Ends": row.get("sehri_ends", ""),
+                "Fajr Start": row.get("fajr_start", ""),
                 "Sunrise": row.get("sunrise", ""),
+                "Zawal": row.get("zawal", ""),
                 "Zohr": row.get("zohr", ""),
                 "Asr": row.get("asr", ""),
                 "Esha": row.get("esha", ""),

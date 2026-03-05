@@ -29,7 +29,9 @@ STANDARD_COLUMNS = {
     "day": "Day",
     "hijri": "Islamic Day",
     "sehri_ends": "Sehri Ends",
+    "fajr_start": "Fajr Start",
     "sunrise": "Sunrise",
+    "zawal": "Zawal",
     "zohr": "Zohr",
     "asr": "Asr",
     "esha": "Esha",
@@ -143,6 +145,18 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
         "{{ASR_JAMAAT}}": times["asr_jamaat"],
         "{{ESHA_JAMAAT}}": times["esha_jamaat"],
     }
+
+    fajr_start = times.get("fajr_start", "")
+    if fajr_start:
+        fajr_start_row = (
+            '<div class="time-row">'
+            '<div class="label"><span class="emoji">\U0001f305</span>Fajr</div>'
+            f'<div class="value">{fajr_start}</div>'
+            '</div>'
+        )
+    else:
+        fajr_start_row = ""
+    replacements["{{FAJR_START_ROW}}"] = fajr_start_row
 
     maghrib_jamaat = times.get("maghrib_jamaat", "")
     if maghrib_jamaat:
