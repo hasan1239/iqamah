@@ -289,9 +289,21 @@
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .cta-btn:hover {
+    .cta-btn:hover:not(.disabled) {
       transform: translateY(-1px);
       box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .cta-btn.disabled {
+      opacity: 0.5;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cta-hint {
+      margin: 8px 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
     .masjid-grid {
@@ -671,7 +683,8 @@
 
     <div class="cta-section">
       <p class="cta-heading">Can't find your masjid?</p>
-      <a href="/add" class="cta-btn">Add it here</a>
+      <p class="cta-hint">Coming soon</p>
+      <span class="cta-btn disabled">Add it here</span>
     </div>
 
     <footer>
