@@ -251,6 +251,61 @@
       line-height: 1.6;
     }
 
+    /* CTA section */
+    .cta-section {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 600px;
+      padding: 28px 24px;
+      background: var(--gold-tint-08);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+
+    .cta-heading {
+      font-size: 1.35rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .cta-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 10px 28px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #1a1a2e;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn:hover:not(.disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .cta-btn.disabled {
+      opacity: 0.5;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cta-hint {
+      margin: 8px 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
     .masjid-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -536,6 +591,19 @@
         font-size: 1rem;
       }
 
+      .cta-section {
+        padding: 32px 28px;
+        margin: 40px auto;
+      }
+
+      .cta-heading {
+        font-size: 1.3rem;
+      }
+
+      .cta-text {
+        font-size: 1rem;
+      }
+
       .masjid-grid {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 20px;
@@ -609,8 +677,14 @@
       })();
     </script>
 
-    <div class="info-box">
+    <div class="info-box" style="display: none;">
       <p><span class="icon">💡</span>Tap a masjid to view prayer times, switch between today and month views, and download a matching lockscreen/wallpaper.</p>
+    </div>
+
+    <div class="cta-section">
+      <p class="cta-heading">Can't find your masjid?</p>
+      <p class="cta-hint">Coming soon</p>
+      <span class="cta-btn disabled">Add it here</span>
     </div>
 
     <footer>
@@ -711,10 +785,10 @@
       }).join('');
 
       document.getElementById('masjidGrid').innerHTML = cardsHTML
-        + '<div class="masjid-card coming-soon add-masjid-card"><div>'
-        + '<div class="masjid-name">Add Your Masjid</div>'
-        + '<div class="coming-soon-text">Coming soon</div>'
-        + '</div></div>';
+        // + '<a href="/add" class="masjid-card add-masjid-card">'
+        // + '<div class="masjid-name">Add Your Masjid</div>'
+        // + '</a>'
+        ;
     }
 
     async function loadMasjids() {

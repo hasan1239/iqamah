@@ -29,7 +29,9 @@ STANDARD_COLUMNS = {
     "day": "Day",
     "hijri": "Islamic Day",
     "sehri_ends": "Sehri Ends",
+    "fajr_start": "Fajr Start",
     "sunrise": "Sunrise",
+    "zawal": "Zawal",
     "zohr": "Zohr",
     "asr": "Asr",
     "esha": "Esha",
@@ -37,6 +39,7 @@ STANDARD_COLUMNS = {
     "zohar_jamaat": "Zohar Jama'at",
     "asr_jamaat": "Asr Jama'at",
     "maghrib_iftari": "Maghrib Iftari",
+    "maghrib_jamaat": "Maghrib Jama'at",
     "esha_jamaat": "Esha Jama'at",
 }
 
@@ -96,6 +99,9 @@ def extract_times(row: dict, mosque_config: dict) -> dict:
         if col_name is None:
             # Quba has no Zohar Jama'at column — fixed at 1:00
             times[key] = "1:00"
+        elif col_name not in row:
+            # Column not in CSV (e.g. older CSVs without Maghrib Jama'at)
+            times[key] = ""
         else:
             times[key] = row[col_name].strip()
     return times
@@ -106,14 +112,21 @@ def format_date_line(row: dict, mosque_config: dict) -> tuple[str, str]:
     cols = mosque_config["columns"]
     day_name = row[cols["day"]].strip()
     date_str = row[cols["date"]].strip()
-    hijri_day = row[cols["hijri"]].strip()
+    hijri_raw = row[cols["hijri"]].strip()
 
     day_map = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
     full_day = day_map.get(day_name, day_name)
 
     english_date = f"{full_day} {date_str} {YEAR}"
-    islamic_date = f"{hijri_day} Ramadan {HIJRI_YEAR}"
+
+    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447")
+    month_abbrev_map = {"Ram": "Ramadan", "Shaw": "Shawwal", "Sha": "Sha'ban"}
+    parts = hijri_raw.split()
+    if len(parts) == 2 and parts[1] in month_abbrev_map:
+        islamic_date = f"{parts[0]} {month_abbrev_map[parts[1]]} {HIJRI_YEAR}"
+    else:
+        islamic_date = f"{hijri_raw} Ramadan {HIJRI_YEAR}"
 
     return english_date, islamic_date
 
@@ -139,6 +152,30 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
         "{{ASR_JAMAAT}}": times["asr_jamaat"],
         "{{ESHA_JAMAAT}}": times["esha_jamaat"],
     }
+
+    fajr_start = times.get("fajr_start", "")
+    if fajr_start:
+        fajr_start_row = (
+            '<div class="time-row">'
+            '<div class="label"><span class="emoji">\U0001f305</span>Fajr</div>'
+            f'<div class="value">{fajr_start}</div>'
+            '</div>'
+        )
+    else:
+        fajr_start_row = ""
+    replacements["{{FAJR_START_ROW}}"] = fajr_start_row
+
+    maghrib_jamaat = times.get("maghrib_jamaat", "")
+    if maghrib_jamaat:
+        maghrib_row = (
+            '<div class="time-row">'
+            '<div class="label"><span class="emoji">\U0001f54c</span>Maghrib Jama\'at</div>'
+            f'<div class="value bright">{maghrib_jamaat}</div>'
+            '</div>'
+        )
+    else:
+        maghrib_row = ""
+    replacements["{{MAGHRIB_JAMAAT_ROW}}"] = maghrib_row
 
     for placeholder, value in replacements.items():
         html = html.replace(placeholder, value)
