@@ -135,7 +135,7 @@ METADATA FIELD DEFINITIONS:
 ROW FIELD DEFINITIONS:
 - "date": "DD Mon" format (e.g. "18 Feb", "1 Mar", "15 Jun"). Always include the month abbreviation even if the timetable only shows day numbers.
 - "day": Three-letter day name, always standardised to exactly three letters regardless of what the timetable shows: Mon, Tue, Wed, Thu, Fri, Sat, Sun. Convert variations like "Thur" → "Thu", "Tues" → "Tue", etc.
-- "islamic_day": The Islamic/Hijri day number if shown in the timetable. Set to null if not present.
+- "islamic_day": The Islamic/Hijri day number if shown in the timetable. Set to null if not present. If the timetable spans multiple Islamic months, include the day number as-is — month boundaries will be inferred from the day number sequence (resets from a high number back to 1 indicate a new month).
 - "sehri_ends": When suhoor/sehri must stop (pre-dawn time). If the timetable has both a Sehri Ends column and a Fajr Start column, use the Sehri Ends column for this field. If only one pre-dawn column exists, map it to "sehri_ends" and leave "fajr_start" as "".
 - "fajr_start": Fajr prayer start time (when the Fajr prayer window opens). This is separate from sehri_ends (when eating must stop) and fajr_jamaat (when the congregation prays). Set to "" if the timetable does not have a separate Fajr Start column. Do NOT confuse this with fajr_jamaat — Fajr Start is a few minutes after Sehri Ends, while Fajr Jama'at is typically 10-15 minutes after Sehri Ends.
 - "sunrise": Sunrise time

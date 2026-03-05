@@ -329,10 +329,41 @@ def validate_and_fix_rows(rows: list[dict], notes: str) -> list[dict]:
     return rows
 
 
+def _assign_islamic_months(rows: list[dict]) -> list[str]:
+    """Assign month abbreviations (Sha/Ram/Shaw) to rows based on islamic_day sequence.
+
+    Detects month boundaries from day number resets.
+    """
+    days = []
+    for row in rows:
+        val = row.get("islamic_day") or row.get("ramadan_day") or ""
+        days.append(int(val) if str(val).strip() else 0)
+
+    n = len(days)
+    resets = [i for i in range(1, n) if days[i] < days[i - 1]]
+
+    if len(resets) == 0:
+        return ["Shaw" if d > 30 else "Ram" for d in days]
+
+    if len(resets) == 1:
+        reset = resets[0]
+        if days[0] == 1:
+            return ["Ram" if i < reset else "Shaw" for i in range(n)]
+        elif days[-1] >= 28:
+            return ["Sha" if i < reset else "Ram" for i in range(n)]
+        else:
+            return ["Ram" if i < reset else "Shaw" for i in range(n)]
+
+    r1, r2 = resets[0], resets[1]
+    return ["Sha" if i < r1 else "Ram" if i < r2 else "Shaw" for i in range(n)]
+
+
 def save_csv(data: dict, output_path: str, notes: str = ""):
     """Save extracted data as a CSV file."""
     rows = data["rows"]
     rows = validate_and_fix_rows(rows, notes)
+
+    months = _assign_islamic_months(rows)
 
     fieldnames = [
         "Date", "Day", "Islamic Day", "Sehri Ends", "Fajr Start", "Sunrise",
@@ -344,11 +375,19 @@ def save_csv(data: dict, output_path: str, notes: str = ""):
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        for row in rows:
+        for i, row in enumerate(rows):
+            day_val = row.get("islamic_day") or row.get("ramadan_day") or ""
+            if str(day_val).strip():
+                day_num = int(day_val)
+                if months[i] == "Shaw" and day_num > 30:
+                    day_num -= 30
+                islamic_day_str = f"{day_num} {months[i]}"
+            else:
+                islamic_day_str = ""
             writer.writerow({
                 "Date": row.get("date", ""),
                 "Day": row.get("day", ""),
-                "Islamic Day": row.get("islamic_day", "") or row.get("ramadan_day", ""),
+                "Islamic Day": islamic_day_str,
                 "Sehri Ends": row.get("sehri_ends", ""),
                 "Fajr Start": row.get("fajr_start", ""),
                 "Sunrise": row.get("sunrise", ""),

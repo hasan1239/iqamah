@@ -112,14 +112,21 @@ def format_date_line(row: dict, mosque_config: dict) -> tuple[str, str]:
     cols = mosque_config["columns"]
     day_name = row[cols["day"]].strip()
     date_str = row[cols["date"]].strip()
-    hijri_day = row[cols["hijri"]].strip()
+    hijri_raw = row[cols["hijri"]].strip()
 
     day_map = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
     full_day = day_map.get(day_name, day_name)
 
     english_date = f"{full_day} {date_str} {YEAR}"
-    islamic_date = f"{hijri_day} Ramadan {HIJRI_YEAR}"
+
+    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447")
+    month_abbrev_map = {"Ram": "Ramadan", "Shaw": "Shawwal", "Sha": "Sha'ban"}
+    parts = hijri_raw.split()
+    if len(parts) == 2 and parts[1] in month_abbrev_map:
+        islamic_date = f"{parts[0]} {month_abbrev_map[parts[1]]} {HIJRI_YEAR}"
+    else:
+        islamic_date = f"{hijri_raw} Ramadan {HIJRI_YEAR}"
 
     return english_date, islamic_date
 

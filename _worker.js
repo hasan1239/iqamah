@@ -240,6 +240,34 @@ async function deduplicateSlug(slug, address, env) {
 
 // --- CSV generation ---
 
+function assignIslamicMonths(rows) {
+  const days = rows.map(r => {
+    const v = r.islamic_day != null ? r.islamic_day : (r.ramadan_day || 0);
+    return parseInt(v) || 0;
+  });
+  const n = days.length;
+  const resets = [];
+  for (let i = 1; i < n; i++) {
+    if (days[i] < days[i - 1]) resets.push(i);
+  }
+
+  if (resets.length === 0) {
+    return days.map(d => d > 30 ? 'Shaw' : 'Ram');
+  }
+  if (resets.length === 1) {
+    const reset = resets[0];
+    if (days[0] === 1) {
+      return days.map((_, i) => i < reset ? 'Ram' : 'Shaw');
+    } else if (days[n - 1] >= 28) {
+      return days.map((_, i) => i < reset ? 'Sha' : 'Ram');
+    } else {
+      return days.map((_, i) => i < reset ? 'Ram' : 'Shaw');
+    }
+  }
+  const [r1, r2] = resets;
+  return days.map((_, i) => i < r1 ? 'Sha' : i < r2 ? 'Ram' : 'Shaw');
+}
+
 function generateCsvString(rows) {
   const headers = [
     'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Fajr Start', 'Sunrise',
@@ -248,10 +276,18 @@ function generateCsvString(rows) {
     'Maghrib Iftari', 'Maghrib Jama\'at', 'Esha Jama\'at',
   ];
 
+  const months = assignIslamicMonths(rows);
+
   const fieldMap = {
     'Date': 'date',
     'Day': 'day',
-    'Islamic Day': r => (r.islamic_day != null ? String(r.islamic_day) : (r.ramadan_day || '')),
+    'Islamic Day': (r, i) => {
+      const v = r.islamic_day != null ? r.islamic_day : (r.ramadan_day || '');
+      if (v === '' || v == null) return '';
+      let dayNum = parseInt(v);
+      if (months[i] === 'Shaw' && dayNum > 30) dayNum -= 30;
+      return `${dayNum} ${months[i]}`;
+    },
     'Sehri Ends': 'sehri_ends',
     'Fajr Start': 'fajr_start',
     'Sunrise': 'sunrise',
@@ -268,15 +304,15 @@ function generateCsvString(rows) {
   };
 
   let csv = headers.join(',') + '\n';
-  for (const row of rows) {
+  rows.forEach((row, idx) => {
     const vals = headers.map(h => {
       const mapper = fieldMap[h];
-      if (typeof mapper === 'function') return mapper(row);
+      if (typeof mapper === 'function') return mapper(row, idx);
       if (typeof mapper === 'string') return row[mapper] || '';
       return '';
     });
     csv += vals.join(',') + '\n';
-  }
+  });
   return csv;
 }
 

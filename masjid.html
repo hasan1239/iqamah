@@ -1557,7 +1557,12 @@
       }
 
       const englishDate = formatFullDate(todayRow['Date'], todayRow['Day']);
-      const hijriDate = `${todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri']} Ramadan 1447`;
+      const hijriRaw = todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '';
+      const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha'ban" };
+      const hijriParts = hijriRaw.trim().split(' ');
+      const hijriDate = (hijriParts.length === 2 && monthAbbrevMap[hijriParts[1]])
+        ? `${hijriParts[0]} ${monthAbbrevMap[hijriParts[1]]} 1447`
+        : `${hijriRaw} Ramadan 1447`;
 
       const tomorrowRow = getTomorrowRow();
       const tomorrowSehri = tomorrowRow ? tomorrowRow['Sehri Ends'] : null;
@@ -1785,6 +1790,29 @@
       }
     }
 
+    function getHijriRange() {
+      const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha\u2019ban" };
+      const getIslamic = row => (row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '').trim();
+      const firstRaw = getIslamic(csvData[0]);
+      const lastRaw = getIslamic(csvData[csvData.length - 1]);
+
+      const parseParts = raw => {
+        const parts = raw.split(' ');
+        if (parts.length === 2 && monthAbbrevMap[parts[1]]) {
+          return { day: parts[0], month: monthAbbrevMap[parts[1]] };
+        }
+        return { day: parseInt(raw), month: 'Ramadan' };
+      };
+
+      const first = parseParts(firstRaw);
+      const last = parseParts(lastRaw);
+
+      if (first.month === last.month) {
+        return `${first.day}-${last.day} ${first.month} 1447`;
+      }
+      return `${first.day} ${first.month} \u2013 ${last.day} ${last.month} 1447`;
+    }
+
     function renderMonthlyView() {
       const hasFajrStart = csvData.some(row => row['Fajr Start']);
       const hasZawal = csvData.some(row => row['Zawal']);
@@ -1800,7 +1828,7 @@
         <header>
           <h1>${config.display_name}</h1>
           <div class="date-line">Ramadan 2026 Timetable</div>
-          <div class="hijri-line">1-30 Ramadan 1447</div>
+          <div class="hijri-line">${getHijriRange()}</div>
         </header>
 
         <div class="view-toggle">
