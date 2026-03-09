@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="favicon.ico">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#050c18">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Prayerly">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <title>Prayerly - Daily Prayer Times</title>
+  <script>
+    (function() {
+      function syncTheme() {
+        var stored = localStorage.getItem('prayerly-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
+        var isLight = document.documentElement.classList.contains('light-mode');
+        if (shouldBeLight && !isLight) document.documentElement.classList.add('light-mode');
+        else if (!shouldBeLight && isLight) document.documentElement.classList.remove('light-mode');
+      }
+      syncTheme();
+      window.addEventListener('pageshow', function(e) { if (e.persisted) syncTheme(); });
+    })();
+  </script>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
+      --overlay-1: #1a4a3a;
+      --overlay-2: #0d2d40;
+      --overlay-3: #1a2a0d;
+      --pattern-line: rgba(212,175,55,0.02);
+      --text-primary: #e8e8e8;
+      --text-secondary: #c0c0c0;
+      --text-tertiary: #a0a0a0;
+      --text-muted: #808080;
+      --gold: #d4af37;
+      --gold-dark: #b8941f;
+      --gold-hover: #f0cd5a;
+      --card-bg: rgba(255,255,255,0.05);
+      --card-border: rgba(212,175,55,0.2);
+      --card-hover-bg: rgba(255,255,255,0.08);
+      --card-active-bg: rgba(255,255,255,0.1);
+      --star-opacity: 1;
+      --gold-tint-08: rgba(212,175,55,0.08);
+      --gold-tint-10: rgba(212,175,55,0.1);
+      --gold-tint-40: rgba(212,175,55,0.4);
+      --divider-footer: rgba(255,255,255,0.1);
+      --coming-soon-text: #606060;
+      --card-shadow: rgba(0,0,0,0.4);
+      --gold-tint-50: rgba(212,175,55,0.5);
+    }
+
+    :root.light-mode {
+      --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
+      --overlay-1: #d4e8d0;
+      --overlay-2: #cce0ec;
+      --overlay-3: #e8e0c8;
+      --pattern-line: rgba(180,140,30,0.04);
+      --text-primary: #1a1a2e;
+      --text-secondary: #3d3d50;
+      --text-tertiary: #5a5a6e;
+      --text-muted: #7a7a8a;
+      --gold: #b8941f;
+      --gold-dark: #9a7a10;
+      --gold-hover: #d4af37;
+      --card-bg: rgba(255,255,255,0.75);
+      --card-border: rgba(180,140,30,0.2);
+      --card-hover-bg: rgba(255,255,255,0.9);
+      --card-active-bg: rgba(255,255,255,0.95);
+      --star-opacity: 0;
+      --gold-tint-08: rgba(180,140,30,0.08);
+      --gold-tint-10: rgba(180,140,30,0.1);
+      --gold-tint-40: rgba(180,140,30,0.35);
+      --divider-footer: rgba(0,0,0,0.1);
+      --coming-soon-text: #9a9a9a;
+      --card-shadow: rgba(0,0,0,0.15);
+      --gold-tint-50: rgba(180,140,30,0.4);
+    }
+
+    .theme-transitioning,
+    .theme-transitioning *,
+    .theme-transitioning *::before,
+    .theme-transitioning *::after {
+      transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease !important;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 30px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Gradient overlays - subtle lockscreen background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 50% -10%, var(--overlay-1), transparent 60%),
+        radial-gradient(ellipse at 100% 50%, var(--overlay-2), transparent 50%),
+        radial-gradient(ellipse at 0% 80%, var(--overlay-3), transparent 50%);
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* Islamic geometric pattern overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(60deg, transparent, transparent 28px, var(--pattern-line) 28px, var(--pattern-line) 29px),
+        repeating-linear-gradient(-60deg, transparent, transparent 28px, var(--pattern-line) 28px, var(--pattern-line) 29px);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Twinkling stars */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: var(--star-opacity);
+      transition: opacity 0.4s ease;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Golden dust motes for light mode */
+    .dust-motes {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    :root.light-mode .dust-motes { opacity: 1; }
+
+    .mote {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,140,30,0.4), rgba(180,140,30,0) 70%);
+      animation: drift 8s ease-in-out infinite;
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+      33% { transform: translateY(-12px) translateX(5px); opacity: 0.5; }
+      66% { transform: translateY(-6px) translateX(-3px); opacity: 0.3; }
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      color: var(--gold);
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .dates {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Usage info box */
+    .info-box {
+      background: var(--gold-tint-08);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 25px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .info-box .icon {
+      font-size: 1.2rem;
+      margin-right: 6px;
+    }
+
+    .info-box p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* CTA section */
+    .cta-section {
+      text-align: center;
+      margin: 30px auto;
+      max-width: 600px;
+      padding: 28px 24px;
+      background: var(--gold-tint-08);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+    }
+
+    .cta-heading {
+      font-size: 1.35rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .cta-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      padding: 10px 28px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #1a1a2e;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 8px;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .cta-btn:hover:not(.disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .cta-btn.disabled {
+      opacity: 0.5;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .cta-hint {
+      margin: 8px 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .masjid-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .masjid-card {
+      position: relative;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+
+    .masjid-card:active:not(.coming-soon) {
+      background: var(--card-active-bg);
+      transform: scale(0.98);
+    }
+
+    .masjid-name {
+      font-size: 1.35rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    /* Pin button */
+    .pin-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 2;
+    }
+    .pin-btn svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      transition: color 0.2s ease;
+    }
+    @media (max-width: 767px) {
+      .pin-btn { opacity: 0.5; }
+    }
+    @media (min-width: 768px) {
+      .masjid-card:hover .pin-btn { opacity: 0.5; }
+    }
+    .pin-btn:hover { opacity: 1 !important; }
+    .pin-btn:hover svg { color: var(--gold); }
+
+    /* Pinned card styles */
+    .masjid-card.pinned {
+      border-left: 3px solid var(--gold);
+    }
+    .masjid-card.pinned .pin-btn {
+      opacity: 1;
+    }
+    .masjid-card.pinned .pin-btn svg {
+      color: var(--gold);
+    }
+    .pinned-label {
+      font-size: 0.7rem;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 4px;
+      display: none;
+    }
+    .masjid-card.pinned .pinned-label {
+      display: block;
+    }
+
+    .masjid-card.coming-soon {
+      cursor: default;
+      flex-direction: column;
+    }
+
+    .masjid-card.add-masjid-card {
+      border-style: dashed;
+    }
+
+    .masjid-card.coming-soon .masjid-name {
+      color: var(--text-muted);
+    }
+
+    .coming-soon-text {
+      font-size: 0.85rem;
+      color: var(--coming-soon-text);
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* Skeleton cards */
+    @keyframes skeleton-pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .skeleton-card .skeleton-bone {
+      width: 70%;
+      height: 1.35rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 6px;
+      animation: skeleton-pulse 1.5s ease-in-out infinite;
+    }
+    :root.light-mode .skeleton-card .skeleton-bone {
+      background: rgba(0,0,0,0.1);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--divider-footer);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: calc(env(safe-area-inset-top, 0px) + 16px);
+      right: 16px;
+      z-index: 100;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .theme-toggle:hover {
+      background: var(--card-hover-bg);
+      border-color: var(--gold-tint-50);
+    }
+
+    .theme-toggle svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .theme-icon--sun { display: block; color: var(--gold); }
+    .theme-icon--moon { display: none; color: var(--gold); }
+    :root.light-mode .theme-icon--sun { display: none; }
+    :root.light-mode .theme-icon--moon { display: block; }
+
+    /* Grid controls / Nearby button */
+    .grid-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 25px;
+    }
+
+    .location-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+
+    .location-btn:hover {
+      background: var(--card-hover-bg);
+      border-color: var(--gold-tint-40);
+      color: var(--gold);
+    }
+
+    .location-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-tint-08);
+    }
+
+    .location-btn.loading .location-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    .location-btn.error {
+      border-color: #c0392b;
+      color: #e74c3c;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .location-icon {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 767px) {
+      .location-btn { display: inline-flex; }
+    }
+
+    /* Distance badge on cards */
+    .distance-badge {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* Desktop/Tablet styles */
+    @media (min-width: 768px) {
+      body {
+        padding: 50px 30px;
+      }
+
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+
+      h1 {
+        font-size: 3rem;
+        letter-spacing: -1px;
+      }
+
+      .subtitle {
+        font-size: 1.15rem;
+      }
+
+      .dates {
+        font-size: 0.95rem;
+      }
+
+      .info-box {
+        padding: 18px 24px;
+        margin: 35px auto;
+      }
+
+      .info-box p {
+        font-size: 1rem;
+      }
+
+      .cta-section {
+        padding: 32px 28px;
+        margin: 40px auto;
+      }
+
+      .cta-heading {
+        font-size: 1.3rem;
+      }
+
+      .cta-text {
+        font-size: 1rem;
+      }
+
+      .masjid-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      .masjid-card {
+        padding: 28px;
+        min-height: 80px;
+      }
+
+      .masjid-card:hover:not(.coming-soon) {
+        background: var(--card-hover-bg);
+        border-color: var(--gold-tint-40);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px var(--card-shadow);
+      }
+
+      .masjid-name {
+        font-size: 1.5rem;
+      }
+
+      footer {
+        margin-top: 20px;
+        padding-top: 20px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
+    <svg class="theme-icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="theme-icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+
+  <!-- Stars container -->
+  <div class="stars" id="stars"></div>
+  <!-- Golden dust motes (light mode) -->
+  <div class="dust-motes" id="dustMotes"></div>
+
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <img src="salahdaily_icon.png" alt="Prayerly" class="logo">
+        <h1>Prayerly</h1>
+      </div>
+    </header>
+
+    <div class="grid-controls">
+      <button class="location-btn" id="locationBtn">
+        <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        <span class="location-btn-text">Nearby</span>
+      </button>
+    </div>
+
+    <div class="masjid-grid" id="masjidGrid"></div>
+    <script>
+      (function() {
+        fetch('data/mosques/index.json').then(function(r) { return r.json(); }).then(function(configs) {
+          var html = '';
+          for (var i = 0; i < configs.length; i++) html += '<div class="skeleton-card"><div class="skeleton-bone"></div></div>';
+          document.getElementById('masjidGrid').innerHTML = html;
+        }).catch(function() {
+          document.getElementById('masjidGrid').innerHTML =
+            '<div class="skeleton-card"><div class="skeleton-bone"></div></div>'.repeat(3);
+        });
+      })();
+    </script>
+
+    <div class="info-box" style="display: none;">
+      <p><span class="icon">💡</span>Tap a masjid to view prayer times, switch between today and month views, and download a matching lockscreen/wallpaper.</p>
+    </div>
+
+    <div class="cta-section">
+      <p class="cta-heading">Can't find your masjid?</p>
+      <p class="cta-hint">Coming soon</p>
+      <span class="cta-btn disabled">Add it here</span>
+    </div>
+
+    <footer>
+      <p>© Prayerly <span id="appVersion"></span></p>
+    </footer>
+  </div>
+
+  <script>
+    // Load version
+    fetch('version.json').then(r => r.json()).then(d => {
+      document.getElementById('appVersion').textContent = 'v' + d.version;
+    }).catch(() => {});
+
+    // Generate twinkling stars
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = (Math.random() * 3) + 's';
+      star.style.animationDuration = (2 + Math.random() * 2) + 's';
+      const size = Math.random() > 0.85 ? 3 : (Math.random() > 0.5 ? 2 : 1);
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      starsContainer.appendChild(star);
+    }
+
+    // Generate golden dust motes (light mode)
+    const motesContainer = document.getElementById('dustMotes');
+    for (let i = 0; i < 60; i++) {
+      const mote = document.createElement('div');
+      mote.className = 'mote';
+      mote.style.left = Math.random() * 100 + '%';
+      mote.style.top = Math.random() * 100 + '%';
+      mote.style.animationDelay = (Math.random() * 8) + 's';
+      mote.style.animationDuration = (6 + Math.random() * 6) + 's';
+      const size = 3 + Math.random() * 5;
+      mote.style.width = size + 'px';
+      mote.style.height = size + 'px';
+      motesContainer.appendChild(mote);
+    }
+
+    // Auto-generate masjid cards from JSON configs
+    var cachedConfigs = [];
+    var userLocation = null;
+    var distanceMap = {};
+    var locationActive = false;
+
+    function haversineDistance(lat1, lon1, lat2, lon2) {
+      var R = 3958.8; // Earth radius in miles
+      var dLat = (lat2 - lat1) * Math.PI / 180;
+      var dLon = (lon2 - lon1) * Math.PI / 180;
+      var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+        + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180)
+        * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function renderMasjidCards(configs) {
+      var pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+      var sorted = configs.slice().sort(function(a, b) {
+        // If location active, sort purely by distance
+        if (locationActive) {
+          var distA = distanceMap[a.slug];
+          var distB = distanceMap[b.slug];
+          if (distA == null && distB == null) return 0;
+          if (distA == null) return 1;
+          if (distB == null) return -1;
+          return distA - distB;
+        }
+        // Otherwise, pinned first
+        if (a.slug === pinnedSlug && b.slug !== pinnedSlug) return -1;
+        if (b.slug === pinnedSlug && a.slug !== pinnedSlug) return 1;
+        // Then alphabetical by name
+        return a.display_name.localeCompare(b.display_name);
+      });
+
+      var cardsHTML = sorted.map(function(config) {
+        var isPinned = config.slug === pinnedSlug;
+        var distBadge = '';
+        if (locationActive && distanceMap[config.slug] != null) {
+          var d = distanceMap[config.slug];
+          var label = d < 0.1 ? '< 0.1 mi' : d.toFixed(1) + ' mi';
+          distBadge = '<span class="distance-badge">' + label + '</span>';
+        }
+        return '<a href="/' + config.slug + '" class="masjid-card' + (isPinned ? ' pinned' : '') + '">'
+          + '<button class="pin-btn" data-slug="' + config.slug + '" aria-label="' + (isPinned ? 'Unpin' : 'Pin') + ' ' + config.display_name + '" title="' + (isPinned ? 'Unpin masjid' : 'Pin as my masjid') + '">'
+          + '<svg viewBox="0 0 24 24" fill="' + (isPinned ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+          + '<path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>'
+          + '</svg></button>'
+          + distBadge
+          + '<div>'
+          + '<div class="pinned-label">My Masjid</div>'
+          + '<div class="masjid-name">' + config.display_name + '</div>'
+          + '</div></a>';
+      }).join('');
+
+      document.getElementById('masjidGrid').innerHTML = cardsHTML
+        // + '<a href="/add" class="masjid-card add-masjid-card">'
+        // + '<div class="masjid-name">Add Your Masjid</div>'
+        // + '</a>'
+        ;
+    }
+
+    async function loadMasjids() {
+      try {
+        var indexRes = await fetch('data/mosques/index.json');
+        if (!indexRes.ok) {
+          console.warn('Could not load masjid index, using fallback cards');
+          return;
+        }
+        cachedConfigs = await indexRes.json();
+        if (cachedConfigs.length === 0) {
+          console.warn('No masjid configs loaded, using fallback cards');
+          return;
+        }
+        renderMasjidCards(cachedConfigs);
+      } catch (error) {
+        console.error('Error loading masjids:', error);
+        document.getElementById('masjidGrid').innerHTML =
+          '<a href="/faizul" class="masjid-card"><div class="masjid-name">Masjid Faizul Islam</div></a>'
+          + '<a href="/quba" class="masjid-card"><div class="masjid-name">Masjid Quba Trust</div></a>'
+          + '<a href="/aisha" class="masjid-card"><div class="masjid-name">Masjid Aisha</div></a>';
+      }
+    }
+
+    loadMasjids();
+
+    // Pin/unpin click handler (event delegation)
+    document.getElementById('masjidGrid').addEventListener('click', function(e) {
+      var pinBtn = e.target.closest('.pin-btn');
+      if (!pinBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      var slug = pinBtn.getAttribute('data-slug');
+      var current = localStorage.getItem('prayerly-pinned-masjid');
+
+      if (current === slug) {
+        localStorage.removeItem('prayerly-pinned-masjid');
+      } else {
+        localStorage.setItem('prayerly-pinned-masjid', slug);
+      }
+
+      renderMasjidCards(cachedConfigs);
+    });
+
+    // Location / Nearby button
+    document.getElementById('locationBtn').addEventListener('click', function() {
+      var btn = this;
+      var textEl = btn.querySelector('.location-btn-text');
+
+      // Toggle off if already active
+      if (locationActive) {
+        locationActive = false;
+        userLocation = null;
+        distanceMap = {};
+        btn.classList.remove('active');
+        textEl.textContent = 'Nearby';
+        renderMasjidCards(cachedConfigs);
+        return;
+      }
+
+      if (!navigator.geolocation) {
+        showLocationError(btn, textEl, 'Not supported');
+        return;
+      }
+
+      btn.classList.add('loading');
+      textEl.textContent = 'Locating...';
+
+      navigator.geolocation.getCurrentPosition(
+        function(pos) {
+          btn.classList.remove('loading');
+          userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+
+          // Compute distances
+          distanceMap = {};
+          cachedConfigs.forEach(function(config) {
+            if (config.lat != null && config.lon != null) {
+              distanceMap[config.slug] = haversineDistance(
+                userLocation.lat, userLocation.lon, config.lat, config.lon
+              );
+            }
+          });
+
+          locationActive = true;
+          btn.classList.add('active');
+          textEl.textContent = 'Nearby';
+          renderMasjidCards(cachedConfigs);
+        },
+        function(err) {
+          btn.classList.remove('loading');
+          var msg = err.code === 1 ? 'Location denied'
+            : err.code === 3 ? 'Timed out'
+            : 'Location error';
+          showLocationError(btn, textEl, msg);
+        },
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 300000 }
+      );
+    });
+
+    function showLocationError(btn, textEl, msg) {
+      btn.classList.add('error');
+      textEl.textContent = msg;
+      setTimeout(function() {
+        btn.classList.remove('error');
+        textEl.textContent = 'Nearby';
+      }, 3000);
+    }
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+
+  <script>
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      var root = document.documentElement;
+      var meta = document.querySelector('meta[name="theme-color"]');
+
+      function updateThemeColor() {
+        var isLight = root.classList.contains('light-mode');
+        if (meta) meta.content = isLight ? '#faf6ef' : '#050c18';
+      }
+
+      toggle.addEventListener('click', function() {
+        // Crossfade overlay: capture current bg gradient, fade it out over the new theme
+        var overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:3;pointer-events:none;transition:opacity 0.4s ease;';
+        overlay.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+        document.body.appendChild(overlay);
+
+        root.classList.add('theme-transitioning');
+        root.classList.toggle('light-mode');
+        var isLight = root.classList.contains('light-mode');
+        localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
+        updateThemeColor();
+        requestAnimationFrame(function() {
+          requestAnimationFrame(function() { overlay.style.opacity = '0'; });
+        });
+        setTimeout(function() {
+          overlay.remove();
+          root.classList.remove('theme-transitioning');
+        }, 400);
+        if (window.goatcounter) {
+          window.goatcounter.count({
+            path: '/theme/' + (isLight ? 'light' : 'dark'),
+            title: 'Theme toggle',
+            event: true,
+          });
+        }
+      });
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (localStorage.getItem('prayerly-theme')) return;
+        if (e.matches) {
+          root.classList.remove('light-mode');
+        } else {
+          root.classList.add('light-mode');
+        }
+        updateThemeColor();
+      });
+
+      updateThemeColor();
+    })();
+  </script>
+
+  <!-- GoatCounter Analytics -->
+  <script data-goatcounter="https://hasan1239.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

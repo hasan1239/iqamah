@@ -1,8 +1,8 @@
 {
   "name": "Prayerly - Daily Prayer Times",
   "short_name": "Prayerly",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#050c18",

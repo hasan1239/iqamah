@@ -462,22 +462,27 @@ export default {
 
     // --- Static asset routing ---
 
+    // SPA shell routing: intercept app routes before static assets
+    // (otherwise / would serve the old index.html)
+    const segment = path.replace(/^\//, '').replace(/\/$/, '');
+    const isAppRoute = !segment || (segment && !segment.includes('.') && !segment.includes('/'));
+    const knownAppRoutes = ['', 'add', 'qibla', 'settings'];
+    const isKnownRoute = knownAppRoutes.includes(segment);
+
+    // For known app routes, serve SPA directly
+    if (isKnownRoute) {
+      return serveStaticPage('index.html', request, env);
+    }
+
     // Try serving static asset first
     const response = await env.ASSETS.fetch(request);
     if (response.status !== 404) {
       return response;
     }
 
-    // If 404, try clean URL routing
-    const segment = path.replace(/^\//, '').replace(/\/$/, '');
-    if (segment && !segment.includes('.') && !segment.includes('/')) {
-      // /add → serve add.html
-      if (segment === 'add') {
-        return serveStaticPage('add.html', request, env);
-      }
-
-      // Other single-segment paths → serve masjid.html (slug routing)
-      return serveStaticPage('masjid.html', request, env);
+    // If 404 and single-segment path, treat as masjid slug → serve SPA shell
+    if (isAppRoute) {
+      return serveStaticPage('index.html', request, env);
     }
 
     return response;
