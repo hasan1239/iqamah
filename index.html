@@ -131,6 +131,7 @@
       --install-border: rgba(180,140,30,0.25);
       --card-shadow: rgba(0,0,0,0.15);
       --coming-soon-text: #9a9a9a;
+      --nav-bg: #f4efe5;
     }
 
     /* ============================================
@@ -220,7 +221,7 @@
        APP CONTAINER
        ============================================ */
     #app {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
       position: relative;
       z-index: 10;
@@ -260,16 +261,19 @@
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(56px + env(safe-area-inset-bottom, 0px));
       padding-bottom: env(safe-area-inset-bottom, 0px);
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: var(--nav-bg, #182B31);
       border-top: 1px solid var(--card-border);
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
       z-index: 200;
+    }
+    .bottom-nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 420px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
     }
 
     .nav-tab {
@@ -290,6 +294,7 @@
     .nav-tab.active {
       color: var(--gold);
     }
+    .nav-tab.active .nav-label { font-weight: 700; }
 
     .nav-icon {
       display: flex;
@@ -305,6 +310,7 @@
       font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.3px;
+      text-transform: uppercase;
     }
 
     /* Hide bottom nav on desktop */
@@ -329,7 +335,7 @@
       padding: 0 24px;
     }
     .desktop-nav-inner {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -481,9 +487,14 @@
        HOME VIEW
        ============================================ */
     .home-header { text-align: center; margin-bottom: 25px; }
-    .home-header h1 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; }
+    .home-header h1 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-height: 1; }
     .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
     .logo { width: 40px; height: 40px; object-fit: contain; }
+
+    /* Greeting */
+    .greeting { text-align: left; margin-bottom: 20px; }
+    .greeting-salaam { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+    .greeting-name { font-size: 1.5rem; font-weight: 600; color: var(--text-primary); line-height: 1.2; margin-top: 2px; }
 
     .grid-controls { display: flex; justify-content: flex-end; margin-bottom: 12px; }
     .location-btn {
@@ -501,37 +512,293 @@
     .location-icon { width: 16px; height: 16px; flex-shrink: 0; }
     @media (max-width: 767px) { .location-btn { display: inline-flex; } }
 
-    .masjid-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 12px; }
+    /* Hero card */
+    .hero-card {
+      position: relative; border: 1px solid var(--gold-tint-40);
+      border-radius: 20px; overflow: hidden; margin-bottom: 28px;
+      box-shadow: 0 0 30px var(--gold-shadow-light);
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      padding: 18px 20px 20px;
+    }
+    .hero-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .hero-badge {
+      font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700;
+      padding: 4px 10px; border-radius: 20px;
+    }
+    .hero-badge-primary {
+      background: var(--gold); color: #0a1210;
+    }
+    .hero-name { font-size: 1.3rem; color: var(--text-primary); font-weight: 700; line-height: 1.3; margin-bottom: 14px; }
+
+    .hero-body {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .hero-next-prayer {
+      background: var(--gold-tint-08); border-radius: 14px; padding: 14px;
+      border: 1px solid var(--gold-tint-10); min-height: 80px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero-next-label {
+      font-size: 0.6rem; color: var(--gold); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;
+    }
+    .hero-next-time { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+    .hero-next-time .hero-next-ampm { font-size: 0.8rem; font-weight: 500; }
+    .hero-next-detail { font-size: 0.6rem; color: var(--text-muted); font-weight: 500; }
+    .hero-next-countdown { color: var(--text-muted); }
+    .hero-next-skeleton {
+      width: 100%; display: flex; flex-direction: column; gap: 8px;
+    }
+    .hero-next-skeleton .skeleton-bone { height: 14px; border-radius: 4px; background: var(--gold-tint-15); }
+    .hero-next-skeleton .skeleton-bone:first-child { width: 60px; }
+    .hero-next-skeleton .skeleton-bone:last-child { width: 80px; }
+    .hero-actions { display: flex; flex-direction: column; }
+    .hero-view-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      flex: 1; text-align: center; padding: 0 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #1a1a2e; font-size: 0.75rem; font-weight: 700; text-decoration: none;
+      border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .hero-view-btn svg { width: 16px; height: 16px; }
+    .hero-view-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px var(--gold-shadow-light); }
+    .hero-unpin-btn {
+      display: none; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: transparent; border: none;
+      color: var(--gold); cursor: pointer;
+      transition: background 0.2s;
+    }
+    @media (min-width: 768px) { .hero-unpin-btn { display: flex; } }
+    .hero-unpin-btn:hover { background: var(--gold-tint-15); }
+    .hero-unpin-btn svg { width: 16px; height: 16px; }
+
+    /* Masjid scroll section */
+    .masjid-scroll-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .masjid-scroll-title {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text-muted); font-weight: 700;
+    }
+
+    /* Vertical list (default, no hero) */
+    .masjid-grid {
+      display: flex; flex-direction: column; gap: 12px; margin-top: 4px;
+    }
+
+    /* Horizontal scroll (when hero card is present) */
+    .masjid-grid.horizontal {
+      flex-direction: row; overflow-x: auto; gap: 14px;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+      padding-bottom: 12px;
+    }
+    .masjid-grid.horizontal::-webkit-scrollbar { display: none; }
+    .masjid-grid.horizontal { -ms-overflow-style: none; scrollbar-width: none; }
+    .masjid-grid.horizontal .masjid-card {
+      min-width: 240px; max-width: 260px; flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
     .masjid-card {
       position: relative; background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 24px; transition: all 0.3s ease; cursor: pointer;
-      text-decoration: none; color: inherit; display: flex; align-items: center;
-      justify-content: center; min-height: 70px;
+      border-radius: 16px; padding: 14px; transition: all 0.3s ease; cursor: pointer;
+      text-decoration: none; color: inherit; display: flex; flex-direction: column;
+      backdrop-filter: blur(12px);
       -webkit-tap-highlight-color: var(--gold-tint-10);
     }
+    .masjid-card:hover { border-color: var(--gold-tint-40); }
     .masjid-card:active { background: var(--card-active-bg); transform: scale(0.98); }
-    .masjid-name { font-size: 1.35rem; color: var(--gold); font-weight: 600; text-align: center; line-height: 1.3; }
 
-    .pin-btn {
-      position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
-      border: none; background: transparent; cursor: pointer; padding: 0;
+    .masjid-card-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .masjid-card-thumb {
+      width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+      background: radial-gradient(circle at top right, #162a26, #0a1210);
+      border: 1px solid var(--gold-tint-10);
       display: flex; align-items: center; justify-content: center;
-      opacity: 0; transition: opacity 0.2s ease; z-index: 2;
+      color: var(--gold-tint-40);
     }
-    .pin-btn svg { width: 16px; height: 16px; color: var(--text-muted); transition: color 0.2s ease; }
-    @media (max-width: 767px) { .pin-btn { opacity: 0.5; } }
-    @media (min-width: 768px) { .masjid-card:hover .pin-btn { opacity: 0.5; } }
+    .masjid-card-thumb svg { width: 18px; height: 18px; }
+    :root.light-mode .masjid-card-thumb {
+      background: radial-gradient(circle at top right, #e8dfc0, #f0ebe0);
+      color: var(--gold-tint-50);
+    }
+    .masjid-card-info { min-width: 0; flex: 1; }
+    .masjid-name { font-size: 0.85rem; color: var(--text-primary); font-weight: 700; text-align: left; line-height: 1.3; }
+    .masjid-card-sub { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
+
+    .masjid-card-bottom {
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+      padding-top: 10px; border-top: 1px solid var(--divider-subtle);
+    }
+    .masjid-card-next { display: flex; flex-direction: column; }
+    .masjid-card-next-label { font-size: 0.55rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .masjid-card-next-time { font-size: 0.85rem; font-weight: 700; color: var(--text-primary); }
+    .masjid-card-chevron {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+    }
+    .masjid-card-chevron svg { width: 16px; height: 16px; }
+
+    /* Vertical list card: single-row layout */
+    .masjid-grid:not(.horizontal) .masjid-card {
+      flex-direction: row; align-items: center; gap: 12px; padding: 12px 14px;
+    }
+    .masjid-grid:not(.horizontal) .masjid-card-top { margin-bottom: 0; flex: 1; align-items: center; }
+    .masjid-grid:not(.horizontal) .masjid-card-bottom {
+      border-top: none; padding-top: 0; gap: 10px; flex-shrink: 0;
+    }
+
+    /* Pin button — desktop only, inline next to name */
+    .pin-btn {
+      display: none; width: 20px; height: 20px; flex-shrink: 0; margin-left: 6px;
+      border: none; background: transparent; cursor: pointer; padding: 0;
+      align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.2s ease;
+    }
+    .pin-btn svg { width: 14px; height: 14px; color: var(--text-muted); transition: color 0.2s ease; }
+    @media (min-width: 768px) {
+      .pin-btn { display: inline-flex; position: relative; top: -2px; }
+      .masjid-card:hover .pin-btn { opacity: 0.6; }
+    }
     .pin-btn:hover { opacity: 1 !important; }
     .pin-btn:hover svg { color: var(--gold); }
-    .masjid-card.pinned { border-left: 3px solid var(--gold); }
-    .masjid-card.pinned .pin-btn { opacity: 1; }
-    .masjid-card.pinned .pin-btn svg { color: var(--gold); }
-    .pinned-label { font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; display: none; }
-    .masjid-card.pinned .pinned-label { display: block; }
-    .distance-badge { position: absolute; top: 8px; left: 12px; font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; pointer-events: none; }
+    .pin-btn.pinned { opacity: 1; }
+    .pin-btn.pinned svg { color: var(--gold); }
+    .masjid-name-row { display: flex; align-items: center; }
 
+    /* Long-press visual feedback (mobile) */
+    .masjid-card.long-pressing { transform: scale(0.97); transition: transform 0.3s ease; }
+
+    /* Pin toast */
+    .pin-toast {
+      position: fixed; bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--card-bg); border: 1px solid var(--gold-tint-40);
+      backdrop-filter: blur(12px); color: var(--text-primary);
+      padding: 10px 20px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+      z-index: 300; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      white-space: nowrap;
+    }
+    .pin-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .pin-toast .toast-star { color: var(--gold); margin-right: 6px; }
+
+    /* Set as primary button (prayer times page) */
+    .set-primary-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; padding: 10px; margin-top: 8px;
+      background: transparent; border: 1px solid var(--gold-tint-30);
+      color: var(--gold); font-size: 0.85rem; font-weight: 600;
+      border-radius: 8px; cursor: pointer; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .set-primary-btn:hover { background: var(--gold-tint-08); }
+    .set-primary-btn svg { width: 16px; height: 16px; }
+    .set-primary-btn.is-primary { border-color: var(--gold); background: var(--gold-tint-08); }
+
+    .distance-badge { font-size: 0.6rem; color: var(--text-muted); white-space: nowrap; }
+
+    /* No hero state */
+    .home-no-hero {
+      text-align: center; padding: 32px 20px; margin-bottom: 20px;
+      background: var(--card-bg); border: 1px dashed var(--card-border); border-radius: 16px;
+    }
+    .home-no-hero-icon { color: var(--gold-tint-30); margin-bottom: 12px; }
+    .home-no-hero-icon svg { width: 40px; height: 40px; }
+    .home-no-hero-text { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .home-no-hero-sub { font-size: 0.8rem; color: var(--text-muted); }
+    .home-no-hero-sub a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+    /* Recently viewed section */
+    .recent-section { margin-bottom: 12px; }
+    .recent-list { display: flex; flex-direction: column; gap: 8px; }
+    .recent-card {
+      display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; text-decoration: none; color: inherit;
+      transition: all 0.2s ease; cursor: pointer;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+    .recent-card:hover { border-color: var(--gold-tint-40); background: var(--card-hover-bg); }
+    .recent-card:active { background: var(--card-active-bg); transform: scale(0.98); }
+    .recent-card-thumb {
+      width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0;
+      background: radial-gradient(circle at top right, #162a26, #0a1210);
+      border: 1px solid var(--gold-tint-10);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-tint-40);
+    }
+    :root.light-mode .recent-card-thumb {
+      background: radial-gradient(circle at top right, #e8dfc0, #f0ebe0);
+      color: var(--gold-tint-50);
+    }
+    .recent-card-thumb svg { width: 18px; height: 18px; }
+    .recent-card-info { flex: 1; min-width: 0; }
+    .recent-card-info .masjid-name { font-size: 0.8rem; }
+    .recent-card-info .masjid-card-sub { font-size: 0.6rem; }
+    .recent-card-next { display: flex; flex-direction: column; flex-shrink: 0; text-align: right; }
+
+    /* Browse all masjids button */
+    .home-browse-all { margin-bottom: 24px; }
+    .home-browse-btn {
+      display: flex; align-items: center; gap: 10px; width: 100%;
+      padding: 14px 16px; background: var(--gold-tint-08);
+      border: 1px solid var(--gold-tint-25); border-radius: 12px;
+      text-decoration: none; color: var(--gold); font-size: 0.85rem; font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .home-browse-btn:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-40); }
+    .home-browse-btn svg:first-child { width: 22px; height: 22px; flex-shrink: 0; }
+    .home-browse-btn span { flex: 1; }
+    .home-browse-btn svg:last-child { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.6; }
+
+    /* ============================================
+       MASJIDS VIEW
+       ============================================ */
+    .masjids-view { padding-bottom: 40px; }
+    .masjids-header { margin-bottom: 16px; }
+    .masjids-header h1 { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
+    .masjids-search-bar {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      padding: 6px 6px 6px 14px; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; transition: border-color 0.2s;
+    }
+    .masjids-search-bar:focus-within { border-color: var(--gold-tint-50); }
+    .masjids-search-icon { flex-shrink: 0; color: var(--text-muted); }
+    .masjids-search-icon svg { width: 18px; height: 18px; }
+    .masjids-search-input {
+      flex: 1; background: none; border: none; outline: none;
+      color: var(--text-primary); font-size: 0.85rem; font-family: inherit;
+    }
+    .masjids-search-input::placeholder { color: var(--text-muted); }
+    .masjids-search-bar .location-btn { flex-shrink: 0; margin: 0; }
+    .pin-hint {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 12px; margin-bottom: 12px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
+      border-radius: 8px; font-size: 0.75rem; color: var(--gold-tint-70);
+    }
+    .pin-hint-dismiss {
+      background: none; border: none; color: var(--gold-tint-50); cursor: pointer;
+      font-size: 1rem; padding: 0 2px; line-height: 1; flex-shrink: 0;
+    }
+    .masjids-empty {
+      text-align: center; padding: 40px 20px; color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* CTA */
     .cta-section {
-      text-align: center; margin: 30px auto; max-width: 600px; padding: 28px 24px;
+      text-align: center; margin: 16px auto; max-width: 600px; padding: 28px 24px;
       background: var(--gold-tint-08); border: 1px solid var(--card-border); border-radius: 12px;
     }
     .cta-heading { font-size: 1.35rem; color: var(--gold); font-weight: 600; margin: 0 0 16px; }
@@ -739,6 +1006,8 @@
     .settings-icon { display: flex; color: var(--gold); }
     .settings-label { font-size: 0.95rem; color: var(--text-primary); }
     .settings-value { font-size: 0.85rem; color: var(--text-muted); }
+    .settings-input { background: transparent; border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; color: var(--text-primary); font-family: inherit; width: 140px; text-align: right; }
+    .settings-input:focus { outline: none; border-color: var(--gold); }
     .settings-chevron { color: var(--text-muted); display: flex; }
 
     /* Toggle switch */
@@ -864,10 +1133,21 @@
       body { padding: 50px 30px; }
       #app { padding-top: 40px; }
       .home-header { display: none; }
-      .masjid-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
-      .masjid-card { padding: 28px; min-height: 80px; }
+      .masjid-grid, .masjid-grid.horizontal {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 12px;
+        overflow-x: visible; flex-direction: unset; scroll-snap-type: none; padding-bottom: 0;
+      }
+      .masjid-grid .masjid-card, .masjid-grid.horizontal .masjid-card {
+        min-width: 0; max-width: none; flex-shrink: 1;
+        flex-direction: row; align-items: center; gap: 12px; padding: 14px 16px;
+      }
+      .masjid-grid .masjid-card-top { margin-bottom: 0; flex: 1; align-items: center; }
+      .masjid-grid .masjid-card-bottom { border-top: none; padding-top: 0; gap: 10px; flex-shrink: 0; }
       .masjid-card:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-40); transform: translateY(-3px); box-shadow: 0 10px 25px var(--card-shadow); }
-      .masjid-name { font-size: 1.5rem; }
+      .hero-card { max-width: 600px; }
+      .home-browse-btn { max-width: 400px; }
+      .recent-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .masjids-header h1 { font-size: 1.5rem; }
     }
   </style>
 </head>
@@ -881,6 +1161,7 @@
       </a>
       <div class="desktop-nav-links" id="desktop-nav-links">
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>
+        <a href="/masjids" class="desktop-nav-link" data-nav="masjids" data-link>Masjids</a>
         <a href="/settings" class="desktop-nav-link" data-nav="settings" data-link>Settings</a>
       </div>
     </div>

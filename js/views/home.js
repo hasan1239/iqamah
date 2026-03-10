@@ -1,14 +1,29 @@
-// Home view — masjid grid with pin and nearby features
+// Home view — hero card (pinned masjid) + recently viewed
 import { navigate } from '../router.js';
-import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
+import { parseCSV, getTodayRow } from '../utils/csv.js';
+import { formatCountdown } from '../utils/countdown.js';
 
 let cachedConfigs = [];
-let userLocation = null;
-let distanceMap = {};
-let locationActive = false;
+let heroCountdownInterval = null;
+let toastTimer = null;
+
+// SVG icons
+const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 
 export function render(container) {
+  const userName = localStorage.getItem('prayerly-user-name');
+  let greetingHTML;
+  if (userName) {
+    greetingHTML = `<div class="greeting-salaam">Assalamu Alaikum,</div><div class="greeting-name">${userName}</div>`;
+  } else {
+    greetingHTML = `<div class="greeting-salaam">Assalamu Alaikum</div>`;
+  }
+
   container.innerHTML = `
     <div class="home-view">
       <header class="home-header">
@@ -17,45 +32,28 @@ export function render(container) {
           <h1>Prayerly</h1>
         </div>
       </header>
+      <div class="greeting">${greetingHTML}</div>
 
-      <div class="grid-controls">
-        <button class="location-btn" id="locationBtn">
-          <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span class="location-btn-text">Nearby</span>
-        </button>
-      </div>
+      <div id="heroContainer"></div>
 
-      <div class="masjid-grid" id="masjidGrid"></div>
+      <div id="recentSection"></div>
 
-      <div class="cta-section">
-        <p class="cta-heading">Can't find your masjid?</p>
-        <a class="cta-btn" href="/add" data-link>Add it here</a>
+      <div class="home-browse-all">
+        <a href="/masjids" class="home-browse-btn" data-link>
+          ${MOSQUE_SVG}
+          <span>Browse All Masjids</span>
+          ${CHEVRON_SVG}
+        </a>
       </div>
 
       <div class="install-banner" id="installBanner"></div>
 
-      <footer class="home-footer">
-        <p>&copy; Prayerly <span id="homeVersion"></span></p>
-      </footer>
+      <div class="pin-toast" id="pinToast"></div>
     </div>
   `;
 
-  // Show skeleton cards immediately
-  const grid = document.getElementById('masjidGrid');
-  grid.innerHTML = '<div class="skeleton-card"><div class="skeleton-bone"></div></div>'.repeat(3);
-
-  // Load version
-  fetch('/version.json').then(r => r.json()).then(d => {
-    const el = document.getElementById('homeVersion');
-    if (el) el.textContent = 'v' + d.version;
-  }).catch(() => {});
-
   loadMasjids();
-  setupLocationBtn();
-  setupGridClicks();
+  setupHeroClicks();
   setupInstallBanner();
 }
 
@@ -64,136 +62,260 @@ async function loadMasjids() {
     const res = await fetch('/data/mosques/index.json');
     if (!res.ok) return;
     cachedConfigs = await res.json();
-    if (cachedConfigs.length === 0) return;
-    renderMasjidCards(cachedConfigs);
+    renderHero();
+    renderRecentlyViewed();
   } catch (error) {
     console.error('Error loading masjids:', error);
-    const grid = document.getElementById('masjidGrid');
-    if (grid) {
-      grid.innerHTML =
-        '<a href="/faizul" class="masjid-card" data-link><div class="masjid-name">Masjid Faizul Islam</div></a>'
-        + '<a href="/quba" class="masjid-card" data-link><div class="masjid-name">Masjid Quba Trust</div></a>';
+  }
+}
+
+// --- Hero card ---
+
+function renderHero() {
+  const heroContainer = document.getElementById('heroContainer');
+  if (!heroContainer) return;
+
+  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+  const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
+
+  if (!pinnedConfig) {
+    heroContainer.innerHTML = `
+      <div class="home-no-hero">
+        <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
+        <div class="home-no-hero-text">No masjid selected</div>
+        <div class="home-no-hero-sub">Set a masjid as your primary from the <a href="/masjids" data-link>Masjids</a> tab</div>
+      </div>`;
+    return;
+  }
+
+  heroContainer.innerHTML = `
+    <div class="hero-card">
+      <div class="hero-header">
+        <span class="hero-badge hero-badge-primary">My Masjid</span>
+        <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Unpin ${pinnedConfig.display_name}" title="Unpin masjid">
+          ${STAR_FILLED_SVG}
+        </button>
+      </div>
+      <div class="hero-name">${pinnedConfig.display_name}</div>
+      <div class="hero-body">
+        <div class="hero-next-prayer" id="heroNextPrayer">
+          <div class="hero-next-skeleton">
+            <div class="skeleton-bone"></div>
+            <div class="skeleton-bone"></div>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <a href="/${pinnedConfig.slug}" class="hero-view-btn" data-link>${CLOCK_SVG} View Times</a>
+        </div>
+      </div>
+    </div>`;
+
+  loadHeroNextPrayer(pinnedConfig);
+}
+
+// --- Recently viewed ---
+
+function renderRecentlyViewed() {
+  const section = document.getElementById('recentSection');
+  if (!section) return;
+
+  const recentSlugs = getRecentSlugs();
+  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+
+  // Filter out pinned masjid and only show ones that exist in configs
+  const recentConfigs = recentSlugs
+    .filter(s => s !== pinnedSlug)
+    .map(s => cachedConfigs.find(c => c.slug === s))
+    .filter(Boolean)
+    .slice(0, 4);
+
+  if (recentConfigs.length === 0) {
+    section.innerHTML = '';
+    return;
+  }
+
+  section.innerHTML = `
+    <div class="recent-section">
+      <div class="masjid-scroll-header">
+        <span class="masjid-scroll-title">Recently Viewed</span>
+      </div>
+      <div class="masjid-grid">
+        ${recentConfigs.map(config => {
+          const subLine = config.address ? config.address.split(',').slice(-2).join(',').trim() : '';
+          return `<a href="/${config.slug}" class="masjid-card" data-link>
+            <div class="masjid-card-top">
+              <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
+              <div class="masjid-card-info">
+                <div class="masjid-name">${config.display_name}</div>
+                ${subLine ? `<div class="masjid-card-sub">${subLine}</div>` : ''}
+              </div>
+            </div>
+            <div class="masjid-card-bottom">
+              <div class="masjid-card-next" data-recent-next="${config.slug}">
+                <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
+                <div class="skeleton-bone" style="width:56px;height:12px"></div>
+              </div>
+              <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
+            </div>
+          </a>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+  loadRecentCardPrayers(recentConfigs);
+}
+
+function getRecentSlugs() {
+  try {
+    return JSON.parse(localStorage.getItem('prayerly-recent-masjids') || '[]');
+  } catch { return []; }
+}
+
+// --- Prayer time helpers ---
+
+function parseTimeTodayWithAMPM(timeStr, isAM) {
+  const parts = timeStr.trim().split(':');
+  if (parts.length < 2) return null;
+  let hours = parseInt(parts[0]);
+  const minutes = parseInt(parts[1]);
+  if (isNaN(hours) || isNaN(minutes)) return null;
+  if (!isAM && hours !== 12) hours += 12;
+  if (isAM && hours === 12) hours = 0;
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+}
+
+function getNextPrayerFromRow(row) {
+  const prayers = [
+    { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
+    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
+    { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
+    { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
+    { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
+  ];
+  const now = new Date();
+  for (const prayer of prayers) {
+    let timeStr = null;
+    for (const key of prayer.keys) {
+      if (row[key]) { timeStr = row[key]; break; }
+    }
+    if (!timeStr && prayer.defaultTime) timeStr = prayer.defaultTime;
+    if (!timeStr) continue;
+    const date = parseTimeTodayWithAMPM(timeStr, prayer.isAM);
+    if (date && date > now) {
+      const diff = date.getTime() - now.getTime();
+      return { name: prayer.name, time: timeStr, countdown: formatCountdown(diff), isAM: prayer.isAM };
+    }
+  }
+  return null;
+}
+
+function formatTimeDisplay(timeStr, isAM) {
+  const parts = timeStr.trim().split(':');
+  if (parts.length < 2) return timeStr;
+  const h = parseInt(parts[0]);
+  const m = parts[1];
+  return `${h}:${m} <span class="hero-next-ampm">${isAM ? 'AM' : 'PM'}</span>`;
+}
+
+// --- Hero next prayer ---
+
+async function loadHeroNextPrayer(config) {
+  const panel = document.getElementById('heroNextPrayer');
+  if (!panel) return;
+
+  try {
+    const csvFile = config.csv || config.slug + '.csv';
+    const res = await fetch(`/data/${csvFile}`);
+    if (!res.ok) { panel.innerHTML = ''; return; }
+    const text = await res.text();
+    const csvData = parseCSV(text);
+    const todayRow = getTodayRow(csvData);
+    if (!todayRow) { panel.innerHTML = ''; return; }
+
+    updateHeroPanel(panel, todayRow);
+
+    if (heroCountdownInterval) clearInterval(heroCountdownInterval);
+    heroCountdownInterval = setInterval(() => {
+      const p = document.getElementById('heroNextPrayer');
+      if (!p) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
+      updateHeroPanel(p, todayRow);
+    }, 60000);
+  } catch {
+    panel.innerHTML = '';
+  }
+}
+
+function updateHeroPanel(panel, todayRow) {
+  const next = getNextPrayerFromRow(todayRow);
+  if (!next) {
+    panel.innerHTML = `<div class="hero-next-label">No more prayers today</div>`;
+    return;
+  }
+  panel.innerHTML = `
+    <div class="hero-next-label">Next Prayer</div>
+    <div class="hero-next-time">${formatTimeDisplay(next.time, next.isAM)}</div>
+    <div class="hero-next-detail">${next.name}${next.countdown ? ` <span class="hero-next-countdown">${next.countdown}</span>` : ''}</div>`;
+}
+
+// --- Recent card prayers ---
+
+async function loadRecentCardPrayers(configs) {
+  for (const config of configs) {
+    const el = document.querySelector(`[data-recent-next="${config.slug}"]`);
+    if (!el) continue;
+    try {
+      const csvFile = config.csv || config.slug + '.csv';
+      const res = await fetch(`/data/${csvFile}`);
+      if (!res.ok) { el.innerHTML = ''; continue; }
+      const text = await res.text();
+      const csvData = parseCSV(text);
+      const todayRow = getTodayRow(csvData);
+      if (!todayRow) { el.innerHTML = ''; continue; }
+      const next = getNextPrayerFromRow(todayRow);
+      if (next) {
+        el.innerHTML = `
+          <span class="masjid-card-next-label">${next.name}</span>
+          <span class="masjid-card-next-time">${next.time} ${next.isAM ? 'AM' : 'PM'}</span>`;
+      } else {
+        el.innerHTML = '';
+      }
+    } catch {
+      el.innerHTML = '';
     }
   }
 }
 
-function renderMasjidCards(configs) {
-  const grid = document.getElementById('masjidGrid');
-  if (!grid) return;
+// --- Hero interactions ---
 
-  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
-  const sorted = configs.slice().sort((a, b) => {
-    if (locationActive) {
-      const distA = distanceMap[a.slug];
-      const distB = distanceMap[b.slug];
-      if (distA == null && distB == null) return 0;
-      if (distA == null) return 1;
-      if (distB == null) return -1;
-      return distA - distB;
-    }
-    if (a.slug === pinnedSlug && b.slug !== pinnedSlug) return -1;
-    if (b.slug === pinnedSlug && a.slug !== pinnedSlug) return 1;
-    return a.display_name.localeCompare(b.display_name);
-  });
-
-  grid.innerHTML = sorted.map(config => {
-    const isPinned = config.slug === pinnedSlug;
-    let distBadge = '';
-    if (locationActive && distanceMap[config.slug] != null) {
-      const d = distanceMap[config.slug];
-      const label = d < 0.1 ? '< 0.1 mi' : d.toFixed(1) + ' mi';
-      distBadge = `<span class="distance-badge">${label}</span>`;
-    }
-    return `<a href="/${config.slug}" class="masjid-card${isPinned ? ' pinned' : ''}" data-link>
-      <button class="pin-btn" data-slug="${config.slug}" aria-label="${isPinned ? 'Unpin' : 'Pin'} ${config.display_name}" title="${isPinned ? 'Unpin masjid' : 'Pin as my masjid'}">
-        <svg viewBox="0 0 24 24" fill="${isPinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
-        </svg>
-      </button>
-      ${distBadge}
-      <div>
-        <div class="pinned-label">My Masjid</div>
-        <div class="masjid-name">${config.display_name}</div>
-      </div>
-    </a>`;
-  }).join('');
+function setupHeroClicks() {
+  document.addEventListener('click', handleHeroClick, true);
 }
 
-function setupGridClicks() {
-  const grid = document.getElementById('masjidGrid');
-  if (!grid) return;
+function handleHeroClick(e) {
+  const unpinBtn = e.target.closest('.hero-unpin-btn');
+  if (!unpinBtn) return;
+  const homeView = e.target.closest('.home-view');
+  if (!homeView) return;
 
-  grid.addEventListener('click', (e) => {
-    // Pin button
-    const pinBtn = e.target.closest('.pin-btn');
-    if (pinBtn) {
-      e.preventDefault();
-      e.stopPropagation();
-      const slug = pinBtn.dataset.slug;
-      const current = localStorage.getItem('prayerly-pinned-masjid');
-      if (current === slug) {
-        localStorage.removeItem('prayerly-pinned-masjid');
-      } else {
-        localStorage.setItem('prayerly-pinned-masjid', slug);
-      }
-      renderMasjidCards(cachedConfigs);
-      return;
-    }
-  });
+  e.preventDefault();
+  e.stopPropagation();
+  localStorage.removeItem('prayerly-pinned-masjid');
+  showToast('Removed from My Masjid');
+  renderHero();
+  renderRecentlyViewed();
 }
 
-function setupLocationBtn() {
-  const btn = document.getElementById('locationBtn');
-  if (!btn) return;
-
-  btn.addEventListener('click', async () => {
-    const textEl = btn.querySelector('.location-btn-text');
-
-    if (locationActive) {
-      locationActive = false;
-      userLocation = null;
-      distanceMap = {};
-      btn.classList.remove('active');
-      textEl.textContent = 'Nearby';
-      renderMasjidCards(cachedConfigs);
-      return;
-    }
-
-    btn.classList.add('loading');
-    textEl.textContent = 'Locating...';
-
-    try {
-      const pos = await getCurrentPosition();
-      btn.classList.remove('loading');
-      userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-
-      distanceMap = {};
-      cachedConfigs.forEach(config => {
-        if (config.lat != null && config.lon != null) {
-          distanceMap[config.slug] = haversineDistance(
-            userLocation.lat, userLocation.lon, config.lat, config.lon
-          );
-        }
-      });
-
-      locationActive = true;
-      btn.classList.add('active');
-      textEl.textContent = 'Nearby';
-      renderMasjidCards(cachedConfigs);
-    } catch (err) {
-      btn.classList.remove('loading');
-      const msg = err.code === 1 ? 'Location denied'
-        : err.code === 3 ? 'Timed out'
-        : 'Location error';
-      btn.classList.add('error');
-      textEl.textContent = msg;
-      setTimeout(() => {
-        btn.classList.remove('error');
-        textEl.textContent = 'Nearby';
-      }, 3000);
-    }
-  });
+function showToast(html) {
+  const toast = document.getElementById('pinToast');
+  if (!toast) return;
+  toast.innerHTML = html;
+  toast.classList.add('visible');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
 }
+
+// --- Install banner ---
 
 function setupInstallBanner() {
   if (isStandalone()) return;
@@ -201,7 +323,6 @@ function setupInstallBanner() {
   if (!banner) return;
 
   if (canInstall()) {
-    // Android — show install button
     banner.classList.add('has-button');
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
@@ -217,7 +338,6 @@ function setupInstallBanner() {
       banner.classList.remove('visible');
     });
   } else if (isIOSSafari()) {
-    // iOS Safari — show share instructions
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
       <div class="install-banner-text"><strong>Install Prayerly</strong> — tap <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> then <strong>"Add to Home Screen"</strong>.</div>`;
@@ -229,8 +349,13 @@ function setupInstallBanner() {
 }
 
 export function destroy() {
-  // Reset location state when leaving home
-  locationActive = false;
-  userLocation = null;
-  distanceMap = {};
+  if (heroCountdownInterval) {
+    clearInterval(heroCountdownInterval);
+    heroCountdownInterval = null;
+  }
+  if (toastTimer) {
+    clearTimeout(toastTimer);
+    toastTimer = null;
+  }
+  document.removeEventListener('click', handleHeroClick, true);
 }
