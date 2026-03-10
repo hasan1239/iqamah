@@ -132,6 +132,7 @@
       --card-shadow: rgba(0,0,0,0.15);
       --coming-soon-text: #9a9a9a;
       --nav-bg: #f4efe5;
+      --month-header-bg: #f4efe5;
     }
 
     /* ============================================
@@ -447,6 +448,7 @@
 
     .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
     .btn-row .download-btn, .btn-row .btn-primary { margin-top: 0; }
+    .btn-row .set-primary-btn { margin-top: 0; width: auto; }
 
     /* Footer */
     footer, .home-footer {
@@ -766,7 +768,7 @@
        ============================================ */
     .masjids-view { padding-bottom: 40px; }
     .masjids-header { margin-bottom: 16px; }
-    .masjids-header h1 { font-family: 'Cinzel', serif; font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
+    .masjids-header h1 { font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
     .masjids-search-bar {
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
       padding: 6px 6px 6px 14px; background: var(--card-bg); border: 1px solid var(--card-border);
@@ -813,6 +815,15 @@
     /* ============================================
        PRAYER TIMES VIEW
        ============================================ */
+    .prayer-times-view header { position: relative; }
+    .prayer-times-view h1 { font-family: inherit; }
+    .share-icon-btn {
+      position: absolute; top: 0; right: 0;
+      background: none; border: none; cursor: pointer; padding: 6px;
+      color: var(--text-muted); transition: color 0.2s;
+    }
+    .share-icon-btn:hover { color: var(--gold); }
+    .share-icon-btn svg { width: 20px; height: 20px; }
     .date-line { font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 4px; }
     .hijri-line { font-family: 'Amiri', serif; font-size: 0.95rem; color: var(--green); margin-bottom: 10px; }
 
@@ -829,7 +840,7 @@
     .section-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; align-items: stretch; }
     .banner-item { background: linear-gradient(135deg, var(--gold-tint-15), var(--gold-tint-08)); border: 1px solid var(--gold-tint-30); border-radius: 10px; padding: 12px 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
     .banner-label { font-family: 'Lato', sans-serif; font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 6px; font-weight: 400; }
-    .banner-time { font-family: 'Cinzel', serif; font-size: 1.35rem; color: var(--gold); font-weight: 700; }
+    .banner-time { font-size: 1.35rem; color: var(--gold); font-weight: 700; }
     .banner-item.next-prayer { background: linear-gradient(135deg, var(--gold-tint-25), var(--gold-tint-15)); border-color: var(--gold-tint-50); }
 
     /* Flip card */
@@ -840,35 +851,100 @@
     .flip-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotateY(180deg); }
     .flip-hint { position: absolute; top: 6px; right: 8px; font-size: 0.65rem; color: var(--gold-tint-50); line-height: 1; }
 
-    /* Times grid */
-    .section-title { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold); margin-bottom: 12px; text-align: center; font-weight: 600; }
-    .times-grid { display: flex; flex-direction: column; gap: 0; }
-    .time-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--divider); }
-    .time-item:last-child { border-bottom: none; }
-    .time-item .time-label { font-size: 0.9rem; color: var(--text-secondary); font-weight: 400; }
-    .time-item .time-value { font-family: 'Cinzel', serif; font-size: 1.05rem; color: var(--gold); font-weight: 600; }
-    .time-item.next-prayer { background: var(--gold-tint-08); border-left: 3px solid var(--gold); margin: 0 -12px; padding-left: 12px; padding-right: 12px; border-radius: 6px; }
+    /* Times table — 3-column layout */
+    .times-table-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .times-table-header {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      padding: 10px 16px; border-bottom: 1px solid var(--divider);
+    }
+    .times-table-header .time-col {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--text-muted); font-weight: 700; text-align: center;
+    }
+    .times-table-header .time-col:first-child { text-align: left; }
+    .times-table-header .time-col:last-child { text-align: right; }
+    .times-table-body { padding: 0; }
+    .time-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      padding: 12px 16px; border-bottom: 1px solid var(--divider-subtle);
+      align-items: center; transition: background 0.2s;
+    }
+    .time-row:last-child { border-bottom: none; }
+    .time-col { text-align: center; }
+    .time-start {
+      font-size: 0.95rem; color: var(--text-secondary);
+      font-weight: 500; text-align: left;
+    }
+    .time-name {
+      font-size: 0.85rem; color: var(--text-primary); font-weight: 600;
+      position: relative;
+    }
+    .time-jamaat {
+      font-size: 0.95rem; color: var(--gold);
+      font-weight: 600; text-align: right;
+    }
+    .time-row.next-start .time-start,
+    .time-row.next-jamaat .time-jamaat { color: var(--gold); }
+    .time-row.next-start, .time-row.next-jamaat {
+      background: var(--gold-tint-08);
+    }
+    .time-row .countdown {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 0.55rem; color: var(--green); font-weight: 400;
+      white-space: nowrap;
+    }
+    .time-row .countdown-left { left: -8px; transform: translateY(-50%) translateX(-100%); }
+    .time-row .countdown-right { right: -8px; transform: translateY(-50%) translateX(100%); }
+    .section-title { font-size: 1rem; color: var(--gold); margin-bottom: 12px; text-align: center; font-weight: 600; }
     .countdown { font-family: 'Lato', sans-serif; font-size: 0.7rem; color: var(--green); font-weight: 400; margin-left: 6px; }
     @media (max-width: 767px) {
       .banner-label .countdown { display: block; margin-left: 0; }
       .banner-label { min-height: 2.4em; display: flex; flex-direction: column; justify-content: center; }
     }
 
-    /* Calendar/Monthly view */
-    .calendar-grid { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 20px; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--gold-tint-30) transparent; }
-    .calendar-grid::-webkit-scrollbar { height: 6px; }
-    .calendar-grid::-webkit-scrollbar-track { background: transparent; }
-    .calendar-grid::-webkit-scrollbar-thumb { background: var(--gold-tint-30); border-radius: 3px; }
-    .calendar-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .calendar-table thead th { font-family: 'Cinzel', serif; color: var(--gold); font-weight: 600; padding: 10px 8px; text-align: center; border-bottom: 2px solid var(--table-header-border); font-size: 0.75rem; white-space: nowrap; }
-    .calendar-table tbody td { padding: 10px 8px; text-align: center; border-bottom: 1px solid var(--divider-subtle); color: var(--text-secondary); white-space: nowrap; }
-    .calendar-table tbody tr:last-child td { border-bottom: none; }
-    .calendar-table tbody tr:hover { background: var(--table-row-hover); }
-    .calendar-table tbody tr.today { background: var(--today-row-bg); }
-    .calendar-table tbody tr.today td { color: var(--gold); font-weight: 600; }
-    .calendar-table .section-header { font-size: 0.7rem; color: var(--gold-tint-70); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--section-header-border); padding: 6px 8px; }
-    .calendar-table .section-divider { border-left: 1px solid var(--section-divider-border); }
-    .date-col { color: var(--text-tertiary); font-weight: 500; }
+    /* Month mode sub-toggle */
+    .month-mode-toggle {
+      display: flex; justify-content: center; gap: 0; margin-bottom: 12px;
+      background: var(--toggle-bg); border-radius: 8px; border: 1px solid var(--toggle-border);
+      padding: 3px; max-width: 200px; margin-left: auto; margin-right: auto;
+    }
+    .month-mode-btn {
+      flex: 1; padding: 6px 12px; font-size: 0.75rem; font-weight: 500;
+      color: var(--toggle-inactive); background: transparent; border: none;
+      cursor: pointer; border-radius: 6px; transition: all 0.2s;
+      font-family: inherit; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .month-mode-btn.active {
+      background: var(--gold-tint-15); color: var(--gold); font-weight: 700;
+    }
+
+    /* Monthly table */
+    .month-table-card { overflow-y: auto; max-height: 70vh; }
+    .month-table {
+      width: 100%; border-collapse: collapse; font-size: 0.8rem;
+      table-layout: fixed;
+    }
+    .month-table thead th {
+      padding: 10px 4px; text-align: center; font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;
+      color: var(--text-muted); border-bottom: 1px solid var(--divider);
+      position: sticky; top: 0; background: var(--month-header-bg, #182B31); z-index: 1;
+    }
+    .month-table thead th.date-col { text-align: left; padding-left: 12px; }
+    .month-table tbody td {
+      padding: 10px 4px; text-align: center;
+      border-bottom: 1px solid var(--divider-subtle); color: var(--text-secondary);
+      font-size: 0.8rem; white-space: nowrap;
+    }
+    .month-table tbody td.date-col { text-align: left; padding-left: 12px; color: var(--text-muted); font-weight: 500; font-size: 0.75rem; line-height: 1.3; }
+    .month-hijri { display: block; font-size: 0.6rem; color: var(--text-muted); font-weight: 400; opacity: 0.7; }
+    .month-table tbody tr:last-child td { border-bottom: none; }
+    .month-table tbody tr.today { background: var(--gold-tint-08); }
+    .month-table tbody tr.today td { color: var(--gold); font-weight: 600; }
     .next-prayer-cell { color: var(--green) !important; }
 
     /* Info section */
@@ -924,64 +1000,127 @@
     /* ============================================
        QIBLA VIEW
        ============================================ */
-    .qibla-view { text-align: center; }
-    .qibla-view header h1 { font-family: 'Cinzel', serif; }
-    .qibla-subtitle { font-size: 0.9rem; color: var(--text-tertiary); margin-bottom: 20px; }
-
-    .compass-container {
-      width: 260px; height: 260px; margin: 20px auto;
-      border-radius: 50%; border: 2px solid var(--card-border);
-      background: var(--card-bg); backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center;
-      position: relative; transition: border-color 0.3s, box-shadow 0.3s;
+    .qibla-view {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center;
+      min-height: 70vh; padding: 20px 0;
     }
-    .compass-container.on-qibla {
-      border-color: var(--gold);
-      box-shadow: 0 0 30px var(--gold-shadow), 0 0 60px var(--gold-shadow-light);
+    .qibla-desktop-msg { padding: 60px 20px; color: var(--text-tertiary); }
+    .qibla-desktop-msg p { font-size: 1.1rem; margin-bottom: 8px; }
+    .qibla-desktop-sub { font-size: 0.9rem; }
+
+    /* Bearing display */
+    .qibla-bearing-display { margin-bottom: 24px; }
+    .qibla-bearing-value {
+      font-size: 3rem; font-weight: 700; color: var(--text-primary);
+      letter-spacing: -1px; line-height: 1.1; margin-bottom: 8px;
+    }
+    .qibla-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 14px; border-radius: 999px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-30);
+      color: var(--gold); font-size: 0.8rem; font-weight: 500;
+      transition: all 0.3s;
+    }
+    .qibla-badge-aligned {
+      background: rgba(45, 122, 79, 0.15); border-color: rgba(45, 122, 79, 0.3);
+      color: var(--green);
+    }
+    .qibla-badge-error {
+      background: rgba(192, 57, 43, 0.1); border-color: rgba(192, 57, 43, 0.2);
+      color: var(--error);
+    }
+
+    /* Compass */
+    .compass-container {
+      position: relative; width: 280px; height: 280px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto;
+    }
+    .compass-outer-ring {
+      position: absolute; inset: -16px; border-radius: 50%;
+      border: 1px solid var(--gold-tint-15);
+    }
+    .compass-inner-ring {
+      position: absolute; inset: -8px; border-radius: 50%;
+      border: 1px solid var(--gold-tint-25);
     }
     .compass {
-      width: 220px; height: 220px; position: relative;
+      width: 100%; height: 100%; position: relative;
       border-radius: 50%; transition: transform 0.15s ease-out;
+      border: 3px solid var(--gold);
+      background: var(--card-bg); backdrop-filter: blur(8px);
     }
-    .compass-ring { width: 100%; height: 100%; position: relative; }
+    .compass-container.on-qibla .compass {
+      box-shadow: 0 0 40px var(--gold-shadow), 0 0 80px var(--gold-shadow-light);
+    }
+
     .compass-dir {
-      position: absolute; font-family: 'Cinzel', serif; font-size: 0.9rem;
-      font-weight: 600; color: var(--text-tertiary);
+      position: absolute; font-size: 0.85rem;
+      font-weight: 600; color: var(--text-muted); opacity: 0.5;
     }
-    .compass-n { top: 4px; left: 50%; transform: translateX(-50%); color: var(--gold); }
-    .compass-e { right: 4px; top: 50%; transform: translateY(-50%); }
-    .compass-s { bottom: 4px; left: 50%; transform: translateX(-50%); }
-    .compass-w { left: 4px; top: 50%; transform: translateY(-50%); }
+    .compass-n { top: 12px; left: 50%; transform: translateX(-50%); color: var(--gold); opacity: 1; }
+    .compass-e { right: 12px; top: 50%; transform: translateY(-50%); }
+    .compass-s { bottom: 12px; left: 50%; transform: translateX(-50%); }
+    .compass-w { left: 12px; top: 50%; transform: translateY(-50%); }
 
+    /* Needle */
     .qibla-needle {
+      position: absolute; top: 0; left: 50%;
+      width: 0; height: 50%;
+      transform-origin: bottom center;
+      margin-left: 0;
+    }
+    .needle-line {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 3px; height: 70%; border-radius: 2px;
+      background: linear-gradient(to top, transparent, var(--gold));
+      box-shadow: 0 0 12px rgba(212,175,55,0.6);
+    }
+    .needle-icon {
+      position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+      color: var(--gold); width: 28px; height: 28px;
+    }
+    .needle-icon svg { width: 100%; height: 100%; }
+
+    /* Center dot */
+    .compass-center {
       position: absolute; top: 50%; left: 50%;
-      transform-origin: center center;
-      margin-left: -12px; margin-top: -40px;
-    }
-    .kaaba-icon {
-      position: absolute; font-size: 1.5rem;
-      top: -8px; left: 50%; transform: translateX(-50%);
-      display: none; /* shown when compass active */
+      transform: translate(-50%, -50%);
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(212,175,55,0.4);
+      border: 2px solid var(--card-bg);
+      z-index: 2;
     }
 
-    .qibla-info { margin-top: 24px; }
-    .qibla-status { font-size: 1rem; color: var(--text-secondary); margin-bottom: 8px; }
-    .qibla-bearing { font-family: 'Cinzel', serif; font-size: 1.8rem; color: var(--gold); font-weight: 700; }
-
-    .qibla-permission { margin-top: 24px; }
-    .qibla-permission p { color: var(--text-tertiary); margin-bottom: 12px; }
+    /* Actions */
+    .qibla-actions { margin-top: 32px; width: 100%; max-width: 280px; }
     .qibla-enable-btn {
+      width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      border: none; color: #0a0a0a; padding: 12px 28px; border-radius: 8px;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
+      border: none; color: #0a0a0a; padding: 14px 24px; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+      box-shadow: 0 4px 15px var(--gold-shadow);
     }
+    .qibla-enable-btn:hover { transform: translateY(-1px); }
+    .qibla-enable-btn:active { transform: scale(0.97); }
+    .qibla-enable-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+    .qibla-location {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 16px; padding: 12px; border-radius: 12px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      color: var(--text-muted); font-size: 0.8rem;
+    }
+    .qibla-permission { margin-bottom: 12px; }
 
     /* ============================================
        SETTINGS VIEW
        ============================================ */
     .settings-view { max-width: 500px; margin: 0 auto; }
     .settings-header { margin-bottom: 24px; }
-    .settings-header h1 { font-family: 'Cinzel', serif; }
+    .settings-header h1 { font-family: inherit; }
 
     .settings-group {
       margin-bottom: 24px;
@@ -997,16 +1136,14 @@
       margin-bottom: 4px; text-decoration: none; color: inherit;
       transition: background 0.2s;
     }
-    .settings-item:first-of-type { border-radius: 12px 12px 4px 4px; }
-    .settings-item:last-of-type { border-radius: 4px 4px 12px 12px; margin-bottom: 0; }
-    .settings-item:only-of-type { border-radius: 12px; }
+    .settings-item:last-of-type { margin-bottom: 0; }
     .settings-link:hover { background: var(--card-hover-bg); }
 
     .settings-item-left { display: flex; align-items: center; gap: 12px; }
     .settings-icon { display: flex; color: var(--gold); }
     .settings-label { font-size: 0.95rem; color: var(--text-primary); }
     .settings-value { font-size: 0.85rem; color: var(--text-muted); }
-    .settings-input { background: transparent; border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; color: var(--text-primary); font-family: inherit; width: 140px; text-align: right; }
+    .settings-input { background: transparent; border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; color: var(--text-primary); font-family: inherit; width: 140px; text-align: left; }
     .settings-input:focus { outline: none; border-color: var(--gold); }
     .settings-chevron { color: var(--text-muted); display: flex; }
 
@@ -1030,16 +1167,17 @@
        ADD MASJID VIEW
        ============================================ */
     .add-masjid-view { max-width: 700px; margin: 0 auto; }
+    .add-masjid-view h1 { font-family: inherit; }
     .add-subtitle { font-size: 0.9rem; color: var(--text-tertiary); margin-bottom: 8px; line-height: 1.4; }
 
-    .progress-bar { display: flex; align-items: center; justify-content: center; margin: 20px 0; gap: 0; }
+    .progress-bar { display: flex; align-items: flex-start; justify-content: center; margin: 20px 0; gap: 0; }
     .progress-step { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .step-number { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--text-muted); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: var(--text-muted); font-weight: 600; transition: all 0.3s; }
     .step-label { font-size: 0.7rem; color: var(--text-muted); display: none; }
     .progress-step.active .step-number { border-color: var(--gold); color: var(--gold); background: var(--gold-tint-15); }
     .progress-step.active .step-label { color: var(--gold); }
     .progress-step.done .step-number { border-color: var(--gold); background: var(--gold); color: #0a0a0a; }
-    .progress-connector { width: 30px; height: 2px; background: var(--text-muted); margin: 0 4px; margin-bottom: 18px; transition: background 0.3s; }
+    .progress-connector { width: 30px; height: 2px; background: var(--text-muted); margin: 0 4px; margin-top: 14px; transition: background 0.3s; }
     .progress-connector.done { background: var(--gold); }
     @media (min-width: 768px) { .step-label { display: block; } .progress-connector { width: 50px; } }
 
@@ -1079,7 +1217,7 @@
     .status-msg { text-align: center; padding: 40px 20px; }
     .spinner { width: 32px; height: 32px; border: 3px solid var(--divider); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
 
-    .section-label { font-family: 'Cinzel', serif; font-size: 0.95rem; color: var(--gold); font-weight: 600; margin: 16px 0 12px; }
+    .section-label { font-size: 0.95rem; color: var(--gold); font-weight: 600; margin: 16px 0 12px; }
 
     .review-layout { margin-bottom: 16px; }
     .review-image { overflow: auto; max-height: 400px; border-radius: 8px; border: 1px solid var(--card-border); }
@@ -1096,7 +1234,7 @@
     }
 
     .review-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    .review-table th { font-family: 'Cinzel', serif; color: var(--gold); font-weight: 600; padding: 6px 4px; text-align: center; border-bottom: 2px solid var(--table-header-border); font-size: 0.7rem; white-space: nowrap; }
+    .review-table th { color: var(--gold); font-weight: 600; padding: 6px 4px; text-align: center; border-bottom: 2px solid var(--table-header-border); font-size: 0.7rem; white-space: nowrap; }
     .review-table td { padding: 2px; text-align: center; border-bottom: 1px solid var(--divider-subtle); }
     .review-table input { width: 100%; padding: 4px 2px; font-size: 0.8rem; font-family: inherit; background: transparent; color: var(--text-primary); border: 1px solid transparent; border-radius: 4px; text-align: center; }
     .review-table input:focus { outline: none; border-color: var(--gold); background: var(--gold-tint-08); }

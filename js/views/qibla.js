@@ -4,6 +4,9 @@ import { calculateQiblaBearing, getCurrentPosition, getCardinalDirection } from 
 let watchId = null;
 let orientationHandler = null;
 let qiblaBearing = null;
+let currentHeading = null;
+
+const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/></svg>';
 
 function isMobile() {
   return window.innerWidth < 768 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -13,9 +16,9 @@ export function render(container) {
   if (!isMobile()) {
     container.innerHTML = `<div class="qibla-view">
       <header><h1>Qibla Finder</h1></header>
-      <div style="text-align:center; padding:60px 20px; color:var(--text-tertiary);">
-        <p style="font-size:1.1rem; margin-bottom:8px;">The Qibla Finder uses your phone's compass and is only available on mobile devices.</p>
-        <p style="font-size:0.9rem;">Open Prayerly on your phone to use this feature.</p>
+      <div class="qibla-desktop-msg">
+        <p>The Qibla Finder uses your phone's compass and is only available on mobile devices.</p>
+        <p class="qibla-desktop-sub">Open Prayerly on your phone to use this feature.</p>
       </div>
     </div>`;
     return;
@@ -23,36 +26,40 @@ export function render(container) {
 
   container.innerHTML = `
     <div class="qibla-view">
-      <header>
-        <h1>Qibla Finder</h1>
-        <p class="qibla-subtitle">Point your phone towards the Qibla</p>
-      </header>
-
-      <div class="compass-container" id="compassContainer">
-        <div class="compass" id="compass">
-          <div class="compass-ring">
-            <span class="compass-dir compass-n">N</span>
-            <span class="compass-dir compass-e">E</span>
-            <span class="compass-dir compass-s">S</span>
-            <span class="compass-dir compass-w">W</span>
-          </div>
-          <div class="qibla-needle" id="qiblaNeedle">
-            <svg viewBox="0 0 24 80" width="24" height="80">
-              <polygon points="12,0 20,70 12,60 4,70" fill="var(--gold)" stroke="var(--gold-dark)" stroke-width="1"/>
-            </svg>
-          </div>
-          <div class="kaaba-icon" id="kaabaIcon">&#x1F54B;</div>
+      <div class="qibla-bearing-display" id="qiblaBearingDisplay">
+        <div class="qibla-bearing-value" id="qiblaBearing">--°</div>
+        <div class="qibla-badge" id="qiblaBadge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="qiblaStatus">Getting location...</span>
         </div>
       </div>
 
-      <div class="qibla-info" id="qiblaInfo">
-        <div class="qibla-status" id="qiblaStatus">Getting your location...</div>
-        <div class="qibla-bearing" id="qiblaBearing"></div>
+      <div class="compass-container" id="compassContainer">
+        <div class="compass-outer-ring"></div>
+        <div class="compass-inner-ring"></div>
+        <div class="compass" id="compass">
+          <span class="compass-dir compass-n">N</span>
+          <span class="compass-dir compass-e">E</span>
+          <span class="compass-dir compass-s">S</span>
+          <span class="compass-dir compass-w">W</span>
+
+          <div class="qibla-needle" id="qiblaNeedle">
+            <div class="needle-line"></div>
+            <div class="needle-icon">${MOSQUE_SVG}</div>
+          </div>
+
+          <div class="compass-center"></div>
+        </div>
       </div>
 
-      <div class="qibla-permission" id="qiblaPermission" style="display:none;">
-        <p>Enable compass access to use the Qibla finder.</p>
-        <button class="qibla-enable-btn" id="enableCompassBtn">Enable Compass</button>
+      <div class="qibla-actions">
+        <div class="qibla-permission" id="qiblaPermission" style="display:none;">
+          <button class="qibla-enable-btn" id="enableCompassBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            Enable Compass
+          </button>
+        </div>
+        <div class="qibla-location" id="qiblaLocation"></div>
       </div>
     </div>
   `;
@@ -68,11 +75,14 @@ export function destroy() {
   }
   watchId = null;
   qiblaBearing = null;
+  currentHeading = null;
 }
 
 async function initQibla() {
-  const statusEl = document.getElementById('qiblaStatus');
   const bearingEl = document.getElementById('qiblaBearing');
+  const statusEl = document.getElementById('qiblaStatus');
+  const badgeEl = document.getElementById('qiblaBadge');
+  const locationEl = document.getElementById('qiblaLocation');
 
   try {
     const pos = await getCurrentPosition({ timeout: 15000 });
@@ -82,24 +92,33 @@ async function initQibla() {
     qiblaBearing = calculateQiblaBearing(lat, lon);
     const direction = getCardinalDirection(qiblaBearing);
 
+    bearingEl.textContent = `${Math.round(qiblaBearing)}° ${direction}`;
     statusEl.textContent = 'Qibla Direction';
-    bearingEl.textContent = `${Math.round(qiblaBearing)}\u00B0 ${direction}`;
 
-    // Try to start compass
+    // Reverse geocode for location display
+    locationEl.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      <span>${lat.toFixed(2)}°, ${lon.toFixed(2)}°</span>`;
+
+    // Set initial needle position (static)
+    const needle = document.getElementById('qiblaNeedle');
+    if (needle) needle.style.transform = `rotate(${qiblaBearing}deg)`;
+
     await startCompass();
   } catch (err) {
     if (err.code === 1) {
-      statusEl.textContent = 'Location access denied';
-      bearingEl.textContent = 'Please allow location access to find Qibla direction';
+      statusEl.textContent = 'Location denied';
+      badgeEl.classList.add('qibla-badge-error');
+      bearingEl.textContent = '--°';
     } else {
-      statusEl.textContent = 'Could not get location';
-      bearingEl.textContent = 'Please ensure location services are enabled';
+      statusEl.textContent = 'Location unavailable';
+      badgeEl.classList.add('qibla-badge-error');
+      bearingEl.textContent = '--°';
     }
   }
 }
 
 async function startCompass() {
-  // iOS 13+ requires permission
   if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
     const permissionEl = document.getElementById('qiblaPermission');
     const enableBtn = document.getElementById('enableCompassBtn');
@@ -113,42 +132,37 @@ async function startCompass() {
           permissionEl.style.display = 'none';
           attachOrientationListener();
         } else {
-          permissionEl.querySelector('p').textContent = 'Compass permission denied. The bearing is shown above.';
-          enableBtn.style.display = 'none';
+          permissionEl.querySelector('button').textContent = 'Permission denied';
+          enableBtn.disabled = true;
         }
       } catch (e) {
-        permissionEl.querySelector('p').textContent = 'Could not request compass permission.';
-        enableBtn.style.display = 'none';
+        permissionEl.querySelector('button').textContent = 'Compass unavailable';
+        enableBtn.disabled = true;
       }
     });
   } else if ('DeviceOrientationEvent' in window) {
     attachOrientationListener();
   }
-  // If no device orientation, just show the static bearing
 }
 
 function attachOrientationListener() {
   orientationHandler = (e) => {
     let heading = null;
 
-    // iOS uses webkitCompassHeading
     if (e.webkitCompassHeading !== undefined) {
       heading = e.webkitCompassHeading;
-    }
-    // Android/Chrome uses alpha (but needs absolute orientation)
-    else if (e.alpha !== null && e.absolute) {
+    } else if (e.alpha !== null && e.absolute) {
       heading = (360 - e.alpha) % 360;
-    }
-    else if (e.alpha !== null) {
+    } else if (e.alpha !== null) {
       heading = (360 - e.alpha) % 360;
     }
 
     if (heading !== null && qiblaBearing !== null) {
+      currentHeading = heading;
       updateCompass(heading);
     }
   };
 
-  // Prefer absolute orientation
   if ('ondeviceorientationabsolute' in window) {
     window.addEventListener('deviceorientationabsolute', orientationHandler);
   } else {
@@ -161,20 +175,23 @@ function updateCompass(deviceHeading) {
   const needle = document.getElementById('qiblaNeedle');
   if (!compass || !needle) return;
 
-  // Rotate entire compass opposite to device heading
   compass.style.transform = `rotate(${-deviceHeading}deg)`;
-
-  // Needle always points to qibla bearing (relative to north)
   needle.style.transform = `rotate(${qiblaBearing}deg)`;
 
-  // Highlight when pointing towards qibla (within 5 degrees)
   const diff = Math.abs(((deviceHeading - qiblaBearing) + 540) % 360 - 180);
   const container = document.getElementById('compassContainer');
+  const badgeEl = document.getElementById('qiblaBadge');
+  const statusEl = document.getElementById('qiblaStatus');
+
   if (container) {
     if (diff < 5) {
       container.classList.add('on-qibla');
+      if (badgeEl) badgeEl.classList.add('qibla-badge-aligned');
+      if (statusEl) statusEl.textContent = 'Facing the Kaaba';
     } else {
       container.classList.remove('on-qibla');
+      if (badgeEl) badgeEl.classList.remove('qibla-badge-aligned');
+      if (statusEl) statusEl.textContent = 'Qibla Direction';
     }
   }
 }
