@@ -4,6 +4,7 @@ import { onThemeChange, getTheme } from '../theme.js';
 let config = null;
 let csvData = [];
 let currentView = 'today';
+let monthlyMode = 'jamaat';
 let countdownInterval = null;
 let eshaRerenderId = null;
 let unsubTheme = null;
@@ -133,9 +134,9 @@ function formatCountdown(prayerDate) {
   const diffMinutes = Math.ceil(diffMs / 60000);
   const hours = Math.floor(diffMinutes / 60);
   const minutes = diffMinutes % 60;
-  if (diffMinutes < 1) return 'in <1m';
-  if (hours === 0) return `in ${minutes}m`;
-  return `in ${hours}h ${minutes}m`;
+  if (diffMinutes < 1) return '<1m';
+  if (hours === 0) return `${minutes}m`;
+  return `${hours}h ${minutes}m`;
 }
 
 function getNextPrayer(todayRow) {
@@ -176,7 +177,7 @@ function applyNextPrayerHighlight(todayRow) {
 
   // Next start time (independent)
   const startTimes = [
-    { name: 'Sunrise', keys: ['Sunrise'], isAM: true },
+    { name: 'Fajr', keys: ['Sehri Ends'], isAM: true },
     { name: 'Dhuhr', keys: ['Zohr'], isAM: false },
     { name: 'Asr', keys: ['Asr'], isAM: false },
     { name: 'Esha', keys: ['Esha'], isAM: false },
@@ -192,21 +193,31 @@ function applyNextPrayerHighlight(todayRow) {
     }
   }
 
-  // Highlight rows
-  const grids = document.querySelectorAll('.times-grid');
-  grids.forEach((grid, gridIndex) => {
-    grid.querySelectorAll('.time-item').forEach(item => {
-      const label = item.querySelector('.time-label');
-      const labelText = label && label.textContent.trim();
-      if (gridIndex === 0 && nextStart && labelText === nextStart.name) {
-        item.classList.add('next-prayer');
-        const cd = formatCountdown(nextStart.date);
-        if (cd) { const span = document.createElement('span'); span.className = 'countdown'; span.textContent = cd; label.appendChild(span); }
-      } else if (gridIndex === 1 && labelText === next.name) {
-        item.classList.add('next-prayer');
-        if (countdown) { const span = document.createElement('span'); span.className = 'countdown'; span.textContent = countdown; label.appendChild(span); }
+  // Highlight rows in unified table
+  document.querySelectorAll('.time-row').forEach(row => {
+    const prayerName = row.dataset.prayer;
+    const nameEl = row.querySelector('.time-name');
+    // Highlight start time column
+    if (nextStart && prayerName === nextStart.name) {
+      row.classList.add('next-start');
+      const cd = formatCountdown(nextStart.date);
+      if (cd && nameEl) {
+        const span = document.createElement('span');
+        span.className = 'countdown countdown-left';
+        span.textContent = cd;
+        nameEl.appendChild(span);
       }
-    });
+    }
+    // Highlight jama'at time column
+    if (prayerName === next.name) {
+      row.classList.add('next-jamaat');
+      if (countdown && nameEl) {
+        const span = document.createElement('span');
+        span.className = 'countdown countdown-right';
+        span.textContent = countdown;
+        nameEl.appendChild(span);
+      }
+    }
   });
 
   // Sehri countdown
@@ -340,9 +351,27 @@ function renderTodayView(target) {
     sehriBannerHtml = `<div class="banner-item"><div class="banner-label">Sehri Ends</div><div class="banner-time">${todaySehri}</div></div>`;
   }
 
+  // Build unified prayer rows: Start | Name | Jama'at
+  const prayerRows = [];
+  prayerRows.push({ name: 'Fajr', start: todayRow['Sehri Ends'], jamaat: todayRow["Fajr Jama'at"] });
+  if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', start: todayRow['Zawal'], jamaat: null });
+  prayerRows.push({ name: 'Dhuhr', start: todayRow['Zohr'], jamaat: todayRow["Zohar Jama'at"] || '1:00' });
+  prayerRows.push({ name: 'Asr', start: todayRow['Asr'], jamaat: todayRow["Asr Jama'at"] });
+  prayerRows.push({ name: 'Maghrib', start: todayRow['Maghrib Iftari'], jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
+  if (todayRow['Esha']) prayerRows.push({ name: 'Esha', start: todayRow['Esha'], jamaat: todayRow["Esha Jama'at"] });
+  else prayerRows.push({ name: 'Esha', start: null, jamaat: todayRow["Esha Jama'at"] });
+
+  const prayerRowsHtml = prayerRows.map(p => `
+    <div class="time-row" data-prayer="${p.name}">
+      <div class="time-col time-start">${p.start || '-'}</div>
+      <div class="time-col time-name">${p.name}</div>
+      <div class="time-col time-jamaat">${p.jamaat || '-'}</div>
+    </div>`).join('');
+
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
+        <button class="share-icon-btn" id="shareBtn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
         <h1>${config.display_name}</h1>
         <div class="date-line">${englishDate}</div>
         <div class="hijri-line">${hijriDate}</div>
@@ -350,38 +379,22 @@ function renderTodayView(target) {
 
       ${renderToggle('today')}
 
-      <div class="times-card">
-        <div class="lockscreen-section">
-          <div class="section-banner">
-            ${sehriBannerHtml}
-            <div class="banner-item">
-              <div class="banner-label">Maghrib/Iftari</div>
-              <div class="banner-time">${todayRow['Maghrib Iftari']}</div>
-            </div>
-          </div>
+      <div class="section-banner">
+        ${sehriBannerHtml}
+        <div class="banner-item">
+          <div class="banner-label">Maghrib/Iftari</div>
+          <div class="banner-time">${todayRow['Maghrib Iftari']}</div>
         </div>
+      </div>
 
-        <div class="gold-divider"><div class="line"></div><div class="diamond"></div><div class="line"></div></div>
-
-        <div class="lockscreen-section">
-          <div class="section-title">Start Times</div>
-          <div class="times-grid">
-            ${todayRow['Fajr Start'] ? `<div class="time-item"><div class="time-label">Fajr</div><div class="time-value">${todayRow['Fajr Start']}</div></div>` : ''}
-            <div class="time-item"><div class="time-label">Sunrise</div><div class="time-value">${todayRow['Sunrise']}</div></div>
-            ${todayRow['Zawal'] ? `<div class="time-item"><div class="time-label">Zawal</div><div class="time-value">${todayRow['Zawal']}</div></div>` : ''}
-            <div class="time-item"><div class="time-label">Dhuhr</div><div class="time-value">${todayRow['Zohr']}</div></div>
-            <div class="time-item"><div class="time-label">Asr</div><div class="time-value">${todayRow['Asr']}</div></div>
-            ${todayRow['Esha'] ? `<div class="time-item"><div class="time-label">Esha</div><div class="time-value">${todayRow['Esha']}</div></div>` : ''}
-          </div>
-
-          <div class="section-title" style="margin-top: 16px;">Jama'at Times</div>
-          <div class="times-grid">
-            <div class="time-item"><div class="time-label">Fajr</div><div class="time-value">${todayRow["Fajr Jama'at"]}</div></div>
-            <div class="time-item"><div class="time-label">Dhuhr</div><div class="time-value">${todayRow["Zohar Jama'at"] || '1:00'}</div></div>
-            <div class="time-item"><div class="time-label">Asr</div><div class="time-value">${todayRow["Asr Jama'at"]}</div></div>
-            ${todayRow["Maghrib Jama'at"] ? `<div class="time-item"><div class="time-label">Maghrib</div><div class="time-value">${todayRow["Maghrib Jama'at"]}</div></div>` : ''}
-            <div class="time-item"><div class="time-label">Esha</div><div class="time-value">${todayRow["Esha Jama'at"]}</div></div>
-          </div>
+      <div class="times-table-card">
+        <div class="times-table-header">
+          <div class="time-col">Start</div>
+          <div class="time-col">Prayer</div>
+          <div class="time-col">Jama'at</div>
+        </div>
+        <div class="times-table-body">
+          ${prayerRowsHtml}
         </div>
       </div>
 
@@ -389,9 +402,8 @@ function renderTodayView(target) {
 
       <div class="btn-row">
         <a href="/latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" id="downloadBtn" download>Download</a>
-        <button class="share-btn" id="shareBtn">Share</button>
+        ${renderPrimaryButton()}
       </div>
-      ${renderPrimaryButton()}
     </div>
   `;
 
@@ -427,11 +439,39 @@ function renderTodayView(target) {
 }
 
 function renderMonthlyView(target) {
-  const hasFajrStart = csvData.some(row => row['Fajr Start']);
-  const hasZawal = csvData.some(row => row['Zawal']);
-  const hasEshaStart = csvData.some(row => row['Esha']);
-  const hasMaghribJamaat = csvData.some(row => row["Maghrib Jama'at"]);
-  const startColspan = (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0) + (hasEshaStart ? 5 : 4) + (hasMaghribJamaat ? 1 : 0);
+  const isJamaat = monthlyMode === 'jamaat';
+
+  const columns = isJamaat
+    ? [
+        { label: 'Sehri', key: 'Sehri Ends' },
+        { label: 'Fajr', key: "Fajr Jama'at" },
+        { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00' },
+        { label: 'Asr', key: "Asr Jama'at" },
+        { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari' },
+        { label: 'Esha', key: "Esha Jama'at" },
+      ]
+    : [
+        { label: 'Sehri', key: 'Sehri Ends' },
+        { label: 'Sunrise', key: 'Sunrise' },
+        { label: 'Dhuhr', key: 'Zohr' },
+        { label: 'Asr', key: 'Asr' },
+        { label: 'Magh', key: 'Maghrib Iftari' },
+        { label: 'Esha', key: 'Esha' },
+      ];
+
+  const todayStr = new Date().toDateString();
+
+  const rowsHtml = csvData.map(row => {
+    const isToday = parseDate(row['Date']).toDateString() === todayStr;
+    const dateParts = row['Date'].trim().split(' ');
+    const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
+    const hijri = row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '';
+    const cells = columns.map(col => {
+      const val = row[col.key] || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
+      return `<td>${val}</td>`;
+    }).join('');
+    return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}<span class="month-hijri">${hijri}</span></td>${cells}</tr>`;
+  }).join('');
 
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
@@ -443,48 +483,21 @@ function renderMonthlyView(target) {
 
       ${renderToggle('monthly')}
 
-      <div class="calendar-grid">
-        <table class="calendar-table">
+      <div class="month-mode-toggle">
+        <button class="month-mode-btn${!isJamaat ? ' active' : ''}" data-mode="start">Start</button>
+        <button class="month-mode-btn${isJamaat ? ' active' : ''}" data-mode="jamaat">Jama'at</button>
+      </div>
+
+      <div class="times-table-card month-table-card">
+        <table class="month-table">
           <thead>
             <tr>
-              <th class="section-header"></th><th class="section-header"></th><th class="section-header"></th>
-              <th class="section-header section-divider" colspan="${startColspan}">Start Times</th>
-              <th class="section-header section-divider" colspan="5">Jama'at Times</th>
-            </tr>
-            <tr>
-              <th>Date</th><th>Day</th><th>Hijri</th>
-              <th class="section-divider">Sehri</th>
-              ${hasFajrStart ? '<th>Fajr</th>' : ''}
-              <th>Sunrise</th>
-              ${hasZawal ? '<th>Zawal</th>' : ''}
-              <th>Dhuhr</th><th>Asr</th>
-              ${hasMaghribJamaat ? '<th>Maghrib</th>' : ''}
-              ${hasEshaStart ? '<th>Esha</th>' : ''}
-              <th class="section-divider">Fajr</th><th>Dhuhr</th><th>Asr</th><th>Maghrib</th><th>Esha</th>
+              <th class="date-col">Date</th>
+              ${columns.map(col => `<th>${col.label}</th>`).join('')}
             </tr>
           </thead>
           <tbody>
-            ${csvData.map(row => {
-              const isToday = parseDate(row['Date']).toDateString() === new Date().toDateString();
-              return `<tr ${isToday ? 'class="today"' : ''}>
-                <td class="date-col">${row['Date']}</td>
-                <td>${row['Day']}</td>
-                <td>${row['Islamic Day'] || row['Ramadan'] || row['Hijri']}</td>
-                <td class="section-divider">${row['Sehri Ends']}</td>
-                ${hasFajrStart ? `<td>${row['Fajr Start']}</td>` : ''}
-                <td>${row['Sunrise']}</td>
-                ${hasZawal ? `<td>${row['Zawal']}</td>` : ''}
-                <td>${row['Zohr']}</td>
-                <td>${row['Asr']}</td>
-                ${hasMaghribJamaat ? `<td>${row['Maghrib Iftari']}</td>` : ''}
-                ${hasEshaStart ? `<td>${row['Esha']}</td>` : ''}
-                <td class="section-divider">${row["Fajr Jama'at"]}</td>
-                <td>${row["Zohar Jama'at"] || '\u2014'}</td>
-                <td>${row["Asr Jama'at"]}</td>
-                <td>${hasMaghribJamaat ? (row["Maghrib Jama'at"] || '\u2014') : row['Maghrib Iftari']}</td>
-                <td>${row["Esha Jama'at"]}</td>
-              </tr>`;
-            }).join('')}
+            ${rowsHtml}
           </tbody>
         </table>
       </div>
@@ -492,23 +505,39 @@ function renderMonthlyView(target) {
   `;
 
   setupToggle(target);
+  setupMonthModeToggle(target);
 
-  // Highlight next prayer cell
+  // Scroll today into view
+  const todayEl = document.getElementById('monthTodayRow');
+  if (todayEl) {
+    requestAnimationFrame(() => {
+      todayEl.scrollIntoView({ block: 'center', behavior: 'instant' });
+    });
+  }
+
+  // Highlight next prayer cell in today row
   const todayRow = getTodayRow();
-  if (todayRow) {
+  if (todayRow && todayEl) {
     const next = getNextPrayer(todayRow);
     if (next) {
-      const dhuhrStartIdx = 5 + (hasFajrStart ? 1 : 0) + (hasZawal ? 1 : 0);
-      const eshaOffset = hasEshaStart ? 1 : 0;
-      const jamaatIdx = dhuhrStartIdx + 2 + eshaOffset;
-      const colMap = { 'Fajr': jamaatIdx, 'Dhuhr': dhuhrStartIdx, 'Asr': dhuhrStartIdx + 1, 'Maghrib': jamaatIdx + 3, 'Esha': jamaatIdx + 4 };
+      const colMap = { 'Fajr': 2, 'Dhuhr': 3, 'Asr': 4, 'Maghrib': 5, 'Esha': 6 };
       const colIndex = colMap[next.name];
-      if (colIndex !== undefined) {
-        const row = document.querySelector('.calendar-table tbody tr.today');
-        if (row && row.children[colIndex]) row.children[colIndex].classList.add('next-prayer-cell');
+      if (colIndex !== undefined && todayEl.children[colIndex]) {
+        todayEl.children[colIndex].classList.add('next-prayer-cell');
       }
     }
   }
+}
+
+function setupMonthModeToggle(container) {
+  container.querySelectorAll('.month-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      if (mode === monthlyMode) return;
+      monthlyMode = mode;
+      renderContent();
+    });
+  });
 }
 
 // --- Helpers ---
