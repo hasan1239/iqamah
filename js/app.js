@@ -15,6 +15,7 @@ async function loadView(viewName) {
 
   const moduleMap = {
     'home': () => import('./views/home.js'),
+    'masjids': () => import('./views/masjids.js'),
     'prayer-times': () => import('./views/prayer-times.js'),
     'qibla': () => import('./views/qibla.js'),
     'settings': () => import('./views/settings.js'),

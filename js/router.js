@@ -6,9 +6,10 @@ let currentPath = null;
 // Tab indices for slide direction
 const TAB_INDEX = {
   home: 0,
-  'prayer-times': 1,
-  qibla: 2,
-  settings: 3,
+  masjids: 1,
+  'prayer-times': 2,
+  qibla: 3,
+  settings: 4,
 };
 
 function getTabIndex(viewName) {
@@ -20,6 +21,9 @@ export function resolvePath(path) {
 
   if (!clean || clean === 'index.html') {
     return { view: 'home', params: {} };
+  }
+  if (clean === 'masjids') {
+    return { view: 'masjids', params: {} };
   }
   if (clean === 'qibla') {
     return { view: 'qibla', params: {} };

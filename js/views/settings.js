@@ -7,12 +7,29 @@ export function render(container) {
   const theme = getTheme();
   const timeFormat = localStorage.getItem('prayerly-time-format') || '24';
   const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+  const userName = localStorage.getItem('prayerly-user-name') || '';
 
   container.innerHTML = `
     <div class="settings-view">
       <header class="settings-header">
         <h1>Settings</h1>
       </header>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Profile</div>
+
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <span class="settings-label">Your Name</span>
+          </div>
+          <input type="text" id="userNameInput" class="settings-input" placeholder="Enter your name" value="${userName}" maxlength="30">
+        </div>
+      </div>
 
       <div class="settings-group">
         <div class="settings-group-title">Appearance</div>
@@ -133,6 +150,14 @@ export function render(container) {
   // Time format toggle
   document.getElementById('timeFormatToggle').addEventListener('change', (e) => {
     localStorage.setItem('prayerly-time-format', e.target.checked ? '24' : '12');
+  });
+
+  // Name input — save on change
+  const nameInput = document.getElementById('userNameInput');
+  nameInput.addEventListener('input', () => {
+    const val = nameInput.value.trim();
+    if (val) localStorage.setItem('prayerly-user-name', val);
+    else localStorage.removeItem('prayerly-user-name');
   });
 }
 

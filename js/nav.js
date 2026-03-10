@@ -9,6 +9,12 @@ const TABS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
   },
   {
+    id: 'masjids',
+    label: 'Masjids',
+    path: '/masjids',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>',
+  },
+  {
     id: 'prayer-times',
     label: 'Times',
     path: null, // Dynamic — uses pinned masjid
@@ -30,12 +36,13 @@ const TABS = [
 
 function getTimesPath() {
   const pinned = localStorage.getItem('prayerly-pinned-masjid');
-  return pinned ? '/' + pinned : '/';
+  return pinned ? '/' + pinned : '/masjids';
 }
 
 function getActiveTabId() {
   const route = getCurrentRoute();
-  return route.view === 'add-masjid' ? 'settings' : route.view;
+  if (route.view === 'add-masjid') return 'settings';
+  return route.view;
 }
 
 export function initNav() {
@@ -65,13 +72,17 @@ export function initNav() {
 function renderNav(nav) {
   const activeId = getActiveTabId();
 
-  nav.innerHTML = TABS.map(tab => {
+  const tabsHTML = TABS.map(tab => {
     const isActive = tab.id === activeId;
-    return `<a class="nav-tab${isActive ? ' active' : ''}" data-tab="${tab.id}" href="${tab.id === 'prayer-times' ? getTimesPath() : tab.path}">
+    const href = tab.id === 'prayer-times' ? getTimesPath() : tab.path;
+
+    return `<a class="nav-tab${isActive ? ' active' : ''}" data-tab="${tab.id}" href="${href}">
       <span class="nav-icon">${tab.icon}</span>
       <span class="nav-label">${tab.label}</span>
     </a>`;
   }).join('');
+
+  nav.innerHTML = `<div class="bottom-nav-inner">${tabsHTML}</div>`;
 }
 
 export function updateActiveTab() {
@@ -85,6 +96,6 @@ export function updateActiveTab() {
   const activeView = route.view === 'add-masjid' ? 'settings' : route.view;
   desktopLinks.querySelectorAll('.desktop-nav-link').forEach(link => {
     const navId = link.dataset.nav;
-    link.classList.toggle('active', navId === activeView || (navId === 'home' && activeView === 'prayer-times'));
+    link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times'));
   });
 }

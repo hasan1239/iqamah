@@ -466,7 +466,7 @@ export default {
     // (otherwise / would serve the old index.html)
     const segment = path.replace(/^\//, '').replace(/\/$/, '');
     const isAppRoute = !segment || (segment && !segment.includes('.') && !segment.includes('/'));
-    const knownAppRoutes = ['', 'add', 'qibla', 'settings'];
+    const knownAppRoutes = ['', 'add', 'masjids', 'qibla', 'settings'];
     const isKnownRoute = knownAppRoutes.includes(segment);
 
     // For known app routes, serve SPA directly

@@ -20,6 +20,9 @@ export async function render(container, { slug }) {
     return;
   }
 
+  // Record visit for recently viewed
+  recordRecentVisit(slug);
+
   // Show skeleton
   container.innerHTML = getSkeleton();
 
@@ -54,6 +57,18 @@ export function destroy() {
   if (eshaRerenderId) { clearTimeout(eshaRerenderId); eshaRerenderId = null; }
   if (unsubTheme) { unsubTheme(); unsubTheme = null; }
   document.title = 'Prayerly';
+}
+
+function recordRecentVisit(slug) {
+  const key = 'prayerly-recent-masjids';
+  const max = 6;
+  try {
+    let recent = JSON.parse(localStorage.getItem(key) || '[]');
+    recent = recent.filter(s => s !== slug);
+    recent.unshift(slug);
+    if (recent.length > max) recent = recent.slice(0, max);
+    localStorage.setItem(key, JSON.stringify(recent));
+  } catch { /* ignore */ }
 }
 
 // --- CSV parsing (local to this view, matches original exactly) ---
@@ -376,6 +391,7 @@ function renderTodayView(target) {
         <a href="/latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" id="downloadBtn" download>Download</a>
         <button class="share-btn" id="shareBtn">Share</button>
       </div>
+      ${renderPrimaryButton()}
     </div>
   `;
 
@@ -386,6 +402,7 @@ function renderTodayView(target) {
   setupInfoToggle();
   setupDownloadTracking();
   updateDownloadLink();
+  setupPrimaryButton();
 
   // Countdowns
   applyNextPrayerHighlight(todayRow);
@@ -639,6 +656,31 @@ function getHijriRange() {
   const last = parseParts(getIslamic(csvData[csvData.length - 1]));
   if (first.month === last.month) return `${first.day}-${last.day} ${first.month} 1447`;
   return `${first.day} ${first.month} \u2013 ${last.day} ${last.month} 1447`;
+}
+
+function renderPrimaryButton() {
+  const current = localStorage.getItem('prayerly-pinned-masjid');
+  const isPrimary = current === masjidId;
+  const starSvg = '<svg viewBox="0 0 24 24" fill="' + (isPrimary ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+  const label = isPrimary ? 'Primary Masjid' : 'Set as Primary Masjid';
+  const cls = isPrimary ? ' is-primary' : '';
+  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn">${starSvg} ${label}</button>`;
+}
+
+function setupPrimaryButton() {
+  const btn = document.getElementById('setPrimaryBtn');
+  if (!btn) return;
+  btn.addEventListener('click', () => {
+    const current = localStorage.getItem('prayerly-pinned-masjid');
+    if (current === masjidId) {
+      localStorage.removeItem('prayerly-pinned-masjid');
+    } else {
+      localStorage.setItem('prayerly-pinned-masjid', masjidId);
+    }
+    // Re-render button
+    btn.outerHTML = renderPrimaryButton();
+    setupPrimaryButton();
+  });
 }
 
 function getSkeleton() {
