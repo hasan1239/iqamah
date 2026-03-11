@@ -10,6 +10,7 @@ let distanceMap = {};
 let locationActive = false;
 let longPressTimer = null;
 let toastTimer = null;
+let viewContainer = null;
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -32,6 +33,7 @@ const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 let searchQuery = '';
 
 export function render(container) {
+  viewContainer = container;
   container.innerHTML = `
     <div class="masjids-view">
       <header class="masjids-header">
@@ -67,7 +69,7 @@ export function render(container) {
   `;
 
   // Show skeleton immediately
-  const grid = document.getElementById('masjidsGrid');
+  const grid = viewContainer.querySelector('#masjidsGrid');
   grid.innerHTML = buildSkeletonCards(6);
 
   loadMasjids();
@@ -117,7 +119,7 @@ async function loadMasjids() {
 }
 
 export function renderCards() {
-  const grid = document.getElementById('masjidsGrid');
+  const grid = viewContainer ? viewContainer.querySelector('#masjidsGrid') : document.getElementById('masjidsGrid');
   if (!grid) return;
 
   const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
@@ -250,7 +252,8 @@ function getNextPrayerFromRow(row) {
 
 async function loadCardPrayers(configs) {
   for (const config of configs) {
-    const el = document.querySelector(`[data-card-next="${config.slug}"]`);
+    const root = viewContainer || document;
+    const el = root.querySelector(`[data-card-next="${config.slug}"]`);
     if (!el) continue;
     try {
       const csvFile = config.csv || config.slug + '.csv';
@@ -277,7 +280,7 @@ async function loadCardPrayers(configs) {
 // --- Search ---
 
 function setupSearch() {
-  const input = document.getElementById('masjidSearch');
+  const input = viewContainer ? viewContainer.querySelector('#masjidSearch') : document.getElementById('masjidSearch');
   if (!input) return;
   input.addEventListener('input', () => {
     searchQuery = input.value.trim();
@@ -304,7 +307,7 @@ function handlePinClick(e) {
 }
 
 function setupLongPress() {
-  const view = document.querySelector('.masjids-view');
+  const view = viewContainer ? viewContainer.querySelector('.masjids-view') : document.querySelector('.masjids-view');
   if (!view) return;
 
   let pressTarget = null;
@@ -358,19 +361,19 @@ function togglePin(slug) {
 }
 
 function setupPinHint() {
-  const hint = document.getElementById('pinHint');
+  const hint = viewContainer ? viewContainer.querySelector('#pinHint') : document.getElementById('pinHint');
   if (!hint) return;
   hint.querySelector('.pin-hint-dismiss').addEventListener('click', dismissPinHint);
 }
 
 function dismissPinHint() {
   localStorage.setItem('prayerly-pin-hint-dismissed', '1');
-  const hint = document.getElementById('pinHint');
+  const hint = viewContainer ? viewContainer.querySelector('#pinHint') : document.getElementById('pinHint');
   if (hint) hint.remove();
 }
 
 function showToast(html) {
-  const toast = document.getElementById('masjidsPinToast');
+  const toast = viewContainer ? viewContainer.querySelector('#masjidsPinToast') : document.getElementById('masjidsPinToast');
   if (!toast) return;
   toast.innerHTML = html;
   toast.classList.add('visible');
@@ -381,7 +384,7 @@ function showToast(html) {
 // --- Location ---
 
 function setupLocationBtn() {
-  const btn = document.getElementById('masjidsLocationBtn');
+  const btn = viewContainer ? viewContainer.querySelector('#masjidsLocationBtn') : document.getElementById('masjidsLocationBtn');
   if (!btn) return;
 
   btn.addEventListener('click', async () => {
@@ -404,6 +407,7 @@ function setupLocationBtn() {
       const pos = await getCurrentPosition();
       btn.classList.remove('loading');
       userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      localStorage.setItem('prayerly-cached-location', JSON.stringify(userLocation));
 
       distanceMap = {};
       cachedConfigs.forEach(config => {
@@ -441,4 +445,5 @@ export function destroy() {
   userLocation = null;
   distanceMap = {};
   searchQuery = '';
+  viewContainer = null;
 }

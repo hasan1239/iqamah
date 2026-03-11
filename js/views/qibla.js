@@ -88,6 +88,7 @@ async function initQibla() {
     const pos = await getCurrentPosition({ timeout: 15000 });
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
+    localStorage.setItem('prayerly-cached-location', JSON.stringify({ lat, lon }));
 
     qiblaBearing = calculateQiblaBearing(lat, lon);
     const direction = getCardinalDirection(qiblaBearing);

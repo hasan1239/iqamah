@@ -722,6 +722,66 @@
     .home-no-hero-sub { font-size: 0.8rem; color: var(--text-muted); }
     .home-no-hero-sub a { color: var(--gold); text-decoration: none; font-weight: 600; }
 
+    /* Sehri/Iftari suggestion card (no pinned masjid) */
+    .sehri-iftari-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 16px; backdrop-filter: blur(12px);
+      margin-bottom: 16px;
+    }
+    .sehri-iftari-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .sehri-iftari-badge {
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--gold);
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-20);
+      padding: 3px 10px; border-radius: 999px;
+    }
+    .sehri-iftari-source {
+      font-size: 0.7rem; color: var(--text-muted); font-weight: 500;
+    }
+    .sehri-iftari-body {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sehri-iftari-loading {
+      display: flex; gap: 40px; padding: 12px 0;
+    }
+    .sehri-iftari-item {
+      flex: 1; text-align: center; padding: 8px 0;
+    }
+    .sehri-iftari-divider {
+      width: 1px; height: 48px; background: var(--divider-subtle); flex-shrink: 0;
+    }
+    .sehri-iftari-label {
+      font-size: 0.65rem; color: var(--text-muted); font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px;
+    }
+    .sehri-iftari-time {
+      font-size: 1.3rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+    }
+    .sehri-iftari-countdown {
+      font-size: 0.7rem; color: var(--green); margin-top: 2px;
+    }
+    .sehri-iftari-empty {
+      font-size: 0.85rem; color: var(--text-muted); padding: 12px 0; text-align: center;
+    }
+    .sehri-iftari-cta {
+      display: block; text-align: center; margin-top: 14px; padding: 10px;
+      font-size: 0.8rem; font-weight: 600; color: var(--gold);
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-20);
+      border-radius: 10px; text-decoration: none; transition: all 0.2s;
+    }
+    .sehri-iftari-cta:hover { background: var(--gold-tint-15); }
+    .sehri-iftari-cta-desktop {
+      display: none; text-align: center; margin-top: 14px; padding: 10px;
+      font-size: 0.8rem; font-weight: 500; color: var(--text-muted);
+    }
+    @media (min-width: 768px) {
+      .sehri-iftari-cta-mobile { display: none; }
+      .sehri-iftari-cta-desktop { display: block; }
+    }
+
     /* Recently viewed section */
     .recent-section { margin-bottom: 12px; }
     .recent-list { display: flex; flex-direction: column; gap: 8px; }
