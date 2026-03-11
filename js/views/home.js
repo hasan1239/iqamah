@@ -7,6 +7,18 @@ import { formatCountdown } from '../utils/countdown.js';
 let cachedConfigs = [];
 let heroCountdownInterval = null;
 let toastTimer = null;
+let masjidsModule = null;
+
+function getCityPostcode(address) {
+  if (!address) return '';
+  const pcMatch = address.match(/[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}/i);
+  if (!pcMatch) return address.split(',').pop().trim();
+  const postcode = pcMatch[0];
+  const before = address.slice(0, pcMatch.index).replace(/,\s*$/, '');
+  const parts = before.split(',').map(s => s.trim()).filter(Boolean);
+  const city = parts.length > 0 ? parts[parts.length - 1] : '';
+  return city ? `${city}, ${postcode}` : postcode;
+}
 
 // SVG icons
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
@@ -46,6 +58,8 @@ export function render(container) {
         </a>
       </div>
 
+      <div id="desktopMasjidList" class="desktop-masjid-list"></div>
+
       <div class="install-banner" id="installBanner"></div>
 
       <div class="pin-toast" id="pinToast"></div>
@@ -55,6 +69,8 @@ export function render(container) {
   loadMasjids();
   setupHeroClicks();
   setupInstallBanner();
+  loadDesktopMasjidList();
+  window.addEventListener('prayerly-pin-changed', onPinChanged);
 }
 
 async function loadMasjids() {
@@ -127,7 +143,7 @@ function renderRecentlyViewed() {
     .filter(s => s !== pinnedSlug)
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean)
-    .slice(0, 4);
+    .slice(0, window.innerWidth >= 768 ? 3 : 4);
 
   if (recentConfigs.length === 0) {
     section.innerHTML = '';
@@ -141,13 +157,14 @@ function renderRecentlyViewed() {
       </div>
       <div class="masjid-grid">
         ${recentConfigs.map(config => {
-          const subLine = config.address ? config.address.split(',').slice(-2).join(',').trim() : '';
+          const shortAddr = getCityPostcode(config.address);
+          const fullAddr = config.address || '';
           return `<a href="/${config.slug}" class="masjid-card" data-link>
             <div class="masjid-card-top">
               <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
               <div class="masjid-card-info">
                 <div class="masjid-name">${config.display_name}</div>
-                ${subLine ? `<div class="masjid-card-sub">${subLine}</div>` : ''}
+                ${config.address ? `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>` : ''}
               </div>
             </div>
             <div class="masjid-card-bottom">
@@ -304,6 +321,7 @@ function handleHeroClick(e) {
   showToast('Removed from My Masjid');
   renderHero();
   renderRecentlyViewed();
+  if (masjidsModule && masjidsModule.renderCards) masjidsModule.renderCards();
 }
 
 function showToast(html) {
@@ -348,6 +366,28 @@ function setupInstallBanner() {
   }
 }
 
+// --- Pin sync (from embedded masjid list) ---
+
+function onPinChanged() {
+  renderHero();
+  renderRecentlyViewed();
+}
+
+// --- Desktop masjid list ---
+
+async function loadDesktopMasjidList() {
+  if (window.innerWidth < 768) return;
+  const container = document.getElementById('desktopMasjidList');
+  if (!container) return;
+
+  try {
+    masjidsModule = await import('./masjids.js');
+    masjidsModule.render(container);
+  } catch (err) {
+    console.error('Could not load masjid list:', err);
+  }
+}
+
 export function destroy() {
   if (heroCountdownInterval) {
     clearInterval(heroCountdownInterval);
@@ -357,5 +397,10 @@ export function destroy() {
     clearTimeout(toastTimer);
     toastTimer = null;
   }
+  if (masjidsModule) {
+    masjidsModule.destroy();
+    masjidsModule = null;
+  }
   document.removeEventListener('click', handleHeroClick, true);
+  window.removeEventListener('prayerly-pin-changed', onPinChanged);
 }

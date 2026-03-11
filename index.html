@@ -383,7 +383,7 @@
     /* Headers */
     header { text-align: center; margin-bottom: 18px; }
     h1 {
-      font-family: 'Cinzel', serif;
+      font-family: inherit;
       font-size: 1.5rem;
       color: var(--gold);
       margin-bottom: 6px;
@@ -634,6 +634,8 @@
     .masjid-card-info { min-width: 0; flex: 1; }
     .masjid-name { font-size: 0.85rem; color: var(--text-primary); font-weight: 700; text-align: left; line-height: 1.3; }
     .masjid-card-sub { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
+    .addr-full { display: none; }
+    @media (min-width: 768px) { .addr-short { display: none; } .addr-full { display: inline; } }
 
     .masjid-card-bottom {
       display: flex; align-items: center; justify-content: space-between; gap: 24px;
@@ -816,7 +818,6 @@
        PRAYER TIMES VIEW
        ============================================ */
     .prayer-times-view header { position: relative; }
-    .prayer-times-view h1 { font-family: inherit; }
     .share-icon-btn {
       position: absolute; top: 0; right: 0;
       background: none; border: none; cursor: pointer; padding: 6px;
@@ -946,6 +947,21 @@
     .month-table tbody tr.today { background: var(--gold-tint-08); }
     .month-table tbody tr.today td { color: var(--gold); font-weight: 600; }
     .next-prayer-cell { color: var(--green) !important; }
+    .month-table-card { scrollbar-width: thin; scrollbar-color: var(--gold-tint-30) transparent; }
+    .month-table-card::-webkit-scrollbar { width: 6px; }
+    .month-table-card::-webkit-scrollbar-track { background: transparent; }
+    .month-table-card::-webkit-scrollbar-thumb { background: var(--gold-tint-30); border-radius: 3px; }
+    .month-table-card::-webkit-scrollbar-thumb:hover { background: var(--gold-tint-50); }
+    .month-group-header { font-size: 0.65rem; color: var(--gold); border-bottom: 2px solid var(--gold-tint-30); letter-spacing: 1px; top: 0; }
+    .month-table-combined thead tr:nth-child(2) th { top: 30px; }
+    .hijri-col { font-size: 0.7rem; color: var(--text-muted); text-align: center; white-space: nowrap; }
+    @media (min-width: 768px) {
+      .month-table-combined { table-layout: fixed; }
+      .month-table-combined thead th { font-size: 0.7rem; }
+      .month-table-combined .date-col { width: 70px; text-align: center; padding-left: 4px; }
+      .month-table-combined .hijri-col { width: 70px; text-align: center; padding-left: 4px; }
+      .month-mode-toggle { display: none; }
+    }
 
     /* Info section */
     .info-section { border: 1px solid var(--card-border); border-radius: 16px; background: var(--card-bg); backdrop-filter: blur(12px); margin-bottom: 20px; overflow: hidden; }
@@ -1120,7 +1136,6 @@
        ============================================ */
     .settings-view { max-width: 500px; margin: 0 auto; }
     .settings-header { margin-bottom: 24px; }
-    .settings-header h1 { font-family: inherit; }
 
     .settings-group {
       margin-bottom: 24px;
@@ -1146,6 +1161,14 @@
     .settings-input { background: transparent; border: 1px solid var(--divider); border-radius: 8px; padding: 6px 10px; font-size: 0.85rem; color: var(--text-primary); font-family: inherit; width: 140px; text-align: left; }
     .settings-input:focus { outline: none; border-color: var(--gold); }
     .settings-chevron { color: var(--text-muted); display: flex; }
+    .settings-pinned-right { display: flex; align-items: center; gap: 8px; }
+    .settings-remove-btn {
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1px solid var(--divider); border-radius: 6px;
+      color: var(--text-muted); cursor: pointer; padding: 4px;
+      transition: all 0.2s;
+    }
+    .settings-remove-btn:hover { color: var(--error); border-color: var(--error); }
 
     /* Toggle switch */
     .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
@@ -1167,7 +1190,16 @@
        ADD MASJID VIEW
        ============================================ */
     .add-masjid-view { max-width: 700px; margin: 0 auto; }
-    .add-masjid-view h1 { font-family: inherit; }
+    @media (min-width: 768px) {
+      .add-masjid-view { max-width: none; }
+      .add-masjid-view #step3 .card {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100vw - 80px);
+        padding: 16px 24px;
+      }
+    }
     .add-subtitle { font-size: 0.9rem; color: var(--text-tertiary); margin-bottom: 8px; line-height: 1.4; }
 
     .progress-bar { display: flex; align-items: flex-start; justify-content: center; margin: 20px 0; gap: 0; }
@@ -1205,13 +1237,15 @@
     .upload-tip { font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; line-height: 1.4; }
     .upload-input { display: none; }
 
-    .image-preview { display: none; }
+    .image-preview { display: none; text-align: center; }
     .image-preview.visible { display: block; }
-    .image-preview img { max-width: 100%; max-height: 200px; border-radius: 8px; margin-bottom: 8px; }
+    .image-preview img { max-width: 100%; max-height: 400px; border-radius: 8px; margin-bottom: 8px; }
+    @media (min-width: 768px) { .image-preview img { max-height: 600px; } }
     .file-info { font-size: 0.8rem; color: var(--text-muted); }
     .change-btn { color: var(--gold); font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
 
-    .error-msg { font-size: 0.85rem; color: var(--error); margin-top: 8px; display: none; }
+    .add-masjid-view .btn-row:has(.btn-primary:only-child) { grid-template-columns: 1fr; max-width: 260px; margin-left: auto; margin-right: auto; }
+    .error-msg { font-size: 0.85rem; color: var(--error); margin-top: 12px; display: none; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.25); border-radius: 8px; padding: 10px 14px; text-align: center; }
     .error-msg.visible { display: block; }
 
     .status-msg { text-align: center; padding: 40px 20px; }
@@ -1220,26 +1254,29 @@
     .section-label { font-size: 0.95rem; color: var(--gold); font-weight: 600; margin: 16px 0 12px; }
 
     .review-layout { margin-bottom: 16px; }
-    .review-image { overflow: auto; max-height: 400px; border-radius: 8px; border: 1px solid var(--card-border); }
+    .review-image { overflow: auto; max-height: 500px; border-radius: 8px; border: 1px solid var(--card-border); }
     .review-image img { width: 100%; display: block; cursor: pointer; }
     .zoom-hint { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 4px; }
     .zoom-controls { display: none; justify-content: center; gap: 8px; margin-top: 6px; align-items: center; }
     .zoom-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-primary); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
     .zoom-level { font-size: 0.75rem; color: var(--text-muted); min-width: 28px; text-align: center; }
     @media (min-width: 768px) {
-      .review-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .review-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
       .review-image-wrap { position: sticky; top: 16px; }
-      .review-image { max-height: 80vh; }
+      .review-image { max-height: none; }
       .zoom-controls { display: flex; }
     }
 
-    .review-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-    .review-table th { color: var(--gold); font-weight: 600; padding: 6px 4px; text-align: center; border-bottom: 2px solid var(--table-header-border); font-size: 0.7rem; white-space: nowrap; }
-    .review-table td { padding: 2px; text-align: center; border-bottom: 1px solid var(--divider-subtle); }
-    .review-table input { width: 100%; padding: 4px 2px; font-size: 0.8rem; font-family: inherit; background: transparent; color: var(--text-primary); border: 1px solid transparent; border-radius: 4px; text-align: center; }
+    .review-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    @media (min-width: 768px) { .review-table { width: 100%; } }
+    .review-table th { color: var(--gold); font-weight: 600; padding: 6px 6px; text-align: center; border-bottom: 2px solid var(--table-header-border); font-size: 0.75rem; white-space: nowrap; position: sticky; top: 0; background: var(--card-bg-solid, #182B31); z-index: 2; }
+    :root.light-mode .review-table th { background: var(--card-bg-solid, #f4efe5); }
+    .review-table td { padding: 3px 2px; text-align: center; border-bottom: 1px solid var(--divider-subtle); }
+    .review-table input { width: 100%; min-width: 48px; padding: 5px 3px; font-size: 0.85rem; font-family: inherit; background: transparent; color: var(--text-primary); border: 1px solid transparent; border-radius: 4px; text-align: center; }
     .review-table input:focus { outline: none; border-color: var(--gold); background: var(--gold-tint-08); }
     .row-num { font-size: 0.7rem; color: var(--text-muted); }
-    .review-table-wrap { overflow-x: auto; }
+    .review-table-wrap { overflow: auto; max-height: 50vh; }
+    @media (min-width: 768px) { .review-table-wrap { max-height: none; overflow-x: auto; overflow-y: visible; } }
 
     .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     @media (min-width: 768px) { .meta-grid { grid-template-columns: 1fr 1fr 1fr; } }
@@ -1267,6 +1304,9 @@
     /* ============================================
        DESKTOP RESPONSIVE
        ============================================ */
+    /* Desktop masjid list embedded in home */
+    .desktop-masjid-list { display: none; }
+
     @media (min-width: 768px) {
       body { padding: 50px 30px; }
       #app { padding-top: 40px; }
@@ -1283,9 +1323,17 @@
       .masjid-grid .masjid-card-bottom { border-top: none; padding-top: 0; gap: 10px; flex-shrink: 0; }
       .masjid-card:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-40); transform: translateY(-3px); box-shadow: 0 10px 25px var(--card-shadow); }
       .hero-card { max-width: 600px; }
-      .home-browse-btn { max-width: 400px; }
+      .home-browse-btn { display: none; }
+      .pin-hint { display: none; }
       .recent-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .masjids-header h1 { font-size: 1.5rem; }
+
+      /* Show embedded masjid list on desktop home */
+      .desktop-masjid-list { display: block; margin-top: 24px; }
+      .desktop-masjid-list .masjids-view { padding-bottom: 0; }
+      .desktop-masjid-list .masjids-header { display: flex; align-items: center; gap: 12px; }
+      .desktop-masjid-list .masjids-title { font-size: 0; }
+      .desktop-masjid-list .masjids-title::after { content: 'All Masjids'; font-size: 1.5rem; font-family: inherit; }
     }
   </style>
 </head>
@@ -1299,7 +1347,6 @@
       </a>
       <div class="desktop-nav-links" id="desktop-nav-links">
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>
-        <a href="/masjids" class="desktop-nav-link" data-nav="masjids" data-link>Masjids</a>
         <a href="/settings" class="desktop-nav-link" data-nav="settings" data-link>Settings</a>
       </div>
     </div>

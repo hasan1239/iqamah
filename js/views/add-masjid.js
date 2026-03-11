@@ -1,8 +1,51 @@
 // Add Your Masjid — 3-step wizard (Upload → Review → Done)
 
+const USE_DUMMY_DATA = true; // Set to true to skip API call and use dummy data for testing
+
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
+
+function getDummyData() {
+  const rows = [];
+  const startDate = new Date(2026, 1, 17);
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(startDate); d.setDate(d.getDate() + i);
+    const dayStr = d.getDate() + ' ' + ['Jan','Feb','Mar'][d.getMonth()];
+    rows.push({
+      date: dayStr, day: days[d.getDay() === 0 ? 6 : d.getDay() - 1],
+      islamic_day: i + 1,
+      fajr_start: `${5 - Math.floor(i/10)}:${String(40 - i).padStart(2,'0')}`,
+      sehri_end: `${5 - Math.floor(i/10)}:${String(38 - i).padStart(2,'0')}`,
+      sunrise: `${7 - Math.floor(i/15)}:${String(20 - Math.floor(i/2)).padStart(2,'0')}`,
+      zawal: '12:15',
+      zohr: `12:${String(24 - Math.floor(i/10)).padStart(2,'0')}`,
+      asr: `${3}:${String(30 + Math.floor(i/3)).padStart(2,'0')}`,
+      maghrib_iftari: `${5}:${String(10 + i).padStart(2,'0')}`,
+      esha: `${7}:${String(15 + Math.floor(i/3)).padStart(2,'0')}`,
+      fajr_jamaat: `${5 - Math.floor(i/10)}:${String(50 - i).padStart(2,'0')}`,
+      zohar_jamaat: '1:00',
+      asr_jamaat: `${3}:${String(45 + Math.floor(i/3)).padStart(2,'0')}`,
+      maghrib_jamaat: `${5}:${String(15 + i).padStart(2,'0')}`,
+      esha_jamaat: `${7}:${String(30 + Math.floor(i/3)).padStart(2,'0')}`,
+    });
+  }
+  return {
+    mosque_name: 'Test Masjid Al-Noor',
+    suggested_slug: 'test_masjid_al_noor',
+    address: '123 High Street, Birmingham, B1 1AA',
+    phone: '0121 555 1234',
+    jummah_times: '12:30pm & 1:30pm',
+    eid_salah: '7:30am & 9:00am',
+    sadaqatul_fitr: '5.00',
+    radio_frequency: '',
+    notes: '',
+    month: 'February-March',
+    islamic_month: 'Ramadan',
+    rows,
+  };
+}
 
 export function render(container) {
   selectedFile = null;
@@ -176,18 +219,20 @@ function setupEventListeners(container) {
 
   // Step navigation
   function goToStep(num) {
-    container.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-    container.querySelector('#step' + num).classList.add('active');
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step' + num)?.classList.add('active');
     for (let s = 1; s <= 4; s++) {
-      const stepEl = container.querySelector('#progStep' + s);
+      const stepEl = document.getElementById('progStep' + s);
+      if (!stepEl) continue;
       stepEl.classList.remove('active', 'done');
       if (s < num) stepEl.classList.add('done');
       else if (s === num) stepEl.classList.add('active');
     }
     for (let c = 1; c <= 3; c++) {
-      container.querySelector('#progConn' + c).classList.toggle('done', c < num);
+      document.getElementById('progConn' + c)?.classList.toggle('done', c < num);
     }
-    container.querySelector('#aiDisclaimer').style.display = num === 3 ? '' : 'none';
+    const disclaimer = document.getElementById('aiDisclaimer');
+    if (disclaimer) disclaimer.style.display = num === 3 ? '' : 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -263,13 +308,18 @@ function setupEventListeners(container) {
     extractBtn.disabled = true;
     goToStep(2);
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
     try {
-      const resp = await fetch('/api/extract', { method: 'POST', body: formData });
-      const result = await resp.json();
-      if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
+      let result;
+      if (USE_DUMMY_DATA) {
+        await new Promise(r => setTimeout(r, 1000));
+        result = { success: true, data: getDummyData() };
+      } else {
+        const formData = new FormData();
+        formData.append('image', selectedFile);
+        const resp = await fetch('/api/extract', { method: 'POST', body: formData });
+        result = await resp.json();
+        if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
+      }
       extractedData = result.data;
       populateReview();
       goToStep(3);
@@ -310,7 +360,7 @@ function setupEventListeners(container) {
 
   function populateReview() {
     // Handle PDF vs image
-    const oldEmbed = container.querySelector('#reviewPdfEmbed');
+    const oldEmbed = document.querySelector('#reviewPdfEmbed');
     if (oldEmbed) oldEmbed.remove();
 
     if (selectedFile && selectedFile.type === 'application/pdf') {
@@ -320,22 +370,22 @@ function setupEventListeners(container) {
       embed.style.width = '100%'; embed.style.height = '100%';
       embed.style.minHeight = window.innerWidth >= 768 ? '80vh' : '400px';
       reviewImg.parentNode.insertBefore(embed, reviewImg);
-      container.querySelector('.zoom-hint').style.display = 'none';
-      container.querySelector('#zoomControls').style.display = 'none';
+      document.querySelector('.zoom-hint').style.display = 'none';
+      document.querySelector('#zoomControls').style.display = 'none';
     } else {
       reviewImg.style.display = ''; reviewImg.src = imageDataUrl;
-      container.querySelector('.zoom-hint').style.display = '';
-      container.querySelector('#zoomControls').style.display = '';
+      document.querySelector('.zoom-hint').style.display = '';
+      document.querySelector('#zoomControls').style.display = '';
     }
 
     masjidNameInput.value = extractedData.mosque_name || '';
-    container.querySelector('#metaAddress').value = extractedData.address || '';
-    container.querySelector('#metaPhone').value = extractedData.phone || '';
-    container.querySelector('#metaJummah').value = extractedData.jummah_times || '';
-    container.querySelector('#metaEid').value = extractedData.eid_salah || '';
-    container.querySelector('#metaFitrana').value = extractedData.sadaqatul_fitr || '';
-    container.querySelector('#metaRadio').value = extractedData.radio_frequency || '';
-    container.querySelector('#metaNotes').value = extractedData.notes || '';
+    document.querySelector('#metaAddress').value = extractedData.address || '';
+    document.querySelector('#metaPhone').value = extractedData.phone || '';
+    document.querySelector('#metaJummah').value = extractedData.jummah_times || '';
+    document.querySelector('#metaEid').value = extractedData.eid_salah || '';
+    document.querySelector('#metaFitrana').value = extractedData.sadaqatul_fitr || '';
+    document.querySelector('#metaRadio').value = extractedData.radio_frequency || '';
+    document.querySelector('#metaNotes').value = extractedData.notes || '';
 
     const cols = getTableColumns(extractedData.rows);
     reviewThead.innerHTML = '<tr><th>#</th>' + cols.map(c => `<th>${c.label}</th>`).join('') + '</tr>';
@@ -367,15 +417,15 @@ function setupEventListeners(container) {
     return {
       mosque_name: masjidNameInput.value.trim(),
       suggested_slug: extractedData.suggested_slug || '',
-      address: container.querySelector('#metaAddress').value.trim(),
-      phone: container.querySelector('#metaPhone').value.trim(),
+      address: document.querySelector('#metaAddress').value.trim(),
+      phone: document.querySelector('#metaPhone').value.trim(),
       month: extractedData.month || '',
       islamic_month: extractedData.islamic_month || '',
-      jummah_times: container.querySelector('#metaJummah').value.trim(),
-      eid_salah: container.querySelector('#metaEid').value.trim(),
-      sadaqatul_fitr: container.querySelector('#metaFitrana').value.trim(),
-      radio_frequency: container.querySelector('#metaRadio').value.trim(),
-      notes: container.querySelector('#metaNotes').value.trim(),
+      jummah_times: document.querySelector('#metaJummah').value.trim(),
+      eid_salah: document.querySelector('#metaEid').value.trim(),
+      sadaqatul_fitr: document.querySelector('#metaFitrana').value.trim(),
+      radio_frequency: document.querySelector('#metaRadio').value.trim(),
+      notes: document.querySelector('#metaNotes').value.trim(),
       rows,
     };
   }
@@ -433,7 +483,7 @@ function setupEventListeners(container) {
     if (delta === 0) currentZoom = 1;
     else currentZoom = Math.min(4, Math.max(0.5, currentZoom + delta));
     reviewImg.style.width = (currentZoom * 100) + '%';
-    container.querySelector('#zoomLevel').textContent = currentZoom + 'x';
+    document.querySelector('#zoomLevel').textContent = currentZoom + 'x';
   }
   container.querySelector('#zoomInBtn').addEventListener('click', () => zoomImage(0.5));
   container.querySelector('#zoomOutBtn').addEventListener('click', () => zoomImage(-0.5));
