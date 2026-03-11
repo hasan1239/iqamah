@@ -232,7 +232,24 @@ function formatTimeDisplay(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
-  return `${h}:${m} <span class="hero-next-ampm">${isAM ? 'AM' : 'PM'}</span>`;
+  if (localStorage.getItem('prayerly-time-format') === '12') {
+    return `${h}:${m} <span class="hero-next-ampm">${isAM ? 'AM' : 'PM'}</span>`;
+  }
+  // 24h: convert using isAM flag
+  const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
+  return `${h24}:${m}`;
+}
+
+function formatCardTime(timeStr, isAM) {
+  const parts = timeStr.trim().split(':');
+  if (parts.length < 2) return timeStr;
+  const h = parseInt(parts[0]);
+  const m = parts[1];
+  if (localStorage.getItem('prayerly-time-format') === '12') {
+    return `${h}:${m} ${isAM ? 'AM' : 'PM'}`;
+  }
+  const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
+  return `${h24}:${m}`;
 }
 
 // --- Hero next prayer ---
@@ -293,7 +310,7 @@ async function loadRecentCardPrayers(configs) {
       if (next) {
         el.innerHTML = `
           <span class="masjid-card-next-label">${next.name}</span>
-          <span class="masjid-card-next-time">${next.time} ${next.isAM ? 'AM' : 'PM'}</span>`;
+          <span class="masjid-card-next-time">${formatCardTime(next.time, next.isAM)}</span>`;
       } else {
         el.innerHTML = '';
       }

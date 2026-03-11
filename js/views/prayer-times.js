@@ -10,6 +10,37 @@ let eshaRerenderId = null;
 let unsubTheme = null;
 let masjidId = null;
 
+function use24h() {
+  return localStorage.getItem('prayerly-time-format') !== '12';
+}
+
+// isAM: true = morning prayer (Sehri/Fajr/Sunrise), false = afternoon/evening
+// skipSuffix: true = omit AM/PM in 12h mode (for month view)
+function ft(timeStr, isAM, skipSuffix) {
+  if (!timeStr || timeStr === '-' || timeStr === '\u2014') return timeStr;
+  const match = timeStr.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return timeStr;
+  let hours = parseInt(match[1]);
+  const minutes = match[2];
+
+  if (use24h()) {
+    if (!isAM && hours !== 12) hours += 12;
+    if (isAM && hours === 12) hours = 0;
+    return `${hours}:${minutes}`;
+  }
+  if (skipSuffix) return `${hours}:${minutes}`;
+  return `${hours}:${minutes} ${isAM ? 'AM' : 'PM'}`;
+}
+
+// Column key → isAM mapping for CSV columns
+const COL_IS_AM = {
+  'Sehri Ends': true, "Fajr Jama'at": true, 'Sunrise': true,
+  'Zohr': false, "Zohar Jama'at": false, 'Zawal': false,
+  'Asr': false, "Asr Jama'at": false,
+  'Maghrib Iftari': false, "Maghrib Jama'at": false,
+  'Esha': false, "Esha Jama'at": false,
+};
+
 export async function render(container, { slug }) {
   masjidId = slug;
   currentView = 'today';
@@ -345,34 +376,34 @@ function renderTodayView(target) {
         <div class="flip-card-front banner-item">
           <div class="flip-hint">\u21BB</div>
           <div class="banner-label">${frontLabel}</div>
-          <div class="banner-time">${frontTime}</div>
+          <div class="banner-time">${ft(frontTime, true)}</div>
         </div>
         <div class="flip-card-back banner-item">
           <div class="flip-hint">\u21BB</div>
           <div class="banner-label">${backLabel}</div>
-          <div class="banner-time">${backTime}</div>
+          <div class="banner-time">${ft(backTime, true)}</div>
         </div>
       </div>
     </div>`;
   } else {
-    sehriBannerHtml = `<div class="banner-item"><div class="banner-label">Sehri Ends</div><div class="banner-time">${todaySehri}</div></div>`;
+    sehriBannerHtml = `<div class="banner-item"><div class="banner-label">Sehri Ends</div><div class="banner-time">${ft(todaySehri, true)}</div></div>`;
   }
 
   // Build unified prayer rows: Start | Name | Jama'at
   const prayerRows = [];
-  prayerRows.push({ name: 'Fajr', start: todayRow['Sehri Ends'], jamaat: todayRow["Fajr Jama'at"] });
-  if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', start: todayRow['Zawal'], jamaat: null });
-  prayerRows.push({ name: 'Dhuhr', start: todayRow['Zohr'], jamaat: todayRow["Zohar Jama'at"] || '1:00' });
-  prayerRows.push({ name: 'Asr', start: todayRow['Asr'], jamaat: todayRow["Asr Jama'at"] });
-  prayerRows.push({ name: 'Maghrib', start: todayRow['Maghrib Iftari'], jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
-  if (todayRow['Esha']) prayerRows.push({ name: 'Esha', start: todayRow['Esha'], jamaat: todayRow["Esha Jama'at"] });
-  else prayerRows.push({ name: 'Esha', start: null, jamaat: todayRow["Esha Jama'at"] });
+  prayerRows.push({ name: 'Fajr', isAM: true, start: todayRow['Sehri Ends'], jamaat: todayRow["Fajr Jama'at"] });
+  if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', isAM: false, start: todayRow['Zawal'], jamaat: null });
+  prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'], jamaat: todayRow["Zohar Jama'at"] || '1:00' });
+  prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'], jamaat: todayRow["Asr Jama'at"] });
+  prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'], jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
+  if (todayRow['Esha']) prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'], jamaat: todayRow["Esha Jama'at"] });
+  else prayerRows.push({ name: 'Esha', isAM: false, start: null, jamaat: todayRow["Esha Jama'at"] });
 
   const prayerRowsHtml = prayerRows.map(p => `
     <div class="time-row" data-prayer="${p.name}">
-      <div class="time-col time-start">${p.start || '-'}</div>
+      <div class="time-col time-start">${ft(p.start, p.isAM) || '-'}</div>
       <div class="time-col time-name">${p.name}</div>
-      <div class="time-col time-jamaat">${p.jamaat || '-'}</div>
+      <div class="time-col time-jamaat">${ft(p.jamaat, p.isAM) || '-'}</div>
     </div>`).join('');
 
   target.innerHTML = `
@@ -390,7 +421,7 @@ function renderTodayView(target) {
         ${sehriBannerHtml}
         <div class="banner-item">
           <div class="banner-label">Maghrib/Iftari</div>
-          <div class="banner-time">${todayRow['Maghrib Iftari']}</div>
+          <div class="banner-time">${ft(todayRow['Maghrib Iftari'], false)}</div>
         </div>
       </div>
 
@@ -455,17 +486,17 @@ function renderMonthlyView(target) {
   if (isDesktop) {
     // Combined view: start + jama'at columns
     const combinedCols = [
-      { label: 'Sehri', key: 'Sehri Ends' },
-      { label: 'Sunrise', key: 'Sunrise' },
-      { label: 'Dhuhr', key: 'Zohr' },
-      { label: 'Asr', key: 'Asr' },
-      { label: 'Maghrib', key: 'Maghrib Iftari' },
-      { label: 'Esha', key: 'Esha' },
-      { label: 'Fajr J', key: "Fajr Jama'at" },
-      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00' },
-      { label: 'Asr J', key: "Asr Jama'at" },
-      { label: 'Magh J', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari' },
-      { label: 'Esha J', key: "Esha Jama'at" },
+      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+      { label: 'Sunrise', key: 'Sunrise', isAM: true },
+      { label: 'Dhuhr', key: 'Zohr', isAM: false },
+      { label: 'Asr', key: 'Asr', isAM: false },
+      { label: 'Maghrib', key: 'Maghrib Iftari', isAM: false },
+      { label: 'Esha', key: 'Esha', isAM: false },
+      { label: 'Fajr J', key: "Fajr Jama'at", isAM: true },
+      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
+      { label: 'Asr J', key: "Asr Jama'at", isAM: false },
+      { label: 'Magh J', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
+      { label: 'Esha J', key: "Esha Jama'at", isAM: false },
     ];
 
     const rowsHtml = csvData.map(row => {
@@ -475,7 +506,7 @@ function renderMonthlyView(target) {
       const hijri = row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '';
       const cells = combinedCols.map(col => {
         const val = row[col.key] || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
-        return `<td>${val}</td>`;
+        return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
       return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}</td><td class="hijri-col">${hijri}</td>${cells}</tr>`;
     }).join('');
@@ -502,20 +533,20 @@ function renderMonthlyView(target) {
     // Mobile: toggle between start/jama'at
     const columns = isJamaat
       ? [
-          { label: 'Sehri', key: 'Sehri Ends' },
-          { label: 'Fajr', key: "Fajr Jama'at" },
-          { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00' },
-          { label: 'Asr', key: "Asr Jama'at" },
-          { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari' },
-          { label: 'Esha', key: "Esha Jama'at" },
+          { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+          { label: 'Fajr', key: "Fajr Jama'at", isAM: true },
+          { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
+          { label: 'Asr', key: "Asr Jama'at", isAM: false },
+          { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
+          { label: 'Esha', key: "Esha Jama'at", isAM: false },
         ]
       : [
-          { label: 'Sehri', key: 'Sehri Ends' },
-          { label: 'Sunrise', key: 'Sunrise' },
-          { label: 'Dhuhr', key: 'Zohr' },
-          { label: 'Asr', key: 'Asr' },
-          { label: 'Magh', key: 'Maghrib Iftari' },
-          { label: 'Esha', key: 'Esha' },
+          { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+          { label: 'Sunrise', key: 'Sunrise', isAM: true },
+          { label: 'Dhuhr', key: 'Zohr', isAM: false },
+          { label: 'Asr', key: 'Asr', isAM: false },
+          { label: 'Magh', key: 'Maghrib Iftari', isAM: false },
+          { label: 'Esha', key: 'Esha', isAM: false },
         ];
 
     const rowsHtml = csvData.map(row => {
@@ -525,7 +556,7 @@ function renderMonthlyView(target) {
       const hijri = row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '';
       const cells = columns.map(col => {
         const val = row[col.key] || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
-        return `<td>${val}</td>`;
+        return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
       return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}<span class="month-hijri">${hijri}</span></td>${cells}</tr>`;
     }).join('');

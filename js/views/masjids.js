@@ -199,6 +199,18 @@ function getDistText(slug) {
   return d < 0.1 ? '< 0.1 mi away' : d.toFixed(1) + ' mi away';
 }
 
+function formatCardTime(timeStr, isAM) {
+  const parts = timeStr.trim().split(':');
+  if (parts.length < 2) return timeStr;
+  const h = parseInt(parts[0]);
+  const m = parts[1];
+  if (localStorage.getItem('prayerly-time-format') === '12') {
+    return `${h}:${m} ${isAM ? 'AM' : 'PM'}`;
+  }
+  const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
+  return `${h24}:${m}`;
+}
+
 function parseTimeTodayWithAMPM(timeStr, isAM) {
   const parts = timeStr.trim().split(':');
   if (parts.length < 2) return null;
@@ -252,7 +264,7 @@ async function loadCardPrayers(configs) {
       if (next) {
         el.innerHTML = `
           <span class="masjid-card-next-label">${next.name}</span>
-          <span class="masjid-card-next-time">${next.time} ${next.isAM ? 'AM' : 'PM'}</span>`;
+          <span class="masjid-card-next-time">${formatCardTime(next.time, next.isAM)}</span>`;
       } else {
         el.innerHTML = '';
       }
