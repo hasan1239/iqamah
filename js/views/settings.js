@@ -109,6 +109,22 @@ export function render(container) {
             </svg>
           </span>
         </a>
+
+        <a href="mailto:prayerly@hotmail.com?subject=Prayerly Feedback" class="settings-item settings-link" id="feedbackLink">
+          <div class="settings-item-left">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </span>
+            <span class="settings-label">Send Feedback</span>
+          </div>
+          <span class="settings-chevron">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </a>
       </div>
 
       <div class="settings-group">

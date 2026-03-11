@@ -3,6 +3,7 @@ import { navigate } from '../router.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
+import { haversineDistance } from '../utils/geolocation.js';
 
 let cachedConfigs = [];
 let heroCountdownInterval = null;
@@ -95,12 +96,7 @@ function renderHero() {
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
 
   if (!pinnedConfig) {
-    heroContainer.innerHTML = `
-      <div class="home-no-hero">
-        <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
-        <div class="home-no-hero-text">No masjid selected</div>
-        <div class="home-no-hero-sub">Set a masjid as your primary from the <a href="/masjids" data-link>Masjids</a> tab</div>
-      </div>`;
+    renderSuggestedHero(heroContainer);
     return;
   }
 
@@ -127,6 +123,119 @@ function renderHero() {
     </div>`;
 
   loadHeroNextPrayer(pinnedConfig);
+}
+
+// --- Suggested hero (no pinned masjid) ---
+
+function findBestMasjid() {
+  if (cachedConfigs.length === 0) return null;
+
+  // Try cached location → nearest masjid
+  try {
+    const cached = JSON.parse(localStorage.getItem('prayerly-cached-location'));
+    if (cached && cached.lat && cached.lon) {
+      const withCoords = cachedConfigs.filter(c => c.lat != null && c.lon != null);
+      if (withCoords.length > 0) {
+        withCoords.sort((a, b) =>
+          haversineDistance(cached.lat, cached.lon, a.lat, a.lon) -
+          haversineDistance(cached.lat, cached.lon, b.lat, b.lon)
+        );
+        return withCoords[0];
+      }
+    }
+  } catch {}
+
+  // Try recently viewed
+  const recentSlugs = getRecentSlugs();
+  if (recentSlugs.length > 0) {
+    const recent = cachedConfigs.find(c => c.slug === recentSlugs[0]);
+    if (recent) return recent;
+  }
+
+  // Fallback: first alphabetically
+  return [...cachedConfigs].sort((a, b) => a.display_name.localeCompare(b.display_name))[0];
+}
+
+function renderSuggestedHero(heroContainer) {
+  const config = findBestMasjid();
+  if (!config) {
+    heroContainer.innerHTML = `
+      <div class="home-no-hero">
+        <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
+        <div class="home-no-hero-text">No masjid selected</div>
+        <div class="home-no-hero-sub">Set a masjid as your primary from the <a href="/masjids" data-link>Masjids</a> tab</div>
+      </div>`;
+    return;
+  }
+
+  heroContainer.innerHTML = `
+    <div class="sehri-iftari-card">
+      <div class="sehri-iftari-header">
+        <span class="sehri-iftari-badge">Today's Times</span>
+        <span class="sehri-iftari-source">${config.display_name}</span>
+      </div>
+      <div class="sehri-iftari-body" id="sehriIftariBody">
+        <div class="sehri-iftari-loading">
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+        </div>
+      </div>
+      <a href="/masjids" class="sehri-iftari-cta sehri-iftari-cta-mobile" data-link>Choose My Masjid</a>
+      <div class="sehri-iftari-cta-desktop">Choose My Masjid below</div>
+    </div>`;
+
+  loadSehriIftari(config);
+}
+
+async function loadSehriIftari(config) {
+  const body = document.getElementById('sehriIftariBody');
+  if (!body) return;
+
+  try {
+    const csvFile = config.csv || config.slug + '.csv';
+    const res = await fetch(`/data/${csvFile}`);
+    if (!res.ok) { body.innerHTML = ''; return; }
+    const text = await res.text();
+    const csvData = parseCSV(text);
+    const todayRow = getTodayRow(csvData);
+    if (!todayRow) { body.innerHTML = '<div class="sehri-iftari-empty">No times available for today</div>'; return; }
+
+    const sehri = todayRow['Sehri Ends'] || '';
+    const maghrib = todayRow['Maghrib Iftari'] || '';
+
+    const sehriFormatted = formatCardTime(sehri, true);
+    const maghribFormatted = formatCardTime(maghrib, false);
+
+    // Countdowns
+    const now = new Date();
+    const sehriDate = sehri ? parseTimeTodayWithAMPM(sehri, true) : null;
+    const maghribDate = maghrib ? parseTimeTodayWithAMPM(maghrib, false) : null;
+    const sehriCd = sehriDate && sehriDate > now ? formatCountdown(sehriDate - now) : null;
+    const maghribCd = maghribDate && maghribDate > now ? formatCountdown(maghribDate - now) : null;
+
+    body.innerHTML = `
+      <div class="sehri-iftari-item">
+        <div class="sehri-iftari-label">Sehri Ends</div>
+        <div class="sehri-iftari-time">${sehriFormatted}</div>
+        ${sehriCd ? `<div class="sehri-iftari-countdown">${sehriCd}</div>` : ''}
+      </div>
+      <div class="sehri-iftari-divider"></div>
+      <div class="sehri-iftari-item">
+        <div class="sehri-iftari-label">Maghrib/Iftari</div>
+        <div class="sehri-iftari-time">${maghribFormatted}</div>
+        ${maghribCd ? `<div class="sehri-iftari-countdown">${maghribCd}</div>` : ''}
+      </div>`;
+
+    // Update countdowns every minute
+    if (heroCountdownInterval) clearInterval(heroCountdownInterval);
+    heroCountdownInterval = setInterval(() => {
+      const b = document.getElementById('sehriIftariBody');
+      if (!b) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
+      loadSehriIftari(config);
+    }, 60000);
+  } catch {
+    body.innerHTML = '';
+  }
 }
 
 // --- Recently viewed ---
