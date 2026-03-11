@@ -391,13 +391,12 @@ function renderTodayView(target) {
 
   // Build unified prayer rows: Start | Name | Jama'at
   const prayerRows = [];
-  prayerRows.push({ name: 'Fajr', isAM: true, start: todayRow['Sehri Ends'], jamaat: todayRow["Fajr Jama'at"] });
+  prayerRows.push({ name: 'Fajr', isAM: true, start: todayRow['Sehri Ends'] || null, jamaat: todayRow["Fajr Jama'at"] });
   if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', isAM: false, start: todayRow['Zawal'], jamaat: null });
-  prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'], jamaat: todayRow["Zohar Jama'at"] || '1:00' });
-  prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'], jamaat: todayRow["Asr Jama'at"] });
-  prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'], jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
-  if (todayRow['Esha']) prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'], jamaat: todayRow["Esha Jama'at"] });
-  else prayerRows.push({ name: 'Esha', isAM: false, start: null, jamaat: todayRow["Esha Jama'at"] });
+  prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'] || null, jamaat: todayRow["Zohar Jama'at"] || '1:00' });
+  prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'] || null, jamaat: todayRow["Asr Jama'at"] });
+  prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'] || null, jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
+  prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'] || null, jamaat: todayRow["Esha Jama'at"] });
 
   const prayerRowsHtml = prayerRows.map(p => `
     <div class="time-row" data-prayer="${p.name}">
@@ -482,22 +481,37 @@ function renderMonthlyView(target) {
 
   const todayStr = new Date().toDateString();
   let tableHtml;
+  let activeCols = [];
+
+  // Helper: check if a column has at least one non-empty value across all rows
+  function colHasData(col) {
+    return csvData.some(row => {
+      const val = row[col.key];
+      return val && val.trim();
+    });
+  }
 
   if (isDesktop) {
     // Combined view: start + jama'at columns
-    const combinedCols = [
-      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
-      { label: 'Sunrise', key: 'Sunrise', isAM: true },
-      { label: 'Dhuhr', key: 'Zohr', isAM: false },
-      { label: 'Asr', key: 'Asr', isAM: false },
-      { label: 'Maghrib', key: 'Maghrib Iftari', isAM: false },
-      { label: 'Esha', key: 'Esha', isAM: false },
-      { label: 'Fajr J', key: "Fajr Jama'at", isAM: true },
-      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
-      { label: 'Asr J', key: "Asr Jama'at", isAM: false },
-      { label: 'Magh J', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
-      { label: 'Esha J', key: "Esha Jama'at", isAM: false },
+    const allStartCols = [
+      { label: 'Sehri', key: 'Sehri Ends', isAM: true, group: 'start' },
+      { label: 'Sunrise', key: 'Sunrise', isAM: true, group: 'start' },
+      { label: 'Dhuhr', key: 'Zohr', isAM: false, group: 'start' },
+      { label: 'Asr', key: 'Asr', isAM: false, group: 'start' },
+      { label: 'Maghrib', key: 'Maghrib Iftari', isAM: false, group: 'start' },
+      { label: 'Esha', key: 'Esha', isAM: false, group: 'start' },
     ];
+    const allJamaatCols = [
+      { label: 'Fajr J', key: "Fajr Jama'at", isAM: true, group: 'jamaat' },
+      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00', isAM: false, group: 'jamaat' },
+      { label: 'Asr J', key: "Asr Jama'at", isAM: false, group: 'jamaat' },
+      { label: 'Magh J', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false, group: 'jamaat' },
+      { label: 'Esha J', key: "Esha Jama'at", isAM: false, group: 'jamaat' },
+    ];
+    const startCols = allStartCols.filter(colHasData);
+    const jamaatCols = allJamaatCols.filter(colHasData);
+    const combinedCols = [...startCols, ...jamaatCols];
+    activeCols = combinedCols;
 
     const rowsHtml = csvData.map(row => {
       const isToday = parseDate(row['Date']).toDateString() === todayStr;
@@ -511,13 +525,16 @@ function renderMonthlyView(target) {
       return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}</td><td class="hijri-col">${hijri}</td>${cells}</tr>`;
     }).join('');
 
+    const startHeader = startCols.length > 0 ? `<th colspan="${startCols.length}" class="month-group-header">Start Times</th>` : '';
+    const jamaatHeader = jamaatCols.length > 0 ? `<th colspan="${jamaatCols.length}" class="month-group-header">Jama'at Times</th>` : '';
+
     tableHtml = `
       <table class="month-table month-table-combined">
         <thead>
           <tr>
             <th class="month-group-header" colspan="2"></th>
-            <th colspan="6" class="month-group-header">Start Times</th>
-            <th colspan="5" class="month-group-header">Jama'at Times</th>
+            ${startHeader}
+            ${jamaatHeader}
           </tr>
           <tr>
             <th class="date-col">Date</th>
@@ -531,23 +548,26 @@ function renderMonthlyView(target) {
       </table>`;
   } else {
     // Mobile: toggle between start/jama'at
+    const allJamaatCols = [
+      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+      { label: 'Fajr', key: "Fajr Jama'at", isAM: true },
+      { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
+      { label: 'Asr', key: "Asr Jama'at", isAM: false },
+      { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
+      { label: 'Esha', key: "Esha Jama'at", isAM: false },
+    ];
+    const allStartCols = [
+      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+      { label: 'Sunrise', key: 'Sunrise', isAM: true },
+      { label: 'Dhuhr', key: 'Zohr', isAM: false },
+      { label: 'Asr', key: 'Asr', isAM: false },
+      { label: 'Magh', key: 'Maghrib Iftari', isAM: false },
+      { label: 'Esha', key: 'Esha', isAM: false },
+    ];
     const columns = isJamaat
-      ? [
-          { label: 'Sehri', key: 'Sehri Ends', isAM: true },
-          { label: 'Fajr', key: "Fajr Jama'at", isAM: true },
-          { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
-          { label: 'Asr', key: "Asr Jama'at", isAM: false },
-          { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
-          { label: 'Esha', key: "Esha Jama'at", isAM: false },
-        ]
-      : [
-          { label: 'Sehri', key: 'Sehri Ends', isAM: true },
-          { label: 'Sunrise', key: 'Sunrise', isAM: true },
-          { label: 'Dhuhr', key: 'Zohr', isAM: false },
-          { label: 'Asr', key: 'Asr', isAM: false },
-          { label: 'Magh', key: 'Maghrib Iftari', isAM: false },
-          { label: 'Esha', key: 'Esha', isAM: false },
-        ];
+      ? allJamaatCols.filter(colHasData)
+      : allStartCols.filter(colHasData);
+    activeCols = columns;
 
     const rowsHtml = csvData.map(row => {
       const isToday = parseDate(row['Date']).toDateString() === todayStr;
@@ -612,10 +632,14 @@ function renderMonthlyView(target) {
   if (todayRow && todayEl) {
     const next = getNextPrayer(todayRow);
     if (next) {
-      const colMap = { 'Fajr': 2, 'Dhuhr': 3, 'Asr': 4, 'Maghrib': 5, 'Esha': 6 };
-      const colIndex = colMap[next.name];
-      if (colIndex !== undefined && todayEl.children[colIndex]) {
-        todayEl.children[colIndex].classList.add('next-prayer-cell');
+      // Map prayer name to jama'at column key
+      const prayerKeyMap = { 'Fajr': ["Fajr Jama'at"], 'Dhuhr': ["Zohar Jama'at"], 'Asr': ["Asr Jama'at"], 'Maghrib': ["Maghrib Jama'at", "Maghrib Iftari"], 'Esha': ["Esha Jama'at"] };
+      const keys = prayerKeyMap[next.name] || [];
+      const colIdx = activeCols.findIndex(c => keys.includes(c.key));
+      // +1 for desktop (date + hijri = 2 prefix cols), +1 for mobile (date = 1 prefix col)
+      const offset = isDesktop ? 2 : 1;
+      if (colIdx !== -1 && todayEl.children[colIdx + offset]) {
+        todayEl.children[colIdx + offset].classList.add('next-prayer-cell');
       }
     }
   }

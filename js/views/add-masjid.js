@@ -339,27 +339,29 @@ function setupEventListeners(container) {
 
   // Review table population
   function getTableColumns(rows) {
-    const hasMaghribJamaat = rows && rows.some(r => r.maghrib_jamaat);
-    const hasFajrStart = rows && rows.some(r => r.fajr_start);
-    const hasZawal = rows && rows.some(r => r.zawal);
-    return [
+    const has = (key) => rows && rows.some(r => r[key]);
+    // Always-shown columns
+    const cols = [
       { key: 'date', label: 'Date', width: '58px' },
       { key: 'day', label: 'Day', width: '40px' },
       { key: 'islamic_day', label: 'Hijri', width: '36px' },
-      { key: 'sehri_ends', label: 'Sehri', width: '52px' },
-      hasFajrStart ? { key: 'fajr_start', label: 'Fajr', width: '52px' } : null,
-      { key: 'sunrise', label: 'Sunrise', width: '52px' },
-      hasZawal ? { key: 'zawal', label: 'Zawal', width: '52px' } : null,
-      { key: 'zohr', label: 'Dhuhr', width: '52px' },
-      { key: 'asr', label: 'Asr', width: '52px' },
-      hasMaghribJamaat ? { key: 'maghrib_iftari', label: 'Maghrib', width: '56px' } : null,
-      { key: 'esha', label: 'Esha', width: '52px' },
-      { key: 'fajr_jamaat', label: 'Fajr J', width: '52px' },
-      { key: 'zohar_jamaat', label: 'Dhuhr J', width: '52px' },
-      { key: 'asr_jamaat', label: 'Asr J', width: '52px' },
-      hasMaghribJamaat ? { key: 'maghrib_jamaat', label: 'Maghrib J', width: '56px' } : { key: 'maghrib_iftari', label: 'Maghrib', width: '56px' },
-      { key: 'esha_jamaat', label: 'Esha J', width: '52px' },
-    ].filter(Boolean);
+    ];
+    // Start time columns — only show if data exists
+    if (has('sehri_ends'))     cols.push({ key: 'sehri_ends', label: 'Sehri', width: '52px' });
+    if (has('fajr_start'))     cols.push({ key: 'fajr_start', label: 'Fajr Start', width: '52px' });
+    if (has('sunrise'))        cols.push({ key: 'sunrise', label: 'Sunrise', width: '52px' });
+    if (has('zawal'))          cols.push({ key: 'zawal', label: 'Zawal', width: '52px' });
+    if (has('zohr'))           cols.push({ key: 'zohr', label: 'Dhuhr', width: '52px' });
+    if (has('asr'))            cols.push({ key: 'asr', label: 'Asr', width: '52px' });
+    if (has('maghrib_iftari')) cols.push({ key: 'maghrib_iftari', label: 'Maghrib', width: '56px' });
+    if (has('esha'))           cols.push({ key: 'esha', label: 'Esha', width: '52px' });
+    // Jama'at columns — only show if data exists
+    if (has('fajr_jamaat'))    cols.push({ key: 'fajr_jamaat', label: 'Fajr J', width: '52px' });
+    if (has('zohar_jamaat'))   cols.push({ key: 'zohar_jamaat', label: 'Dhuhr J', width: '52px' });
+    if (has('asr_jamaat'))     cols.push({ key: 'asr_jamaat', label: 'Asr J', width: '52px' });
+    if (has('maghrib_jamaat')) cols.push({ key: 'maghrib_jamaat', label: 'Maghrib J', width: '56px' });
+    if (has('esha_jamaat'))    cols.push({ key: 'esha_jamaat', label: 'Esha J', width: '52px' });
+    return cols;
   }
 
   function escapeAttr(s) { return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -406,15 +408,22 @@ function setupEventListeners(container) {
 
   function gatherReviewData() {
     const cols = getTableColumns(extractedData.rows);
+    const allRowKeys = [
+      'date', 'day', 'islamic_day', 'sehri_ends', 'fajr_start', 'sunrise',
+      'zawal', 'zohr', 'asr', 'esha', 'fajr_jamaat', 'zohar_jamaat',
+      'asr_jamaat', 'maghrib_iftari', 'maghrib_jamaat', 'esha_jamaat',
+    ];
     const rows = extractedData.rows.map((row, idx) => {
       const newRow = {};
+      // First, read values from visible table inputs
       cols.forEach(col => {
         const input = reviewTbody.querySelector(`input[data-row="${idx}"][data-key="${col.key}"]`);
         newRow[col.key] = input ? input.value : (row[col.key] || '');
       });
-      if (!newRow.hasOwnProperty('maghrib_jamaat')) newRow.maghrib_jamaat = row.maghrib_jamaat || '';
-      if (!newRow.hasOwnProperty('fajr_start')) newRow.fajr_start = row.fajr_start || '';
-      if (!newRow.hasOwnProperty('zawal')) newRow.zawal = row.zawal || '';
+      // Ensure all fields exist, preserving original values for hidden columns
+      allRowKeys.forEach(key => {
+        if (!newRow.hasOwnProperty(key)) newRow[key] = row[key] || '';
+      });
       if (newRow.islamic_day === '' || newRow.islamic_day === 'null') newRow.islamic_day = null;
       else if (!isNaN(newRow.islamic_day)) newRow.islamic_day = parseInt(newRow.islamic_day, 10);
       return newRow;
@@ -442,6 +451,16 @@ function setupEventListeners(container) {
     submitBtn.disabled = true;
     submittingStatus.style.display = '';
     const data = gatherReviewData();
+
+    if (USE_DUMMY_DATA) {
+      confirmationText.textContent = 'Your masjid has been added!';
+      masjidLink.href = '/';
+      masjidLink.innerHTML = 'View ' + data.mosque_name;
+      goToStep(4);
+      submitBtn.disabled = false;
+      submittingStatus.style.display = 'none';
+      return;
+    }
 
     try {
       const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data }) });
