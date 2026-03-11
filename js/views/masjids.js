@@ -11,6 +11,17 @@ let locationActive = false;
 let longPressTimer = null;
 let toastTimer = null;
 
+function getCityPostcode(address) {
+  if (!address) return '';
+  const pcMatch = address.match(/[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}/i);
+  if (!pcMatch) return address.split(',').pop().trim();
+  const postcode = pcMatch[0];
+  const before = address.slice(0, pcMatch.index).replace(/,\s*$/, '');
+  const parts = before.split(',').map(s => s.trim()).filter(Boolean);
+  const city = parts.length > 0 ? parts[parts.length - 1] : '';
+  return city ? `${city}, ${postcode}` : postcode;
+}
+
 // SVG icons
 const STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
@@ -24,7 +35,7 @@ export function render(container) {
   container.innerHTML = `
     <div class="masjids-view">
       <header class="masjids-header">
-        <h1>Masjids</h1>
+        <h1 class="masjids-title">Masjids</h1>
       </header>
 
       <div class="masjids-search-bar">
@@ -105,7 +116,7 @@ async function loadMasjids() {
   }
 }
 
-function renderCards() {
+export function renderCards() {
   const grid = document.getElementById('masjidsGrid');
   if (!grid) return;
 
@@ -142,10 +153,18 @@ function renderCards() {
 
   grid.innerHTML = filtered.map(config => {
     const distText = getDistText(config.slug);
-    const subLine = distText || (config.address ? config.address.split(',').slice(-2).join(',').trim() : '');
+    const shortAddr = getCityPostcode(config.address);
+    const fullAddr = config.address || '';
     const isPinned = config.slug === pinnedSlug;
     const pinIcon = isPinned ? STAR_FILLED_SVG : STAR_SVG;
     const pinClass = isPinned ? ' pinned' : '';
+
+    let subHtml = '';
+    if (distText) {
+      subHtml = `<div class="masjid-card-sub">${distText}</div>`;
+    } else if (config.address) {
+      subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
+    }
 
     return `<a href="/${config.slug}" class="masjid-card" data-link data-slug="${config.slug}">
       <div class="masjid-card-top">
@@ -157,7 +176,7 @@ function renderCards() {
               ${pinIcon}
             </button>
           </div>
-          ${subLine ? `<div class="masjid-card-sub">${subLine}</div>` : ''}
+          ${subHtml}
         </div>
       </div>
       <div class="masjid-card-bottom">
@@ -323,6 +342,7 @@ function togglePin(slug) {
     dismissPinHint();
   }
   renderCards();
+  window.dispatchEvent(new CustomEvent('prayerly-pin-changed'));
 }
 
 function setupPinHint() {

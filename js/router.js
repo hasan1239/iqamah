@@ -34,6 +34,9 @@ export function resolvePath(path) {
   if (clean === 'settings') {
     return { view: 'settings', params: {} };
   }
+  if (clean === 'times') {
+    return { view: 'prayer-times', params: { slug: null } };
+  }
 
   // Single segment = masjid slug
   if (!clean.includes('/') && !clean.includes('.')) {

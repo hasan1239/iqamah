@@ -36,7 +36,7 @@ const TABS = [
 
 function getTimesPath() {
   const pinned = localStorage.getItem('prayerly-pinned-masjid');
-  return pinned ? '/' + pinned : '/masjids';
+  return pinned ? '/' + pinned : '/times';
 }
 
 function getActiveTabId() {
@@ -61,6 +61,11 @@ export function initNav() {
     let path;
     if (tabId === 'prayer-times') {
       path = getTimesPath();
+      // If currently on /times (no masjid) but now have a pinned masjid, force navigate
+      if (path !== '/times' && getCurrentRoute().view === 'prayer-times' && !getCurrentRoute().params.slug) {
+        navigate(path, { replace: true });
+        return;
+      }
     } else {
       path = TABS.find(t => t.id === tabId)?.path || '/';
     }

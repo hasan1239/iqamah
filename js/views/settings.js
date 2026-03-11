@@ -78,9 +78,16 @@ export function render(container) {
                 <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
               </svg>
             </span>
-            <span class="settings-label">${pinnedSlug ? 'Pinned masjid' : 'No masjid pinned'}</span>
+            <span class="settings-label">${pinnedSlug ? 'My Masjid' : 'No masjid pinned'}</span>
           </div>
-          <span class="settings-value" id="pinnedMasjidName">${pinnedSlug || 'None'}</span>
+          <div class="settings-pinned-right">
+            <span class="settings-value" id="pinnedMasjidName">${pinnedSlug || 'None'}</span>
+            ${pinnedSlug ? `<button class="settings-remove-btn" id="removePinnedBtn" aria-label="Remove pinned masjid">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>` : ''}
+          </div>
         </div>
       </div>
 
@@ -151,6 +158,20 @@ export function render(container) {
   document.getElementById('timeFormatToggle').addEventListener('change', (e) => {
     localStorage.setItem('prayerly-time-format', e.target.checked ? '24' : '12');
   });
+
+  // Remove pinned masjid
+  const removeBtn = document.getElementById('removePinnedBtn');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', () => {
+      localStorage.removeItem('prayerly-pinned-masjid');
+      const nameEl = document.getElementById('pinnedMasjidName');
+      const labelEl = document.querySelector('#pinnedMasjidSetting .settings-label');
+      if (nameEl) nameEl.textContent = 'None';
+      if (labelEl) labelEl.textContent = 'No masjid pinned';
+      removeBtn.remove();
+      window.dispatchEvent(new CustomEvent('prayerly-pin-changed'));
+    });
+  }
 
   // Name input — save on change
   const nameInput = document.getElementById('userNameInput');
