@@ -29,7 +29,7 @@ export function render(container) {
       <div class="qibla-bearing-display" id="qiblaBearingDisplay">
         <div class="qibla-bearing-value" id="qiblaBearing">--°</div>
         <div class="qibla-badge" id="qiblaBadge">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
           <span id="qiblaStatus">Getting location...</span>
         </div>
       </div>
@@ -96,9 +96,19 @@ async function initQibla() {
     statusEl.textContent = 'Qibla Direction';
 
     // Reverse geocode for location display
-    locationEl.innerHTML = `
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-      <span>${lat.toFixed(2)}°, ${lon.toFixed(2)}°</span>`;
+    const locIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+    locationEl.innerHTML = `${locIcon}<span>${lat.toFixed(2)}°, ${lon.toFixed(2)}°</span>`;
+    try {
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&zoom=10`);
+      if (geoRes.ok) {
+        const geoData = await geoRes.json();
+        const addr = geoData.address || {};
+        const city = addr.city || addr.town || addr.village || addr.suburb || '';
+        const country = addr.country || '';
+        const display = [city, country].filter(Boolean).join(', ');
+        if (display) locationEl.innerHTML = `${locIcon}<span>${display}</span>`;
+      }
+    } catch {};
 
     // Set initial needle position (static)
     const needle = document.getElementById('qiblaNeedle');
