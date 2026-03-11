@@ -5,6 +5,8 @@ const USE_DUMMY_DATA = true; // Set to true to skip API call and use dummy data 
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
+let _resizeObserver = null;
+let _syncImageHeight = null;
 
 function getDummyData() {
   const rows = [];
@@ -17,7 +19,7 @@ function getDummyData() {
       date: dayStr, day: days[d.getDay() === 0 ? 6 : d.getDay() - 1],
       islamic_day: i + 1,
       fajr_start: `${5 - Math.floor(i/10)}:${String(40 - i).padStart(2,'0')}`,
-      sehri_end: `${5 - Math.floor(i/10)}:${String(38 - i).padStart(2,'0')}`,
+      sehri_ends: `${5 - Math.floor(i/10)}:${String(38 - i).padStart(2,'0')}`,
       sunrise: `${7 - Math.floor(i/15)}:${String(20 - Math.floor(i/2)).padStart(2,'0')}`,
       zawal: '12:15',
       zohr: `12:${String(24 - Math.floor(i/10)).padStart(2,'0')}`,
@@ -61,6 +63,8 @@ export function destroy() {
   selectedFile = null;
   imageDataUrl = null;
   extractedData = null;
+  if (_resizeObserver) { _resizeObserver.disconnect(); _resizeObserver = null; }
+  if (_syncImageHeight) { window.removeEventListener('resize', _syncImageHeight); _syncImageHeight = null; }
 }
 
 function getWizardHTML() {
@@ -68,8 +72,8 @@ function getWizardHTML() {
     <div class="add-masjid-view">
       <header>
         <h1>Add Your Masjid</h1>
-        <p class="add-subtitle">Upload a timetable file and we'll extract the prayer times automatically</p>
-        <p class="add-subtitle ai-disclaimer" id="aiDisclaimer" style="display:none; font-size:0.8rem; margin-top:6px;">Times were extracted using AI and may contain errors. Please verify and fix any mistakes.</p>
+        <p class="add-subtitle" id="uploadSubtitle">Upload a timetable and Prayerly will extract the times automatically</p>
+        <p class="add-subtitle" id="aiDisclaimer" style="display:none;">Times were extracted using AI and may contain errors.<br>Please verify before submitting.</p>
       </header>
 
       <div class="progress-bar">
@@ -128,7 +132,7 @@ function getWizardHTML() {
               <div class="review-image" id="reviewImageContainer">
                 <img id="reviewImg" alt="Original timetable">
               </div>
-              <div class="zoom-hint">Tap to zoom</div>
+              <div class="zoom-hint"><span class="zoom-hint-mobile">Pinch to zoom</span><span class="zoom-hint-desktop">Use buttons to zoom</span></div>
               <div class="zoom-controls" id="zoomControls">
                 <button class="zoom-btn" id="zoomInBtn" title="Zoom in">+</button>
                 <div class="zoom-level" id="zoomLevel">1x</div>
@@ -157,8 +161,8 @@ function getWizardHTML() {
           </div>
           <div class="form-group" style="margin-top:12px;"><label for="metaNotes">Notes</label><textarea id="metaNotes" rows="2" placeholder="Any additional notes"></textarea></div>
 
-          <div class="btn-row">
-            <button class="btn btn-secondary" id="backToUploadBtn">Back</button>
+          <div class="btn-row review-btn-row">
+            <button class="btn btn-secondary" id="reExtractBtn">Re-extract</button>
             <button class="btn btn-secondary" id="downloadJsonBtn">Download JSON</button>
             <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
           </div>
@@ -208,7 +212,6 @@ function setupEventListeners(container) {
   const submitBtn = container.querySelector('#submitBtn');
   const submitError = container.querySelector('#submitError');
   const submittingStatus = container.querySelector('#submittingStatus');
-  const backToUploadBtn = container.querySelector('#backToUploadBtn');
   const downloadJsonBtn = container.querySelector('#downloadJsonBtn');
   const masjidLink = container.querySelector('#masjidLink');
   const confirmationText = container.querySelector('#confirmationText');
@@ -231,7 +234,9 @@ function setupEventListeners(container) {
     for (let c = 1; c <= 3; c++) {
       document.getElementById('progConn' + c)?.classList.toggle('done', c < num);
     }
+    const uploadSub = document.getElementById('uploadSubtitle');
     const disclaimer = document.getElementById('aiDisclaimer');
+    if (uploadSub) uploadSub.style.display = num === 3 ? 'none' : '';
     if (disclaimer) disclaimer.style.display = num === 3 ? '' : 'none';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -323,6 +328,7 @@ function setupEventListeners(container) {
       extractedData = result.data;
       populateReview();
       goToStep(3);
+      setTimeout(setupResizeObserver, 100);
     } catch (e) {
       showError(extractError, e.message);
       goToStep(1);
@@ -453,7 +459,9 @@ function setupEventListeners(container) {
     }
   });
 
-  backToUploadBtn.addEventListener('click', () => goToStep(1));
+  // Re-extract: go back to step 1 with file still loaded
+  const reExtractBtn = container.querySelector('#reExtractBtn');
+  reExtractBtn.addEventListener('click', () => goToStep(1));
 
   downloadJsonBtn.addEventListener('click', () => {
     if (!extractedData) return;
@@ -488,4 +496,77 @@ function setupEventListeners(container) {
   container.querySelector('#zoomInBtn').addEventListener('click', () => zoomImage(0.5));
   container.querySelector('#zoomOutBtn').addEventListener('click', () => zoomImage(-0.5));
   container.querySelector('#zoomResetBtn').addEventListener('click', () => zoomImage(0));
+
+  // Pinch-to-zoom and pan on review image (mobile)
+  function getTouchDist(e) {
+    const t = e.touches;
+    const dx = t[0].clientX - t[1].clientX;
+    const dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  let pinchStartDist = 0;
+  let pinchStartZoom = 1;
+  let panStartX = 0, panStartY = 0;
+  let scrollLeftStart = 0, scrollTopStart = 0;
+  let isPanning = false;
+
+  const reviewImageContainer = container.querySelector('#reviewImageContainer');
+
+  reviewImageContainer.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      pinchStartDist = getTouchDist(e);
+      pinchStartZoom = currentZoom;
+    } else if (e.touches.length === 1 && currentZoom > 1) {
+      isPanning = true;
+      panStartX = e.touches[0].clientX;
+      panStartY = e.touches[0].clientY;
+      scrollLeftStart = reviewImageContainer.scrollLeft;
+      scrollTopStart = reviewImageContainer.scrollTop;
+    }
+  }, { passive: false });
+
+  reviewImageContainer.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getTouchDist(e);
+      const scale = dist / pinchStartDist;
+      currentZoom = Math.min(4, Math.max(0.5, pinchStartZoom * scale));
+      reviewImg.style.width = (currentZoom * 100) + '%';
+      document.querySelector('#zoomLevel').textContent = currentZoom.toFixed(1) + 'x';
+    } else if (e.touches.length === 1 && isPanning) {
+      e.preventDefault();
+      const dx = panStartX - e.touches[0].clientX;
+      const dy = panStartY - e.touches[0].clientY;
+      reviewImageContainer.scrollLeft = scrollLeftStart + dx;
+      reviewImageContainer.scrollTop = scrollTopStart + dy;
+    }
+  }, { passive: false });
+
+  reviewImageContainer.addEventListener('touchend', () => { isPanning = false; });
+
+  // Sync review image height with table height on desktop
+  function syncImageHeight() {
+    const imgContainer = document.getElementById('reviewImageContainer');
+    if (!imgContainer) return;
+    if (window.innerWidth < 768) { imgContainer.style.maxHeight = ''; return; }
+    const tableWrap = document.querySelector('.review-table-wrap');
+    if (tableWrap) {
+      const tableH = tableWrap.scrollHeight;
+      if (tableH > 200) imgContainer.style.maxHeight = tableH + 'px';
+    }
+  }
+
+  function setupResizeObserver() {
+    const tableWrap = document.querySelector('.review-table-wrap');
+    if (!tableWrap) return;
+    if (_resizeObserver) _resizeObserver.disconnect();
+    _resizeObserver = new ResizeObserver(() => syncImageHeight());
+    _resizeObserver.observe(tableWrap);
+    syncImageHeight();
+  }
+
+  _syncImageHeight = syncImageHeight;
+  window.addEventListener('resize', syncImageHeight);
 }

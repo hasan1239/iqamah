@@ -813,6 +813,7 @@
       border-radius: 8px; letter-spacing: 0.5px; transition: transform 0.2s, box-shadow 0.2s;
     }
     .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,175,55,0.3); }
+    @media (min-width: 768px) { .cta-section { display: none; } }
 
     /* ============================================
        PRAYER TIMES VIEW
@@ -1245,6 +1246,9 @@
     .change-btn { color: var(--gold); font-size: 0.85rem; cursor: pointer; text-decoration: underline; }
 
     .add-masjid-view .btn-row:has(.btn-primary:only-child) { grid-template-columns: 1fr; max-width: 260px; margin-left: auto; margin-right: auto; }
+    .review-btn-row { grid-template-columns: 1fr 1fr; }
+    .review-btn-row .btn-primary { grid-column: 1 / -1; }
+    @media (min-width: 768px) { .review-btn-row { grid-template-columns: 1fr 1fr 1fr; } .review-btn-row .btn-primary { grid-column: auto; } }
     .error-msg { font-size: 0.85rem; color: var(--error); margin-top: 12px; display: none; background: rgba(220,38,38,0.1); border: 1px solid rgba(220,38,38,0.25); border-radius: 8px; padding: 10px 14px; text-align: center; }
     .error-msg.visible { display: block; }
 
@@ -1257,6 +1261,8 @@
     .review-image { overflow: auto; max-height: 500px; border-radius: 8px; border: 1px solid var(--card-border); }
     .review-image img { width: 100%; display: block; cursor: pointer; }
     .zoom-hint { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 4px; }
+    .zoom-hint-desktop { display: none; }
+    @media (min-width: 768px) { .zoom-hint-mobile { display: none; } .zoom-hint-desktop { display: inline; } }
     .zoom-controls { display: none; justify-content: center; gap: 8px; margin-top: 6px; align-items: center; }
     .zoom-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-primary); width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
     .zoom-level { font-size: 0.75rem; color: var(--text-muted); min-width: 28px; text-align: center; }
@@ -1347,6 +1353,7 @@
       </a>
       <div class="desktop-nav-links" id="desktop-nav-links">
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>
+        <a href="/add" class="desktop-nav-link" data-nav="add-masjid" data-link>Add Masjid</a>
         <a href="/settings" class="desktop-nav-link" data-nav="settings" data-link>Settings</a>
       </div>
     </div>

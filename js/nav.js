@@ -98,7 +98,7 @@ export function updateActiveTab() {
   const desktopLinks = document.getElementById('desktop-nav-links');
   if (!desktopLinks) return;
   const route = getCurrentRoute();
-  const activeView = route.view === 'add-masjid' ? 'settings' : route.view;
+  const activeView = route.view;
   desktopLinks.querySelectorAll('.desktop-nav-link').forEach(link => {
     const navId = link.dataset.nav;
     link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times'));
