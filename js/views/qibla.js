@@ -107,14 +107,22 @@ async function initQibla() {
     await startCompass();
   } catch (err) {
     if (err.code === 1) {
-      statusEl.textContent = 'Location denied';
+      statusEl.textContent = 'Location denied — tap to retry';
       badgeEl.classList.add('qibla-badge-error');
       bearingEl.textContent = '--°';
     } else {
-      statusEl.textContent = 'Location unavailable';
+      statusEl.textContent = 'Location unavailable — tap to retry';
       badgeEl.classList.add('qibla-badge-error');
       bearingEl.textContent = '--°';
     }
+    badgeEl.style.cursor = 'pointer';
+    badgeEl.addEventListener('click', () => {
+      badgeEl.classList.remove('qibla-badge-error');
+      badgeEl.style.cursor = '';
+      statusEl.textContent = 'Getting location...';
+      bearingEl.textContent = '--°';
+      initQibla();
+    }, { once: true });
   }
 }
 
