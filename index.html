@@ -558,17 +558,8 @@
     .hero-next-skeleton .skeleton-bone { height: 14px; border-radius: 4px; background: var(--gold-tint-15); }
     .hero-next-skeleton .skeleton-bone:first-child { width: 60px; }
     .hero-next-skeleton .skeleton-bone:last-child { width: 80px; }
-    .hero-actions { display: flex; flex-direction: column; }
-    .hero-view-btn {
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      flex: 1; text-align: center; padding: 0 12px;
-      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-      color: #1a1a2e; font-size: 0.75rem; font-weight: 700; text-decoration: none;
-      border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-    .hero-view-btn svg { width: 16px; height: 16px; }
-    .hero-view-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 15px var(--gold-shadow-light); }
+    .hero-card-link { display: block; text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s; }
+    .hero-card-link:hover { transform: translateY(-2px); box-shadow: 0 4px 20px var(--gold-shadow-light); }
     .hero-unpin-btn {
       display: none; align-items: center; justify-content: center;
       width: 28px; height: 28px; border-radius: 50%;
@@ -648,7 +639,7 @@
       width: 28px; height: 28px; border-radius: 8px;
       background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
       display: flex; align-items: center; justify-content: center;
-      color: var(--gold);
+      color: var(--gold); border-radius: 10px;
     }
     .masjid-card-chevron svg { width: 16px; height: 16px; }
 
@@ -816,11 +807,11 @@
     .home-browse-btn {
       display: flex; align-items: center; gap: 10px; width: 100%;
       padding: 14px 16px; background: var(--gold-tint-08);
-      border: 1px solid var(--gold-tint-25); border-radius: 12px;
+      border: 1px solid var(--gold-tint-10); border-radius: 14px;
       text-decoration: none; color: var(--gold); font-size: 0.85rem; font-weight: 600;
       transition: all 0.2s ease;
     }
-    .home-browse-btn:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-40); }
+    .home-browse-btn:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
     .home-browse-btn svg:first-child { width: 22px; height: 22px; flex-shrink: 0; }
     .home-browse-btn span { flex: 1; }
     .home-browse-btn svg:last-child { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.6; }
@@ -900,7 +891,7 @@
 
     /* Banner */
     .section-banner { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; align-items: stretch; }
-    .banner-item { background: linear-gradient(135deg, var(--gold-tint-15), var(--gold-tint-08)); border: 1px solid var(--gold-tint-30); border-radius: 10px; padding: 12px 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+    .banner-item { background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10); border-radius: 14px; padding: 12px 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
     .banner-label { font-family: 'Lato', sans-serif; font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 6px; font-weight: 400; }
     .banner-time { font-size: 1.35rem; color: var(--gold); font-weight: 700; }
     .banner-item.next-prayer { background: linear-gradient(135deg, var(--gold-tint-25), var(--gold-tint-15)); border-color: var(--gold-tint-50); }
@@ -1231,6 +1222,15 @@
       transition: all 0.2s;
     }
     .settings-remove-btn:hover { color: var(--error); border-color: var(--error); }
+
+    .settings-reset-btn {
+      background: none; border: 1px solid var(--divider); border-radius: 8px;
+      color: var(--text-muted); cursor: pointer; padding: 4px 12px;
+      font-size: 0.7rem; font-weight: 600; transition: all 0.2s;
+    }
+    .settings-reset-btn:hover { color: var(--error); border-color: var(--error); }
+    .settings-reset-confirm { background: var(--error); color: #fff; border-color: var(--error); }
+    .settings-reset-confirm:hover { background: var(--error); color: #fff; }
 
     /* Toggle switch */
     .toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }

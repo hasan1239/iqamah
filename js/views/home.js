@@ -101,26 +101,29 @@ function renderHero() {
   }
 
   heroContainer.innerHTML = `
-    <div class="hero-card">
+    <a href="/${pinnedConfig.slug}" class="hero-card hero-card-link" data-link>
       <div class="hero-header">
         <span class="hero-badge hero-badge-primary">My Masjid</span>
-        <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Unpin ${pinnedConfig.display_name}" title="Unpin masjid">
+        <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Remove from My Masjid" title="Remove from My Masjid">
           ${STAR_FILLED_SVG}
         </button>
       </div>
       <div class="hero-name">${pinnedConfig.display_name}</div>
       <div class="hero-body">
-        <div class="hero-next-prayer" id="heroNextPrayer">
+        <div class="hero-next-prayer" id="heroNextStart">
           <div class="hero-next-skeleton">
             <div class="skeleton-bone"></div>
             <div class="skeleton-bone"></div>
           </div>
         </div>
-        <div class="hero-actions">
-          <a href="/${pinnedConfig.slug}" class="hero-view-btn" data-link>${CLOCK_SVG} View Times</a>
+        <div class="hero-next-prayer" id="heroNextJamaat">
+          <div class="hero-next-skeleton">
+            <div class="skeleton-bone"></div>
+            <div class="skeleton-bone"></div>
+          </div>
         </div>
       </div>
-    </div>`;
+    </a>`;
 
   loadHeroNextPrayer(pinnedConfig);
 }
@@ -163,7 +166,7 @@ function renderSuggestedHero(heroContainer) {
       <div class="home-no-hero">
         <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
         <div class="home-no-hero-text">No masjid selected</div>
-        <div class="home-no-hero-sub">Set a masjid as your primary from the <a href="/masjids" data-link>Masjids</a> tab</div>
+        <div class="home-no-hero-sub">Set a masjid as My Masjid from the <a href="/masjids" data-link>Masjids</a> tab</div>
       </div>`;
     return;
   }
@@ -311,7 +314,7 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 }
 
-function getNextPrayerFromRow(row) {
+function getNextJamaatFromRow(row) {
   const prayers = [
     { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
     { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
@@ -326,6 +329,30 @@ function getNextPrayerFromRow(row) {
       if (row[key]) { timeStr = row[key]; break; }
     }
     if (!timeStr && prayer.defaultTime) timeStr = prayer.defaultTime;
+    if (!timeStr) continue;
+    const date = parseTimeTodayWithAMPM(timeStr, prayer.isAM);
+    if (date && date > now) {
+      const diff = date.getTime() - now.getTime();
+      return { name: prayer.name, time: timeStr, countdown: formatCountdown(diff), isAM: prayer.isAM };
+    }
+  }
+  return null;
+}
+
+function getNextStartFromRow(row) {
+  const prayers = [
+    { name: 'Sehri', keys: ['Sehri Ends'], isAM: true },
+    { name: 'Dhuhr', keys: ['Zohr Start', 'Zuhr Start', 'Zohr'], isAM: false },
+    { name: 'Asr', keys: ['Asr Start', 'Asr'], isAM: false },
+    { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
+    { name: 'Esha', keys: ['Esha Start', 'Isha Start', 'Esha'], isAM: false },
+  ];
+  const now = new Date();
+  for (const prayer of prayers) {
+    let timeStr = null;
+    for (const key of prayer.keys) {
+      if (row[key]) { timeStr = row[key]; break; }
+    }
     if (!timeStr) continue;
     const date = parseTimeTodayWithAMPM(timeStr, prayer.isAM);
     if (date && date > now) {
@@ -364,41 +391,62 @@ function formatCardTime(timeStr, isAM) {
 // --- Hero next prayer ---
 
 async function loadHeroNextPrayer(config) {
-  const panel = document.getElementById('heroNextPrayer');
-  if (!panel) return;
+  const startPanel = document.getElementById('heroNextStart');
+  const jamaatPanel = document.getElementById('heroNextJamaat');
+  if (!startPanel && !jamaatPanel) return;
 
   try {
     const csvFile = config.csv || config.slug + '.csv';
     const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) { panel.innerHTML = ''; return; }
+    if (!res.ok) { if (startPanel) startPanel.innerHTML = ''; if (jamaatPanel) jamaatPanel.innerHTML = ''; return; }
     const text = await res.text();
     const csvData = parseCSV(text);
     const todayRow = getTodayRow(csvData);
-    if (!todayRow) { panel.innerHTML = ''; return; }
+    if (!todayRow) { if (startPanel) startPanel.innerHTML = ''; if (jamaatPanel) jamaatPanel.innerHTML = ''; return; }
 
-    updateHeroPanel(panel, todayRow);
+    updateHeroPanels(todayRow);
 
     if (heroCountdownInterval) clearInterval(heroCountdownInterval);
     heroCountdownInterval = setInterval(() => {
-      const p = document.getElementById('heroNextPrayer');
-      if (!p) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
-      updateHeroPanel(p, todayRow);
+      const s = document.getElementById('heroNextStart');
+      if (!s) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
+      updateHeroPanels(todayRow);
     }, 60000);
   } catch {
-    panel.innerHTML = '';
+    if (startPanel) startPanel.innerHTML = '';
+    if (jamaatPanel) jamaatPanel.innerHTML = '';
   }
 }
 
-function updateHeroPanel(panel, todayRow) {
-  const next = getNextPrayerFromRow(todayRow);
-  if (!next) {
-    panel.innerHTML = `<div class="hero-next-label">No more prayers today</div>`;
-    return;
+function updateHeroPanels(todayRow) {
+  const startPanel = document.getElementById('heroNextStart');
+  const jamaatPanel = document.getElementById('heroNextJamaat');
+
+  // Next start time
+  if (startPanel) {
+    const nextStart = getNextStartFromRow(todayRow);
+    if (nextStart) {
+      startPanel.innerHTML = `
+        <div class="hero-next-label">Next Start</div>
+        <div class="hero-next-time">${formatTimeDisplay(nextStart.time, nextStart.isAM)}</div>
+        <div class="hero-next-detail">${nextStart.name}${nextStart.countdown ? ` <span class="hero-next-countdown">${nextStart.countdown}</span>` : ''}</div>`;
+    } else {
+      startPanel.innerHTML = `<div class="hero-next-label">No more prayers today</div>`;
+    }
   }
-  panel.innerHTML = `
-    <div class="hero-next-label">Next Prayer</div>
-    <div class="hero-next-time">${formatTimeDisplay(next.time, next.isAM)}</div>
-    <div class="hero-next-detail">${next.name}${next.countdown ? ` <span class="hero-next-countdown">${next.countdown}</span>` : ''}</div>`;
+
+  // Next jama'at time
+  if (jamaatPanel) {
+    const nextJamaat = getNextJamaatFromRow(todayRow);
+    if (nextJamaat) {
+      jamaatPanel.innerHTML = `
+        <div class="hero-next-label">Next Jama'at</div>
+        <div class="hero-next-time">${formatTimeDisplay(nextJamaat.time, nextJamaat.isAM)}</div>
+        <div class="hero-next-detail">${nextJamaat.name}${nextJamaat.countdown ? ` <span class="hero-next-countdown">${nextJamaat.countdown}</span>` : ''}</div>`;
+    } else {
+      jamaatPanel.innerHTML = `<div class="hero-next-label">No more jama'at today</div>`;
+    }
+  }
 }
 
 // --- Recent card prayers ---
@@ -415,7 +463,7 @@ async function loadRecentCardPrayers(configs) {
       const csvData = parseCSV(text);
       const todayRow = getTodayRow(csvData);
       if (!todayRow) { el.innerHTML = ''; continue; }
-      const next = getNextPrayerFromRow(todayRow);
+      const next = getNextJamaatFromRow(todayRow);
       if (next) {
         el.innerHTML = `
           <span class="masjid-card-next-label">${next.name}</span>

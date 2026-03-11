@@ -174,7 +174,7 @@ export function renderCards() {
         <div class="masjid-card-info">
           <div class="masjid-name-row">
             <div class="masjid-name">${config.display_name}</div>
-            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Pin ${config.display_name}" title="Pin as my masjid">
+            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Set ${config.display_name} as My Masjid" title="Set as My Masjid">
               ${pinIcon}
             </button>
           </div>

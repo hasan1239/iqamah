@@ -78,11 +78,11 @@ export function render(container) {
                 <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
               </svg>
             </span>
-            <span class="settings-label">${pinnedSlug ? 'My Masjid' : 'No masjid pinned'}</span>
+            <span class="settings-label">${pinnedSlug ? 'My Masjid' : 'No masjid selected'}</span>
           </div>
           <div class="settings-pinned-right">
             <span class="settings-value" id="pinnedMasjidName">${pinnedSlug || 'None'}</span>
-            ${pinnedSlug ? `<button class="settings-remove-btn" id="removePinnedBtn" aria-label="Remove pinned masjid">
+            ${pinnedSlug ? `<button class="settings-remove-btn" id="removePinnedBtn" aria-label="Remove My Masjid">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
                 <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
@@ -141,6 +141,18 @@ export function render(container) {
           </div>
           <span class="settings-value" id="settingsVersion">...</span>
         </div>
+
+        <div class="settings-item" id="resetAppSetting">
+          <div class="settings-item-left">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
+            </span>
+            <span class="settings-label">Reset App</span>
+          </div>
+          <button class="settings-reset-btn" id="resetAppBtn">Reset</button>
+        </div>
       </div>
     </div>
   `;
@@ -183,7 +195,7 @@ export function render(container) {
       const nameEl = document.getElementById('pinnedMasjidName');
       const labelEl = document.querySelector('#pinnedMasjidSetting .settings-label');
       if (nameEl) nameEl.textContent = 'None';
-      if (labelEl) labelEl.textContent = 'No masjid pinned';
+      if (labelEl) labelEl.textContent = 'No masjid selected';
       removeBtn.remove();
       window.dispatchEvent(new CustomEvent('prayerly-pin-changed'));
     });
@@ -195,6 +207,27 @@ export function render(container) {
     const val = nameInput.value.trim();
     if (val) localStorage.setItem('prayerly-user-name', val);
     else localStorage.removeItem('prayerly-user-name');
+  });
+
+  // Reset app
+  const resetBtn = document.getElementById('resetAppBtn');
+  resetBtn.addEventListener('click', () => {
+    if (resetBtn.dataset.confirm) {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('prayerly-'));
+      keys.forEach(k => localStorage.removeItem(k));
+      window.location.href = '/';
+      return;
+    }
+    resetBtn.dataset.confirm = '1';
+    resetBtn.textContent = 'Confirm?';
+    resetBtn.classList.add('settings-reset-confirm');
+    setTimeout(() => {
+      if (resetBtn) {
+        delete resetBtn.dataset.confirm;
+        resetBtn.textContent = 'Reset';
+        resetBtn.classList.remove('settings-reset-confirm');
+      }
+    }, 3000);
   });
 }
 
