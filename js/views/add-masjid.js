@@ -2,6 +2,43 @@
 
 const USE_DUMMY_DATA = true; // Set to true to skip API call and use dummy data for testing
 
+let pdfjsLoaded = false;
+async function loadPdfJs() {
+  if (pdfjsLoaded) return;
+  await new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs';
+    script.type = 'module';
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+  // pdf.js as ESM sets globalThis.pdfjsLib — but module scripts are async,
+  // so we import it directly
+  const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
+  window._pdfjsLib = pdfjsLib;
+  pdfjsLoaded = true;
+}
+
+async function pdfToImageDataUrl(dataUrl) {
+  await loadPdfJs();
+  const pdfjsLib = window._pdfjsLib;
+  const data = atob(dataUrl.split(',')[1]);
+  const uint8 = new Uint8Array(data.length);
+  for (let i = 0; i < data.length; i++) uint8[i] = data.charCodeAt(i);
+  const pdf = await pdfjsLib.getDocument({ data: uint8 }).promise;
+  const page = await pdf.getPage(1);
+  const scale = 2; // render at 2x for sharpness
+  const viewport = page.getViewport({ scale });
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  const ctx = canvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  return canvas.toDataURL('image/png');
+}
+
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
@@ -181,6 +218,7 @@ function getWizardHTML() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
             <p id="confirmationText">It will appear on the homepage shortly.</p>
+            <p class="confirmation-note">It may take up to a minute for your masjid to appear.</p>
             <a href="/" class="masjid-link" id="masjidLink" data-link>
               View your masjid page
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
@@ -278,10 +316,19 @@ function setupEventListeners(container) {
     selectedFile = file;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       imageDataUrl = e.target.result;
       if (file.type === 'application/pdf') {
-        previewImg.style.display = 'none';
+        try {
+          fileInfo.textContent = 'Converting PDF...';
+          const pdfImageUrl = await pdfToImageDataUrl(imageDataUrl);
+          imageDataUrl = pdfImageUrl;
+          previewImg.src = pdfImageUrl;
+          previewImg.style.display = '';
+        } catch (err) {
+          showError(uploadError, 'Could not render PDF. Try converting to an image first.');
+          return;
+        }
       } else {
         previewImg.src = imageDataUrl;
         previewImg.style.display = '';
@@ -367,24 +414,9 @@ function setupEventListeners(container) {
   function escapeAttr(s) { return s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
   function populateReview() {
-    // Handle PDF vs image
-    const oldEmbed = document.querySelector('#reviewPdfEmbed');
-    if (oldEmbed) oldEmbed.remove();
-
-    if (selectedFile && selectedFile.type === 'application/pdf') {
-      reviewImg.style.display = 'none';
-      const embed = document.createElement('embed');
-      embed.id = 'reviewPdfEmbed'; embed.src = imageDataUrl; embed.type = 'application/pdf';
-      embed.style.width = '100%'; embed.style.height = '100%';
-      embed.style.minHeight = window.innerWidth >= 768 ? '80vh' : '400px';
-      reviewImg.parentNode.insertBefore(embed, reviewImg);
-      document.querySelector('.zoom-hint').style.display = 'none';
-      document.querySelector('#zoomControls').style.display = 'none';
-    } else {
-      reviewImg.style.display = ''; reviewImg.src = imageDataUrl;
-      document.querySelector('.zoom-hint').style.display = '';
-      document.querySelector('#zoomControls').style.display = '';
-    }
+    reviewImg.style.display = ''; reviewImg.src = imageDataUrl;
+    document.querySelector('.zoom-hint').style.display = '';
+    document.querySelector('#zoomControls').style.display = '';
 
     masjidNameInput.value = extractedData.mosque_name || '';
     document.querySelector('#metaAddress').value = extractedData.address || '';
