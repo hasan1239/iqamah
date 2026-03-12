@@ -1022,13 +1022,43 @@
     .chevron { width: 8px; height: 8px; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted); transform: rotate(45deg); transition: transform 0.3s; }
     .info-header.expanded .chevron { transform: rotate(-135deg); }
     .info-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-    .info-body-inner { padding: 0 16px 16px; }
-    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--divider); gap: 12px; }
-    .info-row:last-child { border-bottom: none; }
-    .info-row-label { font-size: 0.8rem; color: var(--text-muted); min-width: 60px; flex-shrink: 0; }
-    .info-row-value { font-size: 0.85rem; color: var(--text-secondary); text-align: right; }
-    .info-row-value a { color: var(--gold); text-decoration: none; }
-    .info-row-value a:hover { text-decoration: underline; }
+    .info-body-inner { padding: 8px 16px 16px; }
+
+    .info-location { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .info-location-icon {
+      background: var(--gold-tint-15); padding: 8px; border-radius: 10px;
+      color: var(--gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .info-location-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+    .info-field-label {
+      font-size: 0.6rem; color: var(--gold); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;
+    }
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px;
+      border-top: 1px solid var(--gold-tint-10); padding-top: 16px;
+    }
+    .info-grid-item { min-width: 0; }
+    .info-grid-full { grid-column: 1 / -1; }
+    .info-field-value { font-size: 0.85rem; color: var(--text-secondary); }
+    .info-field-value a { color: var(--gold); text-decoration: none; }
+    .info-field-value a:hover { text-decoration: underline; }
+    .info-field-bold { font-weight: 600; }
+    .info-fitrana {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--gold-tint-08); padding: 10px 12px; border-radius: 10px;
+      border: 1px solid var(--gold-tint-10);
+    }
+    .info-fitrana .info-field-label { margin-bottom: 0; }
+    .info-fitrana .info-field-value { font-size: 0.95rem; color: var(--text-primary); }
+    .info-maps-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 10px; margin-top: 16px; border-radius: 10px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      color: var(--text-secondary); font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .info-maps-btn:hover { background: var(--gold-tint-15); }
 
     /* Lockscreen section (prayer times layout) */
     .lockscreen-section { margin: 12px 0; }

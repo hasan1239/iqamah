@@ -762,30 +762,69 @@ function renderInfoSection() {
   const hasInfo = config.address || config.phone || config.eid_salah || config.sadaqatul_fitr || config.radio_frequency;
   if (!hasInfo) return '';
 
-  let rows = '';
+  const mapUrl = config.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(config.address) : '';
+
+  // Location block (address with icon)
+  let locationHtml = '';
   if (config.address) {
-    const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(config.address);
-    const addrHtml = config.address.split(', ').join(',<br class="mobile-br"> ');
-    rows += `<div class="info-row"><span class="info-row-label">Address</span><span class="info-row-value"><a href="${mapUrl}" target="_blank" rel="noopener">${addrHtml}</a></span></div>`;
+    const addrHtml = config.address.split(', ').join(',<br> ');
+    locationHtml = `
+      <div class="info-location">
+        <div class="info-location-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="info-field-label">Location</div>
+          <div class="info-location-text">${addrHtml}</div>
+        </div>
+      </div>`;
   }
+
+  // Grid items
+  let gridItems = '';
   if (config.phone) {
     const phoneParts = config.phone.split(/\s*[|\/]\s*/);
     const phoneHtml = phoneParts.map(part => {
       const m = part.match(/[\d\s]{10,}/);
       return m ? `<a href="tel:${m[0].replace(/\s+/g, '')}">${part.trim()}</a>` : part.trim();
-    }).join('<br class="mobile-br"> ');
-    rows += `<div class="info-row"><span class="info-row-label">Contact</span><span class="info-row-value">${phoneHtml}</span></div>`;
+    }).join('<br>');
+    gridItems += `<div class="info-grid-item"><div class="info-field-label">Contact</div><div class="info-field-value">${phoneHtml}</div></div>`;
   }
-  if (config.radio_frequency) rows += `<div class="info-row"><span class="info-row-label">Radio</span><span class="info-row-value">${config.radio_frequency}</span></div>`;
+  if (config.radio_frequency) {
+    gridItems += `<div class="info-grid-item"><div class="info-field-label">Radio Freq</div><div class="info-field-value">${config.radio_frequency}</div></div>`;
+  }
+  if (config.jummah_times) {
+    gridItems += `<div class="info-grid-item info-grid-full"><div class="info-field-label">Jumu'ah Times</div><div class="info-field-value">${config.jummah_times}</div></div>`;
+  }
   if (config.eid_salah) {
-    const eidHtml = config.eid_salah.split(', ').join(',<br class="mobile-br"> ');
-    rows += `<div class="info-row"><span class="info-row-label">Eid Salah</span><span class="info-row-value">${eidHtml}</span></div>`;
+    gridItems += `<div class="info-grid-item info-grid-full"><div class="info-field-label">Eid Salah</div><div class="info-field-value info-field-bold">${config.eid_salah}</div></div>`;
   }
-  if (config.sadaqatul_fitr) rows += `<div class="info-row"><span class="info-row-label">Fitrana</span><span class="info-row-value">${config.sadaqatul_fitr}</span></div>`;
+  if (config.sadaqatul_fitr) {
+    gridItems += `<div class="info-grid-item info-grid-full info-fitrana"><div class="info-field-label">Fitrana</div><div class="info-field-value info-field-bold">${config.sadaqatul_fitr}</div></div>`;
+  }
+
+  // Maps button
+  let mapsBtn = '';
+  if (mapUrl) {
+    mapsBtn = `<a href="${mapUrl}" target="_blank" rel="noopener" class="info-maps-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>
+      </svg>
+      <span>Open in Maps</span>
+    </a>`;
+  }
 
   return `<div class="info-section">
     <div class="info-header" id="infoHeader"><span>Masjid Info</span><div class="chevron"></div></div>
-    <div class="info-body" id="infoBody"><div class="info-body-inner">${rows}</div></div>
+    <div class="info-body" id="infoBody">
+      <div class="info-body-inner">
+        ${locationHtml}
+        ${gridItems ? `<div class="info-grid">${gridItems}</div>` : ''}
+        ${mapsBtn}
+      </div>
+    </div>
   </div>`;
 }
 
