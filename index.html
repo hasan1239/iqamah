@@ -1017,8 +1017,8 @@
 
     /* Info section */
     .info-section { border: 1px solid var(--card-border); border-radius: 16px; background: var(--card-bg); backdrop-filter: blur(12px); margin-bottom: 20px; overflow: hidden; }
-    .info-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; transition: background 0.2s; }
-    .info-header:hover { background: var(--gold-tint-08); }
+    .info-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer; font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
+    @media (hover: hover) { .info-header:hover { background: var(--gold-tint-08); } }
     .chevron { width: 8px; height: 8px; border-right: 2px solid var(--text-muted); border-bottom: 2px solid var(--text-muted); transform: rotate(45deg); transition: transform 0.3s; }
     .info-header.expanded .chevron { transform: rotate(-135deg); }
     .info-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
