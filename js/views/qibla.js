@@ -1,4 +1,4 @@
-// Qibla compass view — points to the Kaaba using device orientation
+// Qibla compass view -points to the Kaaba using device orientation
 import { calculateQiblaBearing, getCurrentPosition, getCardinalDirection } from '../utils/geolocation.js';
 
 let watchId = null;
@@ -117,14 +117,22 @@ async function initQibla() {
 
     await startCompass();
   } catch (err) {
+    badgeEl.classList.add('qibla-badge-error');
+    bearingEl.textContent = '--°';
     if (err.code === 1) {
-      statusEl.textContent = 'Location denied — tap to retry';
-      badgeEl.classList.add('qibla-badge-error');
-      bearingEl.textContent = '--°';
+      // Check if permission is permanently blocked
+      if (navigator.permissions) {
+        try {
+          const perm = await navigator.permissions.query({ name: 'geolocation' });
+          if (perm.state === 'denied') {
+            statusEl.textContent = 'Location blocked - enable in browser settings';
+            return;
+          }
+        } catch {}
+      }
+      statusEl.textContent = 'Location denied - tap to retry';
     } else {
-      statusEl.textContent = 'Location unavailable — tap to retry';
-      badgeEl.classList.add('qibla-badge-error');
-      bearingEl.textContent = '--°';
+      statusEl.textContent = 'Location unavailable - tap to retry';
     }
     badgeEl.style.cursor = 'pointer';
     badgeEl.addEventListener('click', () => {
