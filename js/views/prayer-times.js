@@ -820,9 +820,11 @@ function renderInfoSection() {
     <div class="info-header" id="infoHeader"><span>Masjid Info</span><div class="chevron"></div></div>
     <div class="info-body" id="infoBody">
       <div class="info-body-inner">
-        ${locationHtml}
-        ${gridItems ? `<div class="info-grid">${gridItems}</div>` : ''}
-        ${mapsBtn}
+        <div class="info-layout">
+          ${locationHtml ? `<div class="info-layout-left">${locationHtml}${mapsBtn}</div>` : ''}
+          ${gridItems ? `<div class="info-layout-right"><div class="info-grid">${gridItems}</div></div>` : ''}
+        </div>
+        ${!locationHtml ? mapsBtn : ''}
       </div>
     </div>
   </div>`;
