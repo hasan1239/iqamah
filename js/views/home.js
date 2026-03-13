@@ -328,7 +328,7 @@ function renderRecentlyViewed() {
         </div>
         <a href="/masjids" class="recent-hint-card" data-link>
           <div class="recent-hint-icon">${MOSQUE_SVG}</div>
-          <div class="recent-hint-text">Masjids you visit will appear here</div>
+          <div class="recent-hint-text">Masjids you view will appear here</div>
         </a>
       </div>`;
     return;
