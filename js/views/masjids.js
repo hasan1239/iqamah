@@ -31,6 +31,7 @@ const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 
 let searchQuery = '';
+let loadGeneration = 0;
 
 export function render(container) {
   viewContainer = container;
@@ -251,18 +252,21 @@ function getNextPrayerFromRow(row) {
 }
 
 async function loadCardPrayers(configs) {
-  for (const config of configs) {
-    const root = viewContainer || document;
-    const el = root.querySelector(`[data-card-next="${config.slug}"]`);
-    if (!el) continue;
+  const gen = ++loadGeneration;
+  const promises = configs.map(async (config) => {
     try {
       const csvFile = config.csv || config.slug + '.csv';
       const res = await fetch(`/data/${csvFile}`);
-      if (!res.ok) { el.innerHTML = ''; continue; }
+      if (gen !== loadGeneration) return;
+      const root = viewContainer || document;
+      const el = root.querySelector(`[data-card-next="${config.slug}"]`);
+      if (!el) return;
+      if (!res.ok) { el.innerHTML = ''; return; }
       const text = await res.text();
+      if (gen !== loadGeneration) return;
       const csvData = parseCSV(text);
       const todayRow = getTodayRow(csvData);
-      if (!todayRow) { el.innerHTML = ''; continue; }
+      if (!todayRow) { el.innerHTML = ''; return; }
       const next = getNextPrayerFromRow(todayRow);
       if (next) {
         el.innerHTML = `
@@ -272,9 +276,13 @@ async function loadCardPrayers(configs) {
         el.innerHTML = '';
       }
     } catch {
-      el.innerHTML = '';
+      if (gen !== loadGeneration) return;
+      const root = viewContainer || document;
+      const el = root.querySelector(`[data-card-next="${config.slug}"]`);
+      if (el) el.innerHTML = '';
     }
-  }
+  });
+  await Promise.all(promises);
 }
 
 // --- Search ---
