@@ -341,6 +341,10 @@ function setupLongPress() {
     if (pressTarget) pressTarget.classList.remove('long-pressing');
   }, { passive: true });
 
+  view.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.masjid-card[data-slug]')) e.preventDefault();
+  });
+
   view.addEventListener('touchend', (e) => {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     if (pressTarget) pressTarget.classList.remove('long-pressing');
