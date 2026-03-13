@@ -555,7 +555,7 @@ async function handleExtract(request, env) {
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (await isRateLimited(ip, env)) {
-    return errorResponse('Rate limit exceeded. Please try again later.', 429);
+    return errorResponse('You\'ve reached the limit of 5 extractions per month. Please try again next month.', 429);
   }
 
   let formData;
