@@ -613,6 +613,11 @@ function renderMonthlyView(target) {
       <div class="times-table-card month-table-card">
         ${tableHtml}
       </div>
+
+      <div class="month-footer-links">
+        ${config.source_image ? `<a href="/data/${config.source_image}" target="_blank" class="month-footer-link">Source</a>` : ''}
+        <a href="mailto:prayerly@hotmail.com?subject=${encodeURIComponent('Iqamah Report Issue - ' + config.display_name)}" class="month-footer-link">Report</a>
+      </div>
     </div>
   `;
 

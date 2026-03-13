@@ -12,5 +12,6 @@
   "eid_salah": "9:00am (one jama'at only)",
   "sadaqatul_fitr": "\u00a35.00 per person",
   "radio_frequency": "460.375",
-  "is_stale": false
+  "is_stale": false,
+  "source_image": "sources/aisha.jpg"
 }

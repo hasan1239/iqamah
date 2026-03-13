@@ -13,5 +13,6 @@
   "is_stale": false,
   "notes": "Jama'at times are subject to changes. Changes will be displayed on display screens. Maghrib Jama'at times are shown in the Maghrib Jama'at column. Listen live by visiting emasjid.live/masjidevali.",
   "lat": 53.7516084,
-  "lon": -2.5086968
+  "lon": -2.5086968,
+  "source_image": "sources/vali.jpg"
 }

@@ -353,6 +353,28 @@ async function githubCreateFile(path, content, message, env) {
   return resp.json();
 }
 
+async function githubUpsertBinary(path, base64Content, message, env) {
+  // Check if file exists to get SHA for overwrite
+  const existing = await githubGetFile(path, env);
+  const body = { message, content: base64Content };
+  if (existing) body.sha = existing.sha;
+  const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `token ${env.GITHUB_PAT}`,
+      'User-Agent': 'Prayerly-Worker/1.0',
+      'Accept': 'application/vnd.github.v3+json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    throw new Error(`GitHub upsert ${path} failed: ${resp.status} ${err}`);
+  }
+  return resp.json();
+}
+
 async function githubUpdateFile(path, content, sha, message, env) {
   const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
     method: 'PUT',
@@ -641,7 +663,7 @@ async function handleSubmit(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  const { data } = body;
+  const { data, image } = body;
   if (!data || !data.rows || !data.rows.length) {
     return errorResponse('No timetable data provided');
   }
@@ -677,6 +699,15 @@ async function handleSubmit(request, env) {
     notes: data.notes || '',
   };
 
+  // Set source image path in config
+  if (image) {
+    const imgMatch = image.match(/^data:image\/(\w+);base64,/);
+    if (imgMatch) {
+      const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+      config.source_image = `sources/${slug}.${ext}`;
+    }
+  }
+
   // Geocode address
   if (config.address) {
     const { lat, lon } = await geocodeAddress(config.address);
@@ -694,6 +725,28 @@ async function handleSubmit(request, env) {
       `Add timetable for ${mosqueName}`,
       env
     );
+
+    // 1b. Save raw extraction JSON
+    await githubCreateFile(
+      `data/${slug}.json`,
+      JSON.stringify(data, null, 2),
+      `Add extraction data for ${mosqueName}`,
+      env
+    );
+
+    // 1c. Save source timetable image (overwrite if exists)
+    if (image) {
+      const match = image.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (match) {
+        const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
+        await githubUpsertBinary(
+          `data/sources/${slug}.${ext}`,
+          match[2],
+          `Add source image for ${mosqueName}`,
+          env
+        );
+      }
+    }
 
     // 2. Create config JSON
     await githubCreateFile(
