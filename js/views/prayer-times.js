@@ -239,21 +239,23 @@ function applyNextPrayerHighlight(todayRow) {
     if (nextStart && prayerName === nextStart.name) {
       row.classList.add('next-start');
       const cd = formatCountdown(nextStart.date);
-      if (cd && nameEl) {
+      const startVal = row.querySelector('.time-start .time-value');
+      if (cd && startVal) {
         const span = document.createElement('span');
-        span.className = 'countdown countdown-left';
+        span.className = 'countdown';
         span.textContent = cd;
-        nameEl.appendChild(span);
+        startVal.appendChild(span);
       }
     }
     // Highlight jama'at time column
     if (prayerName === next.name) {
       row.classList.add('next-jamaat');
-      if (countdown && nameEl) {
+      const jamaatVal = row.querySelector('.time-jamaat .time-value');
+      if (countdown && jamaatVal) {
         const span = document.createElement('span');
-        span.className = 'countdown countdown-right';
+        span.className = 'countdown';
         span.textContent = countdown;
-        nameEl.appendChild(span);
+        jamaatVal.appendChild(span);
       }
     }
   });
@@ -400,9 +402,9 @@ function renderTodayView(target) {
 
   const prayerRowsHtml = prayerRows.map(p => `
     <div class="time-row" data-prayer="${p.name}">
-      <div class="time-col time-start">${ft(p.start, p.isAM) || '-'}</div>
+      <div class="time-col time-start"><span class="time-value">${ft(p.start, p.isAM) || '-'}</span></div>
       <div class="time-col time-name">${p.name}</div>
-      <div class="time-col time-jamaat">${ft(p.jamaat, p.isAM) || '-'}</div>
+      <div class="time-col time-jamaat"><span class="time-value">${ft(p.jamaat, p.isAM) || '-'}</span></div>
     </div>`).join('');
 
   target.innerHTML = `
