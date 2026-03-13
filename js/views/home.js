@@ -37,6 +37,8 @@ export function render(container) {
     greetingHTML = `<div class="greeting-salaam">Assalamu Alaikum</div>`;
   }
 
+  const showRebrand = !localStorage.getItem('iqamah-rebrand-dismissed');
+
   container.innerHTML = `
     <div class="home-view">
       <header class="home-header">
@@ -70,7 +72,69 @@ export function render(container) {
   setupHeroClicks();
   setupInstallBanner();
   loadDesktopMasjidList();
+
+  if (showRebrand) {
+    showWelcomeScreen();
+  }
   window.addEventListener('iqamah-pin-changed', onPinChanged);
+}
+
+function showWelcomeScreen() {
+  const overlay = document.createElement('div');
+  overlay.className = 'welcome-overlay';
+  overlay.innerHTML = `
+    <div class="welcome-card">
+      <img src="/iqamah-logo.svg" alt="Iqamah" class="welcome-logo">
+      <h1 class="welcome-title">Prayerly is now Iqamah</h1>
+      <p class="welcome-subtitle">Same app you know and love, with a fresh new look and new features.</p>
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <span class="welcome-icon">&#9733;</span>
+          <div>
+            <strong>New Design</strong>
+            <span>A cleaner, more polished experience</span>
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-icon">&#43;</span>
+          <div>
+            <strong>Add Your Masjid</strong>
+            <span>Add your masjid and Iqamah will extract the times for you</span>
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-icon">&#9776;</span>
+          <div>
+            <strong>Browse Masjids</strong>
+            <span>Find and pin your local masjid for quick access</span>
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-icon">&#8982;</span>
+          <div>
+            <strong>Qibla Compass</strong>
+            <span>Find the direction of the Qibla from anywhere</span>
+          </div>
+        </div>
+        <div class="welcome-feature">
+          <span class="welcome-icon">&#9201;</span>
+          <div>
+            <strong>12/24 Hour Format</strong>
+            <span>Switch between time formats in settings</span>
+          </div>
+        </div>
+      </div>
+      <button class="welcome-btn" id="welcomeBtn">Get Started</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+
+  document.getElementById('welcomeBtn').addEventListener('click', () => {
+    overlay.classList.remove('visible');
+    overlay.addEventListener('transitionend', () => overlay.remove());
+    localStorage.setItem('iqamah-rebrand-dismissed', '1');
+  });
 }
 
 async function loadMasjids() {
@@ -257,7 +321,16 @@ function renderRecentlyViewed() {
     .slice(0, 3);
 
   if (recentConfigs.length === 0) {
-    section.innerHTML = '';
+    section.innerHTML = `
+      <div class="recent-section">
+        <div class="masjid-scroll-header">
+          <span class="masjid-scroll-title">Recently Viewed</span>
+        </div>
+        <a href="/masjids" class="recent-hint-card" data-link>
+          <div class="recent-hint-icon">${MOSQUE_SVG}</div>
+          <div class="recent-hint-text">Masjids you visit will appear here</div>
+        </a>
+      </div>`;
     return;
   }
 
