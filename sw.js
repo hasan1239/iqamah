@@ -1,15 +1,11 @@
-const CACHE_NAME = 'iqamah-v1';
+const CACHE_NAME = 'iqamah-v2';
 
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './salahdaily_icon.png',
-  './favicon.ico',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-192.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png',
+  './iqamah-icon.svg',
+  './iqamah-icon.png',
+  './iqamah-logo.svg',
   // JS modules
   './js/app.js',
   './js/router.js',
