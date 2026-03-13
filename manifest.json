@@ -8,7 +8,7 @@
   "background_color": "#050c18",
   "theme_color": "#050c18",
   "icons": [
-    { "src": "iqamah-icon.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "iqamah-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "iqamah-icon.png?v=2", "sizes": "512x512", "type": "image/png" },
+    { "src": "iqamah-icon.png?v=2", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
