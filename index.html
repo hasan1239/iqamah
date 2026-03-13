@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" href="/iqamah-icon.png">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#050c18">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Prayerly">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <title>Prayerly - Daily Prayer Times</title>
+  <meta name="apple-mobile-web-app-title" content="Iqamah">
+  <link rel="apple-touch-icon" href="/iqamah-icon.png">
+  <title>Iqamah - Daily Prayer Times</title>
 
   <!-- FOUC prevention: sync theme before render -->
   <script>
     (function() {
       function syncTheme() {
-        var stored = localStorage.getItem('prayerly-theme');
+        var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
         var isLight = document.documentElement.classList.contains('light-mode');
@@ -491,7 +491,7 @@
     .home-header { text-align: center; margin-bottom: 25px; }
     .home-header h1 { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -0.5px; margin: 0; line-height: 1; }
     .header-content { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-    .logo { width: 40px; height: 40px; object-fit: contain; }
+    .logo { height: 40px; width: auto; object-fit: contain; }
 
     /* Greeting */
     .greeting { text-align: left; margin-bottom: 20px; }
@@ -1451,8 +1451,7 @@
   <nav class="desktop-nav" id="desktop-nav">
     <div class="desktop-nav-inner">
       <a href="/" class="desktop-nav-brand" data-link>
-        <img src="/salahdaily_icon.png" alt="Prayerly">
-        <span>Prayerly</span>
+        <img src="/iqamah-logo.png" alt="Iqamah">
       </a>
       <div class="desktop-nav-links" id="desktop-nav-links">
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>

@@ -52,7 +52,7 @@ export function render(container) {
         </button>
       </div>
 
-      ${!localStorage.getItem('prayerly-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
+      ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
         <span>Tip: Long press a masjid to set it as My Masjid</span>
         <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
       </div>` : ''}
@@ -122,7 +122,7 @@ export function renderCards() {
   const grid = viewContainer ? viewContainer.querySelector('#masjidsGrid') : document.getElementById('masjidsGrid');
   if (!grid) return;
 
-  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
 
   let filtered = cachedConfigs.slice();
 
@@ -206,7 +206,7 @@ function formatCardTime(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
-  if (localStorage.getItem('prayerly-time-format') === '12') {
+  if (localStorage.getItem('iqamah-time-format') === '12') {
     return `${h}:${m} ${isAM ? 'AM' : 'PM'}`;
   }
   const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
@@ -345,19 +345,19 @@ function setupLongPress() {
 }
 
 function togglePin(slug) {
-  const current = localStorage.getItem('prayerly-pinned-masjid');
+  const current = localStorage.getItem('iqamah-pinned-masjid');
   if (current === slug) {
-    localStorage.removeItem('prayerly-pinned-masjid');
+    localStorage.removeItem('iqamah-pinned-masjid');
     showToast('Removed from My Masjid');
   } else {
-    localStorage.setItem('prayerly-pinned-masjid', slug);
+    localStorage.setItem('iqamah-pinned-masjid', slug);
     const config = cachedConfigs.find(c => c.slug === slug);
     const name = config ? config.display_name : 'Masjid';
     showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
     dismissPinHint();
   }
   renderCards();
-  window.dispatchEvent(new CustomEvent('prayerly-pin-changed'));
+  window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
 }
 
 function setupPinHint() {
@@ -367,7 +367,7 @@ function setupPinHint() {
 }
 
 function dismissPinHint() {
-  localStorage.setItem('prayerly-pin-hint-dismissed', '1');
+  localStorage.setItem('iqamah-pin-hint-dismissed', '1');
   const hint = viewContainer ? viewContainer.querySelector('#pinHint') : document.getElementById('pinHint');
   if (hint) hint.remove();
 }
@@ -407,7 +407,7 @@ function setupLocationBtn() {
       const pos = await getCurrentPosition();
       btn.classList.remove('loading');
       userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-      localStorage.setItem('prayerly-cached-location', JSON.stringify(userLocation));
+      localStorage.setItem('iqamah-cached-location', JSON.stringify(userLocation));
 
       distanceMap = {};
       cachedConfigs.forEach(config => {

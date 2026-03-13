@@ -11,7 +11,7 @@ let unsubTheme = null;
 let masjidId = null;
 
 function use24h() {
-  return localStorage.getItem('prayerly-time-format') !== '12';
+  return localStorage.getItem('iqamah-time-format') !== '12';
 }
 
 // isAM: true = morning prayer (Sehri/Fajr/Sunrise), false = afternoon/evening
@@ -76,7 +76,7 @@ export async function render(container, { slug }) {
       return;
     }
     config = await configRes.json();
-    document.title = `${config.display_name} - Prayerly`;
+    document.title = `${config.display_name} - Iqamah`;
 
     const csvRes = await fetch(`/data/${config.csv}`);
     if (!csvRes.ok) throw new Error('Timetable not found');
@@ -95,11 +95,11 @@ export function destroy() {
   if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
   if (eshaRerenderId) { clearTimeout(eshaRerenderId); eshaRerenderId = null; }
   if (unsubTheme) { unsubTheme(); unsubTheme = null; }
-  document.title = 'Prayerly';
+  document.title = 'Iqamah';
 }
 
 function recordRecentVisit(slug) {
-  const key = 'prayerly-recent-masjids';
+  const key = 'iqamah-recent-masjids';
   const max = 6;
   try {
     let recent = JSON.parse(localStorage.getItem(key) || '[]');
@@ -719,11 +719,11 @@ function setupShareButton() {
     }
     if (navigator.share) {
       try {
-        await navigator.share({ title: `${config.display_name} - Prayerly`, text: `Prayer times for ${config.display_name} on Prayerly`, url: shareUrl });
+        await navigator.share({ title: `${config.display_name} - Iqamah`, text: `Prayer times for ${config.display_name} on Iqamah`, url: shareUrl });
       } catch (err) { /* user cancelled */ }
     } else if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Prayerly\n${shareUrl}`);
+        await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`);
         btn.textContent = 'Copied!';
         setTimeout(() => { btn.textContent = 'Share'; }, 2000);
       } catch (err) { /* fallback failed */ }
@@ -845,7 +845,7 @@ function getHijriRange() {
 }
 
 function renderPrimaryButton() {
-  const current = localStorage.getItem('prayerly-pinned-masjid');
+  const current = localStorage.getItem('iqamah-pinned-masjid');
   const isPrimary = current === masjidId;
   const starSvg = '<svg viewBox="0 0 24 24" fill="' + (isPrimary ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
   const label = isPrimary ? 'My Masjid' : 'Set as My Masjid';
@@ -857,11 +857,11 @@ function setupPrimaryButton() {
   const btn = document.getElementById('setPrimaryBtn');
   if (!btn) return;
   btn.addEventListener('click', () => {
-    const current = localStorage.getItem('prayerly-pinned-masjid');
+    const current = localStorage.getItem('iqamah-pinned-masjid');
     if (current === masjidId) {
-      localStorage.removeItem('prayerly-pinned-masjid');
+      localStorage.removeItem('iqamah-pinned-masjid');
     } else {
-      localStorage.setItem('prayerly-pinned-masjid', masjidId);
+      localStorage.setItem('iqamah-pinned-masjid', masjidId);
     }
     // Re-render button
     btn.outerHTML = renderPrimaryButton();

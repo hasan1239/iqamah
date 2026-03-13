@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="/favicon.ico">
-  <title>Page Not Found - Prayerly</title>
+  <link rel="icon" href="/iqamah-icon.png">
+  <title>Page Not Found - Iqamah</title>
   <script>
     (function() {
-      var stored = localStorage.getItem('prayerly-theme');
+      var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
       if (shouldBeLight) document.documentElement.classList.add('light-mode');

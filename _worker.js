@@ -1,5 +1,5 @@
 // ============================================================
-// Prayerly — Cloudflare Pages Worker
+// Iqamah — Cloudflare Pages Worker
 // Handles clean URL routing + Add Your Masjid API endpoints
 // ============================================================
 

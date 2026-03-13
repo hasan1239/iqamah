@@ -29,7 +29,7 @@ const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 
 export function render(container) {
-  const userName = localStorage.getItem('prayerly-user-name');
+  const userName = localStorage.getItem('iqamah-user-name');
   let greetingHTML;
   if (userName) {
     greetingHTML = `<div class="greeting-salaam">Assalamu Alaikum,</div><div class="greeting-name">${userName}</div>`;
@@ -41,8 +41,7 @@ export function render(container) {
     <div class="home-view">
       <header class="home-header">
         <div class="header-content">
-          <img src="/salahdaily_icon.png" alt="Prayerly" class="logo">
-          <h1>Prayerly</h1>
+          <img src="/iqamah-logo.png" alt="Iqamah" class="logo">
         </div>
       </header>
       <div class="greeting">${greetingHTML}</div>
@@ -71,7 +70,7 @@ export function render(container) {
   setupHeroClicks();
   setupInstallBanner();
   loadDesktopMasjidList();
-  window.addEventListener('prayerly-pin-changed', onPinChanged);
+  window.addEventListener('iqamah-pin-changed', onPinChanged);
 }
 
 async function loadMasjids() {
@@ -92,7 +91,7 @@ function renderHero() {
   const heroContainer = document.getElementById('heroContainer');
   if (!heroContainer) return;
 
-  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
 
   if (!pinnedConfig) {
@@ -135,7 +134,7 @@ function findBestMasjid() {
 
   // Try cached location → nearest masjid
   try {
-    const cached = JSON.parse(localStorage.getItem('prayerly-cached-location'));
+    const cached = JSON.parse(localStorage.getItem('iqamah-cached-location'));
     if (cached && cached.lat && cached.lon) {
       const withCoords = cachedConfigs.filter(c => c.lat != null && c.lon != null);
       if (withCoords.length > 0) {
@@ -248,7 +247,7 @@ function renderRecentlyViewed() {
   if (!section) return;
 
   const recentSlugs = getRecentSlugs();
-  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
 
   // Filter out pinned masjid and only show ones that exist in configs
   const recentConfigs = recentSlugs
@@ -296,7 +295,7 @@ function renderRecentlyViewed() {
 
 function getRecentSlugs() {
   try {
-    return JSON.parse(localStorage.getItem('prayerly-recent-masjids') || '[]');
+    return JSON.parse(localStorage.getItem('iqamah-recent-masjids') || '[]');
   } catch { return []; }
 }
 
@@ -368,7 +367,7 @@ function formatTimeDisplay(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
-  if (localStorage.getItem('prayerly-time-format') === '12') {
+  if (localStorage.getItem('iqamah-time-format') === '12') {
     return `${h}:${m} <span class="hero-next-ampm">${isAM ? 'AM' : 'PM'}</span>`;
   }
   // 24h: convert using isAM flag
@@ -381,7 +380,7 @@ function formatCardTime(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
-  if (localStorage.getItem('prayerly-time-format') === '12') {
+  if (localStorage.getItem('iqamah-time-format') === '12') {
     return `${h}:${m} ${isAM ? 'AM' : 'PM'}`;
   }
   const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
@@ -491,7 +490,7 @@ function handleHeroClick(e) {
 
   e.preventDefault();
   e.stopPropagation();
-  localStorage.removeItem('prayerly-pinned-masjid');
+  localStorage.removeItem('iqamah-pinned-masjid');
   showToast('Removed from My Masjid');
   renderHero();
   renderRecentlyViewed();
@@ -518,7 +517,7 @@ function setupInstallBanner() {
     banner.classList.add('has-button');
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
-      <div class="install-banner-text"><strong>Install Prayerly</strong> for quick access from your home screen.</div>
+      <div class="install-banner-text"><strong>Install Iqamah</strong> for quick access from your home screen.</div>
       <button class="install-btn">Install</button>`;
     banner.classList.add('visible');
     banner.querySelector('.install-btn').addEventListener('click', () => {
@@ -532,7 +531,7 @@ function setupInstallBanner() {
   } else if (isIOSSafari()) {
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
-      <div class="install-banner-text"><strong>Install Prayerly</strong> — tap <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> then <strong>"Add to Home Screen"</strong>.</div>`;
+      <div class="install-banner-text"><strong>Install Iqamah</strong> — tap <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> then <strong>"Add to Home Screen"</strong>.</div>`;
     banner.classList.add('visible');
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');
@@ -576,5 +575,5 @@ export function destroy() {
     masjidsModule = null;
   }
   document.removeEventListener('click', handleHeroClick, true);
-  window.removeEventListener('prayerly-pin-changed', onPinChanged);
+  window.removeEventListener('iqamah-pin-changed', onPinChanged);
 }

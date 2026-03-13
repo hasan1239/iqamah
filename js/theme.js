@@ -32,7 +32,7 @@ export function toggleTheme() {
   root.classList.add('theme-transitioning');
   root.classList.toggle('light-mode');
   const isLight = root.classList.contains('light-mode');
-  localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
+  localStorage.setItem('iqamah-theme', isLight ? 'light' : 'dark');
   updateThemeColor();
 
   requestAnimationFrame(() => {
@@ -61,7 +61,7 @@ export function toggleTheme() {
 export function initTheme() {
   // Listen for system preference changes
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (localStorage.getItem('prayerly-theme')) return;
+    if (localStorage.getItem('iqamah-theme')) return;
     if (e.matches) {
       document.documentElement.classList.remove('light-mode');
     } else {

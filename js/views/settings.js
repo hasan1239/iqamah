@@ -5,9 +5,9 @@ let unsubTheme = null;
 
 export function render(container) {
   const theme = getTheme();
-  const timeFormat = localStorage.getItem('prayerly-time-format') || '24';
-  const pinnedSlug = localStorage.getItem('prayerly-pinned-masjid');
-  const userName = localStorage.getItem('prayerly-user-name') || '';
+  const timeFormat = localStorage.getItem('iqamah-time-format') || '24';
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const userName = localStorage.getItem('iqamah-user-name') || '';
 
   container.innerHTML = `
     <div class="settings-view">
@@ -110,7 +110,7 @@ export function render(container) {
           </span>
         </a>
 
-        <a href="mailto:prayerly@hotmail.com?subject=Prayerly Feedback" class="settings-item settings-link" id="feedbackLink">
+        <a href="mailto:prayerly@hotmail.com?subject=Iqamah Feedback" class="settings-item settings-link" id="feedbackLink">
           <div class="settings-item-left">
             <span class="settings-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
@@ -184,20 +184,20 @@ export function render(container) {
 
   // Time format toggle
   document.getElementById('timeFormatToggle').addEventListener('change', (e) => {
-    localStorage.setItem('prayerly-time-format', e.target.checked ? '24' : '12');
+    localStorage.setItem('iqamah-time-format', e.target.checked ? '24' : '12');
   });
 
   // Remove pinned masjid
   const removeBtn = document.getElementById('removePinnedBtn');
   if (removeBtn) {
     removeBtn.addEventListener('click', () => {
-      localStorage.removeItem('prayerly-pinned-masjid');
+      localStorage.removeItem('iqamah-pinned-masjid');
       const nameEl = document.getElementById('pinnedMasjidName');
       const labelEl = document.querySelector('#pinnedMasjidSetting .settings-label');
       if (nameEl) nameEl.textContent = 'None';
       if (labelEl) labelEl.textContent = 'No masjid selected';
       removeBtn.remove();
-      window.dispatchEvent(new CustomEvent('prayerly-pin-changed'));
+      window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
     });
   }
 
@@ -205,15 +205,15 @@ export function render(container) {
   const nameInput = document.getElementById('userNameInput');
   nameInput.addEventListener('input', () => {
     const val = nameInput.value.trim();
-    if (val) localStorage.setItem('prayerly-user-name', val);
-    else localStorage.removeItem('prayerly-user-name');
+    if (val) localStorage.setItem('iqamah-user-name', val);
+    else localStorage.removeItem('iqamah-user-name');
   });
 
   // Reset app
   const resetBtn = document.getElementById('resetAppBtn');
   resetBtn.addEventListener('click', () => {
     if (resetBtn.dataset.confirm) {
-      const keys = Object.keys(localStorage).filter(k => k.startsWith('prayerly-'));
+      const keys = Object.keys(localStorage).filter(k => k.startsWith('iqamah-'));
       keys.forEach(k => localStorage.removeItem(k));
       window.location.href = '/';
       return;

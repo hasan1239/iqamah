@@ -35,7 +35,7 @@ const TABS = [
 ];
 
 function getTimesPath() {
-  const pinned = localStorage.getItem('prayerly-pinned-masjid');
+  const pinned = localStorage.getItem('iqamah-pinned-masjid');
   return pinned ? '/' + pinned : '/times';
 }
 

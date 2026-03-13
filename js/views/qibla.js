@@ -18,7 +18,7 @@ export function render(container) {
       <header><h1>Qibla Finder</h1></header>
       <div class="qibla-desktop-msg">
         <p>The Qibla Finder uses your phone's compass and is only available on mobile devices.</p>
-        <p class="qibla-desktop-sub">Open Prayerly on your phone to use this feature.</p>
+        <p class="qibla-desktop-sub">Open Iqamah on your phone to use this feature.</p>
       </div>
     </div>`;
     return;
@@ -88,7 +88,7 @@ async function initQibla() {
     const pos = await getCurrentPosition({ timeout: 15000 });
     const lat = pos.coords.latitude;
     const lon = pos.coords.longitude;
-    localStorage.setItem('prayerly-cached-location', JSON.stringify({ lat, lon }));
+    localStorage.setItem('iqamah-cached-location', JSON.stringify({ lat, lon }));
 
     qiblaBearing = calculateQiblaBearing(lat, lon);
     const direction = getCardinalDirection(qiblaBearing);

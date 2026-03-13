@@ -1,4 +1,4 @@
-// Prayerly SPA — App entry point
+// Iqamah SPA — App entry point
 import { initTheme } from './theme.js';
 import { initBackground } from './background.js';
 import { initRouter, navigate } from './router.js';
@@ -122,6 +122,18 @@ document.addEventListener('click', (e) => {
     navigate(href);
   }
 });
+
+// Migrate localStorage keys from prayerly-* to iqamah-*
+if (!localStorage.getItem('iqamah-migrated')) {
+  Object.keys(localStorage).forEach(k => {
+    if (k.startsWith('prayerly-')) {
+      const newKey = k.replace('prayerly-', 'iqamah-');
+      if (!localStorage.getItem(newKey)) localStorage.setItem(newKey, localStorage.getItem(k));
+      localStorage.removeItem(k);
+    }
+  });
+  localStorage.setItem('iqamah-migrated', '1');
+}
 
 // Init
 initTheme();

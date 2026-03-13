@@ -109,7 +109,7 @@ function getWizardHTML() {
     <div class="add-masjid-view">
       <header>
         <h1>Add Your Masjid</h1>
-        <p class="add-subtitle" id="uploadSubtitle">Upload a timetable and Prayerly will extract the times automatically</p>
+        <p class="add-subtitle" id="uploadSubtitle">Upload a timetable and Iqamah will extract the times automatically</p>
         <p class="add-subtitle" id="aiDisclaimer" style="display:none;">Times were extracted using AI and may contain errors.<br>Please verify before submitting.</p>
       </header>
 

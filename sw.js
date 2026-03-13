@@ -1,4 +1,4 @@
-const CACHE_NAME = 'prayerly-v2';
+const CACHE_NAME = 'iqamah-v1';
 
 const PRECACHE_URLS = [
   './',
