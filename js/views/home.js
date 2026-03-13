@@ -41,7 +41,7 @@ export function render(container) {
     <div class="home-view">
       <header class="home-header">
         <div class="header-content">
-          <img src="/iqamah-logo.png" alt="Iqamah" class="logo">
+          <img src="/iqamah-logo.svg" alt="Iqamah" class="logo">
         </div>
       </header>
       <div class="greeting">${greetingHTML}</div>
