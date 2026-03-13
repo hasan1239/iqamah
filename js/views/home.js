@@ -254,7 +254,7 @@ function renderRecentlyViewed() {
     .filter(s => s !== pinnedSlug)
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean)
-    .slice(0, window.innerWidth >= 768 ? 3 : 4);
+    .slice(0, 3);
 
   if (recentConfigs.length === 0) {
     section.innerHTML = '';
