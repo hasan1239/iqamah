@@ -1,5 +1,5 @@
 // ============================================================
-// Iqamah — Cloudflare Pages Worker
+// Prayerly — Cloudflare Pages Worker
 // Handles clean URL routing + Add Your Masjid API endpoints
 // ============================================================
 
@@ -353,28 +353,6 @@ async function githubCreateFile(path, content, message, env) {
   return resp.json();
 }
 
-async function githubUpsertBinary(path, base64Content, message, env) {
-  // Check if file exists to get SHA for overwrite
-  const existing = await githubGetFile(path, env);
-  const body = { message, content: base64Content };
-  if (existing) body.sha = existing.sha;
-  const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `token ${env.GITHUB_PAT}`,
-      'User-Agent': 'Prayerly-Worker/1.0',
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`GitHub upsert ${path} failed: ${resp.status} ${err}`);
-  }
-  return resp.json();
-}
-
 async function githubUpdateFile(path, content, sha, message, env) {
   const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
     method: 'PUT',
@@ -395,6 +373,68 @@ async function githubUpdateFile(path, content, sha, message, env) {
     throw new Error(`GitHub update ${path} failed: ${resp.status} ${err}`);
   }
   return resp.json();
+}
+
+// Commit multiple files in a single commit using the Git Data API
+async function githubCommitFiles(files, message, env) {
+  const headers = {
+    'Authorization': `token ${env.GITHUB_PAT}`,
+    'User-Agent': 'Prayerly-Worker/1.0',
+    'Accept': 'application/vnd.github.v3+json',
+    'Content-Type': 'application/json',
+  };
+  const api = `https://api.github.com/repos/${GITHUB_REPO}`;
+
+  // 1. Get HEAD ref
+  const refResp = await fetch(`${api}/git/ref/heads/main`, { headers });
+  if (!refResp.ok) throw new Error('Failed to get HEAD ref');
+  const refData = await refResp.json();
+  const headSha = refData.object.sha;
+
+  // 2. Get base tree
+  const commitResp = await fetch(`${api}/git/commits/${headSha}`, { headers });
+  if (!commitResp.ok) throw new Error('Failed to get HEAD commit');
+  const commitData = await commitResp.json();
+  const baseTreeSha = commitData.tree.sha;
+
+  // 3. Create blobs in parallel
+  const blobPromises = files.map(async (f) => {
+    const blobResp = await fetch(`${api}/git/blobs`, {
+      method: 'POST', headers,
+      body: JSON.stringify({
+        content: f.base64 || btoa(unescape(encodeURIComponent(f.content))),
+        encoding: 'base64',
+      }),
+    });
+    if (!blobResp.ok) throw new Error(`Failed to create blob for ${f.path}`);
+    const blob = await blobResp.json();
+    return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
+  });
+  const tree = await Promise.all(blobPromises);
+
+  // 4. Create tree
+  const treeResp = await fetch(`${api}/git/trees`, {
+    method: 'POST', headers,
+    body: JSON.stringify({ base_tree: baseTreeSha, tree }),
+  });
+  if (!treeResp.ok) throw new Error('Failed to create tree');
+  const treeData = await treeResp.json();
+
+  // 5. Create commit
+  const newCommitResp = await fetch(`${api}/git/commits`, {
+    method: 'POST', headers,
+    body: JSON.stringify({ message, tree: treeData.sha, parents: [headSha] }),
+  });
+  if (!newCommitResp.ok) throw new Error('Failed to create commit');
+  const newCommit = await newCommitResp.json();
+
+  // 6. Update ref
+  const updateRefResp = await fetch(`${api}/git/refs/heads/main`, {
+    method: 'PATCH', headers,
+    body: JSON.stringify({ sha: newCommit.sha }),
+  });
+  if (!updateRefResp.ok) throw new Error('Failed to update ref');
+  return newCommit;
 }
 
 // --- Geocoding ---
@@ -484,27 +524,22 @@ export default {
 
     // --- Static asset routing ---
 
-    // SPA shell routing: intercept app routes before static assets
-    // (otherwise / would serve the old index.html)
-    const segment = path.replace(/^\//, '').replace(/\/$/, '');
-    const isAppRoute = !segment || (segment && !segment.includes('.') && !segment.includes('/'));
-    const knownAppRoutes = ['', 'add', 'masjids', 'qibla', 'settings', 'times'];
-    const isKnownRoute = knownAppRoutes.includes(segment);
-
-    // For known app routes, serve SPA directly
-    if (isKnownRoute) {
-      return serveStaticPage('index.html', request, env);
-    }
-
     // Try serving static asset first
     const response = await env.ASSETS.fetch(request);
     if (response.status !== 404) {
       return response;
     }
 
-    // If 404 and single-segment path, treat as masjid slug → serve SPA shell
-    if (isAppRoute) {
-      return serveStaticPage('index.html', request, env);
+    // If 404, try clean URL routing
+    const segment = path.replace(/^\//, '').replace(/\/$/, '');
+    if (segment && !segment.includes('.') && !segment.includes('/')) {
+      // /add → serve add.html
+      if (segment === 'add') {
+        return serveStaticPage('add.html', request, env);
+      }
+
+      // Other single-segment paths → serve masjid.html (slug routing)
+      return serveStaticPage('masjid.html', request, env);
     }
 
     return response;
@@ -718,58 +753,33 @@ async function handleSubmit(request, env) {
   }
 
   try {
-    // 1. Create CSV file
-    await githubCreateFile(
-      `data/${slug}.csv`,
-      csvContent,
-      `Add timetable for ${mosqueName}`,
-      env
-    );
+    // Build list of files to commit
+    const files = [
+      { path: `data/${slug}.csv`, content: csvContent },
+      { path: `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
+      { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
+    ];
 
-    // 1b. Save raw extraction JSON
-    await githubCreateFile(
-      `data/${slug}.json`,
-      JSON.stringify(data, null, 2),
-      `Add extraction data for ${mosqueName}`,
-      env
-    );
-
-    // 1c. Save source timetable image (overwrite if exists)
+    // Source timetable image
     if (image) {
-      const match = image.match(/^data:image\/(\w+);base64,(.+)$/);
-      if (match) {
-        const ext = match[1] === 'jpeg' ? 'jpg' : match[1];
-        await githubUpsertBinary(
-          `data/sources/${slug}.${ext}`,
-          match[2],
-          `Add source image for ${mosqueName}`,
-          env
-        );
+      const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (imgMatch) {
+        const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+        files.push({ path: `data/sources/${slug}.${ext}`, base64: imgMatch[2] });
       }
     }
 
-    // 2. Create config JSON
-    await githubCreateFile(
-      `data/mosques/${slug}.json`,
-      JSON.stringify(config, null, 2),
-      `Add config for ${mosqueName}`,
-      env
-    );
-
-    // 3. Update index.json
+    // Updated index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
     if (indexFile) {
       const existingIndex = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
       existingIndex.push(config);
       existingIndex.sort((a, b) => a.display_name.localeCompare(b.display_name));
-      await githubUpdateFile(
-        'data/mosques/index.json',
-        JSON.stringify(existingIndex),
-        indexFile.sha,
-        `Add ${mosqueName} to index`,
-        env
-      );
+      files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingIndex) });
     }
+
+    // Single commit for all files
+    await githubCommitFiles(files, `Add ${mosqueName}`, env);
 
     return jsonResponse({
       success: true,
