@@ -533,9 +533,10 @@ export default {
     // If 404, try clean URL routing
     const segment = path.replace(/^\//, '').replace(/\/$/, '');
     if (segment && !segment.includes('.') && !segment.includes('/')) {
-      // /add → serve add.html
-      if (segment === 'add') {
-        return serveStaticPage('add.html', request, env);
+      // SPA routes → serve index.html (app shell)
+      const spaRoutes = ['masjids', 'qibla', 'settings', 'add', 'times'];
+      if (spaRoutes.includes(segment)) {
+        return serveStaticPage('index.html', request, env);
       }
 
       // Other single-segment paths → serve masjid.html (slug routing)
