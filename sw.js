@@ -4,7 +4,7 @@ const PRECACHE_URLS = [
   './',
   './index.html',
   './iqamah-icon.svg',
-  './iqamah-icon.png',
+  './iqamah-icon.svg',
   './iqamah-logo.svg',
   // JS modules
   './js/app.js',

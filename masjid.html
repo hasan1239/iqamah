@@ -1227,9 +1227,8 @@
           background_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
           theme_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
           icons: [
-            { src: 'iqamah-icon.png', sizes: '512x512', type: 'image/png' },
-            { src: 'icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-            { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+            { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png' },
+            { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
           ]
         };
         const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
