@@ -495,7 +495,7 @@ function setupEventListeners(container) {
     }
 
     try {
-      const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data }) });
+      const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, image: imageDataUrl }) });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
       confirmationText.textContent = result.message || 'Your masjid has been added!';

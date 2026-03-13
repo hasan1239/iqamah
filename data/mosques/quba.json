@@ -13,5 +13,6 @@
   "eid_salah": "7:30am & 9:00am",
   "sadaqatul_fitr": "\u00a34.50",
   "radio_frequency": "454.3500",
-  "is_stale": false
+  "is_stale": false,
+  "source_image": "sources/quba.jpg"
 }
