@@ -3,20 +3,27 @@
 // Handles clean URL routing + Add Your Masjid API endpoints
 // ============================================================
 
-// --- Rate limiting (in-memory, per-isolate) ---
-const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX = 5; // max extractions per IP per window
+// --- Rate limiting (persistent via Cloudflare KV) ---
+const RATE_LIMIT_MAX = 5; // max extractions per IP per month
 
-function isRateLimited(ip) {
+async function isRateLimited(ip, env) {
+  if (!env.RATE_LIMITS) return false; // fallback: allow if KV not bound
+  const key = `extract:${ip}`;
+  const data = await env.RATE_LIMITS.get(key, 'json');
   const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(ip, { windowStart: now, count: 1 });
+  const thirtyDays = 30 * 24 * 60 * 60;
+
+  if (!data) {
+    await env.RATE_LIMITS.put(key, JSON.stringify({ count: 1, start: now }), { expirationTtl: thirtyDays });
     return false;
   }
-  entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) return true;
+
+  if (data.count >= RATE_LIMIT_MAX) return true;
+
+  data.count++;
+  const elapsed = Math.floor((now - data.start) / 1000);
+  const remaining = Math.max(thirtyDays - elapsed, 60);
+  await env.RATE_LIMITS.put(key, JSON.stringify(data), { expirationTtl: remaining });
   return false;
 }
 
@@ -522,22 +529,16 @@ export default {
       return handleSubmit(request, env);
     }
 
-    // --- Static asset routing ---
+    // --- SPA routing ---
 
-    // Try serving static asset first
-    const response = await env.ASSETS.fetch(request);
-    if (response.status !== 404) {
-      return response;
-    }
-
-    // If 404, try clean URL routing
+    // SPA routes must be served before static assets (Cloudflare auto-strips .html)
     const segment = path.replace(/^\//, '').replace(/\/$/, '');
     if (segment && !segment.includes('.') && !segment.includes('/')) {
-      // All single-segment paths → serve index.html (SPA shell)
       return serveStaticPage('index.html', request, env);
     }
 
-    return response;
+    // Try serving static asset
+    return env.ASSETS.fetch(request);
   },
 };
 
@@ -553,7 +554,7 @@ async function handleExtract(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip, env)) {
     return errorResponse('Rate limit exceeded. Please try again later.', 429);
   }
 

@@ -199,8 +199,6 @@ function getWizardHTML() {
           <div class="form-group" style="margin-top:12px;"><label for="metaNotes">Notes</label><textarea id="metaNotes" rows="2" placeholder="Any additional notes"></textarea></div>
 
           <div class="btn-row review-btn-row">
-            <button class="btn btn-secondary" id="reExtractBtn">Re-extract</button>
-            <button class="btn btn-secondary" id="downloadJsonBtn">Download JSON</button>
             <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
           </div>
           <div class="error-msg" id="submitError"></div>
@@ -219,10 +217,6 @@ function getWizardHTML() {
             </div>
             <p id="confirmationText">It will appear on the homepage shortly.</p>
             <p class="confirmation-note">It may take up to a minute for your masjid to appear.</p>
-            <a href="/" class="masjid-link" id="masjidLink" data-link>
-              View your masjid page
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
-            </a>
             <div style="margin-top:24px;"><a href="/" class="btn btn-secondary" data-link>Back to Home</a></div>
           </div>
         </div>
@@ -486,8 +480,6 @@ function setupEventListeners(container) {
 
     if (USE_DUMMY_DATA) {
       confirmationText.textContent = 'Your masjid has been added!';
-      masjidLink.href = '/';
-      masjidLink.innerHTML = 'View ' + data.mosque_name;
       goToStep(4);
       submitBtn.disabled = false;
       submittingStatus.style.display = 'none';
@@ -499,8 +491,6 @@ function setupEventListeners(container) {
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
       confirmationText.textContent = result.message || 'Your masjid has been added!';
-      masjidLink.href = result.url || '/';
-      masjidLink.innerHTML = 'View ' + data.mosque_name;
       goToStep(4);
     } catch (e) {
       showError(submitError, e.message);

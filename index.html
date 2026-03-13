@@ -777,6 +777,13 @@
 
     /* Recently viewed section */
     .recent-section { margin-bottom: 12px; }
+    .recent-hint-card {
+      display: flex; align-items: center; gap: 14px; padding: 16px;
+      border: 1px dashed var(--gold-tint-30); border-radius: 14px;
+      text-decoration: none; color: var(--text-muted); font-size: 0.85rem;
+    }
+    .recent-hint-icon { opacity: 0.4; flex-shrink: 0; }
+    .recent-hint-icon svg { width: 24px; height: 24px; }
     .recent-list { display: flex; flex-direction: column; gap: 8px; }
     .recent-card {
       display: flex; align-items: center; gap: 10px; padding: 12px 14px;
@@ -1086,6 +1093,46 @@
     .stale-notice h2 { color: var(--gold); font-size: 1.3rem; margin-bottom: 12px; }
     .stale-notice p { color: var(--text-tertiary); font-size: 0.95rem; line-height: 1.5; }
 
+    /* Welcome screen */
+    .welcome-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      background: var(--bg-gradient); display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .welcome-overlay.visible { opacity: 1; }
+    .welcome-card {
+      text-align: center; padding: 32px 24px; max-width: 380px; width: 100%;
+    }
+    .welcome-logo { height: 48px; width: auto; margin-bottom: 24px; }
+    .welcome-title {
+      font-family: 'Lato', sans-serif; font-size: 1.4rem; color: var(--gold);
+      font-weight: 700; margin-bottom: 8px;
+    }
+    .welcome-subtitle {
+      font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 28px;
+    }
+    .welcome-features { text-align: left; margin-bottom: 32px; }
+    .welcome-feature {
+      display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px;
+    }
+    .welcome-feature:last-child { margin-bottom: 0; }
+    .welcome-icon {
+      flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center;
+      justify-content: center; border-radius: 10px; font-size: 1.1rem;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-30); color: var(--gold);
+    }
+    .welcome-feature strong {
+      display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 2px;
+    }
+    .welcome-feature span:last-child {
+      font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;
+    }
+    .welcome-btn {
+      width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; font-family: 'Lato', sans-serif;
+      background: linear-gradient(135deg, var(--gold), #c9a227); color: #0a1210;
+    }
+
     /* Install banner */
     .install-banner {
       background: var(--gold-tint-08); border: 1px solid var(--install-border);
@@ -1297,6 +1344,7 @@
        ADD MASJID VIEW
        ============================================ */
     .add-masjid-view { max-width: 700px; margin: 0 auto; }
+    .add-masjid-view .card { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     @media (min-width: 768px) {
       .add-masjid-view { max-width: none; }
       .add-masjid-view #step3 .card {
