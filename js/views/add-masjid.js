@@ -1,6 +1,6 @@
 // Add Your Masjid — 3-step wizard (Upload → Review → Done)
 
-const USE_DUMMY_DATA = true; // Set to true to skip API call and use dummy data for testing
+const USE_DUMMY_DATA = false;
 
 let pdfjsLoaded = false;
 async function loadPdfJs() {
