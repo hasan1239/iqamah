@@ -1,0 +1,18 @@
+{
+  "display_name": "Madinatul Uloom Jami' Masjid",
+  "slug": "madinatul",
+  "csv": "madinatul.csv",
+  "address": "115 Fentham Road, Aston, Birmingham B6 6NA",
+  "phone": "07944 267 205",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "",
+  "eid_salah": "1st Eid Salaah: 8:00am, 2nd Eid Salaah: 9:15am",
+  "sadaqatul_fitr": "£7 per person (adult & child)",
+  "radio_frequency": "459.5750",
+  "is_stale": false,
+  "notes": "Taraweeh Jamaat times vary — see timetable. There will be a second Taraweeh Jamaat at 12:30am. To protect your fast, please stop eating 5 minutes before Sehri End time. Maghrib/Iftar column is labelled 'Maghrib Iftar' under Jama'at Times — this is the Iftar time. No separate Maghrib Jama'at column exists.",
+  "source_image": "sources/madinatul.jpg",
+  "lat": 52.5059662,
+  "lon": -1.896682
+}
