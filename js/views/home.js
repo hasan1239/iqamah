@@ -89,7 +89,7 @@ function showWelcomeScreen() {
       <p class="welcome-subtitle">Same app you know, with a fresh new look and new features.</p>
       <div class="welcome-features">
         <div class="welcome-feature">
-          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75L19 13z"/><path d="M5 17l.5 1.5L7 19l-1.5.5L5 21l-.5-1.5L3 19l1.5-.5L5 17z"/></svg></span>
           <div>
             <strong>New Design</strong>
             <span>A cleaner, more polished experience</span>
@@ -99,7 +99,7 @@ function showWelcomeScreen() {
           <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
           <div>
             <strong>Add Your Masjid</strong>
-            <span>Add your masjid and Iqamah will extract the times for you</span>
+            <span>Upload a timetable and Iqamah will do the rest</span>
           </div>
         </div>
         <div class="welcome-feature">
@@ -123,8 +123,15 @@ function showWelcomeScreen() {
             <span>Switch between time formats in settings</span>
           </div>
         </div>
+        <div class="welcome-feature">
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" style="margin-left:3px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg></span>
+          <div>
+            <strong>Community Powered</strong>
+            <span>Can't find your masjid? Add it in seconds</span>
+          </div>
+        </div>
       </div>
-      <button class="welcome-btn" id="welcomeBtn">Get Started</button>
+      <button class="welcome-btn" id="welcomeBtn">Explore</button>
     </div>
   `;
   document.body.appendChild(overlay);
