@@ -400,65 +400,76 @@ async function githubUpdateFile(path, content, sha, message, env) {
 }
 
 // Commit multiple files in a single commit using the Git Data API
+// Retries on ref update failure (race condition with concurrent commits)
 async function githubCommitFiles(files, message, env) {
-  const headers = {
-    'Authorization': `token ${env.GITHUB_PAT}`,
-    'User-Agent': 'Prayerly-Worker/1.0',
-    'Accept': 'application/vnd.github.v3+json',
-    'Content-Type': 'application/json',
-  };
-  const api = `https://api.github.com/repos/${GITHUB_REPO}`;
+  const maxRetries = 2;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const headers = {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      };
+      const api = `https://api.github.com/repos/${GITHUB_REPO}`;
 
-  // 1. Get HEAD ref
-  const refResp = await fetch(`${api}/git/ref/heads/main`, { headers });
-  if (!refResp.ok) throw new Error('Failed to get HEAD ref');
-  const refData = await refResp.json();
-  const headSha = refData.object.sha;
+      // 1. Get HEAD ref
+      const refResp = await fetch(`${api}/git/ref/heads/main`, { headers });
+      if (!refResp.ok) throw new Error('Failed to get HEAD ref');
+      const refData = await refResp.json();
+      const headSha = refData.object.sha;
 
-  // 2. Get base tree
-  const commitResp = await fetch(`${api}/git/commits/${headSha}`, { headers });
-  if (!commitResp.ok) throw new Error('Failed to get HEAD commit');
-  const commitData = await commitResp.json();
-  const baseTreeSha = commitData.tree.sha;
+      // 2. Get base tree
+      const commitResp = await fetch(`${api}/git/commits/${headSha}`, { headers });
+      if (!commitResp.ok) throw new Error('Failed to get HEAD commit');
+      const commitData = await commitResp.json();
+      const baseTreeSha = commitData.tree.sha;
 
-  // 3. Create blobs in parallel
-  const blobPromises = files.map(async (f) => {
-    const blobResp = await fetch(`${api}/git/blobs`, {
-      method: 'POST', headers,
-      body: JSON.stringify({
-        content: f.base64 || btoa(unescape(encodeURIComponent(f.content))),
-        encoding: 'base64',
-      }),
-    });
-    if (!blobResp.ok) throw new Error(`Failed to create blob for ${f.path}`);
-    const blob = await blobResp.json();
-    return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
-  });
-  const tree = await Promise.all(blobPromises);
+      // 3. Create blobs in parallel (content-addressed, safe to re-create)
+      const blobPromises = files.map(async (f) => {
+        const blobResp = await fetch(`${api}/git/blobs`, {
+          method: 'POST', headers,
+          body: JSON.stringify({
+            content: f.base64 || btoa(unescape(encodeURIComponent(f.content))),
+            encoding: 'base64',
+          }),
+        });
+        if (!blobResp.ok) throw new Error(`Failed to create blob for ${f.path}`);
+        const blob = await blobResp.json();
+        return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
+      });
+      const tree = await Promise.all(blobPromises);
 
-  // 4. Create tree
-  const treeResp = await fetch(`${api}/git/trees`, {
-    method: 'POST', headers,
-    body: JSON.stringify({ base_tree: baseTreeSha, tree }),
-  });
-  if (!treeResp.ok) throw new Error('Failed to create tree');
-  const treeData = await treeResp.json();
+      // 4. Create tree
+      const treeResp = await fetch(`${api}/git/trees`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ base_tree: baseTreeSha, tree }),
+      });
+      if (!treeResp.ok) throw new Error('Failed to create tree');
+      const treeData = await treeResp.json();
 
-  // 5. Create commit
-  const newCommitResp = await fetch(`${api}/git/commits`, {
-    method: 'POST', headers,
-    body: JSON.stringify({ message, tree: treeData.sha, parents: [headSha] }),
-  });
-  if (!newCommitResp.ok) throw new Error('Failed to create commit');
-  const newCommit = await newCommitResp.json();
+      // 5. Create commit
+      const newCommitResp = await fetch(`${api}/git/commits`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ message, tree: treeData.sha, parents: [headSha] }),
+      });
+      if (!newCommitResp.ok) throw new Error('Failed to create commit');
+      const newCommit = await newCommitResp.json();
 
-  // 6. Update ref
-  const updateRefResp = await fetch(`${api}/git/refs/heads/main`, {
-    method: 'PATCH', headers,
-    body: JSON.stringify({ sha: newCommit.sha }),
-  });
-  if (!updateRefResp.ok) throw new Error('Failed to update ref');
-  return newCommit;
+      // 6. Update ref
+      const updateRefResp = await fetch(`${api}/git/refs/heads/main`, {
+        method: 'PATCH', headers,
+        body: JSON.stringify({ sha: newCommit.sha }),
+      });
+      if (!updateRefResp.ok) throw new Error('Failed to update ref');
+      return newCommit;
+    } catch (e) {
+      if (attempt < maxRetries && e.message.includes('Failed to update ref')) {
+        continue;
+      }
+      throw e;
+    }
+  }
 }
 
 // --- GitHub Issue notification ---
@@ -482,6 +493,31 @@ async function createNotificationIssue(slug, mosqueName, env) {
   } catch (e) {
     console.error('Failed to create notification issue:', e);
   }
+}
+
+// --- Timetable date validation ---
+
+function validateTimetableDates(rows, year) {
+  if (!year) return null; // can't validate without year
+  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  let latestDate = null;
+  for (const row of rows) {
+    if (!row.date) continue;
+    const parts = row.date.trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const day = parseInt(parts[0]);
+    const mon = months[parts[1]];
+    if (isNaN(day) || mon === undefined) continue;
+    const d = new Date(Date.UTC(year, mon, day));
+    if (!latestDate || d > latestDate) latestDate = d;
+  }
+  if (!latestDate) return null; // can't parse, skip
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  if (latestDate < today) {
+    return 'This timetable appears to be outdated — all dates are in the past. Please upload a current timetable.';
+  }
+  return null;
 }
 
 // --- Geocoding ---
@@ -886,6 +922,18 @@ async function handleSubmit(request, env) {
   const mosqueName = sanitiseMasjidName(data.mosque_name || '');
   if (!mosqueName) {
     return errorResponse('Masjid name is required');
+  }
+
+  // Validate timetable dates aren't stale
+  const dateError = validateTimetableDates(data.rows, data.year);
+  if (dateError) {
+    return errorResponse(dateError);
+  }
+
+  // Server-side field length truncation
+  const MAX_LENGTHS = { address: 200, phone: 30, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
+  for (const [field, max] of Object.entries(MAX_LENGTHS)) {
+    if (data[field]) data[field] = data[field].substring(0, max);
   }
 
   const address = data.address || '';
