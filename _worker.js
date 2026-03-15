@@ -475,8 +475,13 @@ async function githubCommitFiles(files, message, env) {
 
 // --- GitHub Issue notifications ---
 
-async function createNotificationIssue(slug, mosqueName, env) {
+async function createNotificationIssue(slug, mosqueName, imageExt, env) {
   try {
+    let issueBody = `A new masjid has been submitted for review.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`;
+    if (imageExt) {
+      const imageUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/data/sources/${slug}.${imageExt}`;
+      issueBody += `\n\n**Source timetable:**\n![Timetable](${imageUrl})`;
+    }
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
       method: 'POST',
       headers: {
@@ -487,7 +492,7 @@ async function createNotificationIssue(slug, mosqueName, env) {
       },
       body: JSON.stringify({
         title: `New masjid submitted: ${mosqueName}`,
-        body: `A new masjid has been submitted for review.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`,
+        body: issueBody,
         labels: ['new-masjid'],
       }),
     });
@@ -496,7 +501,34 @@ async function createNotificationIssue(slug, mosqueName, env) {
   }
 }
 
-async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted) {
+async function uploadImageToRepo(imageBase64, ext, env) {
+  try {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const path = `data/extraction-logs/${timestamp}.${ext}`;
+    const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Extraction log image ${timestamp}`,
+        content: imageBase64,
+      }),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      return data.content.download_url;
+    }
+  } catch (e) {
+    console.error('Failed to upload extraction image:', e);
+  }
+  return null;
+}
+
+async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted, imageBase64, mediaType) {
   try {
     const title = success
       ? `Extraction succeeded: ${mosqueName || 'Unknown'}`
@@ -504,6 +536,19 @@ async function createExtractionNotification(mosqueName, ip, success, errorMsg, e
     let body = success
       ? `A timetable extraction completed successfully.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
       : `A timetable extraction failed.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
+
+    // Upload image and include in issue
+    if (imageBase64) {
+      const extMap = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/pdf': 'pdf' };
+      const ext = extMap[mediaType] || 'jpg';
+      const imageUrl = await uploadImageToRepo(imageBase64, ext, env);
+      if (imageUrl && ext !== 'pdf') {
+        body += `\n\n**Uploaded timetable:**\n![Timetable](${imageUrl})`;
+      } else if (imageUrl) {
+        body += `\n\n**Uploaded timetable:** [View PDF](${imageUrl})`;
+      }
+    }
+
     if (success && extracted) {
       body += `\n\n<details><summary>Extracted JSON</summary>\n\n\`\`\`json\n${JSON.stringify(extracted, null, 2)}\n\`\`\`\n\n</details>`;
     }
@@ -754,7 +799,7 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
-      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env, null, imageBase64, mediaType);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -770,7 +815,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
-      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env);
+      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -784,12 +829,12 @@ async function handleExtract(request, env) {
 
     // Notify about successful extraction (use extracted name as fallback)
     const notifName = mosqueName || extracted.mosque_name || '';
-    await createExtractionNotification(notifName, ip, true, null, env, extracted);
+    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType);
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
-    await createExtractionNotification(mosqueName, ip, false, e.message, env);
+    await createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType);
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
 }
@@ -1054,11 +1099,12 @@ async function handleSubmit(request, env) {
     ];
 
     // Source timetable image
+    let sourceImageExt = null;
     if (image) {
       const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
       if (imgMatch) {
-        const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
-        files.push({ path: `data/sources/${slug}.${ext}`, base64: imgMatch[2] });
+        sourceImageExt = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+        files.push({ path: `data/sources/${slug}.${sourceImageExt}`, base64: imgMatch[2] });
       }
     }
 
@@ -1071,7 +1117,7 @@ async function handleSubmit(request, env) {
     await githubCommitFiles(files, `Add ${mosqueName}`, env);
 
     // Create GitHub issue notification
-    await createNotificationIssue(slug, mosqueName, env);
+    await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
 
     return jsonResponse({
       success: true,
