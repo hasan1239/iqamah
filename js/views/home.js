@@ -613,6 +613,7 @@ function showToast(html) {
 
 function setupInstallBanner() {
   if (isStandalone()) return;
+  if (localStorage.getItem('iqamah-install-dismissed')) return;
   const banner = document.getElementById('installBanner');
   if (!banner) return;
 
@@ -631,6 +632,7 @@ function setupInstallBanner() {
     });
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');
+      localStorage.setItem('iqamah-install-dismissed', '1');
     });
   }
 
@@ -643,6 +645,7 @@ function setupInstallBanner() {
     banner.classList.add('visible');
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');
+      localStorage.setItem('iqamah-install-dismissed', '1');
     });
   } else {
     // Listen for late-firing beforeinstallprompt
