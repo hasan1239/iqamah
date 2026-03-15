@@ -472,7 +472,7 @@ async function githubCommitFiles(files, message, env) {
   }
 }
 
-// --- GitHub Issue notification ---
+// --- GitHub Issue notifications ---
 
 async function createNotificationIssue(slug, mosqueName, env) {
   try {
@@ -492,6 +492,27 @@ async function createNotificationIssue(slug, mosqueName, env) {
     });
   } catch (e) {
     console.error('Failed to create notification issue:', e);
+  }
+}
+
+async function createExtractionNotification(mosqueName, ip, env) {
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: `Extraction attempt: ${mosqueName || 'Unknown'}`,
+        body: `Someone is attempting to add a masjid.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`,
+        labels: ['extraction-attempt'],
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to create extraction notification:', e);
   }
 }
 
@@ -684,6 +705,9 @@ async function handleExtract(request, env) {
     console.error('Failed to load extraction prompt:', e);
     return errorResponse('Server configuration error: missing extraction prompt', 500);
   }
+
+  // Notify about extraction attempt (non-blocking)
+  createExtractionNotification(mosqueName, ip, env);
 
   // Call Claude API
   try {

@@ -33,6 +33,7 @@ const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 let searchQuery = '';
 let loadGeneration = 0;
+let masjidsLoadPromise = null;
 
 export function render(container) {
   viewContainer = container;
@@ -74,7 +75,7 @@ export function render(container) {
   const grid = viewContainer.querySelector('#masjidsGrid');
   grid.innerHTML = buildSkeletonCards(6);
 
-  loadMasjids();
+  masjidsLoadPromise = loadMasjids();
   setupSearch();
   setupLocationBtn();
   setupGridClicks();
@@ -438,6 +439,9 @@ function setupLocationBtn() {
       btn.classList.remove('loading');
       userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
       localStorage.setItem('iqamah-cached-location', JSON.stringify(userLocation));
+
+      // Ensure masjid configs are loaded before computing distances
+      if (masjidsLoadPromise) await masjidsLoadPromise;
 
       distanceMap = {};
       cachedConfigs.forEach(config => {
