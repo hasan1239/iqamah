@@ -13,7 +13,8 @@
     "eid_salah": "9:00am (one jama'at only)",
     "sadaqatul_fitr": "£5.00 per person",
     "radio_frequency": "460.375",
-    "is_stale": false
+    "is_stale": false,
+    "source_image": "sources/aisha.jpg"
   },
   {
     "display_name": "Masjid-E-Aman",
@@ -30,7 +31,8 @@
     "is_stale": false,
     "notes": "Fajar Salah will be 15 minutes after the end of Sehri time. Dars-e-Quran after Asar Salah at the Weekend during month of Ramadhaan. Listen to Live broadcast of Adhaan and Talks from Masjid on 447-6250.",
     "lat": 52.5086688,
-    "lon": -1.8909605
+    "lon": -1.8909605,
+    "source_image": "sources/aman.jpg"
   },
   {
     "display_name": "Amanah Masjid",
@@ -47,7 +49,8 @@
     "is_stale": false,
     "notes": "Clocks go forward 1 hour on 29th March 2026. Jum'a Speech (Khutba) starts at 1:00pm.",
     "lat": 52.4670705,
-    "lon": -1.8761104
+    "lon": -1.8761104,
+    "source_image": "sources/amanah.jpg"
   },
   {
     "display_name": "Masjid Faizul Islam",
@@ -64,7 +67,8 @@
     "sadaqatul_fitr": "Minimum £6.00 for adults & children",
     "radio_frequency": "454 7000",
     "is_stale": false,
-    "notes": "During the Month of Ramadhan Fajr Jamaat will be 15 mins after Sehri Ends. Zohr 1:00PM & Jumuah @ 1:15PM. As a precaution please close your fast 5 minutes before Sehri ends."
+    "notes": "During the Month of Ramadhan Fajr Jamaat will be 15 mins after Sehri Ends. Zohr 1:00PM & Jumuah @ 1:15PM. As a precaution please close your fast 5 minutes before Sehri ends.",
+    "source_image": "sources/faizul.jpg"
   },
   {
     "display_name": "Masjid Al Falaah",
@@ -80,7 +84,8 @@
     "jummah_times": "12:30pm & 1:40pm",
     "eid_salah": "7:30am & 9:00am",
     "sadaqatul_fitr": "£6 per person (min)",
-    "is_stale": false
+    "is_stale": false,
+    "source_image": "sources/falaah.jpg"
   },
   {
     "display_name": "Great Barr Muslim Foundation",
@@ -115,7 +120,8 @@
     "sadaqatul_fitr": "£7 per person",
     "radio_frequency": "454.1500",
     "is_stale": false,
-    "notes": "Qur'an completion in Taraweeh will be taking place on 29th Ramadhan. Zuhr Jamat 1:00 (vertical text indicates fixed Zuhr Jama'at at 1:00). Jumu'ah Jamat 1:00. This timetable has been donated by Mr & Mrs. Maksud Ahmed Shaikh for Esal-E-Sawab of Late Shafi Ahmed Sheikh. Charity Registration: 1188915 (UK). Website: www.birminghamjamemasjid.org.uk. Facebook: www.facebook.com/BirminghamJameMasjid."
+    "notes": "Qur'an completion in Taraweeh will be taking place on 29th Ramadhan. Zuhr Jamat 1:00 (vertical text indicates fixed Zuhr Jama'at at 1:00). Jumu'ah Jamat 1:00. This timetable has been donated by Mr & Mrs. Maksud Ahmed Shaikh for Esal-E-Sawab of Late Shafi Ahmed Sheikh. Charity Registration: 1188915 (UK). Website: www.birminghamjamemasjid.org.uk. Facebook: www.facebook.com/BirminghamJameMasjid.",
+    "source_image": "sources/jame.jpg"
   },
   {
     "display_name": "Madinatul Uloom Masjid",
@@ -150,7 +156,8 @@
     "is_stale": false,
     "notes": "Maghrib Jamat will commence six minutes after Iftar time. For Brothers: Daily after Taraweeh Salaah. For Sisters: Saturday's 1:45pm Urdu Lecture, Sunday's 1:45pm English Lecture.",
     "lat": 51.8576307,
-    "lon": -2.2367226
+    "lon": -2.2367226,
+    "source_image": "sources/noor.jpg"
   },
   {
     "display_name": "Masjid Quba Trust",
@@ -167,7 +174,8 @@
     "eid_salah": "7:30am & 9:00am",
     "sadaqatul_fitr": "£4.50",
     "radio_frequency": "454.3500",
-    "is_stale": false
+    "is_stale": false,
+    "source_image": "sources/quba.jpg"
   },
   {
     "display_name": "Jami Masjid",
@@ -203,6 +211,7 @@
     "is_stale": false,
     "notes": "Jama'at times are subject to changes. Changes will be displayed on display screens. Maghrib Jama'at times are shown in the Maghrib Jama'at column. Listen live by visiting emasjid.live/masjidevali.",
     "lat": 53.7516084,
-    "lon": -2.5086968
+    "lon": -2.5086968,
+    "source_image": "sources/vali.jpg"
   }
 ]
