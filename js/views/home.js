@@ -170,15 +170,18 @@ function renderHero() {
     return;
   }
 
-  const heroPending = pinnedConfig.approved === false ? '<div class="pending-notice" style="margin-top:8px;margin-bottom:0;">This masjid is pending review<br>Times may not be verified yet</div>' : '';
+  const heroPendingBadge = pinnedConfig.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
 
   heroContainer.innerHTML = `
     <a href="/${pinnedConfig.slug}" class="hero-card hero-card-link" data-link>
       <div class="hero-header">
         <span class="hero-badge hero-badge-primary">My Masjid</span>
-        <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Remove from My Masjid" title="Remove from My Masjid">
-          ${STAR_FILLED_SVG}
-        </button>
+        <div class="hero-header-right">
+          ${heroPendingBadge}
+          <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Remove from My Masjid" title="Remove from My Masjid">
+            ${STAR_FILLED_SVG}
+          </button>
+        </div>
       </div>
       <div class="hero-name">${pinnedConfig.display_name}</div>
       <div class="hero-body">
@@ -195,7 +198,6 @@ function renderHero() {
           </div>
         </div>
       </div>
-      ${heroPending}
     </a>`;
 
   loadHeroNextPrayer(pinnedConfig);
