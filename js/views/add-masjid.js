@@ -111,6 +111,7 @@ function loadTurnstile(container) {
     turnstileToken = null;
     turnstileWidgetId = window.turnstile.render('#turnstileWidget', {
       sitekey: TURNSTILE_SITE_KEY,
+      appearance: 'interaction-only',
       'refresh-expired': 'auto',
       callback: (token) => { turnstileToken = token; },
       'expired-callback': () => {
@@ -401,6 +402,10 @@ function setupEventListeners(container) {
     if (extractBtn.disabled) return;
     if (!USE_DUMMY_DATA && !turnstileToken) {
       // Wait up to 5 seconds for the Turnstile token to arrive
+      clearError(extractError);
+      const origText = extractBtn.textContent;
+      extractBtn.textContent = 'Verifying...';
+      extractBtn.disabled = true;
       for (let i = 0; i < 10 && !turnstileToken; i++) {
         await new Promise(r => setTimeout(r, 500));
       }
@@ -409,9 +414,11 @@ function setupEventListeners(container) {
           window.turnstile.reset(turnstileWidgetId);
         }
         showError(extractError, 'Security check failed to load. Please try again.');
+        extractBtn.textContent = origText;
         extractBtn.disabled = false;
         return;
       }
+      extractBtn.textContent = origText;
     }
     clearError(extractError);
     extractBtn.disabled = true;
