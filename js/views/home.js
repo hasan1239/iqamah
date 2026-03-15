@@ -132,6 +132,7 @@ function showWelcomeScreen() {
         </div>
       </div>
       <button class="welcome-btn" id="welcomeBtn">Explore</button>
+      <p class="welcome-reinstall-hint">Already installed? Delete and reinstall to update the app name and icon.</p>
     </div>
   `;
   document.body.appendChild(overlay);
