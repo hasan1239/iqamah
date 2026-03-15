@@ -1,0 +1,19 @@
+{
+  "display_name": "Masjid An Noor",
+  "slug": "annoor",
+  "csv": "annoor.csv",
+  "address": "146 Berners Street, Leicester, England. LE2 0FU",
+  "phone": "",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "Bayān: 12:15pm, Azān: 12:50pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "454.300 MHZ",
+  "approved": false,
+  "is_stale": false,
+  "notes": "It is advisable to stop eating and drinking at least 5 minutes before Sub'h Sādiq. Salāt should not be performed during the 10 minutes before Zawāl. Programmes in the Masjid during Ramadhān: Dars e Qur'ān (Urdu/English) - see notice board for details; Short Lesson on Hadīth (English) after Fajr. Programmes via the receiver only: Urdu after Zuhr, English after Maghrib.",
+  "source_image": "sources/annoor.png",
+  "lat": 52.6342653,
+  "lon": -1.1101507
+}
