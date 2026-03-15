@@ -122,7 +122,7 @@ async function loadMasjids() {
 }
 
 export function renderCards() {
-  const grid = viewContainer ? viewContainer.querySelector('#masjidsGrid') : document.getElementById('masjidsGrid');
+  const grid = (viewContainer && viewContainer.querySelector('#masjidsGrid')) || document.getElementById('masjidsGrid');
   if (!grid) return;
 
   const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
@@ -265,7 +265,7 @@ async function loadCardPrayers(configs) {
       const csvFile = config.csv || config.slug + '.csv';
       const res = await fetch(`/data/${csvFile}`);
       if (gen !== loadGeneration) return;
-      const root = viewContainer || document;
+      const root = (viewContainer && viewContainer.isConnected) ? viewContainer : document;
       const el = root.querySelector(`[data-card-next="${config.slug}"]`);
       if (!el) return;
       if (!res.ok) { el.innerHTML = ''; return; }
@@ -284,7 +284,7 @@ async function loadCardPrayers(configs) {
       }
     } catch {
       if (gen !== loadGeneration) return;
-      const root = viewContainer || document;
+      const root = (viewContainer && viewContainer.isConnected) ? viewContainer : document;
       const el = root.querySelector(`[data-card-next="${config.slug}"]`);
       if (el) el.innerHTML = '';
     }
@@ -295,7 +295,7 @@ async function loadCardPrayers(configs) {
 // --- Search ---
 
 function setupSearch() {
-  const input = viewContainer ? viewContainer.querySelector('#masjidSearch') : document.getElementById('masjidSearch');
+  const input = (viewContainer && viewContainer.querySelector('#masjidSearch')) || document.getElementById('masjidSearch');
   if (!input) return;
   input.addEventListener('input', () => {
     searchQuery = input.value.trim();
@@ -322,7 +322,7 @@ function handlePinClick(e) {
 }
 
 function setupLongPress() {
-  const view = viewContainer ? viewContainer.querySelector('.masjids-view') : document.querySelector('.masjids-view');
+  const view = (viewContainer && viewContainer.querySelector('.masjids-view')) || document.querySelector('.masjids-view');
   if (!view) return;
 
   let pressTarget = null;
@@ -392,19 +392,19 @@ function togglePin(slug) {
 }
 
 function setupPinHint() {
-  const hint = viewContainer ? viewContainer.querySelector('#pinHint') : document.getElementById('pinHint');
+  const hint = (viewContainer && viewContainer.querySelector('#pinHint')) || document.getElementById('pinHint');
   if (!hint) return;
   hint.querySelector('.pin-hint-dismiss').addEventListener('click', dismissPinHint);
 }
 
 function dismissPinHint() {
   localStorage.setItem('iqamah-pin-hint-dismissed', '1');
-  const hint = viewContainer ? viewContainer.querySelector('#pinHint') : document.getElementById('pinHint');
+  const hint = (viewContainer && viewContainer.querySelector('#pinHint')) || document.getElementById('pinHint');
   if (hint) hint.remove();
 }
 
 function showToast(html) {
-  const toast = viewContainer ? viewContainer.querySelector('#masjidsPinToast') : document.getElementById('masjidsPinToast');
+  const toast = (viewContainer && viewContainer.querySelector('#masjidsPinToast')) || document.getElementById('masjidsPinToast');
   if (!toast) return;
   toast.innerHTML = html;
   toast.classList.add('visible');
@@ -415,7 +415,7 @@ function showToast(html) {
 // --- Location ---
 
 function setupLocationBtn() {
-  const btn = viewContainer ? viewContainer.querySelector('#masjidsLocationBtn') : document.getElementById('masjidsLocationBtn');
+  const btn = (viewContainer && viewContainer.querySelector('#masjidsLocationBtn')) || document.getElementById('masjidsLocationBtn');
   if (!btn) return;
 
   btn.addEventListener('click', async () => {
@@ -442,6 +442,10 @@ function setupLocationBtn() {
 
       // Ensure masjid configs are loaded before computing distances
       if (masjidsLoadPromise) await masjidsLoadPromise;
+      if (!cachedConfigs.length) {
+        // Retry if configs didn't load (e.g. race condition or failed fetch)
+        await loadMasjids();
+      }
 
       distanceMap = {};
       cachedConfigs.forEach(config => {
