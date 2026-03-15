@@ -599,15 +599,17 @@ function setupEventListeners(container) {
 
   // Re-extract: go back to step 1 with file still loaded
   const reExtractBtn = container.querySelector('#reExtractBtn');
-  reExtractBtn.addEventListener('click', () => goToStep(1));
+  if (reExtractBtn) reExtractBtn.addEventListener('click', () => goToStep(1));
 
-  downloadJsonBtn.addEventListener('click', () => {
-    if (!extractedData) return;
-    const blob = new Blob([JSON.stringify(extractedData, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = (extractedData.suggested_slug || 'extraction') + '.json'; a.click();
-    URL.revokeObjectURL(a.href);
-  });
+  if (downloadJsonBtn) {
+    downloadJsonBtn.addEventListener('click', () => {
+      if (!extractedData) return;
+      const blob = new Blob([JSON.stringify(extractedData, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = (extractedData.suggested_slug || 'extraction') + '.json'; a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  }
 
   // Lightbox
   const lightbox = container.querySelector('#lightbox');
