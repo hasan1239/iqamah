@@ -122,9 +122,6 @@ function loadTurnstile(container) {
       },
       'error-callback': () => {
         turnstileToken = null;
-        if (window.turnstile && turnstileWidgetId !== null) {
-          setTimeout(() => window.turnstile.reset(turnstileWidgetId), 2000);
-        }
       },
     });
   }
@@ -177,7 +174,7 @@ function getWizardHTML() {
         <div class="card">
           <div class="form-group">
             <label>Timetable File <span class="required">*</span></label>
-            <div class="upload-area" id="uploadArea">
+            <div class="upload-area" id="uploadArea" style="user-select:none;-webkit-user-select:none;">
               <div class="upload-icon">&#128247;</div>
               <div class="upload-text"><strong>Upload timetable</strong></div>
               <div class="upload-hint">JPG, PNG, or PDF, max 10MB</div>
