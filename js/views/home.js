@@ -616,7 +616,8 @@ function setupInstallBanner() {
   const banner = document.getElementById('installBanner');
   if (!banner) return;
 
-  if (canInstall()) {
+  function showAndroidBanner() {
+    if (banner.classList.contains('visible')) return;
     banner.classList.add('has-button');
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
@@ -631,6 +632,10 @@ function setupInstallBanner() {
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');
     });
+  }
+
+  if (canInstall()) {
+    showAndroidBanner();
   } else if (isIOSSafari()) {
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
@@ -639,6 +644,13 @@ function setupInstallBanner() {
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');
     });
+  } else {
+    // Listen for late-firing beforeinstallprompt
+    const onPrompt = () => {
+      showAndroidBanner();
+      window.removeEventListener('beforeinstallprompt', onPrompt);
+    };
+    window.addEventListener('beforeinstallprompt', onPrompt);
   }
 }
 
