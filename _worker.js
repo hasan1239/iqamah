@@ -461,6 +461,29 @@ async function githubCommitFiles(files, message, env) {
   return newCommit;
 }
 
+// --- GitHub Issue notification ---
+
+async function createNotificationIssue(slug, mosqueName, env) {
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: `New masjid submitted: ${mosqueName}`,
+        body: `A new masjid has been submitted for review.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`,
+        labels: ['new-masjid'],
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to create notification issue:', e);
+  }
+}
+
 // --- Geocoding ---
 
 async function geocodeAddress(address) {
@@ -761,6 +784,7 @@ async function handleSubmit(request, env) {
     eid_salah: data.eid_salah || '',
     sadaqatul_fitr: data.sadaqatul_fitr || '',
     radio_frequency: data.radio_frequency || '',
+    approved: false,
     is_stale: false,
     notes: data.notes || '',
   };
@@ -812,11 +836,15 @@ async function handleSubmit(request, env) {
     // Single commit for all files
     await githubCommitFiles(files, `Add ${mosqueName}`, env);
 
+    // Create GitHub issue notification (non-blocking)
+    createNotificationIssue(slug, mosqueName, env);
+
     return jsonResponse({
       success: true,
       slug,
       url: `/${slug}`,
-      message: `${mosqueName} has been added successfully!`,
+      pending: true,
+      message: `${mosqueName} has been submitted for review!`,
     });
   } catch (e) {
     console.error('Submit error:', e);

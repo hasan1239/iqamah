@@ -1088,6 +1088,33 @@
     .mobile-br { display: none; }
     @media (max-width: 767px) { .mobile-br { display: inline; } }
 
+    /* Pending badge + notice */
+    .pending-badge {
+      display: inline-block;
+      font-size: 0.55rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(255, 193, 7, 0.15);
+      color: #d4a017;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      margin-left: 8px;
+      white-space: nowrap;
+    }
+    .pending-notice {
+      text-align: center;
+      padding: 10px 16px;
+      margin: 0 0 16px;
+      border-radius: 10px;
+      background: rgba(255, 193, 7, 0.1);
+      color: #d4a017;
+      border: 1px solid rgba(255, 193, 7, 0.2);
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
     /* Stale notice */
     .stale-notice { text-align: center; padding: 40px 20px; }
     .stale-notice h2 { color: var(--gold); font-size: 1.3rem; margin-bottom: 12px; }

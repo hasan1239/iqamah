@@ -84,6 +84,22 @@ export async function render(container, { slug }) {
 
     renderContent(container);
 
+    // Show pending notice if unapproved
+    if (config.approved === false) {
+      const ptView = container.querySelector('.prayer-times-view');
+      if (ptView) {
+        const notice = document.createElement('div');
+        notice.className = 'pending-notice';
+        notice.textContent = 'This masjid is pending review \u2014 times may not be verified yet.';
+        const toggle = ptView.querySelector('.view-toggle');
+        if (toggle) {
+          toggle.parentNode.insertBefore(notice, toggle);
+        } else {
+          ptView.insertBefore(notice, ptView.firstChild);
+        }
+      }
+    }
+
     // Update download link on theme change
     unsubTheme = onThemeChange(() => updateDownloadLink());
   } catch (error) {

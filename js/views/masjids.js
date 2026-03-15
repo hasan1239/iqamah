@@ -136,8 +136,12 @@ export function renderCards() {
     );
   }
 
-  // Sort: by distance if location active, otherwise alphabetical
+  // Sort: approved first, then by distance if location active, otherwise alphabetical
   filtered.sort((a, b) => {
+    const aApproved = a.approved !== false ? 1 : 0;
+    const bApproved = b.approved !== false ? 1 : 0;
+    if (aApproved !== bApproved) return bApproved - aApproved;
+
     if (locationActive) {
       const distA = distanceMap[a.slug];
       const distB = distanceMap[b.slug];
@@ -161,6 +165,7 @@ export function renderCards() {
     const isPinned = config.slug === pinnedSlug;
     const pinIcon = isPinned ? STAR_FILLED_SVG : STAR_SVG;
     const pinClass = isPinned ? ' pinned' : '';
+    const pendingBadge = config.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
 
     let subHtml = '';
     if (distText) {
@@ -174,7 +179,7 @@ export function renderCards() {
         <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
         <div class="masjid-card-info">
           <div class="masjid-name-row">
-            <div class="masjid-name">${config.display_name}</div>
+            <div class="masjid-name">${config.display_name}${pendingBadge}</div>
             <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Set ${config.display_name} as My Masjid" title="Set as My Masjid">
               ${pinIcon}
             </button>

@@ -111,9 +111,20 @@ function loadTurnstile(container) {
     turnstileToken = null;
     turnstileWidgetId = window.turnstile.render('#turnstileWidget', {
       sitekey: TURNSTILE_SITE_KEY,
+      'refresh-expired': 'auto',
       callback: (token) => { turnstileToken = token; },
-      'expired-callback': () => { turnstileToken = null; },
-      'error-callback': () => { turnstileToken = null; },
+      'expired-callback': () => {
+        turnstileToken = null;
+        if (window.turnstile && turnstileWidgetId !== null) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
+      },
+      'error-callback': () => {
+        turnstileToken = null;
+        if (window.turnstile && turnstileWidgetId !== null) {
+          setTimeout(() => window.turnstile.reset(turnstileWidgetId), 2000);
+        }
+      },
     });
   }
 
@@ -389,8 +400,18 @@ function setupEventListeners(container) {
   extractBtn.addEventListener('click', async () => {
     if (extractBtn.disabled) return;
     if (!USE_DUMMY_DATA && !turnstileToken) {
-      showError(extractError, 'Please wait for the security check to complete.');
-      return;
+      // Wait up to 5 seconds for the Turnstile token to arrive
+      for (let i = 0; i < 10 && !turnstileToken; i++) {
+        await new Promise(r => setTimeout(r, 500));
+      }
+      if (!turnstileToken) {
+        if (window.turnstile && turnstileWidgetId !== null) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
+        showError(extractError, 'Security check failed to load. Please try again.');
+        extractBtn.disabled = false;
+        return;
+      }
     }
     clearError(extractError);
     extractBtn.disabled = true;
@@ -538,7 +559,28 @@ function setupEventListeners(container) {
       const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken }) });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
-      confirmationText.textContent = result.message || 'Your masjid has been added!';
+      if (result.pending) {
+        // Pending approval flow
+        const checkIcon = document.querySelector('.check-icon');
+        if (checkIcon) checkIcon.style.color = '#d4a017';
+        confirmationText.textContent = 'Your masjid has been submitted for review';
+        const confirmNote = document.querySelector('.confirmation-note');
+        if (confirmNote) confirmNote.textContent = 'It will be visible to everyone once approved. You can still access your masjid page below.';
+        const confirmDiv = document.querySelector('.confirmation');
+        if (confirmDiv && result.slug) {
+          const linkEl = document.createElement('a');
+          linkEl.href = `/${result.slug}`;
+          linkEl.className = 'btn btn-primary';
+          linkEl.setAttribute('data-link', '');
+          linkEl.textContent = 'View Your Masjid';
+          linkEl.style.marginTop = '16px';
+          linkEl.style.display = 'inline-block';
+          const backLink = confirmDiv.querySelector('[href="/"]');
+          if (backLink) backLink.parentElement.insertBefore(linkEl, backLink);
+        }
+      } else {
+        confirmationText.textContent = result.message || 'Your masjid has been added!';
+      }
       goToStep(4);
     } catch (e) {
       showError(submitError, e.message);

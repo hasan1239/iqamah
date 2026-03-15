@@ -163,6 +163,8 @@ function renderHero() {
     return;
   }
 
+  const heroPending = pinnedConfig.approved === false ? '<div class="pending-notice" style="margin-top:8px;margin-bottom:0;">Pending review — times may not be verified yet.</div>' : '';
+
   heroContainer.innerHTML = `
     <a href="/${pinnedConfig.slug}" class="hero-card hero-card-link" data-link>
       <div class="hero-header">
@@ -186,6 +188,7 @@ function renderHero() {
           </div>
         </div>
       </div>
+      ${heroPending}
     </a>`;
 
   loadHeroNextPrayer(pinnedConfig);
@@ -196,11 +199,15 @@ function renderHero() {
 function findBestMasjid() {
   if (cachedConfigs.length === 0) return null;
 
+  // Only consider approved masjids for suggestions
+  const approved = cachedConfigs.filter(c => c.approved !== false);
+  if (approved.length === 0) return null;
+
   // Try cached location → nearest masjid
   try {
     const cached = JSON.parse(localStorage.getItem('iqamah-cached-location'));
     if (cached && cached.lat && cached.lon) {
-      const withCoords = cachedConfigs.filter(c => c.lat != null && c.lon != null);
+      const withCoords = approved.filter(c => c.lat != null && c.lon != null);
       if (withCoords.length > 0) {
         withCoords.sort((a, b) =>
           haversineDistance(cached.lat, cached.lon, a.lat, a.lon) -
@@ -211,15 +218,15 @@ function findBestMasjid() {
     }
   } catch {}
 
-  // Try recently viewed
+  // Try recently viewed (only approved)
   const recentSlugs = getRecentSlugs();
   if (recentSlugs.length > 0) {
-    const recent = cachedConfigs.find(c => c.slug === recentSlugs[0]);
+    const recent = approved.find(c => recentSlugs.includes(c.slug));
     if (recent) return recent;
   }
 
   // Fallback: first alphabetically
-  return [...cachedConfigs].sort((a, b) => a.display_name.localeCompare(b.display_name))[0];
+  return [...approved].sort((a, b) => a.display_name.localeCompare(b.display_name))[0];
 }
 
 function renderSuggestedHero(heroContainer) {
@@ -343,11 +350,12 @@ function renderRecentlyViewed() {
         ${recentConfigs.map(config => {
           const shortAddr = getCityPostcode(config.address);
           const fullAddr = config.address || '';
+          const pendingBadge = config.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
           return `<a href="/${config.slug}" class="masjid-card" data-link>
             <div class="masjid-card-top">
               <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
               <div class="masjid-card-info">
-                <div class="masjid-name">${config.display_name}</div>
+                <div class="masjid-name">${config.display_name}${pendingBadge}</div>
                 ${config.address ? `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>` : ''}
               </div>
             </div>

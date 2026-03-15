@@ -1,0 +1,28 @@
+name: Approve Masjid
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Masjid slug to approve'
+        required: true
+permissions:
+  contents: write
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Approve masjid
+        run: |
+          CONFIG="data/mosques/${{ github.event.inputs.slug }}.json"
+          if [ ! -f "$CONFIG" ]; then echo "Not found: $CONFIG"; exit 1; fi
+          jq '.approved = true' "$CONFIG" > tmp.json && mv tmp.json "$CONFIG"
+      - name: Regenerate index.json
+        run: jq -s '.' $(ls data/mosques/*.json | grep -v index.json | sort) > data/mosques/index.json
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/mosques/
+          git commit -m "Approve masjid: ${{ github.event.inputs.slug }}" || echo "No changes"
+          git push
