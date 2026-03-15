@@ -170,7 +170,7 @@ function renderHero() {
     return;
   }
 
-  const heroPending = pinnedConfig.approved === false ? '<div class="pending-notice" style="margin-top:8px;margin-bottom:0;">Pending review — times may not be verified yet.</div>' : '';
+  const heroPending = pinnedConfig.approved === false ? '<div class="pending-notice" style="margin-top:8px;margin-bottom:0;">This masjid is pending review<br>Times may not be verified yet</div>' : '';
 
   heroContainer.innerHTML = `
     <a href="/${pinnedConfig.slug}" class="hero-card hero-card-link" data-link>
@@ -363,13 +363,19 @@ function renderRecentlyViewed() {
         ${recentConfigs.map(config => {
           const shortAddr = getCityPostcode(config.address);
           const fullAddr = config.address || '';
-          const pendingBadge = config.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
+          const isPending = config.approved === false;
+          let subHtml = '';
+          if (isPending) {
+            subHtml = `<div class="masjid-card-sub"><span class="pending-badge">Pending Review</span></div>`;
+          } else if (config.address) {
+            subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
+          }
           return `<a href="/${config.slug}" class="masjid-card" data-link>
             <div class="masjid-card-top">
               <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
               <div class="masjid-card-info">
-                <div class="masjid-name">${config.display_name}${pendingBadge}</div>
-                ${config.address ? `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>` : ''}
+                <div class="masjid-name">${config.display_name}</div>
+                ${subHtml}
               </div>
             </div>
             <div class="masjid-card-bottom">
