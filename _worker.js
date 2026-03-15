@@ -752,7 +752,7 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
-      createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -768,7 +768,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
-      createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env);
+      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -780,13 +780,13 @@ async function handleExtract(request, env) {
     // Override mosque name with user-provided name if given
     if (mosqueName) extracted.mosque_name = mosqueName;
 
-    // Notify about successful extraction (non-blocking)
-    createExtractionNotification(mosqueName, ip, true, null, env);
+    // Notify about successful extraction
+    await createExtractionNotification(mosqueName, ip, true, null, env);
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
-    createExtractionNotification(mosqueName, ip, false, e.message, env);
+    await createExtractionNotification(mosqueName, ip, false, e.message, env);
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
 }
@@ -1067,8 +1067,8 @@ async function handleSubmit(request, env) {
     // Single commit for all files
     await githubCommitFiles(files, `Add ${mosqueName}`, env);
 
-    // Create GitHub issue notification (non-blocking)
-    createNotificationIssue(slug, mosqueName, env);
+    // Create GitHub issue notification
+    await createNotificationIssue(slug, mosqueName, env);
 
     return jsonResponse({
       success: true,
