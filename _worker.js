@@ -465,6 +465,7 @@ async function githubCommitFiles(files, message, env) {
       return newCommit;
     } catch (e) {
       if (attempt < maxRetries && e.message.includes('Failed to update ref')) {
+        await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
         continue;
       }
       throw e;
@@ -495,8 +496,15 @@ async function createNotificationIssue(slug, mosqueName, env) {
   }
 }
 
-async function createExtractionNotification(mosqueName, ip, env) {
+async function createExtractionNotification(mosqueName, ip, success, errorMsg, env) {
   try {
+    const status = success ? 'succeeded' : 'failed';
+    const title = success
+      ? `Extraction succeeded: ${mosqueName || 'Unknown'}`
+      : `Extraction failed: ${mosqueName || 'Unknown'}`;
+    const body = success
+      ? `A timetable extraction completed successfully.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
+      : `A timetable extraction failed.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
       method: 'POST',
       headers: {
@@ -505,11 +513,7 @@ async function createExtractionNotification(mosqueName, ip, env) {
         'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        title: `Extraction attempt: ${mosqueName || 'Unknown'}`,
-        body: `Someone is attempting to add a masjid.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`,
-        labels: ['extraction-attempt'],
-      }),
+      body: JSON.stringify({ title, body, labels: ['extraction-attempt'] }),
     });
   } catch (e) {
     console.error('Failed to create extraction notification:', e);
@@ -706,9 +710,6 @@ async function handleExtract(request, env) {
     return errorResponse('Server configuration error: missing extraction prompt', 500);
   }
 
-  // Notify about extraction attempt (non-blocking)
-  createExtractionNotification(mosqueName, ip, env);
-
   // Call Claude API
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -751,6 +752,7 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
+      createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -766,6 +768,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
+      createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -777,9 +780,13 @@ async function handleExtract(request, env) {
     // Override mosque name with user-provided name if given
     if (mosqueName) extracted.mosque_name = mosqueName;
 
+    // Notify about successful extraction (non-blocking)
+    createExtractionNotification(mosqueName, ip, true, null, env);
+
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
+    createExtractionNotification(mosqueName, ip, false, e.message, env);
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
 }
@@ -1052,12 +1059,10 @@ async function handleSubmit(request, env) {
       }
     }
 
-    // Updated index.json (reuse already-fetched data)
-    if (indexFile) {
-      existingConfigs.push(config);
-      existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
-      files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
-    }
+    // Updated index.json (reuse already-fetched data, or create if missing)
+    existingConfigs.push(config);
+    existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
+    files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
 
     // Single commit for all files
     await githubCommitFiles(files, `Add ${mosqueName}`, env);

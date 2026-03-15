@@ -599,6 +599,7 @@ function setupEventListeners(container) {
 
     warning.querySelector('#dupCancelBtn').addEventListener('click', () => {
       removeDuplicateWarning();
+      goToStep(1);
     });
 
     warning.querySelector('#dupConfirmBtn').addEventListener('click', async () => {
