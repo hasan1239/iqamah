@@ -496,15 +496,17 @@ async function createNotificationIssue(slug, mosqueName, env) {
   }
 }
 
-async function createExtractionNotification(mosqueName, ip, success, errorMsg, env) {
+async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted) {
   try {
-    const status = success ? 'succeeded' : 'failed';
     const title = success
       ? `Extraction succeeded: ${mosqueName || 'Unknown'}`
       : `Extraction failed: ${mosqueName || 'Unknown'}`;
-    const body = success
-      ? `A timetable extraction completed successfully.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
-      : `A timetable extraction failed.\n\n**Name entered:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
+    let body = success
+      ? `A timetable extraction completed successfully.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
+      : `A timetable extraction failed.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
+    if (success && extracted) {
+      body += `\n\n<details><summary>Extracted JSON</summary>\n\n\`\`\`json\n${JSON.stringify(extracted, null, 2)}\n\`\`\`\n\n</details>`;
+    }
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
       method: 'POST',
       headers: {
@@ -780,8 +782,9 @@ async function handleExtract(request, env) {
     // Override mosque name with user-provided name if given
     if (mosqueName) extracted.mosque_name = mosqueName;
 
-    // Notify about successful extraction
-    await createExtractionNotification(mosqueName, ip, true, null, env);
+    // Notify about successful extraction (use extracted name as fallback)
+    const notifName = mosqueName || extracted.mosque_name || '';
+    await createExtractionNotification(notifName, ip, true, null, env, extracted);
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
