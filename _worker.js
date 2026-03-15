@@ -724,6 +724,132 @@ async function handleExtract(request, env) {
   }
 }
 
+// --- Duplicate detection helpers ---
+
+function normalisePhone(phone) {
+  if (!phone) return '';
+  let digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('44')) digits = digits.slice(2);
+  if (digits.startsWith('0')) digits = digits.slice(1);
+  return digits;
+}
+
+function extractPostcode(address) {
+  if (!address) return null;
+  const m = address.match(/\b([A-Z]{1,2}\d[A-Z\d]?)\s*(\d[A-Z]{2})\b/i);
+  if (!m) return null;
+  return { outcode: m[1].toUpperCase(), incode: m[2].toUpperCase(), full: m[1].toUpperCase() + ' ' + m[2].toUpperCase() };
+}
+
+function normaliseName(name) {
+  let s = (name || '').toLowerCase();
+  s = s.replace(/\b(masjid|mosque|islamic\s+centre|islamic\s+center|trust|foundation)\b/gi, '');
+  s = s.replace(/\b(al-|al\s|e-|e\s)/gi, '');
+  s = s.replace(/[^a-z0-9\s]/g, '');
+  return s.replace(/\s+/g, ' ').trim();
+}
+
+function levenshteinRatio(a, b) {
+  if (!a || !b) return 0;
+  const m = a.length, n = b.length;
+  if (m === 0 || n === 0) return 0;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return 1 - dp[m][n] / Math.max(m, n);
+}
+
+function haversineDistanceMetres(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = (d) => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
+  const normPhone = normalisePhone(phone);
+  const normName = normaliseName(name);
+  const postcode = extractPostcode(address);
+  const matches = [];
+
+  for (const cfg of existingConfigs) {
+    let score = 0;
+    const reasons = [];
+
+    // Phone match
+    if (normPhone && cfg.phone) {
+      const cfgPhone = normalisePhone(cfg.phone);
+      if (cfgPhone && normPhone === cfgPhone) {
+        score += 100;
+        reasons.push('Same phone number');
+      }
+    }
+
+    // Name similarity
+    if (normName) {
+      const cfgName = normaliseName(cfg.display_name);
+      if (cfgName) {
+        const ratio = levenshteinRatio(normName, cfgName);
+        if (ratio > 0.7) {
+          score += Math.round(ratio * 40);
+          reasons.push(`Similar name (${Math.round(ratio * 100)}% match)`);
+        }
+      }
+    }
+
+    // Postcode match
+    if (postcode && cfg.address) {
+      const cfgPostcode = extractPostcode(cfg.address);
+      if (cfgPostcode) {
+        if (postcode.full === cfgPostcode.full) {
+          score += 50;
+          reasons.push('Same postcode');
+        } else if (postcode.outcode === cfgPostcode.outcode) {
+          score += 25;
+          reasons.push('Same postcode area');
+        }
+      }
+    }
+
+    // Proximity
+    if (lat != null && lon != null && cfg.lat != null && cfg.lon != null) {
+      const dist = haversineDistanceMetres(lat, lon, cfg.lat, cfg.lon);
+      if (dist < 100) {
+        score += 40;
+        reasons.push('Very close location (<100m)');
+      } else if (dist < 300) {
+        score += 25;
+        reasons.push('Nearby location (<300m)');
+      } else if (dist < 500) {
+        score += 15;
+        reasons.push('In the same area (<500m)');
+      }
+    }
+
+    if (score >= 60) {
+      matches.push({
+        slug: cfg.slug,
+        display_name: cfg.display_name,
+        address: cfg.address || '',
+        score,
+        reasons,
+      });
+    }
+  }
+
+  matches.sort((a, b) => b.score - a.score);
+  return matches;
+}
+
 // ============================================================
 // POST /api/submit — Commit new masjid to GitHub
 // ============================================================
@@ -762,10 +888,43 @@ async function handleSubmit(request, env) {
     return errorResponse('Masjid name is required');
   }
 
+  const address = data.address || '';
+  const phone = data.phone || '';
+
+  // Geocode address early (reused for both duplicate check and config)
+  let geoLat = null, geoLon = null;
+  if (address) {
+    const { lat, lon } = await geocodeAddress(address);
+    if (lat !== null) { geoLat = lat; geoLon = lon; }
+  }
+
+  // Fetch existing configs early (reused for both duplicate check and index update)
+  let indexFile = null;
+  let existingConfigs = [];
+  try {
+    indexFile = await githubGetFile('data/mosques/index.json', env);
+    if (indexFile) {
+      existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+    }
+  } catch (e) {
+    // If index fetch fails, skip duplicate check and proceed
+  }
+
+  // Duplicate detection (skip if user confirmed)
+  if (!body.confirm_not_duplicate && existingConfigs.length > 0) {
+    const duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+    if (duplicates.length > 0) {
+      return jsonResponse({
+        duplicate_warning: true,
+        matches: duplicates,
+        message: 'We found existing masjids that may be the same. Please check before submitting.',
+      }, 409);
+    }
+  }
+
   // Generate slug
   let slug = data.suggested_slug || slugify(mosqueName);
   slug = slugify(slug); // Ensure it's properly slugified
-  const address = data.address || '';
   slug = await deduplicateSlug(slug, address, env);
 
   // Build CSV
@@ -776,8 +935,8 @@ async function handleSubmit(request, env) {
     display_name: mosqueName,
     slug,
     csv: `${slug}.csv`,
-    address: data.address || '',
-    phone: data.phone || '',
+    address,
+    phone,
     month: data.month || '',
     islamic_month: data.islamic_month || '',
     jummah_times: data.jummah_times || '',
@@ -798,13 +957,10 @@ async function handleSubmit(request, env) {
     }
   }
 
-  // Geocode address
-  if (config.address) {
-    const { lat, lon } = await geocodeAddress(config.address);
-    if (lat !== null) {
-      config.lat = lat;
-      config.lon = lon;
-    }
+  // Apply geocoded coordinates
+  if (geoLat !== null) {
+    config.lat = geoLat;
+    config.lon = geoLon;
   }
 
   try {
@@ -824,13 +980,11 @@ async function handleSubmit(request, env) {
       }
     }
 
-    // Updated index.json
-    const indexFile = await githubGetFile('data/mosques/index.json', env);
+    // Updated index.json (reuse already-fetched data)
     if (indexFile) {
-      const existingIndex = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
-      existingIndex.push(config);
-      existingIndex.sort((a, b) => a.display_name.localeCompare(b.display_name));
-      files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingIndex) });
+      existingConfigs.push(config);
+      existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name));
+      files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
     }
 
     // Single commit for all files

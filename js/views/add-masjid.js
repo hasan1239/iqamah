@@ -544,9 +544,92 @@ function setupEventListeners(container) {
     };
   }
 
+  // Submit helper — performs the actual submit call
+  async function doSubmit(data, confirmNotDuplicate) {
+    const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken };
+    if (confirmNotDuplicate) payload.confirm_not_duplicate = true;
+    const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const result = await resp.json();
+    return { resp, result };
+  }
+
+  function removeDuplicateWarning() {
+    const existing = document.querySelector('.duplicate-warning');
+    if (existing) existing.remove();
+  }
+
+  function showDuplicateWarning(matches, message, data) {
+    removeDuplicateWarning();
+    const warning = document.createElement('div');
+    warning.className = 'duplicate-warning';
+    warning.innerHTML = `
+      <div class="duplicate-warning-header">&#9888; ${message}</div>
+      ${matches.map(m => `
+        <div class="duplicate-match-card">
+          <strong>${m.display_name}</strong>
+          ${m.address ? `<p>${m.address}</p>` : ''}
+          <div class="duplicate-match-reasons">${m.reasons.join(' &middot; ')}</div>
+          <a class="duplicate-match-link" href="/${m.slug}" target="_blank">View masjid &rarr;</a>
+        </div>
+      `).join('')}
+      <div class="duplicate-actions">
+        <button class="btn btn-secondary" id="dupCancelBtn">Cancel</button>
+        <button class="btn btn-primary" id="dupConfirmBtn">This is different &mdash; submit anyway</button>
+      </div>
+    `;
+    submitError.parentElement.insertBefore(warning, submitError);
+
+    warning.querySelector('#dupCancelBtn').addEventListener('click', () => {
+      removeDuplicateWarning();
+    });
+
+    warning.querySelector('#dupConfirmBtn').addEventListener('click', async () => {
+      removeDuplicateWarning();
+      clearError(submitError);
+      submitBtn.disabled = true;
+      submittingStatus.style.display = '';
+      try {
+        const { resp, result } = await doSubmit(data, true);
+        if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
+        handleSuccess(result);
+      } catch (e) {
+        showError(submitError, e.message);
+      } finally {
+        submitBtn.disabled = false;
+        submittingStatus.style.display = 'none';
+      }
+    });
+  }
+
+  function handleSuccess(result) {
+    if (result.pending) {
+      const checkIcon = document.querySelector('.check-icon');
+      if (checkIcon) checkIcon.style.color = '#d4a017';
+      confirmationText.textContent = 'Your masjid has been submitted for review';
+      const confirmNote = document.querySelector('.confirmation-note');
+      if (confirmNote) confirmNote.textContent = 'It will be visible to everyone once approved. You can still access your masjid page below.';
+      const confirmDiv = document.querySelector('.confirmation');
+      if (confirmDiv && result.slug) {
+        const linkEl = document.createElement('a');
+        linkEl.href = `/${result.slug}`;
+        linkEl.className = 'btn btn-primary';
+        linkEl.setAttribute('data-link', '');
+        linkEl.textContent = 'View Your Masjid';
+        linkEl.style.marginTop = '16px';
+        linkEl.style.display = 'inline-block';
+        const backLink = confirmDiv.querySelector('[href="/"]');
+        if (backLink) backLink.parentElement.insertBefore(linkEl, backLink);
+      }
+    } else {
+      confirmationText.textContent = result.message || 'Your masjid has been added!';
+    }
+    goToStep(4);
+  }
+
   // Submit
   submitBtn.addEventListener('click', async () => {
     clearError(submitError);
+    removeDuplicateWarning();
     submitBtn.disabled = true;
     submittingStatus.style.display = '';
     const data = gatherReviewData();
@@ -560,32 +643,18 @@ function setupEventListeners(container) {
     }
 
     try {
-      const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken }) });
-      const result = await resp.json();
-      if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
-      if (result.pending) {
-        // Pending approval flow
-        const checkIcon = document.querySelector('.check-icon');
-        if (checkIcon) checkIcon.style.color = '#d4a017';
-        confirmationText.textContent = 'Your masjid has been submitted for review';
-        const confirmNote = document.querySelector('.confirmation-note');
-        if (confirmNote) confirmNote.textContent = 'It will be visible to everyone once approved. You can still access your masjid page below.';
-        const confirmDiv = document.querySelector('.confirmation');
-        if (confirmDiv && result.slug) {
-          const linkEl = document.createElement('a');
-          linkEl.href = `/${result.slug}`;
-          linkEl.className = 'btn btn-primary';
-          linkEl.setAttribute('data-link', '');
-          linkEl.textContent = 'View Your Masjid';
-          linkEl.style.marginTop = '16px';
-          linkEl.style.display = 'inline-block';
-          const backLink = confirmDiv.querySelector('[href="/"]');
-          if (backLink) backLink.parentElement.insertBefore(linkEl, backLink);
-        }
-      } else {
-        confirmationText.textContent = result.message || 'Your masjid has been added!';
+      const { resp, result } = await doSubmit(data, false);
+
+      // Handle duplicate warning
+      if (resp.status === 409 && result.duplicate_warning) {
+        submittingStatus.style.display = 'none';
+        submitBtn.disabled = false;
+        showDuplicateWarning(result.matches, result.message, data);
+        return;
       }
-      goToStep(4);
+
+      if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
+      handleSuccess(result);
     } catch (e) {
       showError(submitError, e.message);
     } finally {
