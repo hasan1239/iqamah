@@ -190,9 +190,9 @@ def render_to_png(html_content: str, output_path: str, script_dir: Path):
     tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
 
     # Copy logo to temp directory so relative paths work
-    logo_src = script_dir / "salahdaily_icon.png"
+    logo_src = script_dir / "iqamah-icon.svg"
     if logo_src.exists():
-        logo_dst = os.path.join(tmp_dir, "salahdaily_icon.png")
+        logo_dst = os.path.join(tmp_dir, "iqamah-icon.svg")
         shutil.copy2(logo_src, logo_dst)
 
     Path(tmp_html).write_text(html_content, encoding="utf-8")

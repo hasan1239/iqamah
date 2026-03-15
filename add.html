@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/iqamah-icon.svg">
+  <link rel="icon" type="image/png" href="/iqamah-icon.png">
   <meta name="theme-color" content="#050c18">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <title>Add Your Masjid - Prayerly</title>
+  <link rel="apple-touch-icon" href="iqamah-icon.png">
+  <title>Add Your Masjid - Iqamah</title>
   <script>
     (function() {
       function syncTheme() {
-        var stored = localStorage.getItem('prayerly-theme');
+        var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
         var isLight = document.documentElement.classList.contains('light-mode');
@@ -661,7 +662,7 @@
   <div class="container">
     <header>
       <div class="header-content">
-        <img src="salahdaily_icon.png" alt="Prayerly" class="logo">
+        <img src="/iqamah-logo.svg" alt="Iqamah" class="logo">
         <h1>Add Your Masjid</h1>
       </div>
       <p class="subtitle">Upload a timetable file and we'll extract the prayer times automatically</p>
@@ -835,7 +836,7 @@
     </div>
 
     <footer>
-      <p>&copy; Prayerly</p>
+      <p>&copy; Iqamah</p>
     </footer>
   </div>
 
@@ -890,7 +891,7 @@
         root.classList.add('theme-transitioning');
         root.classList.toggle('light-mode');
         var isLight = root.classList.contains('light-mode');
-        localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('iqamah-theme', isLight ? 'light' : 'dark');
         updateThemeColor();
         requestAnimationFrame(function() {
           requestAnimationFrame(function() { overlay.style.opacity = '0'; });

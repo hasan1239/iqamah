@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/iqamah-icon.svg">
+  <link rel="icon" type="image/png" href="/iqamah-icon.png">
   <meta name="theme-color" content="#050c18">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <title>Prayerly - Prayer Times</title>
+  <link rel="apple-touch-icon" href="iqamah-icon.png">
+  <title>Iqamah - Prayer Times</title>
   <script>
     (function() {
       function syncTheme() {
-        var stored = localStorage.getItem('prayerly-theme');
+        var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
         var isLight = document.documentElement.classList.contains('light-mode');
@@ -1145,7 +1146,7 @@
     </div>
 
     <footer>
-      <p>Wallpaper updates daily at 2:00am GMT · © Prayerly <span id="appVersion"></span></p>
+      <p>Wallpaper updates daily at 2:00am GMT · © Iqamah <span id="appVersion"></span></p>
     </footer>
   </div>
 
@@ -1217,8 +1218,8 @@
 
         // Inject dynamic PWA manifest with this masjid's start URL
         const manifest = {
-          name: `Prayerly - ${config.display_name}`,
-          short_name: 'Prayerly',
+          name: `Iqamah - ${config.display_name}`,
+          short_name: 'Iqamah',
           start_url: `/${masjidId}`,
           scope: './',
           display: 'standalone',
@@ -1226,10 +1227,8 @@
           background_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
           theme_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
           icons: [
-            { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-            { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-            { src: 'icons/icon-maskable-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
-            { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+            { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png' },
+            { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
           ]
         };
         const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
@@ -1241,11 +1240,11 @@
         // Set iOS app title to mosque name
         const appleMeta = document.createElement('meta');
         appleMeta.name = 'apple-mobile-web-app-title';
-        appleMeta.content = 'Prayerly';
+        appleMeta.content = 'Iqamah';
         document.head.appendChild(appleMeta);
 
         // Update title
-        document.title = `${config.display_name} - Prayerly`;
+        document.title = `${config.display_name} - Iqamah`;
 
         // Load CSV
         const csvRes = await fetch(`data/${config.csv}`);
@@ -1969,7 +1968,7 @@
 
     async function shareTimes() {
       const shareUrl = window.location.href;
-      const shareText = `Prayer times for ${config.display_name} on Prayerly\n${shareUrl}`;
+      const shareText = `Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`;
 
       if (window.goatcounter) {
         window.goatcounter.count({
@@ -1982,8 +1981,8 @@
       if (navigator.share) {
         try {
           await navigator.share({
-            title: `${config.display_name} - Prayerly`,
-            text: `Prayer times for ${config.display_name} on Prayerly`,
+            title: `${config.display_name} - Iqamah`,
+            text: `Prayer times for ${config.display_name} on Iqamah`,
             url: shareUrl,
           });
         } catch (err) {
@@ -2108,7 +2107,7 @@
         root.classList.add('theme-transitioning');
         root.classList.toggle('light-mode');
         var isLight = root.classList.contains('light-mode');
-        localStorage.setItem('prayerly-theme', isLight ? 'light' : 'dark');
+        localStorage.setItem('iqamah-theme', isLight ? 'light' : 'dark');
         updateThemeColor();
         updateDownloadLink();
         requestAnimationFrame(function() {
@@ -2128,7 +2127,7 @@
       });
 
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        if (localStorage.getItem('prayerly-theme')) return;
+        if (localStorage.getItem('iqamah-theme')) return;
         if (e.matches) {
           root.classList.remove('light-mode');
         } else {

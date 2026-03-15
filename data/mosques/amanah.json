@@ -13,5 +13,6 @@
   "is_stale": false,
   "notes": "Clocks go forward 1 hour on 29th March 2026. Jum'a Speech (Khutba) starts at 1:00pm.",
   "lat": 52.4670705,
-  "lon": -1.8761104
+  "lon": -1.8761104,
+  "source_image": "sources/amanah.jpg"
 }

@@ -3,21 +3,45 @@
 // Handles clean URL routing + Add Your Masjid API endpoints
 // ============================================================
 
-// --- Rate limiting (in-memory, per-isolate) ---
-const rateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX = 5; // max extractions per IP per window
+// --- Rate limiting (persistent via Cloudflare KV) ---
+const RATE_LIMITS_CONFIG = {
+  extract: { max: 3, windowSecs: 30 * 24 * 60 * 60 }, // 3 per month
+  submit: { max: 3, windowSecs: 30 * 24 * 60 * 60 },  // 3 per month
+};
 
-function isRateLimited(ip) {
+async function isRateLimited(ip, action, env) {
+  if (!env.RATE_LIMITS) return false;
+  const config = RATE_LIMITS_CONFIG[action];
+  if (!config) return false;
+  const key = `${action}:${ip}`;
+  const data = await env.RATE_LIMITS.get(key, 'json');
   const now = Date.now();
-  const entry = rateLimitMap.get(ip);
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitMap.set(ip, { windowStart: now, count: 1 });
+
+  if (!data) {
+    await env.RATE_LIMITS.put(key, JSON.stringify({ count: 1, start: now }), { expirationTtl: config.windowSecs });
     return false;
   }
-  entry.count++;
-  if (entry.count > RATE_LIMIT_MAX) return true;
+
+  if (data.count >= config.max) return true;
+
+  data.count++;
+  const elapsed = Math.floor((now - data.start) / 1000);
+  const remaining = Math.max(config.windowSecs - elapsed, 60);
+  await env.RATE_LIMITS.put(key, JSON.stringify(data), { expirationTtl: remaining });
   return false;
+}
+
+// --- Turnstile verification ---
+async function verifyTurnstile(token, ip, env) {
+  if (!env.TURNSTILE_SECRET) return true; // skip if not configured
+  if (!token) return false;
+  const resp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `secret=${encodeURIComponent(env.TURNSTILE_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${encodeURIComponent(ip)}`,
+  });
+  const result = await resp.json();
+  return result.success === true;
 }
 
 // --- Validation helpers (ported from extract_timetable.py) ---
@@ -375,6 +399,199 @@ async function githubUpdateFile(path, content, sha, message, env) {
   return resp.json();
 }
 
+// Commit multiple files in a single commit using the Git Data API
+// Retries on ref update failure (race condition with concurrent commits)
+async function githubCommitFiles(files, message, env) {
+  const maxRetries = 2;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const headers = {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      };
+      const api = `https://api.github.com/repos/${GITHUB_REPO}`;
+
+      // 1. Get HEAD ref
+      const refResp = await fetch(`${api}/git/ref/heads/main`, { headers });
+      if (!refResp.ok) throw new Error('Failed to get HEAD ref');
+      const refData = await refResp.json();
+      const headSha = refData.object.sha;
+
+      // 2. Get base tree
+      const commitResp = await fetch(`${api}/git/commits/${headSha}`, { headers });
+      if (!commitResp.ok) throw new Error('Failed to get HEAD commit');
+      const commitData = await commitResp.json();
+      const baseTreeSha = commitData.tree.sha;
+
+      // 3. Create blobs in parallel (content-addressed, safe to re-create)
+      const blobPromises = files.map(async (f) => {
+        const blobResp = await fetch(`${api}/git/blobs`, {
+          method: 'POST', headers,
+          body: JSON.stringify({
+            content: f.base64 || btoa(unescape(encodeURIComponent(f.content))),
+            encoding: 'base64',
+          }),
+        });
+        if (!blobResp.ok) throw new Error(`Failed to create blob for ${f.path}`);
+        const blob = await blobResp.json();
+        return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
+      });
+      const tree = await Promise.all(blobPromises);
+
+      // 4. Create tree
+      const treeResp = await fetch(`${api}/git/trees`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ base_tree: baseTreeSha, tree }),
+      });
+      if (!treeResp.ok) throw new Error('Failed to create tree');
+      const treeData = await treeResp.json();
+
+      // 5. Create commit
+      const newCommitResp = await fetch(`${api}/git/commits`, {
+        method: 'POST', headers,
+        body: JSON.stringify({ message, tree: treeData.sha, parents: [headSha] }),
+      });
+      if (!newCommitResp.ok) throw new Error('Failed to create commit');
+      const newCommit = await newCommitResp.json();
+
+      // 6. Update ref
+      const updateRefResp = await fetch(`${api}/git/refs/heads/main`, {
+        method: 'PATCH', headers,
+        body: JSON.stringify({ sha: newCommit.sha }),
+      });
+      if (!updateRefResp.ok) throw new Error('Failed to update ref');
+      return newCommit;
+    } catch (e) {
+      if (attempt < maxRetries && e.message.includes('Failed to update ref')) {
+        await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+
+// --- GitHub Issue notifications ---
+
+async function createNotificationIssue(slug, mosqueName, imageExt, env) {
+  try {
+    let issueBody = `A new masjid has been submitted for review.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`;
+    if (imageExt) {
+      const imageUrl = `https://raw.githubusercontent.com/${GITHUB_REPO}/main/data/sources/${slug}.${imageExt}`;
+      issueBody += `\n\n**Source timetable:**\n![Timetable](${imageUrl})`;
+    }
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: `New masjid submitted: ${mosqueName}`,
+        body: issueBody,
+        labels: ['new-masjid'],
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to create notification issue:', e);
+  }
+}
+
+async function uploadImageToRepo(imageBase64, ext, env) {
+  try {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const path = `data/extraction-logs/${timestamp}.${ext}`;
+    const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: `Extraction log image ${timestamp}`,
+        content: imageBase64,
+      }),
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      return data.content.download_url;
+    }
+  } catch (e) {
+    console.error('Failed to upload extraction image:', e);
+  }
+  return null;
+}
+
+async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted, imageBase64, mediaType) {
+  try {
+    const title = success
+      ? `Extraction succeeded: ${mosqueName || 'Unknown'}`
+      : `Extraction failed: ${mosqueName || 'Unknown'}`;
+    let body = success
+      ? `A timetable extraction completed successfully.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
+      : `A timetable extraction failed.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
+
+    // Upload image and include in issue
+    if (imageBase64) {
+      const extMap = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/pdf': 'pdf' };
+      const ext = extMap[mediaType] || 'jpg';
+      const imageUrl = await uploadImageToRepo(imageBase64, ext, env);
+      if (imageUrl && ext !== 'pdf') {
+        body += `\n\n**Uploaded timetable:**\n![Timetable](${imageUrl})`;
+      } else if (imageUrl) {
+        body += `\n\n**Uploaded timetable:** [View PDF](${imageUrl})`;
+      }
+    }
+
+    if (success && extracted) {
+      body += `\n\n<details><summary>Extracted JSON</summary>\n\n\`\`\`json\n${JSON.stringify(extracted, null, 2)}\n\`\`\`\n\n</details>`;
+    }
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ title, body, labels: ['extraction-attempt'] }),
+    });
+  } catch (e) {
+    console.error('Failed to create extraction notification:', e);
+  }
+}
+
+// --- Timetable date validation ---
+
+function validateTimetableDates(rows, year) {
+  if (!year) return null; // can't validate without year
+  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  let latestDate = null;
+  for (const row of rows) {
+    if (!row.date) continue;
+    const parts = row.date.trim().split(/\s+/);
+    if (parts.length < 2) continue;
+    const day = parseInt(parts[0]);
+    const mon = months[parts[1]];
+    if (isNaN(day) || mon === undefined) continue;
+    const d = new Date(Date.UTC(year, mon, day));
+    if (!latestDate || d > latestDate) latestDate = d;
+  }
+  if (!latestDate) return null; // can't parse, skip
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  if (latestDate < today) {
+    return 'This timetable appears to be outdated — all dates are in the past. Please upload a current timetable.';
+  }
+  return null;
+}
+
 // --- Geocoding ---
 
 async function geocodeAddress(address) {
@@ -460,27 +677,16 @@ export default {
       return handleSubmit(request, env);
     }
 
-    // --- Static asset routing ---
+    // --- SPA routing ---
 
-    // Try serving static asset first
-    const response = await env.ASSETS.fetch(request);
-    if (response.status !== 404) {
-      return response;
-    }
-
-    // If 404, try clean URL routing
+    // SPA routes must be served before static assets (Cloudflare auto-strips .html)
     const segment = path.replace(/^\//, '').replace(/\/$/, '');
     if (segment && !segment.includes('.') && !segment.includes('/')) {
-      // /add → serve add.html
-      if (segment === 'add') {
-        return serveStaticPage('add.html', request, env);
-      }
-
-      // Other single-segment paths → serve masjid.html (slug routing)
-      return serveStaticPage('masjid.html', request, env);
+      return serveStaticPage('index.html', request, env);
     }
 
-    return response;
+    // Try serving static asset
+    return env.ASSETS.fetch(request);
   },
 };
 
@@ -496,8 +702,8 @@ async function handleExtract(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (isRateLimited(ip)) {
-    return errorResponse('Rate limit exceeded. Please try again later.', 429);
+  if (await isRateLimited(ip, 'extract', env)) {
+    return errorResponse('You\'ve reached the limit of 3 extractions per month. Please try again next month.', 429);
   }
 
   let formData;
@@ -505,6 +711,12 @@ async function handleExtract(request, env) {
     formData = await request.formData();
   } catch (e) {
     return errorResponse('Invalid form data');
+  }
+
+  // Verify Turnstile
+  const turnstileToken = formData.get('cf-turnstile-response');
+  if (!await verifyTurnstile(turnstileToken, ip, env)) {
+    return errorResponse('Security check failed. Please refresh and try again.', 403);
   }
 
   const imageFile = formData.get('image');
@@ -587,6 +799,7 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env, null, imageBase64, mediaType);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -602,6 +815,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
+      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -613,11 +827,142 @@ async function handleExtract(request, env) {
     // Override mosque name with user-provided name if given
     if (mosqueName) extracted.mosque_name = mosqueName;
 
+    // Notify about successful extraction (use extracted name as fallback)
+    const notifName = mosqueName || extracted.mosque_name || '';
+    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType);
+
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
+    await createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType);
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
+}
+
+// --- Duplicate detection helpers ---
+
+function normalisePhone(phone) {
+  if (!phone) return '';
+  let digits = phone.replace(/\D/g, '');
+  if (digits.startsWith('44')) digits = digits.slice(2);
+  if (digits.startsWith('0')) digits = digits.slice(1);
+  return digits;
+}
+
+function extractPostcode(address) {
+  if (!address) return null;
+  const m = address.match(/\b([A-Z]{1,2}\d[A-Z\d]?)\s*(\d[A-Z]{2})\b/i);
+  if (!m) return null;
+  return { outcode: m[1].toUpperCase(), incode: m[2].toUpperCase(), full: m[1].toUpperCase() + ' ' + m[2].toUpperCase() };
+}
+
+function normaliseName(name) {
+  let s = (name || '').toLowerCase();
+  s = s.replace(/\b(masjid|mosque|islamic\s+centre|islamic\s+center|trust|foundation)\b/gi, '');
+  s = s.replace(/\b(al-|al\s|e-|e\s)/gi, '');
+  s = s.replace(/[^a-z0-9\s]/g, '');
+  return s.replace(/\s+/g, ' ').trim();
+}
+
+function levenshteinRatio(a, b) {
+  if (!a || !b) return 0;
+  const m = a.length, n = b.length;
+  if (m === 0 || n === 0) return 0;
+  const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return 1 - dp[m][n] / Math.max(m, n);
+}
+
+function haversineDistanceMetres(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const toRad = (d) => d * Math.PI / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
+  const normPhone = normalisePhone(phone);
+  const normName = normaliseName(name);
+  const postcode = extractPostcode(address);
+  const matches = [];
+
+  for (const cfg of existingConfigs) {
+    let score = 0;
+    const reasons = [];
+
+    // Phone match
+    if (normPhone && cfg.phone) {
+      const cfgPhone = normalisePhone(cfg.phone);
+      if (cfgPhone && normPhone === cfgPhone) {
+        score += 100;
+        reasons.push('Same phone number');
+      }
+    }
+
+    // Name similarity
+    if (normName) {
+      const cfgName = normaliseName(cfg.display_name);
+      if (cfgName) {
+        const ratio = levenshteinRatio(normName, cfgName);
+        if (ratio > 0.7) {
+          score += Math.round(ratio * 40);
+          reasons.push(`Similar name (${Math.round(ratio * 100)}% match)`);
+        }
+      }
+    }
+
+    // Postcode match
+    if (postcode && cfg.address) {
+      const cfgPostcode = extractPostcode(cfg.address);
+      if (cfgPostcode) {
+        if (postcode.full === cfgPostcode.full) {
+          score += 50;
+          reasons.push('Same postcode');
+        } else if (postcode.outcode === cfgPostcode.outcode) {
+          score += 25;
+          reasons.push('Same postcode area');
+        }
+      }
+    }
+
+    // Proximity
+    if (lat != null && lon != null && cfg.lat != null && cfg.lon != null) {
+      const dist = haversineDistanceMetres(lat, lon, cfg.lat, cfg.lon);
+      if (dist < 100) {
+        score += 40;
+        reasons.push('Very close location (<100m)');
+      } else if (dist < 300) {
+        score += 25;
+        reasons.push('Nearby location (<300m)');
+      } else if (dist < 500) {
+        score += 15;
+        reasons.push('In the same area (<500m)');
+      }
+    }
+
+    if (score >= 60) {
+      matches.push({
+        slug: cfg.slug,
+        display_name: cfg.display_name,
+        address: cfg.address || '',
+        score,
+        reasons,
+      });
+    }
+  }
+
+  matches.sort((a, b) => b.score - a.score);
+  return matches;
 }
 
 // ============================================================
@@ -629,6 +974,12 @@ async function handleSubmit(request, env) {
     return errorResponse('Server configuration error: missing GitHub token', 500);
   }
 
+  // Rate limit
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (await isRateLimited(ip, 'submit', env)) {
+    return errorResponse('You\'ve reached the limit of 3 submissions per month. Please try again next month.', 429);
+  }
+
   let body;
   try {
     body = await request.json();
@@ -636,7 +987,13 @@ async function handleSubmit(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  const { data } = body;
+  // Verify Turnstile
+  const turnstileToken = body['cf-turnstile-response'];
+  if (!await verifyTurnstile(turnstileToken, ip, env)) {
+    return errorResponse('Security check failed. Please refresh and try again.', 403);
+  }
+
+  const { data, image } = body;
   if (!data || !data.rows || !data.rows.length) {
     return errorResponse('No timetable data provided');
   }
@@ -646,10 +1003,55 @@ async function handleSubmit(request, env) {
     return errorResponse('Masjid name is required');
   }
 
+  // Validate timetable dates aren't stale
+  const dateError = validateTimetableDates(data.rows, data.year);
+  if (dateError) {
+    return errorResponse(dateError);
+  }
+
+  // Server-side field length truncation
+  const MAX_LENGTHS = { address: 200, phone: 30, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
+  for (const [field, max] of Object.entries(MAX_LENGTHS)) {
+    if (data[field]) data[field] = data[field].substring(0, max);
+  }
+
+  const address = data.address || '';
+  const phone = data.phone || '';
+
+  // Geocode address early (reused for both duplicate check and config)
+  let geoLat = null, geoLon = null;
+  if (address) {
+    const { lat, lon } = await geocodeAddress(address);
+    if (lat !== null) { geoLat = lat; geoLon = lon; }
+  }
+
+  // Fetch existing configs early (reused for both duplicate check and index update)
+  let indexFile = null;
+  let existingConfigs = [];
+  try {
+    indexFile = await githubGetFile('data/mosques/index.json', env);
+    if (indexFile) {
+      existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+    }
+  } catch (e) {
+    // If index fetch fails, skip duplicate check and proceed
+  }
+
+  // Duplicate detection (skip if user confirmed)
+  if (!body.confirm_not_duplicate && existingConfigs.length > 0) {
+    const duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+    if (duplicates.length > 0) {
+      return jsonResponse({
+        duplicate_warning: true,
+        matches: duplicates,
+        message: 'We found existing masjids that may be the same. Please check before submitting.',
+      }, 409);
+    }
+  }
+
   // Generate slug
   let slug = data.suggested_slug || slugify(mosqueName);
   slug = slugify(slug); // Ensure it's properly slugified
-  const address = data.address || '';
   slug = await deduplicateSlug(slug, address, env);
 
   // Build CSV
@@ -660,64 +1062,69 @@ async function handleSubmit(request, env) {
     display_name: mosqueName,
     slug,
     csv: `${slug}.csv`,
-    address: data.address || '',
-    phone: data.phone || '',
+    address,
+    phone,
     month: data.month || '',
     islamic_month: data.islamic_month || '',
     jummah_times: data.jummah_times || '',
     eid_salah: data.eid_salah || '',
     sadaqatul_fitr: data.sadaqatul_fitr || '',
     radio_frequency: data.radio_frequency || '',
+    approved: false,
     is_stale: false,
     notes: data.notes || '',
   };
 
-  // Geocode address
-  if (config.address) {
-    const { lat, lon } = await geocodeAddress(config.address);
-    if (lat !== null) {
-      config.lat = lat;
-      config.lon = lon;
+  // Set source image path in config
+  if (image) {
+    const imgMatch = image.match(/^data:image\/(\w+);base64,/);
+    if (imgMatch) {
+      const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+      config.source_image = `sources/${slug}.${ext}`;
     }
   }
 
+  // Apply geocoded coordinates
+  if (geoLat !== null) {
+    config.lat = geoLat;
+    config.lon = geoLon;
+  }
+
   try {
-    // 1. Create CSV file
-    await githubCreateFile(
-      `data/${slug}.csv`,
-      csvContent,
-      `Add timetable for ${mosqueName}`,
-      env
-    );
+    // Build list of files to commit
+    const files = [
+      { path: `data/${slug}.csv`, content: csvContent },
+      { path: `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
+      { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
+    ];
 
-    // 2. Create config JSON
-    await githubCreateFile(
-      `data/mosques/${slug}.json`,
-      JSON.stringify(config, null, 2),
-      `Add config for ${mosqueName}`,
-      env
-    );
-
-    // 3. Update index.json
-    const indexFile = await githubGetFile('data/mosques/index.json', env);
-    if (indexFile) {
-      const existingIndex = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
-      existingIndex.push(config);
-      existingIndex.sort((a, b) => a.display_name.localeCompare(b.display_name));
-      await githubUpdateFile(
-        'data/mosques/index.json',
-        JSON.stringify(existingIndex),
-        indexFile.sha,
-        `Add ${mosqueName} to index`,
-        env
-      );
+    // Source timetable image
+    let sourceImageExt = null;
+    if (image) {
+      const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (imgMatch) {
+        sourceImageExt = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+        files.push({ path: `data/sources/${slug}.${sourceImageExt}`, base64: imgMatch[2] });
+      }
     }
+
+    // Updated index.json (reuse already-fetched data, or create if missing)
+    existingConfigs.push(config);
+    existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
+    files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
+
+    // Single commit for all files
+    await githubCommitFiles(files, `Add ${mosqueName}`, env);
+
+    // Create GitHub issue notification
+    await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
 
     return jsonResponse({
       success: true,
       slug,
       url: `/${slug}`,
-      message: `${mosqueName} has been added successfully!`,
+      pending: true,
+      message: `${mosqueName} has been submitted for review!`,
     });
   } catch (e) {
     console.error('Submit error:', e);

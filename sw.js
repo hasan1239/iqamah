@@ -1,16 +1,27 @@
-const CACHE_NAME = 'prayerly-v1';
+const CACHE_NAME = 'iqamah-v2';
 
 const PRECACHE_URLS = [
   './',
   './index.html',
-  './masjid.html',
-  './salahdaily_icon.png',
-  './favicon.ico',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-maskable-192.png',
-  './icons/icon-maskable-512.png',
-  './icons/apple-touch-icon.png'
+  './iqamah-icon.svg',
+  './iqamah-icon.png',
+  './iqamah-logo.svg',
+  // JS modules
+  './js/app.js',
+  './js/router.js',
+  './js/nav.js',
+  './js/theme.js',
+  './js/background.js',
+  './js/utils/csv.js',
+  './js/utils/countdown.js',
+  './js/utils/geolocation.js',
+  './js/utils/pwa.js',
+  './js/views/home.js',
+  './js/views/prayer-times.js',
+  './js/views/qibla.js',
+  './js/views/settings.js',
+  './js/views/add-masjid.js',
+  './js/views/not-found.js',
 ];
 
 // Install: precache core assets
@@ -41,6 +52,25 @@ self.addEventListener('fetch', event => {
 
   // Skip GoatCounter analytics — network only
   if (url.hostname === 'gc.zgo.at' || url.hostname.endsWith('.goatcounter.com')) {
+    return;
+  }
+
+  // Skip API calls — network only
+  if (url.pathname.startsWith('/api/')) {
+    return;
+  }
+
+  // App shell navigation: serve cached index.html for all navigation requests
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put('index.html', clone));
+          return response;
+        })
+        .catch(() => caches.match('index.html'))
+    );
     return;
   }
 
@@ -88,14 +118,17 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Everything else — stale while revalidate
+  // Everything else (JS modules, JSON, images) — stale while revalidate
   event.respondWith(
     caches.match(event.request).then(cached => {
       const fetchPromise = fetch(event.request).then(response => {
         const clone = response.clone();
         caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         return response;
-      }).catch(() => cached);
+      }).catch(() => {
+        if (cached) return cached;
+        return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+      });
       return cached || fetchPromise;
     })
   );
