@@ -1,0 +1,19 @@
+{
+  "display_name": "Birmingham Central Mosque",
+  "slug": "central",
+  "csv": "central.csv",
+  "address": "180 Belgrave Middleway, Birmingham, B12 0XS",
+  "phone": "0121 440 5355",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
+  "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
+  "sadaqatul_fitr": "£5 per person",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Suhur Ends column is labelled 'Suhur Ends'. Maghrib Adhan column is the Sunset Adhan. Isha Jamat column shown. Friday Prayers: Urdu & English Speech at 12.45pm | Main Arabic Khutba at 1.15pm. Islamic dates are tentative and subject to change as per crescent moon sighting. Eid services will be in different languages; Imams will be announced closer to the Day of Eid.",
+  "source_image": "sources/central.jpg",
+  "lat": 52.4646458,
+  "lon": -1.8905789
+}
