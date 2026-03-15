@@ -631,18 +631,7 @@ function setupEventListeners(container) {
       if (checkIcon) checkIcon.style.color = '#d4a017';
       confirmationText.textContent = 'Your masjid has been submitted for review';
       if (confirmNote) confirmNote.textContent = 'Your masjid page is live but will show a "Pending Review" tag until approved.';
-      const confirmDiv = document.querySelector('.confirmation');
-      if (confirmDiv && result.slug) {
-        const linkEl = document.createElement('a');
-        linkEl.href = `/${result.slug}`;
-        linkEl.className = 'btn btn-primary';
-        linkEl.setAttribute('data-link', '');
-        linkEl.textContent = 'View Your Masjid';
-        linkEl.style.marginTop = '16px';
-        linkEl.style.display = 'inline-block';
-        const backLink = confirmDiv.querySelector('[href="/"]');
-        if (backLink) backLink.parentElement.insertBefore(linkEl, backLink);
-      }
+      // View Your Masjid button hidden until approval flow is finalised
     } else {
       confirmationText.textContent = result.message || 'Your masjid has been added!';
       if (confirmNote) confirmNote.textContent = 'It will appear on the homepage shortly.';

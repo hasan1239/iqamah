@@ -167,10 +167,12 @@ export function renderCards() {
     const isPinned = config.slug === pinnedSlug;
     const pinIcon = isPinned ? STAR_FILLED_SVG : STAR_SVG;
     const pinClass = isPinned ? ' pinned' : '';
-    const pendingBadge = config.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
+    const isPending = config.approved === false;
 
     let subHtml = '';
-    if (distText) {
+    if (isPending) {
+      subHtml = `<div class="masjid-card-sub"><span class="pending-badge">Pending Review</span></div>`;
+    } else if (distText) {
       subHtml = `<div class="masjid-card-sub">${distText}</div>`;
     } else if (config.address) {
       subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
@@ -181,7 +183,7 @@ export function renderCards() {
         <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
         <div class="masjid-card-info">
           <div class="masjid-name-row">
-            <div class="masjid-name">${config.display_name}${pendingBadge}</div>
+            <div class="masjid-name">${config.display_name}</div>
             <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Set ${config.display_name} as My Masjid" title="Set as My Masjid">
               ${pinIcon}
             </button>

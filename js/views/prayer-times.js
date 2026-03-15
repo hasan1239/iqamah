@@ -98,7 +98,7 @@ export async function render(container, { slug }) {
       if (ptView) {
         const notice = document.createElement('div');
         notice.className = 'pending-notice';
-        notice.textContent = 'This masjid is pending review \u2014 times may not be verified yet.';
+        notice.innerHTML = 'This masjid is pending review<br>Times may not be verified yet';
         const toggle = ptView.querySelector('.view-toggle');
         if (toggle) {
           toggle.parentNode.insertBefore(notice, toggle);
