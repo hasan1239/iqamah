@@ -8,6 +8,7 @@ import { registerServiceWorker, initInstallPrompt } from './utils/pwa.js';
 const viewModules = {};
 let currentViewModule = null;
 let appContainer = null;
+let transitionCleanupId = null;
 
 // Lazy-load view modules
 async function loadView(viewName) {
@@ -34,6 +35,12 @@ async function loadView(viewName) {
 async function renderView(viewName, params, direction) {
   appContainer = document.getElementById('app');
   if (!appContainer) return;
+
+  // Cancel any pending transition cleanup
+  if (transitionCleanupId) {
+    clearTimeout(transitionCleanupId);
+    transitionCleanupId = null;
+  }
 
   // Destroy previous view
   if (currentViewModule && currentViewModule.destroy) {
@@ -88,7 +95,10 @@ async function renderView(viewName, params, direction) {
     currentViewModule = viewModule;
 
     // Clean up after animation
-    setTimeout(() => {
+    transitionCleanupId = setTimeout(() => {
+      transitionCleanupId = null;
+      // Only clean up if this transition's wrapper is still in the DOM
+      if (!appContainer.contains(wrapper)) return;
       appContainer.innerHTML = '';
       // Move newView contents into app container
       while (newView.firstChild) {

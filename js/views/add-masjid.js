@@ -264,8 +264,8 @@ function getWizardHTML() {
             <div class="check-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <p id="confirmationText">It will appear on the homepage shortly.</p>
-            <p class="confirmation-note">It may take up to a minute for your masjid to appear.</p>
+            <p id="confirmationText">Your masjid has been submitted for review</p>
+            <p class="confirmation-note" id="confirmationNote">Your masjid page is live but will show a "Pending Review" tag until approved.</p>
             <div style="margin-top:24px;"><a href="/" class="btn btn-secondary" data-link>Back to Home</a></div>
           </div>
         </div>
@@ -397,8 +397,9 @@ function setupEventListeners(container) {
   uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]); });
 
   // Extract
+  let isExtracting = false;
   extractBtn.addEventListener('click', async () => {
-    if (extractBtn.disabled) return;
+    if (extractBtn.disabled || isExtracting) return;
     if (!USE_DUMMY_DATA && !turnstileToken) {
       // Wait up to 5 seconds for the Turnstile token to arrive
       clearError(extractError);
@@ -420,6 +421,7 @@ function setupEventListeners(container) {
       extractBtn.textContent = origText;
     }
     clearError(extractError);
+    isExtracting = true;
     extractBtn.disabled = true;
     goToStep(2);
 
@@ -449,6 +451,7 @@ function setupEventListeners(container) {
       showError(extractError, e.message);
       goToStep(1);
     } finally {
+      isExtracting = false;
       extractBtn.disabled = !selectedFile;
     }
   });
@@ -621,12 +624,12 @@ function setupEventListeners(container) {
   }
 
   function handleSuccess(result) {
+    const confirmNote = document.getElementById('confirmationNote');
     if (result.pending) {
       const checkIcon = document.querySelector('.check-icon');
       if (checkIcon) checkIcon.style.color = '#d4a017';
       confirmationText.textContent = 'Your masjid has been submitted for review';
-      const confirmNote = document.querySelector('.confirmation-note');
-      if (confirmNote) confirmNote.textContent = 'It will be visible to everyone once approved. You can still access your masjid page below.';
+      if (confirmNote) confirmNote.textContent = 'Your masjid page is live but will show a "Pending Review" tag until approved.';
       const confirmDiv = document.querySelector('.confirmation');
       if (confirmDiv && result.slug) {
         const linkEl = document.createElement('a');
@@ -641,6 +644,7 @@ function setupEventListeners(container) {
       }
     } else {
       confirmationText.textContent = result.message || 'Your masjid has been added!';
+      if (confirmNote) confirmNote.textContent = 'It will appear on the homepage shortly.';
     }
     goToStep(4);
   }
@@ -650,6 +654,12 @@ function setupEventListeners(container) {
     if (isSubmitting) return;
     clearError(submitError);
     removeDuplicateWarning();
+
+    if (!masjidNameInput.value.trim()) {
+      showError(submitError, 'Masjid name is required.');
+      return;
+    }
+
     isSubmitting = true;
     submitBtn.disabled = true;
     submittingStatus.style.display = '';

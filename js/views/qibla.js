@@ -173,6 +173,12 @@ async function startCompass() {
 }
 
 function attachOrientationListener() {
+  // Remove previous listener if one exists (prevents accumulation)
+  if (orientationHandler) {
+    window.removeEventListener('deviceorientationabsolute', orientationHandler);
+    window.removeEventListener('deviceorientation', orientationHandler);
+  }
+
   orientationHandler = (e) => {
     let heading = null;
 

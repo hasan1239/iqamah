@@ -11,6 +11,7 @@ let locationActive = false;
 let longPressTimer = null;
 let toastTimer = null;
 let viewContainer = null;
+let longPressCleanup = null;
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -326,7 +327,7 @@ function setupLongPress() {
   let pressTarget = null;
   let didLongPress = false;
 
-  view.addEventListener('touchstart', (e) => {
+  const onTouchStart = (e) => {
     const card = e.target.closest('.masjid-card[data-slug]');
     if (!card) return;
     pressTarget = card;
@@ -339,18 +340,18 @@ function setupLongPress() {
       togglePin(card.dataset.slug);
       setTimeout(() => card.classList.remove('long-pressing'), 200);
     }, 500);
-  }, { passive: true });
+  };
 
-  view.addEventListener('touchmove', () => {
+  const onTouchMove = () => {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     if (pressTarget) pressTarget.classList.remove('long-pressing');
-  }, { passive: true });
+  };
 
-  view.addEventListener('contextmenu', (e) => {
+  const onContextMenu = (e) => {
     if (e.target.closest('.masjid-card[data-slug]')) e.preventDefault();
-  });
+  };
 
-  view.addEventListener('touchend', (e) => {
+  const onTouchEnd = (e) => {
     if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
     if (pressTarget) pressTarget.classList.remove('long-pressing');
     if (didLongPress) {
@@ -358,7 +359,19 @@ function setupLongPress() {
       didLongPress = false;
     }
     pressTarget = null;
-  });
+  };
+
+  view.addEventListener('touchstart', onTouchStart, { passive: true });
+  view.addEventListener('touchmove', onTouchMove, { passive: true });
+  view.addEventListener('contextmenu', onContextMenu);
+  view.addEventListener('touchend', onTouchEnd);
+
+  longPressCleanup = () => {
+    view.removeEventListener('touchstart', onTouchStart);
+    view.removeEventListener('touchmove', onTouchMove);
+    view.removeEventListener('contextmenu', onContextMenu);
+    view.removeEventListener('touchend', onTouchEnd);
+  };
 }
 
 function togglePin(slug) {
@@ -457,6 +470,7 @@ function setupLocationBtn() {
 export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
   document.removeEventListener('click', handlePinClick, true);
   locationActive = false;
   userLocation = null;

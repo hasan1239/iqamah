@@ -185,10 +185,10 @@ function formatCountdown(prayerDate) {
   const now = new Date();
   const diffMs = prayerDate - now;
   if (diffMs <= 0) return null;
-  const diffMinutes = Math.ceil(diffMs / 60000);
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-  if (diffMinutes < 1) return '<1m';
+  const totalMinutes = Math.floor(diffMs / 60000);
+  if (totalMinutes < 1) return '<1m';
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
   if (hours === 0) return `${minutes}m`;
   return `${hours}h ${minutes}m`;
 }
@@ -479,15 +479,19 @@ function renderTodayView(target) {
     if (row && currentView === 'today') applyNextPrayerHighlight(row);
   }, 60000);
 
-  // Re-render after Esha
+  // Re-render after Esha to update countdowns
   if (eshaRerenderId) clearTimeout(eshaRerenderId);
   const eshaTime = todayRow["Esha Jama'at"];
   if (eshaTime) {
     const eshaDate = parseTimeToDate(eshaTime, false);
     const msUntilEsha = eshaDate - new Date();
     if (msUntilEsha > 0) {
+      const ptContent = document.getElementById('pt-content');
       eshaRerenderId = setTimeout(() => {
-        if (currentView === 'today') renderContent();
+        // Only re-render if this view is still active
+        if (currentView === 'today' && ptContent && document.contains(ptContent)) {
+          renderContent();
+        }
       }, msUntilEsha + 60000);
     }
   }
