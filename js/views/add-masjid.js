@@ -42,6 +42,7 @@ async function pdfToImageDataUrl(dataUrl) {
 const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
 let turnstileToken = null;
 let turnstileWidgetId = null;
+let isSubmitting = false;
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
@@ -143,6 +144,7 @@ export function destroy() {
     turnstileWidgetId = null;
   }
   turnstileToken = null;
+  isSubmitting = false;
   selectedFile = null;
   imageDataUrl = null;
   extractedData = null;
@@ -236,14 +238,14 @@ function getWizardHTML() {
           <div class="section-label">Masjid Details</div>
           <div class="form-group"><label for="masjidName">Masjid Name <span class="required">*</span></label><input type="text" id="masjidName" placeholder="e.g. Masjid Al-Noor" maxlength="100" autocomplete="off"></div>
           <div class="meta-grid">
-            <div class="form-group"><label for="metaAddress">Address</label><input type="text" id="metaAddress" placeholder="Full address with postcode"></div>
-            <div class="form-group"><label for="metaPhone">Phone</label><input type="text" id="metaPhone" placeholder="Phone number"></div>
-            <div class="form-group"><label for="metaRadio">Radio Frequency</label><input type="text" id="metaRadio" placeholder="e.g. 454.3500"></div>
-            <div class="form-group"><label for="metaEid">Eid Salah</label><input type="text" id="metaEid" placeholder="e.g. 7:30am & 9:00am"></div>
-            <div class="form-group"><label for="metaFitrana">Sadaqatul Fitr</label><input type="text" id="metaFitrana" placeholder="e.g. £5 per person"></div>
-            <div class="form-group"><label for="metaJummah">Jumu'ah Times</label><input type="text" id="metaJummah" placeholder="e.g. 12:30pm & 1:30pm"></div>
+            <div class="form-group"><label for="metaAddress">Address</label><input type="text" id="metaAddress" placeholder="Full address with postcode" maxlength="200"></div>
+            <div class="form-group"><label for="metaPhone">Phone</label><input type="text" id="metaPhone" placeholder="Phone number" maxlength="30"></div>
+            <div class="form-group"><label for="metaRadio">Radio Frequency</label><input type="text" id="metaRadio" placeholder="e.g. 454.3500" maxlength="20"></div>
+            <div class="form-group"><label for="metaEid">Eid Salah</label><input type="text" id="metaEid" placeholder="e.g. 7:30am & 9:00am" maxlength="100"></div>
+            <div class="form-group"><label for="metaFitrana">Sadaqatul Fitr</label><input type="text" id="metaFitrana" placeholder="e.g. £5 per person" maxlength="50"></div>
+            <div class="form-group"><label for="metaJummah">Jumu'ah Times</label><input type="text" id="metaJummah" placeholder="e.g. 12:30pm & 1:30pm" maxlength="100"></div>
           </div>
-          <div class="form-group" style="margin-top:12px;"><label for="metaNotes">Notes</label><textarea id="metaNotes" rows="2" placeholder="Any additional notes"></textarea></div>
+          <div class="form-group" style="margin-top:12px;"><label for="metaNotes">Notes</label><textarea id="metaNotes" rows="2" placeholder="Any additional notes" maxlength="500"></textarea></div>
 
           <div class="btn-row review-btn-row">
             <button class="btn btn-primary" id="submitBtn">Submit Masjid</button>
@@ -533,6 +535,7 @@ function setupEventListeners(container) {
       suggested_slug: extractedData.suggested_slug || '',
       address: document.querySelector('#metaAddress').value.trim(),
       phone: document.querySelector('#metaPhone').value.trim(),
+      year: extractedData.year || null,
       month: extractedData.month || '',
       islamic_month: extractedData.islamic_month || '',
       jummah_times: document.querySelector('#metaJummah').value.trim(),
@@ -546,6 +549,18 @@ function setupEventListeners(container) {
 
   // Submit helper — performs the actual submit call
   async function doSubmit(data, confirmNotDuplicate) {
+    // Wait for turnstile token if not yet available
+    if (!turnstileToken) {
+      for (let i = 0; i < 10 && !turnstileToken; i++) {
+        await new Promise(r => setTimeout(r, 500));
+      }
+      if (!turnstileToken) {
+        if (window.turnstile && turnstileWidgetId !== null) {
+          window.turnstile.reset(turnstileWidgetId);
+        }
+        throw new Error('Security check expired. Please scroll up and try again.');
+      }
+    }
     const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken };
     if (confirmNotDuplicate) payload.confirm_not_duplicate = true;
     const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -558,7 +573,7 @@ function setupEventListeners(container) {
     if (existing) existing.remove();
   }
 
-  function showDuplicateWarning(matches, message, data) {
+  function showDuplicateWarning(matches, message) {
     removeDuplicateWarning();
     const warning = document.createElement('div');
     warning.className = 'duplicate-warning';
@@ -584,17 +599,21 @@ function setupEventListeners(container) {
     });
 
     warning.querySelector('#dupConfirmBtn').addEventListener('click', async () => {
+      if (isSubmitting) return;
       removeDuplicateWarning();
       clearError(submitError);
+      isSubmitting = true;
       submitBtn.disabled = true;
       submittingStatus.style.display = '';
       try {
-        const { resp, result } = await doSubmit(data, true);
+        const freshData = gatherReviewData();
+        const { resp, result } = await doSubmit(freshData, true);
         if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
         handleSuccess(result);
       } catch (e) {
         showError(submitError, e.message);
       } finally {
+        isSubmitting = false;
         submitBtn.disabled = false;
         submittingStatus.style.display = 'none';
       }
@@ -628,8 +647,10 @@ function setupEventListeners(container) {
 
   // Submit
   submitBtn.addEventListener('click', async () => {
+    if (isSubmitting) return;
     clearError(submitError);
     removeDuplicateWarning();
+    isSubmitting = true;
     submitBtn.disabled = true;
     submittingStatus.style.display = '';
     const data = gatherReviewData();
@@ -637,6 +658,7 @@ function setupEventListeners(container) {
     if (USE_DUMMY_DATA) {
       confirmationText.textContent = 'Your masjid has been added!';
       goToStep(4);
+      isSubmitting = false;
       submitBtn.disabled = false;
       submittingStatus.style.display = 'none';
       return;
@@ -649,7 +671,7 @@ function setupEventListeners(container) {
       if (resp.status === 409 && result.duplicate_warning) {
         submittingStatus.style.display = 'none';
         submitBtn.disabled = false;
-        showDuplicateWarning(result.matches, result.message, data);
+        showDuplicateWarning(result.matches, result.message);
         return;
       }
 
@@ -658,6 +680,7 @@ function setupEventListeners(container) {
     } catch (e) {
       showError(submitError, e.message);
     } finally {
+      isSubmitting = false;
       submitBtn.disabled = false;
       submittingStatus.style.display = 'none';
     }

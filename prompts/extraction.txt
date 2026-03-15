@@ -94,6 +94,7 @@ Return this exact JSON structure:
   "address": "Full address as shown on the timetable",
   "phone": "Phone number as shown on the timetable",
   "month": "February-March 2026",
+  "year": 2026,
   "islamic_month": "Ramadan 1447",
   "jummah_times": "1st Jumu'ah: 12:30pm, 2nd Jumu'ah: 1:40pm",
   "eid_salah": "7:30am & 9:00am",
@@ -127,6 +128,7 @@ METADATA FIELD DEFINITIONS:
 - "suggested_slug": A short, URL-safe slug (lowercase, no spaces, underscores only) derived from the most distinctive word(s) in the mosque name. Strip common prefixes like Masjid, Masjid-e, Masjid-al, Jam-e, Jamia, Al, and common suffixes like Trust, Foundation, Association, Society, Centre, Mosque, Islamic Centre. Use what remains as the slug. If the remaining word is very long, abbreviate sensibly. Examples: "Masjid Faizul Islam" → "faizul", "Birmingham Jam-e-Masjid" → "jame", "Eden Foundation" → "eden", "Masjid Al Falaah" → "falaah", "Masjid Abu Bakr" → "abubakr", "Great Barr Muslim Foundation" → "gbmf", "Madinatul Uloom Al-Islamyah" → "muai".
 - "address": Full street address including postcode/ZIP if visible. Set to "" if not shown.
 - "phone": Phone number(s) as shown. Include multiple if listed (e.g. "0121 554 9157 / 07980 924 816"). Set to "" if not shown.
+- "year": The Gregorian year as an integer (e.g. 2026). Extract from the timetable header or date columns.
 - "month": The Gregorian month(s) and year covered (e.g. "June 2025", "February-March 2026")
 - "islamic_month": The Islamic month and Hijri year if shown (e.g. "Ramadan 1447", "Dhul Hijjah 1446"). Set to "" if not shown.
 - "jummah_times": Jumu'ah/Friday prayer time(s) exactly as stated. Many mosques have multiple Jumu'ah salahs — include all with khutbah/speech times if listed (e.g. "1st: 12:30pm (Khutbah 12:10pm), 2nd: 1:30pm"). Set to "" if not shown.
