@@ -39,6 +39,9 @@ async function pdfToImageDataUrl(dataUrl) {
   return canvas.toDataURL('image/png');
 }
 
+const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
+let turnstileToken = null;
+let turnstileWidgetId = null;
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
@@ -94,9 +97,43 @@ export function render(container) {
   container.innerHTML = getWizardHTML();
 
   setupEventListeners(container);
+  loadTurnstile(container);
+}
+
+function loadTurnstile(container) {
+  const widgetEl = container.querySelector('#turnstileWidget');
+  if (!widgetEl) return;
+
+  function renderWidget() {
+    if (turnstileWidgetId !== null && window.turnstile) {
+      window.turnstile.remove(turnstileWidgetId);
+    }
+    turnstileToken = null;
+    turnstileWidgetId = window.turnstile.render('#turnstileWidget', {
+      sitekey: TURNSTILE_SITE_KEY,
+      callback: (token) => { turnstileToken = token; },
+      'expired-callback': () => { turnstileToken = null; },
+      'error-callback': () => { turnstileToken = null; },
+    });
+  }
+
+  if (window.turnstile) {
+    renderWidget();
+  } else {
+    const script = document.createElement('script');
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad';
+    script.async = true;
+    window.onTurnstileLoad = renderWidget;
+    document.head.appendChild(script);
+  }
 }
 
 export function destroy() {
+  if (turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.remove(turnstileWidgetId);
+    turnstileWidgetId = null;
+  }
+  turnstileToken = null;
   selectedFile = null;
   imageDataUrl = null;
   extractedData = null;
@@ -142,6 +179,7 @@ function getWizardHTML() {
               <span class="change-btn" id="changeBtn">Change file</span>
             </div>
           </div>
+          <div id="turnstileWidget" class="turnstile-container"></div>
           <div class="btn-row">
             <button class="btn btn-primary" id="extractBtn" disabled>Extract Prayer Times</button>
           </div>
@@ -350,6 +388,10 @@ function setupEventListeners(container) {
   // Extract
   extractBtn.addEventListener('click', async () => {
     if (extractBtn.disabled) return;
+    if (!USE_DUMMY_DATA && !turnstileToken) {
+      showError(extractError, 'Please wait for the security check to complete.');
+      return;
+    }
     clearError(extractError);
     extractBtn.disabled = true;
     goToStep(2);
@@ -362,11 +404,17 @@ function setupEventListeners(container) {
       } else {
         const formData = new FormData();
         formData.append('image', selectedFile);
+        formData.append('cf-turnstile-response', turnstileToken);
         const resp = await fetch('/api/extract', { method: 'POST', body: formData });
         result = await resp.json();
         if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
       }
       extractedData = result.data;
+      // Reset turnstile for submit step
+      if (window.turnstile && turnstileWidgetId !== null) {
+        window.turnstile.reset(turnstileWidgetId);
+        turnstileToken = null;
+      }
       populateReview();
       goToStep(3);
       setTimeout(setupResizeObserver, 100);
@@ -487,7 +535,7 @@ function setupEventListeners(container) {
     }
 
     try {
-      const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, image: imageDataUrl }) });
+      const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken }) });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
       confirmationText.textContent = result.message || 'Your masjid has been added!';

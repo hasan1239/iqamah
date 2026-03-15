@@ -4,27 +4,44 @@
 // ============================================================
 
 // --- Rate limiting (persistent via Cloudflare KV) ---
-const RATE_LIMIT_MAX = 5; // max extractions per IP per month
+const RATE_LIMITS_CONFIG = {
+  extract: { max: 3, windowSecs: 30 * 24 * 60 * 60 }, // 3 per month
+  submit: { max: 3, windowSecs: 30 * 24 * 60 * 60 },  // 3 per month
+};
 
-async function isRateLimited(ip, env) {
-  if (!env.RATE_LIMITS) return false; // fallback: allow if KV not bound
-  const key = `extract:${ip}`;
+async function isRateLimited(ip, action, env) {
+  if (!env.RATE_LIMITS) return false;
+  const config = RATE_LIMITS_CONFIG[action];
+  if (!config) return false;
+  const key = `${action}:${ip}`;
   const data = await env.RATE_LIMITS.get(key, 'json');
   const now = Date.now();
-  const thirtyDays = 30 * 24 * 60 * 60;
 
   if (!data) {
-    await env.RATE_LIMITS.put(key, JSON.stringify({ count: 1, start: now }), { expirationTtl: thirtyDays });
+    await env.RATE_LIMITS.put(key, JSON.stringify({ count: 1, start: now }), { expirationTtl: config.windowSecs });
     return false;
   }
 
-  if (data.count >= RATE_LIMIT_MAX) return true;
+  if (data.count >= config.max) return true;
 
   data.count++;
   const elapsed = Math.floor((now - data.start) / 1000);
-  const remaining = Math.max(thirtyDays - elapsed, 60);
+  const remaining = Math.max(config.windowSecs - elapsed, 60);
   await env.RATE_LIMITS.put(key, JSON.stringify(data), { expirationTtl: remaining });
   return false;
+}
+
+// --- Turnstile verification ---
+async function verifyTurnstile(token, ip, env) {
+  if (!env.TURNSTILE_SECRET) return true; // skip if not configured
+  if (!token) return false;
+  const resp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `secret=${encodeURIComponent(env.TURNSTILE_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${encodeURIComponent(ip)}`,
+  });
+  const result = await resp.json();
+  return result.success === true;
 }
 
 // --- Validation helpers (ported from extract_timetable.py) ---
@@ -554,8 +571,8 @@ async function handleExtract(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, env)) {
-    return errorResponse('You\'ve reached the limit of 5 extractions per month. Please try again next month.', 429);
+  if (await isRateLimited(ip, 'extract', env)) {
+    return errorResponse('You\'ve reached the limit of 3 extractions per month. Please try again next month.', 429);
   }
 
   let formData;
@@ -563,6 +580,12 @@ async function handleExtract(request, env) {
     formData = await request.formData();
   } catch (e) {
     return errorResponse('Invalid form data');
+  }
+
+  // Verify Turnstile
+  const turnstileToken = formData.get('cf-turnstile-response');
+  if (!await verifyTurnstile(turnstileToken, ip, env)) {
+    return errorResponse('Security check failed. Please refresh and try again.', 403);
   }
 
   const imageFile = formData.get('image');
@@ -687,11 +710,23 @@ async function handleSubmit(request, env) {
     return errorResponse('Server configuration error: missing GitHub token', 500);
   }
 
+  // Rate limit
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (await isRateLimited(ip, 'submit', env)) {
+    return errorResponse('You\'ve reached the limit of 3 submissions per month. Please try again next month.', 429);
+  }
+
   let body;
   try {
     body = await request.json();
   } catch (e) {
     return errorResponse('Invalid JSON body');
+  }
+
+  // Verify Turnstile
+  const turnstileToken = body['cf-turnstile-response'];
+  if (!await verifyTurnstile(turnstileToken, ip, env)) {
+    return errorResponse('Security check failed. Please refresh and try again.', 403);
   }
 
   const { data, image } = body;
