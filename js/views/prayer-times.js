@@ -49,11 +49,19 @@ export async function render(container, { slug }) {
 
   if (!slug) {
     const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/></svg>';
+    const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
     container.innerHTML = `<div class="prayer-times-view">
       <div class="home-no-hero">
         <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
         <div class="home-no-hero-text">No masjid selected</div>
-        <div class="home-no-hero-sub">Set a masjid as your primary from the <a href="/masjids" data-link>Masjids</a> tab to view prayer times here</div>
+        <div class="home-no-hero-sub">Set a masjid as your primary from the Masjids tab to view prayer times here</div>
+      </div>
+      <div class="home-browse-all">
+        <a href="/masjids" class="home-browse-btn" data-link>
+          ${MOSQUE_SVG}
+          <span>Browse All Masjids</span>
+          ${CHEVRON_SVG}
+        </a>
       </div>
     </div>`;
     return;

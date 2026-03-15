@@ -784,6 +784,9 @@
       border: 1px dashed var(--gold-tint-30); border-radius: 14px;
       text-decoration: none; color: var(--text-muted); font-size: 0.85rem;
     }
+    @media (min-width: 768px) {
+      .recent-hint-card { cursor: default; pointer-events: none; user-select: none; -webkit-user-select: none; }
+    }
     .recent-hint-icon { opacity: 0.4; flex-shrink: 0; }
     .recent-hint-icon svg { width: 24px; height: 24px; }
     .recent-list { display: flex; flex-direction: column; gap: 8px; }

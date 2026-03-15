@@ -86,38 +86,38 @@ function showWelcomeScreen() {
     <div class="welcome-card">
       <img src="/iqamah-logo.svg" alt="Iqamah" class="welcome-logo">
       <h1 class="welcome-title">Prayerly is now Iqamah</h1>
-      <p class="welcome-subtitle">Same app you know and love, with a fresh new look and new features.</p>
+      <p class="welcome-subtitle">Same app you know, with a fresh new look and new features.</p>
       <div class="welcome-features">
         <div class="welcome-feature">
-          <span class="welcome-icon">&#9733;</span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
           <div>
             <strong>New Design</strong>
             <span>A cleaner, more polished experience</span>
           </div>
         </div>
         <div class="welcome-feature">
-          <span class="welcome-icon">&#43;</span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
           <div>
             <strong>Add Your Masjid</strong>
             <span>Add your masjid and Iqamah will extract the times for you</span>
           </div>
         </div>
         <div class="welcome-feature">
-          <span class="welcome-icon">&#9776;</span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
           <div>
             <strong>Browse Masjids</strong>
             <span>Find and pin your local masjid for quick access</span>
           </div>
         </div>
         <div class="welcome-feature">
-          <span class="welcome-icon">&#8982;</span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></span>
           <div>
             <strong>Qibla Compass</strong>
             <span>Find the direction of the Qibla from anywhere</span>
           </div>
         </div>
         <div class="welcome-feature">
-          <span class="welcome-icon">&#9201;</span>
+          <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
           <div>
             <strong>12/24 Hour Format</strong>
             <span>Switch between time formats in settings</span>
@@ -333,10 +333,16 @@ function renderRecentlyViewed() {
         <div class="masjid-scroll-header">
           <span class="masjid-scroll-title">Recently Viewed</span>
         </div>
-        <a href="/masjids" class="recent-hint-card" data-link>
-          <div class="recent-hint-icon">${MOSQUE_SVG}</div>
-          <div class="recent-hint-text">Masjids you view will appear here</div>
-        </a>
+        ${window.innerWidth >= 768
+          ? `<div class="recent-hint-card">
+              <div class="recent-hint-icon">${MOSQUE_SVG}</div>
+              <div class="recent-hint-text">Masjids you view will appear here</div>
+            </div>`
+          : `<a href="/masjids" class="recent-hint-card" data-link>
+              <div class="recent-hint-icon">${MOSQUE_SVG}</div>
+              <div class="recent-hint-text">Masjids you view will appear here</div>
+            </a>`
+        }
       </div>`;
     return;
   }

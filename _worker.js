@@ -1031,7 +1031,7 @@ async function handleSubmit(request, env) {
     // Updated index.json (reuse already-fetched data)
     if (indexFile) {
       existingConfigs.push(config);
-      existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name));
+      existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
       files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
     }
 

@@ -151,7 +151,7 @@ export function renderCards() {
       if (distB == null) return -1;
       return distA - distB;
     }
-    return a.display_name.localeCompare(b.display_name);
+    return a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true });
   });
 
   if (filtered.length === 0) {
