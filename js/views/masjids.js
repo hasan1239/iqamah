@@ -62,7 +62,8 @@ export function render(container) {
 
       <div class="masjid-grid" id="masjidsGrid"></div>
 
-      <div class="cta-section">
+      <div class="cta-section" style="position:relative">
+        <span class="beta-badge" style="position:absolute;top:10px;right:12px">BETA</span>
         <p class="cta-heading">Can't find your masjid?</p>
         <a class="cta-btn" href="/add" data-link>Add it here</a>
       </div>
