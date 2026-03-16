@@ -89,6 +89,7 @@ Some timetables show full dates ("18 Feb"), others show only day numbers ("18", 
 
 STEP 4: OUTPUT FORMAT
 
+IMPORTANT: Before extracting any values, you MUST first identify every column in the timetable by reading the headers carefully. List them in the "column_map" field (see below). This forces you to read each header and match it to the correct output field BEFORE you start reading values. This is critical for accuracy — especially for timetables with right-to-left layouts, dual-label columns, or columns that look similar (e.g. Sunset vs Iftar, Zawal vs Zohr).
 
 Return this exact JSON structure:
 {
@@ -96,6 +97,7 @@ Return this exact JSON structure:
     "Col 1 (leftmost): 'Date' → date",
     "Col 2: 'Day' → day",
     "Col 3: 'Sehri End' → sehri_ends",
+    "Col 4: 'Fajr Start' → fajr_start",
     "Col 5: 'Sunrise' → sunrise",
     "Col 6: 'Zawal' → zawal",
     "Col 7: 'Zohr Start' → zohr",
