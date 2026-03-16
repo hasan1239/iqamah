@@ -502,7 +502,28 @@ function setupEventListeners(container) {
       let result;
       if (USE_DUMMY_DATA) {
         await new Promise(r => setTimeout(r, 1000));
-        result = { success: true, data: { mosque_name: masjidConfig.display_name, rows: [] } };
+        const dummyRows = [];
+        const startDate = new Date(2026, 2, 20);
+        const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        for (let i = 0; i < 30; i++) {
+          const d = new Date(startDate); d.setDate(d.getDate() + i);
+          const dayStr = d.getDate() + ' ' + ['Jan','Feb','Mar','Apr'][d.getMonth()];
+          dummyRows.push({
+            date: dayStr, day: days[d.getDay() === 0 ? 6 : d.getDay() - 1],
+            islamic_day: i + 1,
+            sehri_ends: '', fajr_start: `${4}:${String(30 + Math.floor(i/3)).padStart(2,'0')}`,
+            sunrise: `${6}:${String(10 - Math.floor(i/5)).padStart(2,'0')}`,
+            zawal: '', zohr: `12:${String(20 + Math.floor(i/10)).padStart(2,'0')}`,
+            asr: `${4}:${String(30 + Math.floor(i/3)).padStart(2,'0')}`,
+            maghrib_iftari: `${7}:${String(20 + i).padStart(2,'0')}`,
+            esha: `${9}:${String(10 + Math.floor(i/3)).padStart(2,'0')}`,
+            fajr_jamaat: `${4}:${String(45 + Math.floor(i/3)).padStart(2,'0')}`,
+            zohar_jamaat: '1:30', asr_jamaat: `${5}:${String(15 + Math.floor(i/3)).padStart(2,'0')}`,
+            maghrib_jamaat: `${7}:${String(25 + i).padStart(2,'0')}`,
+            esha_jamaat: `${9}:${String(30 + Math.floor(i/3)).padStart(2,'0')}`,
+          });
+        }
+        result = { success: true, data: { mosque_name: masjidConfig.display_name, rows: dummyRows, year: 2026, month: 'March-April 2026', islamic_month: 'Shawwal 1447' } };
       } else {
         const formData = new FormData();
         formData.append('image', selectedFile);
@@ -638,6 +659,18 @@ function setupEventListeners(container) {
     submitBtn.disabled = true;
     submittingStatus.style.display = '';
     const data = gatherReviewData();
+
+    if (USE_DUMMY_DATA) {
+      await new Promise(r => setTimeout(r, 1000));
+      confirmationText.textContent = `Timetable for ${masjidConfig.display_name} has been updated!`;
+      const confirmNote = document.getElementById('confirmationNote');
+      if (confirmNote) confirmNote.textContent = 'The updated times are live but will show a "Pending Review" tag until approved.';
+      goToStep(4);
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submittingStatus.style.display = 'none';
+      return;
+    }
 
     try {
       // Wait for turnstile token
