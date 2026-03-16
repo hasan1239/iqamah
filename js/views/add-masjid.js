@@ -322,6 +322,84 @@ function setupEventListeners(container) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function parseTime(str) {
+    if (!str || !str.trim()) return null;
+    const parts = str.trim().split(':');
+    if (parts.length !== 2) return null;
+    const h = parseInt(parts[0]), m = parseInt(parts[1]);
+    if (isNaN(h) || isNaN(m)) return null;
+    return h * 60 + m;
+  }
+
+  function parseTimePM(str) {
+    const mins = parseTime(str);
+    if (mins === null) return null;
+    // Times 1:00-11:59 are PM for afternoon prayers
+    return mins > 0 && mins < 720 ? mins + 720 : mins;
+  }
+
+  function validateExtractedData(data) {
+    const rows = data?.rows;
+    if (!rows || rows.length < 28 || rows.length > 31) {
+      return "We couldn't extract the times accurately from this image. Please make sure the image is clear, well-lit, and shows the full timetable, then try again.";
+    }
+
+    let failures = 0;
+    for (const row of rows) {
+      const sehri = parseTime(row.sehri_ends);
+      const fajrJ = parseTime(row.fajr_jamaat);
+      const sunrise = parseTime(row.sunrise);
+      const asr = parseTimePM(row.asr);
+      const maghrib = parseTimePM(row.maghrib_iftari);
+      const maghribJ = parseTimePM(row.maghrib_jamaat);
+      const esha = parseTimePM(row.esha);
+      const eshaJ = parseTimePM(row.esha_jamaat);
+
+      // Fajr jama'at must be before sunrise
+      if (fajrJ && sunrise && fajrJ >= sunrise) failures++;
+      // Sehri must be before sunrise
+      if (sehri && sunrise && sehri >= sunrise) failures++;
+      // Maghrib must be after asr
+      if (asr && maghrib && maghrib <= asr) failures++;
+      // Esha must be significantly after maghrib (at least 30 min)
+      if (esha && maghrib && (esha - maghrib) < 30) failures++;
+      // Maghrib jama'at must not equal esha jama'at for every row
+      if (maghribJ && eshaJ && maghribJ === eshaJ) failures++;
+    }
+
+    // If more than half the rows have issues, the extraction is bad
+    if (failures > rows.length / 2) {
+      return "We couldn't extract the times accurately from this image. Please make sure the image is clear, well-lit, and shows the full timetable, then try again.";
+    }
+
+    return null;
+  }
+
+  function showReviewOverlay() {
+    if (localStorage.getItem('iqamah-review-hint-dismissed')) return;
+    const overlay = document.createElement('div');
+    overlay.className = 'review-overlay';
+    overlay.innerHTML = `
+      <div class="review-overlay-card">
+        <h3>Review the extracted times</h3>
+        <ul>
+          <li>Times were extracted using AI and may contain errors</li>
+          <li>Tap any cell in the table to edit it</li>
+          <li>Check the masjid name and details are correct</li>
+          <li>This feature is still in beta</li>
+        </ul>
+        <button class="review-overlay-btn" id="reviewOverlayBtn">Got it</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('visible'));
+    overlay.querySelector('#reviewOverlayBtn').addEventListener('click', () => {
+      overlay.classList.remove('visible');
+      overlay.addEventListener('transitionend', () => overlay.remove());
+      localStorage.setItem('iqamah-review-hint-dismissed', '1');
+    });
+  }
+
   // File validation
   function validateFile(file) {
     if (!file) return 'Please select a file.';
@@ -346,6 +424,31 @@ function setupEventListeners(container) {
   function showError(el, msg) { el.textContent = msg; el.classList.add('visible'); }
   function clearError(el) { el.classList.remove('visible'); }
 
+  function resizeImage(file, maxSide = 2000) {
+    return new Promise((resolve) => {
+      if (file.type === 'application/pdf') { resolve(file); return; }
+      const img = new Image();
+      img.onload = () => {
+        if (Math.max(img.naturalWidth, img.naturalHeight) <= maxSide) {
+          resolve(file);
+          return;
+        }
+        const ratio = maxSide / Math.max(img.naturalWidth, img.naturalHeight);
+        const w = Math.round(img.naturalWidth * ratio);
+        const h = Math.round(img.naturalHeight * ratio);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.85);
+      };
+      img.onerror = () => resolve(file);
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
   async function setFile(file) {
     const error = validateFile(file);
     if (error) { showError(uploadError, error); return; }
@@ -356,7 +459,8 @@ function setupEventListeners(container) {
     }
 
     clearError(uploadError);
-    selectedFile = file;
+    // Resize large images before storing
+    selectedFile = await resizeImage(file);
 
     const reader = new FileReader();
     reader.onload = async (e) => {
@@ -439,6 +543,13 @@ function setupEventListeners(container) {
         if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
       }
       extractedData = result.data;
+
+      // Client-side validation of extracted data
+      const validationError = validateExtractedData(extractedData);
+      if (validationError) {
+        throw new Error(validationError);
+      }
+
       // Reset turnstile for submit step
       if (window.turnstile && turnstileWidgetId !== null) {
         window.turnstile.reset(turnstileWidgetId);
@@ -446,6 +557,7 @@ function setupEventListeners(container) {
       }
       populateReview();
       goToStep(3);
+      showReviewOverlay();
       setTimeout(setupResizeObserver, 100);
     } catch (e) {
       showError(extractError, e.message);

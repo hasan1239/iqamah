@@ -769,6 +769,7 @@ async function handleExtract(request, env) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 8000,
+        temperature: 0,
         messages: [{
           role: 'user',
           content: [
@@ -818,6 +819,9 @@ async function handleExtract(request, env) {
       await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
+
+    // Strip column_map (used by prompt for accuracy, not needed in saved data)
+    delete extracted.column_map;
 
     // Apply validation fixes
     const notes = extracted.notes || '';
