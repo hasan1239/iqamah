@@ -44,23 +44,51 @@ def download_timetable(code: str, output_path: str) -> bool:
         return False
 
 
+def preprocess_image(image_bytes: bytes) -> tuple[bytes, str]:
+    """Resize large images to max 2000px on longest side and convert to JPEG.
+
+    Returns (processed_bytes, media_type).
+    """
+    from PIL import Image
+    import io
+
+    img = Image.open(io.BytesIO(image_bytes))
+    max_side = 2000
+    resized = False
+
+    if max(img.size) > max_side:
+        ratio = max_side / max(img.size)
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+        resized = True
+        print(f"  📐 Resized from {Image.open(io.BytesIO(image_bytes)).size} to {new_size}")
+
+    # Convert to JPEG if PNG or if resized
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=85)
+    return buf.getvalue(), "image/jpeg"
+
+
 def extract_with_claude(image_path: str, api_key: str) -> dict:
     """Send the timetable image to Claude API for extraction."""
     print("  🤖 Sending to Claude API for extraction...")
 
     with open(image_path, "rb") as f:
-        image_data = base64.standard_b64encode(f.read()).decode("utf-8")
+        raw_bytes = f.read()
 
-    # Determine media type
-    ext = Path(image_path).suffix.lower()
-    media_types = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png"}
-    media_type = media_types.get(ext, "image/jpeg")
+    # Preprocess image (resize + convert to JPEG)
+    processed_bytes, media_type = preprocess_image(raw_bytes)
+    image_data = base64.standard_b64encode(processed_bytes).decode("utf-8")
 
     client = anthropic.Anthropic(api_key=api_key)
 
     message = client.messages.create(
-        model="claude-opus-4-6",
+        model="claude-sonnet-4-6",
         max_tokens=8000,
+        temperature=0,
         messages=[
             {
                 "role": "user",
@@ -91,6 +119,7 @@ def extract_with_claude(image_path: str, api_key: str) -> dict:
 
     try:
         data = json.loads(response_text)
+        data.pop("column_map", None)
         print(f"  ✅ Extracted {len(data.get('rows', []))} rows for {data.get('mosque_name', 'unknown')}")
         return data
     except json.JSONDecodeError as e:

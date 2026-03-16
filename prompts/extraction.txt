@@ -11,6 +11,8 @@ Before extracting any data, scan the FULL image including:
 - The mosque name, address, and contact details (usually at the top or bottom)
 - The month, year, and Islamic month/year (e.g. "Ramadan 1447 AH", "June 2025", "Dhul Hijjah 1446")
 
+IMPORTANT: Some timetables use RIGHT-TO-LEFT column ordering (date/day on the far right, prayer times reading right-to-left). Do NOT assume columns read left-to-right. Always read the column HEADERS first and match each header to its data column, regardless of direction. If you see dates on the right side and Isha on the left side, the table is right-to-left.
+
 STEP 2: IDENTIFY COLUMN MAPPING
 Timetables vary widely in column names. Map each column you see to the correct output field:
 
@@ -34,7 +36,7 @@ Sunset vs Maghrib/Iftar: Some timetables have BOTH a "Sunset" column AND a separ
 
 Iftar Time vs Maghrib Jama'at: Some timetables have BOTH an "Iftar Time" column AND a separate "Maghrib Jama'at" column. These are different — Iftar Time is when the fast breaks (essentially sunset/Maghrib azan time), while Maghrib Jama'at is when the congregation prays (a few minutes later). Map Iftar Time to "maghrib_iftari" and Maghrib Jama'at to "maghrib_jamaat". Do NOT confuse them — they are separate fields. Note: Some timetables label a column "Maghrib (Iftar)" even under a "Jama'at Times" header — this is still the Iftar time, not the Maghrib Jama'at. The Maghrib Jama'at may be specified separately in a footnote (e.g. "Maghrib Jama'at 6 minutes after Iftar").
 
-Sehri Ends vs Fajr Start: Some timetables have BOTH a "Sehri Ends" / "End of Suhoor" column AND a separate "Fajr Start" / "Fajr Begins" / "Subah Sadiq" column. These are different — Sehri Ends is when eating must stop, while Fajr Start / Subah Sadiq is when the Fajr prayer window begins (a few minutes later). Map Sehri Ends to "sehri_ends" and Fajr Start / Subah Sadiq to "fajr_start". Do NOT confuse them — they are separate fields. If only one of these columns exists, map it to "sehri_ends" and leave "fajr_start" as "". Be especially careful not to confuse "Fajr Start" with "Fajr Jama'at" — they are adjacent columns with different values. Fajr Start is when the prayer window opens; Fajr Jama'at is when the congregation prays (later).
+Sehri Ends vs Fajr Start: Some timetables have BOTH a "Sehri Ends" / "End of Suhoor" column AND a separate "Fajr Start" / "Fajr Begins" / "Subah Sadiq" column. These are different — Sehri Ends is when eating must stop, while Fajr Start / Subah Sadiq is when the Fajr prayer window begins (a few minutes later). Map Sehri Ends to "sehri_ends" and Fajr Start / Subah Sadiq to "fajr_start". Do NOT confuse them — they are separate fields. If only one of these columns exists, map it to "sehri_ends" and leave "fajr_start" as "". IMPORTANT: Some timetables combine both labels into a single column header (e.g. "Dawn / Subh Sadiq / Suhoor Ends" or "Sehri End / Fajr Start"). When a SINGLE column has BOTH labels, it is one column with one set of values — map it to "sehri_ends" and leave "fajr_start" as "". Only populate "fajr_start" when there are TWO separate columns with their own distinct values. Be especially careful not to confuse "Fajr Start" with "Fajr Jama'at" — they are adjacent columns with different values. Fajr Start is when the prayer window opens; Fajr Jama'at is when the congregation prays (later).
 
 Zawal/Zenith vs Zohr/Zuhr: Some timetables have BOTH a "Zawal" / "Zenith" / "After Zenith" column AND a separate "Zohr" / "Zuhr" / "Dhuhr Start" column. These are different — Zawal is when the sun passes its zenith (and prayer is NOT permitted), while Zohr/Zuhr is when the Dhuhr prayer window begins (a few minutes later). Map Zawal to "zawal" and Zohr/Dhuhr Start to "zohr". Do NOT confuse them — they are separate fields. If only one of these columns exists, determine which it is from context: if the value is a few minutes before other Dhuhr-related times, it is likely Zawal; if it matches or is close to the Dhuhr Jama'at time, it is likely Zohr. When only one exists, map it to "zohr" and leave "zawal" as "".
 
@@ -87,8 +89,26 @@ Some timetables show full dates ("18 Feb"), others show only day numbers ("18", 
 
 STEP 4: OUTPUT FORMAT
 
+IMPORTANT: Before extracting any values, you MUST first identify every column in the timetable by reading the headers carefully. List them in the "column_map" field (see below). This forces you to read each header and match it to the correct output field BEFORE you start reading values. This is critical for accuracy — especially for timetables with right-to-left layouts, dual-label columns, or columns that look similar (e.g. Sunset vs Iftar, Zawal vs Zohr).
+
 Return this exact JSON structure:
 {
+  "column_map": [
+    "Col 1 (leftmost): 'Date' → date",
+    "Col 2: 'Day' → day",
+    "Col 3: 'Sehri End' → sehri_ends",
+    "Col 4: 'Fajr Start' → fajr_start",
+    "Col 5: 'Sunrise' → sunrise",
+    "Col 6: 'Zawal' → zawal",
+    "Col 7: 'Zohr Start' → zohr",
+    "Col 8: 'Asr Start' → asr",
+    "Col 9: 'Isha Start' → esha",
+    "Col 10: 'Fajr Jamat' → fajr_jamaat",
+    "Col 11: 'Zohr Jamat' → zohar_jamaat",
+    "Col 12: 'Asr Jamat' → asr_jamaat",
+    "Col 13: 'Iftar' → maghrib_iftari",
+    "Col 14: 'Isha Jamat' → esha_jamaat"
+  ],
   "mosque_name": "Full Mosque Name as shown on the timetable",
   "suggested_slug": "faizul",
   "address": "Full address as shown on the timetable",
@@ -124,6 +144,7 @@ Return this exact JSON structure:
 }
 
 METADATA FIELD DEFINITIONS:
+- "column_map": A list of every column you identified in the timetable, from left to right (or right to left for RTL tables), showing the header text and which output field it maps to. Use the exact format shown in the example. Include columns you are ignoring (e.g. Sunset → ignored). This field is for accuracy purposes and will be stripped after parsing.
 - "mosque_name": Full name as shown on the image
 - "suggested_slug": A short, URL-safe slug (lowercase, no spaces, underscores only) derived from the most distinctive word(s) in the mosque name. Strip common prefixes like Masjid, Masjid-e, Masjid-al, Jam-e, Jamia, Al, and common suffixes like Trust, Foundation, Association, Society, Centre, Mosque, Islamic Centre. Use what remains as the slug. If the remaining word is very long, abbreviate sensibly. Examples: "Masjid Faizul Islam" → "faizul", "Birmingham Jam-e-Masjid" → "jame", "Eden Foundation" → "eden", "Masjid Al Falaah" → "falaah", "Masjid Abu Bakr" → "abubakr", "Great Barr Muslim Foundation" → "gbmf", "Madinatul Uloom Al-Islamyah" → "muai".
 - "address": Full street address including postcode/ZIP if visible. Set to "" if not shown.
@@ -152,7 +173,7 @@ ROW FIELD DEFINITIONS:
 - "zohar_jamaat": Dhuhr/Zuhr congregational prayer time. Apply Friday Jumu'ah overrides if applicable. Set to "" if not present.
 - "asr_jamaat": Asr congregational prayer time. Set to "" if not present.
 - "maghrib_iftari": Maghrib/Iftar time (when the fast breaks and Maghrib prayer begins). This is the Iftar/Sunset/Maghrib Azan time, NOT the Maghrib Jama'at time. If the timetable has both an Iftar Time column and a Maghrib Jama'at column, use the Iftar Time column for this field. If both Sunset and Maghrib columns exist, use the Maghrib/Iftar column.
-- "maghrib_jamaat": Maghrib congregational prayer time. This is separate from maghrib_iftari — it is when the congregation prays, typically a few minutes after iftar. Set to "" if the timetable does not have a separate Maghrib Jama'at column.
+- "maghrib_jamaat": Maghrib congregational prayer time. This is separate from maghrib_iftari — it is when the congregation prays, typically a few minutes after iftar. Set to "" if the timetable does not have a separate Maghrib Jama'at column. IMPORTANT: Do NOT duplicate esha_jamaat values into this field. If a timetable has columns for Fajr Jama'at, Zuhr Jama'at, Asr Jama'at, Maghrib (Iftar), and Isha Jama'at — that "Maghrib (Iftar)" is the iftar time (map to "maghrib_iftari"), and there is NO Maghrib Jama'at column, so "maghrib_jamaat" should be "". A good check: if your maghrib_jamaat values are identical to esha_jamaat values for every row, you have likely misread the same column twice.
 - "esha_jamaat": Esha/Isha congregational prayer time. Set to "" if not present.
 
 EVERY row must include ALL 16 fields listed above (date through esha_jamaat), even if the value is "" (empty string) because the timetable doesn't have that column.
@@ -172,9 +193,11 @@ Before returning, check:
 4. No ditto marks remain: Every cell must be a time value or "". No " or '' ditto characters anywhere in the output.
 5. Every row has all 16 fields with no missing keys.
 6. Fajr Jama'at values are actual calculated times, never "SEHRI+15" or similar formulas.
-7. Zohar Jama'at on Fridays reflects any Jumu'ah override found in the timetable.
-8. All dates include month abbreviation in "DD Mon" format.
-9. Missing columns: If a field is "" for EVERY row, go back and check the image — is there actually a column for it that was missed? Most timetables have columns for Isha/Esha Start, Sunrise, Zohr, Asr, and Maghrib/Iftar. A field should only be "" across all rows if the timetable genuinely does not have that column. Pay particular attention to Isha/Esha Start — this is a separate column from Isha/Esha Jama'at and is commonly missed. Note: "zawal", "fajr_start", and "maghrib_jamaat" being empty across all rows is normal — many timetables do not have separate columns for these. Exception: Jama'at-only timetables may have "zohr", "asr", and "esha" all empty — this is fine if the timetable genuinely only shows jama'at times with no start times.
-10. Column confusion: Verify you have not confused adjacent columns. Common mistakes: using Fajr Start values for "fajr_jamaat" instead of Fajr Jama'at values, using Maghrib Jama'at values for "maghrib_iftari" instead of Iftar Time values, using Zawal values for "zohr" instead of Dhuhr Start values, using Sunset instead of Maghrib for "maghrib_iftari", using Sunset values for "esha" instead of Isha Start values (Isha Start is always significantly after Maghrib — if your "esha" values are close to or less than "maghrib_iftari", you have the wrong column). If two columns are next to each other under the same header group, read the sub-headers carefully.
+7. Fajr Jama'at must ALWAYS be before sunrise. If your fajr_jamaat values are after sunrise, you have read the wrong column (a common mistake in right-to-left timetables is reading the Isha Jama'at column instead of Fajr Jama'at).
+8. Zohar Jama'at on Fridays reflects any Jumu'ah override found in the timetable.
+9. All dates include month abbreviation in "DD Mon" format.
+10. Missing columns: If a field is "" for EVERY row, go back and check the image — is there actually a column for it that was missed? Most timetables have columns for Isha/Esha Start, Sunrise, Zohr, Asr, and Maghrib/Iftar. A field should only be "" across all rows if the timetable genuinely does not have that column. Pay particular attention to Isha/Esha Start — this is a separate column from Isha/Esha Jama'at and is commonly missed. Note: "zawal", "fajr_start", and "maghrib_jamaat" being empty across all rows is normal — many timetables do not have separate columns for these. Exception: Jama'at-only timetables may have "zohr", "asr", and "esha" all empty — this is fine if the timetable genuinely only shows jama'at times with no start times.
+11. Column confusion: Verify you have not confused adjacent columns. Common mistakes: using Fajr Start values for "fajr_jamaat" instead of Fajr Jama'at values, using Maghrib Jama'at values for "maghrib_iftari" instead of Iftar Time values, using Zawal values for "zohr" instead of Dhuhr Start values, using Sunset instead of Maghrib for "maghrib_iftari", using Sunset values for "esha" instead of Isha Start values (Isha Start is always significantly after Maghrib — if your "esha" values are close to or less than "maghrib_iftari", you have the wrong column). If two columns are next to each other under the same header group, read the sub-headers carefully.
+12. Duplicate columns: If maghrib_jamaat values are identical to esha_jamaat values for every row, you have likely read the same column twice. Go back and check — most likely there is no separate Maghrib Jama'at column and maghrib_jamaat should be "".
 
 Return ONLY valid JSON, no markdown fences, no explanation, no preamble.

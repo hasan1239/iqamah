@@ -501,6 +501,26 @@ async function createNotificationIssue(slug, mosqueName, imageExt, env) {
   }
 }
 
+async function triggerLockscreenGeneration(slug, env) {
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/generate.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ref: 'main',
+        inputs: { mosque: slug },
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to trigger lockscreen generation:', e);
+  }
+}
+
 async function uploadImageToRepo(imageBase64, ext, env) {
   try {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -769,6 +789,7 @@ async function handleExtract(request, env) {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 8000,
+        temperature: 0,
         messages: [{
           role: 'user',
           content: [
@@ -818,6 +839,9 @@ async function handleExtract(request, env) {
       await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
+
+    // Strip column_map (used by prompt for accuracy, not needed in saved data)
+    delete extracted.column_map;
 
     // Apply validation fixes
     const notes = extracted.notes || '';
@@ -1118,6 +1142,9 @@ async function handleSubmit(request, env) {
 
     // Create GitHub issue notification
     await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
+
+    // Trigger lockscreen generation workflow
+    triggerLockscreenGeneration(slug, env);
 
     return jsonResponse({
       success: true,
