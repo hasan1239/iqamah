@@ -16,7 +16,7 @@ jobs:
         run: |
           CONFIG="data/mosques/${{ github.event.inputs.slug }}.json"
           if [ ! -f "$CONFIG" ]; then echo "Not found: $CONFIG"; exit 1; fi
-          jq '.approved = true' "$CONFIG" > tmp.json && mv tmp.json "$CONFIG"
+          jq '.approved = true | del(.pending_update)' "$CONFIG" > tmp.json && mv tmp.json "$CONFIG"
       - name: Regenerate index.json
         run: jq -s '.' $(ls data/mosques/*.json | grep -v index.json | sort) > data/mosques/index.json
       - name: Commit

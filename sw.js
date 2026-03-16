@@ -21,6 +21,7 @@ const PRECACHE_URLS = [
   './js/views/qibla.js',
   './js/views/settings.js',
   './js/views/add-masjid.js',
+  './js/views/update-masjid.js',
   './js/views/not-found.js',
 ];
 
