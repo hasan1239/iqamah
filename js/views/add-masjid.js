@@ -203,7 +203,7 @@ function getWizardHTML() {
         <div class="card">
           <div class="status-msg">
             <div class="spinner"></div>
-            <div>Extracting prayer times from file...</div>
+            <div>Extracting prayer times...</div>
             <div style="font-size:0.8rem; color:var(--text-muted); margin-top:8px;">This usually takes 15-30 seconds</div>
           </div>
         </div>
@@ -340,8 +340,8 @@ function setupEventListeners(container) {
 
   function validateExtractedData(data) {
     const rows = data?.rows;
-    if (!rows || rows.length < 28 || rows.length > 31) {
-      return "We couldn't extract the times accurately from this image. Please make sure the image is clear, well-lit, and shows the full timetable, then try again.";
+    if (!rows || rows.length === 0) {
+      return "We couldn't extract any prayer times from this image. Please make sure the image is clear and shows the full timetable, then try again.";
     }
 
     let failures = 0;
