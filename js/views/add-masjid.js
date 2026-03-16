@@ -517,7 +517,7 @@ function setupEventListeners(container) {
         if (window.turnstile && turnstileWidgetId !== null) {
           window.turnstile.reset(turnstileWidgetId);
         }
-        showError(extractError, 'Security check failed to load. Please try again.');
+        showError(extractError, 'Security check failed to load. Please refresh page.');
         extractBtn.textContent = origText;
         extractBtn.disabled = false;
         return;
