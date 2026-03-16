@@ -1,0 +1,19 @@
+{
+  "display_name": "Kings Heath Masjid",
+  "slug": "kingsheath",
+  "csv": "kingsheath.csv",
+  "address": "113-115 Station Road, Kings Heath, Birmingham, B14 7TA",
+  "phone": "Tel: 0121 444 8988 | Mob: 0730",
+  "month": "March 2026",
+  "islamic_month": "Ramadhan/Shawwal 1447",
+  "jummah_times": "1st Jumuah: 12:35pm (Speech at 12:05pm), 2nd Jumuah: 1:30pm (Speech at 1:05pm)",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "454.3500",
+  "approved": false,
+  "is_stale": false,
+  "notes": "During the month of Ramadhan, Maghrib Jama'ah will take place 5 minutes after Adhaan. Daily programmes will be held throughout Ramadhan. A schedule has been published. British Summer Time (BST) starts on Sun 29th March - clocks go forward 1 hour. English Taleem after Isha Salaah Monday, Tuesday and Thursday. Tafseer for sisters (English): Monday 1:20pm-1:50pm. Maghrib jamaat is 5 minutes after Adhaan/Iftaar during Ramadhan (rows 1-28). No separate Maghrib Jama'at column in table; rule applied in",
+  "source_image": "sources/kingsheath.jpg",
+  "lat": 52.4359412,
+  "lon": -1.8967673
+}
