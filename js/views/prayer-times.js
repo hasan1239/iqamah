@@ -239,9 +239,10 @@ function applyNextPrayerHighlight(todayRow) {
 
   // Next start time (independent)
   const startTimes = [
-    { name: 'Fajr', keys: ['Sehri Ends'], isAM: true },
+    { name: 'Fajr', keys: ['Sehri Ends', 'Fajr Start'], isAM: true },
     { name: 'Dhuhr', keys: ['Zohr'], isAM: false },
     { name: 'Asr', keys: ['Asr'], isAM: false },
+    { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
     { name: 'Esha', keys: ['Esha'], isAM: false },
   ];
   let nextStart = null;
