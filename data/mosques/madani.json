@@ -1,0 +1,19 @@
+{
+  "display_name": "Madani Masjid",
+  "slug": "madani",
+  "csv": "madani.csv",
+  "address": "77 Evington Valley Road, Leicester, LE5 5LL",
+  "phone": "",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "Jumu'ah Lecture: 12:00pm, Jumu'ah Adhan: 12:17-12:24pm, Jumu'ah Khutbah: 12:25-12:30pm, Gate 4 Opens",
+  "eid_salah": "1st Jamaat: Fajr Salah 5:45am, Eid Lecture after Fajr, Eid Salah 6:25am; 2nd Jamaat: Eid Lecture 8:3",
+  "sadaqatul_fitr": "£5.00 per head",
+  "radio_frequency": "459.800",
+  "approved": false,
+  "is_stale": false,
+  "notes": "No Salat is permitted during the 10 minutes before Zawal time. Timetable subject to sighting of the new moon. Listen LIVE on: emasjidlive.co.uk/listen/madanimasjid and https://www.youtube.com/@MCCSoundBytes/streams. Download timetable from madani.school. Sadaqatul Fitr must be paid before the Eid Salah. The timetable has no separate fajr_start, zohr, or maghrib_jamaat columns — the Dawn/Subh Sadiq/Suhoor Ends column is a single combined column mapped to sehri_ends.",
+  "source_image": "sources/madani.png",
+  "lat": 52.6278525,
+  "lon": -1.0987708
+}
