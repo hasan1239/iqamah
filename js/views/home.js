@@ -98,7 +98,7 @@ function showWelcomeScreen() {
         <div class="welcome-feature">
           <span class="welcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
           <div>
-            <strong>Add Your Masjid</strong>
+            <strong>Add Your Masjid <span class="beta-badge">BETA</span></strong>
             <span>Upload a timetable and Iqamah will do the rest</span>
           </div>
         </div>
