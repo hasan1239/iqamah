@@ -206,7 +206,7 @@
   /* Table header */
   .table-header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr 1fr;
     padding: 7px 14px;
     border-bottom: 1px solid rgba(180,140,30,0.12);
   }
@@ -218,8 +218,8 @@
     color: rgba(180,140,30,0.5);
     text-align: center;
   }
-  .table-header .col:first-child { text-align: left; }
-  .table-header .col:last-child { text-align: right; }
+  .table-header .col:first-child { text-align: center; }
+  .table-header .col:last-child { text-align: center; }
 
   /* Prayer rows */
   .times-section {
@@ -231,7 +231,7 @@
   .time-row {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr 1fr;
     align-items: center;
     padding: 0 14px;
     border-bottom: 1px solid rgba(180,140,30,0.06);
@@ -244,7 +244,7 @@
     font-family: 'Lato', sans-serif;
     font-size: 14px;
     color: rgba(26,26,46,0.6);
-    text-align: left;
+    text-align: center;
   }
 
   .time-name {
@@ -261,7 +261,7 @@
     font-size: 14px;
     font-weight: 600;
     color: #9a7a10;
-    text-align: right;
+    text-align: center;
   }
 
   .time-start.empty, .time-jamaat.empty {
