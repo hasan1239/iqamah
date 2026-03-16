@@ -501,6 +501,26 @@ async function createNotificationIssue(slug, mosqueName, imageExt, env) {
   }
 }
 
+async function triggerLockscreenGeneration(slug, env) {
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/generate.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ref: 'main',
+        inputs: { mosque: slug },
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to trigger lockscreen generation:', e);
+  }
+}
+
 async function uploadImageToRepo(imageBase64, ext, env) {
   try {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -1122,6 +1142,9 @@ async function handleSubmit(request, env) {
 
     // Create GitHub issue notification
     await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
+
+    // Trigger lockscreen generation workflow
+    triggerLockscreenGeneration(slug, env);
 
     return jsonResponse({
       success: true,
