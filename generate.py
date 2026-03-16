@@ -137,20 +137,24 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
 
     english_date, islamic_date = date_parts
 
+    def t(val):
+        """Return time value or dash if empty."""
+        return val if val else "—"
+
     replacements = {
         "{{ENGLISH_DATE}}": english_date,
         "{{ISLAMIC_DATE}}": islamic_date,
         "{{MOSQUE_NAME}}": mosque_name,
-        "{{SEHRI_ENDS}}": times["sehri_ends"],
-        "{{MAGHRIB_IFTARI}}": times["maghrib_iftari"],
-        "{{SUNRISE}}": times["sunrise"],
-        "{{ZOHR}}": times["zohr"],
-        "{{ASR}}": times["asr"],
-        "{{ESHA}}": times["esha"],
-        "{{FAJR_JAMAAT}}": times["fajr_jamaat"],
-        "{{ZOHAR_JAMAAT}}": times["zohar_jamaat"],
-        "{{ASR_JAMAAT}}": times["asr_jamaat"],
-        "{{ESHA_JAMAAT}}": times["esha_jamaat"],
+        "{{SEHRI_ENDS}}": t(times["sehri_ends"]),
+        "{{MAGHRIB_IFTARI}}": t(times["maghrib_iftari"]),
+        "{{SUNRISE}}": t(times["sunrise"]),
+        "{{ZOHR}}": t(times["zohr"]),
+        "{{ASR}}": t(times["asr"]),
+        "{{ESHA}}": t(times["esha"]),
+        "{{FAJR_JAMAAT}}": t(times["fajr_jamaat"]),
+        "{{ZOHAR_JAMAAT}}": t(times["zohar_jamaat"]),
+        "{{ASR_JAMAAT}}": t(times["asr_jamaat"]),
+        "{{ESHA_JAMAAT}}": t(times["esha_jamaat"]),
     }
 
     fajr_start = times.get("fajr_start", "")
