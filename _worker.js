@@ -7,6 +7,7 @@
 const RATE_LIMITS_CONFIG = {
   extract: { max: 3, windowSecs: 30 * 24 * 60 * 60 }, // 3 per month
   submit: { max: 3, windowSecs: 30 * 24 * 60 * 60 },  // 3 per month
+  update: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
 };
 
 async function isRateLimited(ip, action, env) {
@@ -697,10 +698,19 @@ export default {
       return handleSubmit(request, env);
     }
 
+    if (path === '/api/update' && request.method === 'POST') {
+      return handleUpdate(request, env);
+    }
+
     // --- SPA routing ---
 
     // SPA routes must be served before static assets (Cloudflare auto-strips .html)
     const segment = path.replace(/^\//, '').replace(/\/$/, '');
+
+    if (segment.startsWith('update/')) {
+      return serveStaticPage('index.html', request, env);
+    }
+
     if (segment && !segment.includes('.') && !segment.includes('/')) {
       return serveStaticPage('index.html', request, env);
     }
@@ -1156,5 +1166,268 @@ async function handleSubmit(request, env) {
   } catch (e) {
     console.error('Submit error:', e);
     return errorResponse('Failed to save masjid: ' + e.message, 500);
+  }
+}
+
+// ============================================================
+// CSV merge logic
+// ============================================================
+
+function parseDateForSort(dateStr) {
+  if (!dateStr) return 0;
+  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  const parts = dateStr.trim().split(/\s+/);
+  if (parts.length < 2) return 0;
+  const day = parseInt(parts[0]);
+  const mon = months[parts[1]];
+  if (isNaN(day) || mon === undefined) return 0;
+  // Use a sortable number: month * 100 + day
+  return mon * 100 + day;
+}
+
+function mergeCsvRows(existingCsvText, newRows) {
+  // Parse existing CSV into Map keyed by date string
+  const lines = existingCsvText.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim());
+  const existingMap = new Map();
+
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split(',').map(v => v.trim());
+    const row = {};
+    headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+    const dateKey = row['Date'] || '';
+    if (dateKey) existingMap.set(dateKey.trim(), row);
+  }
+
+  // Generate new CSV string and parse it
+  const newCsvText = generateCsvString(newRows);
+  const newLines = newCsvText.trim().split('\n');
+  const newHeaders = newLines[0].split(',').map(h => h.trim());
+
+  for (let i = 1; i < newLines.length; i++) {
+    const values = newLines[i].split(',').map(v => v.trim());
+    const row = {};
+    newHeaders.forEach((h, idx) => { row[h] = values[idx] || ''; });
+    const dateKey = row['Date'] || '';
+    if (dateKey) existingMap.set(dateKey.trim(), row);
+  }
+
+  // Sort all rows by date
+  const allRows = Array.from(existingMap.values());
+  allRows.sort((a, b) => parseDateForSort(a['Date']) - parseDateForSort(b['Date']));
+
+  // Rebuild CSV with standard headers
+  const standardHeaders = [
+    'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Fajr Start', 'Sunrise',
+    'Zawal', 'Zohr', 'Asr', 'Esha',
+    "Fajr Jama'at", "Zohar Jama'at", "Asr Jama'at",
+    'Maghrib Iftari', "Maghrib Jama'at", "Esha Jama'at",
+  ];
+
+  let csv = standardHeaders.join(',') + '\n';
+  for (const row of allRows) {
+    const vals = standardHeaders.map(h => row[h] || '');
+    csv += vals.join(',') + '\n';
+  }
+  return csv;
+}
+
+// ============================================================
+// POST /api/update — Update existing masjid timetable
+// ============================================================
+
+async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, env) {
+  try {
+    const issueBody = `A timetable update has been submitted.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**New rows:** ${newRowCount}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`;
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${env.GITHUB_PAT}`,
+        'User-Agent': 'Prayerly-Worker/1.0',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: `Timetable updated: ${mosqueName}`,
+        body: issueBody,
+        labels: ['timetable-update'],
+      }),
+    });
+  } catch (e) {
+    console.error('Failed to create update notification issue:', e);
+  }
+}
+
+async function handleUpdate(request, env) {
+  if (!env.GITHUB_PAT) {
+    return errorResponse('Server configuration error: missing GitHub token', 500);
+  }
+
+  // Rate limit
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (await isRateLimited(ip, 'update', env)) {
+    return errorResponse('You\'ve reached the limit of 5 timetable updates per month. Please try again next month.', 429);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (e) {
+    return errorResponse('Invalid JSON body');
+  }
+
+  // Verify Turnstile
+  const turnstileToken = body['cf-turnstile-response'];
+  if (!await verifyTurnstile(turnstileToken, ip, env)) {
+    return errorResponse('Security check failed. Please refresh and try again.', 403);
+  }
+
+  const { data, slug, image } = body;
+  if (!data || !data.rows || !data.rows.length) {
+    return errorResponse('No timetable data provided');
+  }
+  if (!slug) {
+    return errorResponse('Masjid slug is required');
+  }
+
+  // Fetch existing config
+  const configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+  if (!configFile) {
+    return errorResponse('Masjid not found', 404);
+  }
+
+  let existingConfig;
+  try {
+    existingConfig = JSON.parse(atob(configFile.content.replace(/\n/g, '')));
+  } catch (e) {
+    return errorResponse('Failed to read existing masjid config', 500);
+  }
+
+  // Masjid name check — compare extracted name with existing display_name
+  const extractedName = sanitiseMasjidName(data.mosque_name || '');
+  if (extractedName) {
+    const ratio = levenshteinRatio(
+      normaliseName(extractedName),
+      normaliseName(existingConfig.display_name)
+    );
+    if (ratio < 0.5) {
+      return errorResponse(
+        `This doesn't appear to be the timetable for ${existingConfig.display_name}. Please make sure you uploaded the correct timetable.`
+      );
+    }
+  }
+
+  // Validate timetable dates — reject if all in the past
+  const dateError = validateTimetableDates(data.rows, data.year);
+  if (dateError) {
+    return errorResponse(dateError);
+  }
+
+  // Apply validation fixes on new rows
+  const notes = data.notes || existingConfig.notes || '';
+  const { rows: fixedRows } = validateAndFixRows(data.rows, notes);
+
+  // Server-side field length truncation
+  const MAX_LENGTHS = { address: 200, phone: 30, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
+  for (const [field, max] of Object.entries(MAX_LENGTHS)) {
+    if (data[field]) data[field] = data[field].substring(0, max);
+  }
+
+  // Fetch existing CSV
+  const csvFile = await githubGetFile(`data/${existingConfig.csv || slug + '.csv'}`, env);
+  let mergedCsv;
+  if (csvFile) {
+    const existingCsvText = atob(csvFile.content.replace(/\n/g, ''));
+    mergedCsv = mergeCsvRows(existingCsvText, fixedRows);
+  } else {
+    mergedCsv = generateCsvString(fixedRows);
+  }
+
+  // Update config — only overwrite non-empty metadata fields
+  const metaFields = ['address', 'phone', 'jummah_times', 'eid_salah', 'sadaqatul_fitr', 'radio_frequency', 'notes'];
+  for (const field of metaFields) {
+    if (data[field] && data[field].trim()) {
+      existingConfig[field] = data[field].trim();
+    }
+  }
+  existingConfig.is_stale = false;
+  existingConfig.pending_update = true;
+  if (data.month) existingConfig.month = data.month;
+  if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
+
+  // Re-geocode if address changed
+  if (data.address && data.address.trim() && data.address.trim() !== (existingConfig.address || '')) {
+    const { lat, lon } = await geocodeAddress(data.address.trim());
+    if (lat !== null) {
+      existingConfig.lat = lat;
+      existingConfig.lon = lon;
+    }
+  }
+
+  // Source image update
+  if (image) {
+    const imgMatch = image.match(/^data:image\/(\w+);base64,/);
+    if (imgMatch) {
+      const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+      existingConfig.source_image = `sources/${slug}.${ext}`;
+    }
+  }
+
+  try {
+    // Build file list
+    const files = [
+      { path: `data/${existingConfig.csv || slug + '.csv'}`, content: mergedCsv },
+      { path: `data/mosques/${slug}.json`, content: JSON.stringify(existingConfig, null, 2) },
+      { path: `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
+    ];
+
+    // Source timetable image
+    if (image) {
+      const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
+      if (imgMatch) {
+        const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
+        files.push({ path: `data/sources/${slug}.${ext}`, base64: imgMatch[2] });
+      }
+    }
+
+    // Update index.json
+    let indexFile = null;
+    let existingConfigs = [];
+    try {
+      indexFile = await githubGetFile('data/mosques/index.json', env);
+      if (indexFile) {
+        existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+      }
+    } catch (e) { /* proceed */ }
+
+    // Replace the config in the index
+    const cfgIdx = existingConfigs.findIndex(c => c.slug === slug);
+    if (cfgIdx !== -1) {
+      existingConfigs[cfgIdx] = existingConfig;
+    } else {
+      existingConfigs.push(existingConfig);
+    }
+    existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
+    files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
+
+    // Single commit
+    await githubCommitFiles(files, `Update timetable: ${existingConfig.display_name}`, env);
+
+    // Create notification issue
+    await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
+
+    // Trigger lockscreen generation
+    triggerLockscreenGeneration(slug, env);
+
+    return jsonResponse({
+      success: true,
+      slug,
+      url: `/${slug}`,
+      pending: true,
+      message: `Timetable for ${existingConfig.display_name} has been updated!`,
+    });
+  } catch (e) {
+    console.error('Update error:', e);
+    return errorResponse('Failed to update timetable: ' + e.message, 500);
   }
 }
