@@ -9,6 +9,7 @@ let countdownInterval = null;
 let eshaRerenderId = null;
 let unsubTheme = null;
 let masjidId = null;
+let season = 'ramadan';
 
 function use24h() {
   return localStorage.getItem('iqamah-time-format') !== '12';
@@ -74,7 +75,10 @@ export async function render(container, { slug }) {
   container.innerHTML = getSkeleton();
 
   try {
-    const configRes = await fetch(`/data/mosques/${slug}.json`);
+    const [configRes, seasonRes] = await Promise.all([
+      fetch(`/data/mosques/${slug}.json`),
+      fetch('/data/season.json').catch(() => null),
+    ]);
     if (!configRes.ok) {
       container.innerHTML = `<div class="not-found">
         <div class="not-found-code">404</div>
@@ -84,6 +88,9 @@ export async function render(container, { slug }) {
       return;
     }
     config = await configRes.json();
+    if (seasonRes && seasonRes.ok) {
+      try { const s = await seasonRes.json(); season = s.season || 'ramadan'; } catch {}
+    }
     document.title = `${config.display_name} - Iqamah`;
 
     const csvRes = await fetch(`/data/${config.csv}`);
@@ -287,62 +294,65 @@ function applyNextPrayerHighlight(todayRow) {
     }
   });
 
-  // Sehri countdown
-  const sehriTime = todayRow['Sehri Ends'];
-  if (sehriTime) {
-    const sehriDate = parseTimeToDate(sehriTime, true);
-    const sehriCountdown = formatCountdown(sehriDate);
-    if (sehriCountdown) {
-      document.querySelectorAll('.banner-label').forEach(label => {
-        if (label.textContent.trim() === 'Sehri Ends') {
-          const span = document.createElement('span'); span.className = 'countdown'; span.textContent = sehriCountdown; label.appendChild(span);
-        }
-      });
+  // Sehri/Iftari countdowns only in Ramadan mode
+  if (season === 'ramadan') {
+    // Sehri countdown
+    const sehriTime = todayRow['Sehri Ends'];
+    if (sehriTime) {
+      const sehriDate = parseTimeToDate(sehriTime, true);
+      const sehriCountdown = formatCountdown(sehriDate);
+      if (sehriCountdown) {
+        document.querySelectorAll('.banner-label').forEach(label => {
+          if (label.textContent.trim() === 'Sehri Ends') {
+            const span = document.createElement('span'); span.className = 'countdown'; span.textContent = sehriCountdown; label.appendChild(span);
+          }
+        });
+      }
     }
-  }
 
-  // Tomorrow's sehri countdown
-  const eshaJamaatTime = todayRow["Esha Jama'at"];
-  if (eshaJamaatTime) {
-    const eshaDate = parseTimeToDate(eshaJamaatTime, false);
-    if (new Date() > eshaDate) {
-      const tomorrowRow = getTomorrowRow();
-      if (tomorrowRow) {
-        const tomorrowSehriTime = tomorrowRow['Sehri Ends'];
-        if (tomorrowSehriTime) {
-          const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
-          const parts = tomorrowSehriTime.trim().split(':');
-          let hours = parseInt(parts[0]); const minutes = parseInt(parts[1]);
-          if (hours === 12) hours = 0;
-          const tomorrowSehriDate = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours, minutes);
-          const tc = formatCountdown(tomorrowSehriDate);
-          if (tc) {
-            document.querySelectorAll('.banner-label').forEach(label => {
-              if (label.textContent.includes("Tomorrow")) {
-                const span = document.createElement('span'); span.className = 'countdown'; span.textContent = tc; label.appendChild(span);
-              }
-            });
+    // Tomorrow's sehri countdown
+    const eshaJamaatTime = todayRow["Esha Jama'at"];
+    if (eshaJamaatTime) {
+      const eshaDate = parseTimeToDate(eshaJamaatTime, false);
+      if (new Date() > eshaDate) {
+        const tomorrowRow = getTomorrowRow();
+        if (tomorrowRow) {
+          const tomorrowSehriTime = tomorrowRow['Sehri Ends'];
+          if (tomorrowSehriTime) {
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+            const parts = tomorrowSehriTime.trim().split(':');
+            let hours = parseInt(parts[0]); const minutes = parseInt(parts[1]);
+            if (hours === 12) hours = 0;
+            const tomorrowSehriDate = new Date(tomorrow.getFullYear(), tomorrow.getMonth(), tomorrow.getDate(), hours, minutes);
+            const tc = formatCountdown(tomorrowSehriDate);
+            if (tc) {
+              document.querySelectorAll('.banner-label').forEach(label => {
+                if (label.textContent.includes("Tomorrow")) {
+                  const span = document.createElement('span'); span.className = 'countdown'; span.textContent = tc; label.appendChild(span);
+                }
+              });
+            }
           }
         }
       }
     }
-  }
 
-  // Iftari countdown
-  const maghribTime = todayRow['Maghrib Iftari'];
-  if (maghribTime) {
-    const maghribDate = parseTimeToDate(maghribTime, false);
-    const iftariCountdown = formatCountdown(maghribDate);
-    if (iftariCountdown || (next && next.name === 'Maghrib')) {
-      document.querySelectorAll('.banner-item').forEach(item => {
-        const label = item.querySelector('.banner-label');
-        if (label && label.textContent.includes('Maghrib')) {
-          if (next && next.name === 'Maghrib') item.classList.add('next-prayer');
-          if (iftariCountdown) {
-            const span = document.createElement('span'); span.className = 'countdown'; span.textContent = iftariCountdown; label.appendChild(span);
+    // Iftari countdown
+    const maghribTime = todayRow['Maghrib Iftari'];
+    if (maghribTime) {
+      const maghribDate = parseTimeToDate(maghribTime, false);
+      const iftariCountdown = formatCountdown(maghribDate);
+      if (iftariCountdown || (next && next.name === 'Maghrib')) {
+        document.querySelectorAll('.banner-item').forEach(item => {
+          const label = item.querySelector('.banner-label');
+          if (label && label.textContent.includes('Maghrib')) {
+            if (next && next.name === 'Maghrib') item.classList.add('next-prayer');
+            if (iftariCountdown) {
+              const span = document.createElement('span'); span.className = 'countdown'; span.textContent = iftariCountdown; label.appendChild(span);
+            }
           }
-        }
-      });
+        });
+      }
     }
   }
 }
@@ -365,10 +375,28 @@ function renderTodayView(target) {
     const isStale = lastDate && lastDate < new Date();
     const currentMonth = new Date().toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
 
+    // Build Eid banner even when no timetable data
+    let noTimesEidHtml = '';
+    if (season === 'eid' && config.eid_salah) {
+      const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
+      const pills = [];
+      let m;
+      while ((m = regex.exec(config.eid_salah)) !== null) {
+        pills.push(`<span class="eid-time-pill">${m[0]}</span>`);
+      }
+      noTimesEidHtml = `
+        <div class="eid-banner">
+          <div class="eid-banner-label">Eid Salah</div>
+          <div class="eid-banner-times">${pills.join('')}</div>
+          <div class="eid-banner-raw">${config.eid_salah}</div>
+        </div>`;
+    }
+
     if (isStale) {
       target.innerHTML = `
         <div class="prayer-times-view">
           <header><h1>${config.display_name}</h1></header>
+          ${noTimesEidHtml}
           <div class="stale-notice">
             <h2>No times for ${currentMonth}</h2>
             <p>Could you help by uploading the latest timetable?</p>
@@ -376,7 +404,11 @@ function renderTodayView(target) {
           </div>
         </div>`;
     } else {
-      target.innerHTML = `<div class="prayer-times-view"><div class="error">No prayer times available for today.<br><small>Check back when the timetable period begins.</small></div></div>`;
+      target.innerHTML = `<div class="prayer-times-view">
+        <header><h1>${config.display_name}</h1></header>
+        ${noTimesEidHtml}
+        <div class="error">No prayer times available for today.<br><small>Check back when the timetable period begins.</small></div>
+      </div>`;
     }
     return;
   }
@@ -389,38 +421,83 @@ function renderTodayView(target) {
     ? `${hijriParts[0]} ${monthAbbrevMap[hijriParts[1]]} 1447`
     : `${hijriRaw} Ramadan 1447`;
 
-  const tomorrowRow = getTomorrowRow();
-  const tomorrowSehri = tomorrowRow ? tomorrowRow['Sehri Ends'] : null;
-  const todaySehri = todayRow['Sehri Ends'];
-  const sehriPassed = todaySehri && parseTimeToDate(todaySehri, true) < new Date();
+  const isRamadan = season === 'ramadan';
+  const isEid = season === 'eid';
 
-  let sehriBannerHtml;
-  if (tomorrowSehri) {
-    const frontLabel = sehriPassed ? "Tomorrow's Sehri" : 'Sehri Ends';
-    const frontTime = sehriPassed ? tomorrowSehri : todaySehri;
-    const backLabel = sehriPassed ? 'Sehri Ends' : "Tomorrow's Sehri";
-    const backTime = sehriPassed ? todaySehri : tomorrowSehri;
-    sehriBannerHtml = `<div class="flip-card" id="sehriFlip">
-      <div class="flip-card-inner">
-        <div class="flip-card-front banner-item">
-          <div class="flip-hint">\u21BB</div>
-          <div class="banner-label">${frontLabel}</div>
-          <div class="banner-time">${ft(frontTime, true)}</div>
+  // Override hijri line for Eid
+  const hijriDisplay = isEid ? '1 Shawwal 1447 - Eid al-Fitr' : hijriDate;
+
+  // Sehri/Iftari banner only in Ramadan mode
+  let sehriBannerHtml = '';
+  if (isRamadan) {
+    const tomorrowRow = getTomorrowRow();
+    const tomorrowSehri = tomorrowRow ? tomorrowRow['Sehri Ends'] : null;
+    const todaySehri = todayRow['Sehri Ends'];
+    const sehriPassed = todaySehri && parseTimeToDate(todaySehri, true) < new Date();
+
+    if (tomorrowSehri) {
+      const frontLabel = sehriPassed ? "Tomorrow's Sehri" : 'Sehri Ends';
+      const frontTime = sehriPassed ? tomorrowSehri : todaySehri;
+      const backLabel = sehriPassed ? 'Sehri Ends' : "Tomorrow's Sehri";
+      const backTime = sehriPassed ? todaySehri : tomorrowSehri;
+      sehriBannerHtml = `<div class="flip-card" id="sehriFlip">
+        <div class="flip-card-inner">
+          <div class="flip-card-front banner-item">
+            <div class="flip-hint">\u21BB</div>
+            <div class="banner-label">${frontLabel}</div>
+            <div class="banner-time">${ft(frontTime, true)}</div>
+          </div>
+          <div class="flip-card-back banner-item">
+            <div class="flip-hint">\u21BB</div>
+            <div class="banner-label">${backLabel}</div>
+            <div class="banner-time">${ft(backTime, true)}</div>
+          </div>
         </div>
-        <div class="flip-card-back banner-item">
-          <div class="flip-hint">\u21BB</div>
-          <div class="banner-label">${backLabel}</div>
-          <div class="banner-time">${ft(backTime, true)}</div>
+      </div>`;
+    } else {
+      sehriBannerHtml = `<div class="banner-item"><div class="banner-label">Sehri Ends</div><div class="banner-time">${ft(todaySehri, true)}</div></div>`;
+    }
+  }
+
+  // Maghrib label changes by season
+  const maghribLabel = isRamadan ? 'Maghrib/Iftari' : 'Maghrib';
+
+  // Eid banner (shown in eid mode if masjid has eid_salah)
+  let eidBannerHtml = '';
+  if (isEid && config.eid_salah) {
+    const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
+    const pills = [];
+    let m;
+    while ((m = regex.exec(config.eid_salah)) !== null) {
+      pills.push(`<span class="eid-time-pill">${m[0]}</span>`);
+    }
+    eidBannerHtml = `
+      <div class="eid-banner">
+        <div class="eid-banner-label">Eid Salah</div>
+        <div class="eid-banner-times">${pills.length > 0 ? pills.join('') : ''}</div>
+        <div class="eid-banner-raw">${config.eid_salah}</div>
+      </div>`;
+  }
+
+  // Build section banner HTML (Ramadan = Sehri + Iftari, others = just Eid or nothing)
+  let sectionBannerHtml = '';
+  if (isRamadan) {
+    sectionBannerHtml = `
+      <div class="section-banner">
+        ${sehriBannerHtml}
+        <div class="banner-item">
+          <div class="banner-label">${maghribLabel}</div>
+          <div class="banner-time">${ft(todayRow['Maghrib Iftari'], false)}</div>
         </div>
-      </div>
-    </div>`;
-  } else {
-    sehriBannerHtml = `<div class="banner-item"><div class="banner-label">Sehri Ends</div><div class="banner-time">${ft(todaySehri, true)}</div></div>`;
+      </div>`;
+  } else if (eidBannerHtml) {
+    sectionBannerHtml = eidBannerHtml;
   }
 
   // Build unified prayer rows: Start | Name | Jama'at
+  const fajrStart = isRamadan ? (todayRow['Sehri Ends'] || null) : (todayRow['Fajr Start'] || todayRow['Sehri Ends'] || null);
   const prayerRows = [];
-  prayerRows.push({ name: 'Fajr', isAM: true, start: todayRow['Sehri Ends'] || null, jamaat: todayRow["Fajr Jama'at"] });
+  prayerRows.push({ name: 'Fajr', isAM: true, start: fajrStart, jamaat: todayRow["Fajr Jama'at"] });
   if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', isAM: false, start: todayRow['Zawal'], jamaat: null });
   prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'] || null, jamaat: todayRow["Zohar Jama'at"] || '1:00' });
   prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'] || null, jamaat: todayRow["Asr Jama'at"] });
@@ -440,18 +517,12 @@ function renderTodayView(target) {
         <button class="share-icon-btn" id="shareBtn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
         <h1>${config.display_name}</h1>
         <div class="date-line">${englishDate}</div>
-        <div class="hijri-line">${hijriDate}</div>
+        <div class="hijri-line">${hijriDisplay}</div>
       </header>
 
       ${renderToggle('today')}
 
-      <div class="section-banner">
-        ${sehriBannerHtml}
-        <div class="banner-item">
-          <div class="banner-label">Maghrib/Iftari</div>
-          <div class="banner-time">${ft(todayRow['Maghrib Iftari'], false)}</div>
-        </div>
-      </div>
+      ${sectionBannerHtml}
 
       <div class="times-table-card">
         <div class="times-table-header">

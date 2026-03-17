@@ -1644,6 +1644,93 @@
       .desktop-masjid-list .masjids-title { font-size: 0; }
       .desktop-masjid-list .masjids-title::after { content: 'All Masjids'; font-size: 1.5rem; font-family: inherit; }
     }
+    /* ============================================
+       Eid Times Page
+       ============================================ */
+    .eid-times-view { padding: 16px 16px 100px; max-width: 600px; margin: 0 auto; }
+    .eid-times-header { text-align: center; margin-bottom: 24px; padding-top: 16px; }
+    .eid-times-header h1 { font-family: 'Lato', sans-serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
+    .eid-times-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+    .eid-times-hint { font-size: 0.72rem; color: var(--text-muted); margin: 6px 0 0; opacity: 0.7; }
+    .eid-times-empty { text-align: center; color: var(--text-muted); padding: 40px 0; font-size: 0.9rem; }
+    .eid-times-list { display: flex; flex-direction: column; gap: 12px; }
+    .eid-card {
+      display: flex; gap: 14px; padding: 16px;
+      background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;
+    }
+    .eid-card:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-30); }
+    .eid-card-icon { flex-shrink: 0; width: 36px; height: 36px; color: var(--gold); opacity: 0.7; margin-top: 2px; }
+    .eid-card-icon svg { width: 100%; height: 100%; }
+    .eid-card-content { flex: 1; min-width: 0; }
+    .eid-card-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 4px; }
+    .eid-card-address { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+    .eid-card-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 0; }
+    .eid-time-pill {
+      display: inline-block; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10); border-radius: 20px;
+      color: var(--gold); white-space: nowrap;
+    }
+    .eid-card-raw { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* Eid banner in prayer-times (replaces Sehri/Iftari) */
+    .eid-banner {
+      background: var(--card-bg); border: 1px solid var(--gold-tint-10); border-radius: 14px;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      padding: 14px 16px; text-align: center; margin-bottom: 12px;
+    }
+    .eid-banner-label { font-family: 'Lato', sans-serif; font-size: 0.85rem; color: var(--gold); margin-bottom: 10px; font-weight: 600; }
+    .eid-banner-times { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 6px; }
+    .eid-banner-raw { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; }
+
+    /* Eid greeting on home */
+    .eid-greeting { text-align: center; padding: 0 0 8px; }
+    .eid-greeting-title {
+      font-family: 'Lato', sans-serif; font-size: 1.6rem; font-weight: 700;
+      color: var(--gold); margin-bottom: 4px;
+      text-shadow: 0 0 20px var(--gold-shadow);
+    }
+    .eid-greeting-name { font-family: 'Lato', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .eid-greeting-subtitle { font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
+
+    /* Eid pills on hero card */
+    .hero-eid-times { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 8px 0 14px; }
+    .hero-eid-label { font-size: 0.72rem; color: var(--text-muted); margin-right: 2px; }
+
+    /* Eid welcome overlay */
+    .eid-overlay { background: linear-gradient(180deg, #1a1028 0%, #2a1a3a 30%, #1e1230 60%, #150d20 100%); }
+    .eid-overlay .welcome-card { position: relative; z-index: 1; }
+    .eid-string-lights { position: absolute; top: 18px; left: 0; right: 0; z-index: 2; pointer-events: none; }
+    .eid-lantern { position: absolute; top: 20px; z-index: 2; pointer-events: none; opacity: 0.7; transform-origin: top center; animation: lanternSway 4s ease-in-out infinite; }
+    .eid-lantern-1 { left: 18px; top: 38px; animation-delay: -1s; }
+    .eid-lantern-2 { left: 65px; top: 35px; animation-delay: -2.5s; opacity: 0.5; }
+    .eid-lantern-3 { left: 120px; top: 30px; animation-delay: -4s; opacity: 0.4; }
+    .eid-lantern-4 { right: 18px; top: 30px; animation-delay: -0.5s; }
+    .eid-lantern-5 { right: 65px; top: 36px; animation-delay: -3s; opacity: 0.5; }
+    .eid-lantern-6 { right: 120px; top: 36px; animation-delay: -1.8s; opacity: 0.4; }
+    @keyframes lanternSway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    .eid-welcome-crescent { margin-bottom: 8px; filter: drop-shadow(0 0 30px rgba(212,175,55,0.5)) drop-shadow(0 0 60px rgba(212,175,55,0.2)); }
+    .eid-welcome-card { padding-top: 40px; }
+    .eid-welcome-title {
+      font-family: 'Lato', sans-serif; font-size: 2.2rem; font-weight: 700;
+      color: #d4af37; margin-bottom: 10px;
+      text-shadow: 0 0 30px rgba(212,175,55,0.5), 0 0 60px rgba(212,175,55,0.2), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .eid-welcome-dua { font-size: 1rem; color: rgba(212,175,55,0.7); font-style: italic; margin-bottom: 28px; }
+    .eid-welcome-btn {
+      display: inline-block; text-decoration: none; text-align: center;
+      background: linear-gradient(135deg, #f0d060, #d4af37, #b8941f);
+      box-shadow: 0 4px 20px rgba(212,175,55,0.4);
+      color: #0a1210;
+    }
+    #eidBrowseSlot .home-browse-all { margin-top: -16px; margin-bottom: 20px; }
+
+    @media (min-width: 768px) {
+      .eid-times-view { padding-bottom: 40px; }
+      .eid-times-header h1 { font-size: 1.8rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -1655,6 +1742,7 @@
       </a>
       <div class="desktop-nav-links" id="desktop-nav-links">
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>
+        <a href="/eid" class="desktop-nav-link" data-nav="eid-times" data-link id="desktopEidLink" style="display:none">Eid Salah</a>
         <a href="/add" class="desktop-nav-link" data-nav="add-masjid" data-link>Add Masjid</a>
         <a href="/settings" class="desktop-nav-link" data-nav="settings" data-link>Settings</a>
       </div>
