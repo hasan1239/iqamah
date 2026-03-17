@@ -9,6 +9,7 @@ let cachedConfigs = [];
 let heroCountdownInterval = null;
 let toastTimer = null;
 let masjidsModule = null;
+let seasonConfig = { season: 'ramadan', eid_date: '' };
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -50,6 +51,8 @@ export function render(container) {
 
       <div id="heroContainer"></div>
 
+      <div id="eidBrowseSlot"></div>
+
       <div id="recentSection"></div>
 
       <div class="home-browse-all">
@@ -73,6 +76,8 @@ export function render(container) {
   setupInstallBanner();
   loadDesktopMasjidList();
 
+  // Welcome screen priority: Eid welcome > rebrand welcome (never both)
+  // Eid welcome is deferred until season.json is loaded (see loadMasjids)
   if (showRebrand) {
     showWelcomeScreen();
   }
@@ -145,13 +150,235 @@ function showWelcomeScreen() {
   });
 }
 
+function showEidWelcome() {
+  if (localStorage.getItem('iqamah-eid-dismissed')) return;
+  // Don't show if rebrand welcome is being shown
+  if (!localStorage.getItem('iqamah-rebrand-dismissed')) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'welcome-overlay eid-overlay';
+  overlay.innerHTML = `
+    <div class="eid-string-lights">
+      <svg viewBox="0 0 400 40" preserveAspectRatio="none" width="100%" height="40">
+        <path d="M0 0 Q50 35 100 15 Q150 -5 200 15 Q250 35 300 15 Q350 -5 400 0" fill="none" stroke="#c9a227" stroke-width="1.2" opacity="0.6"/>
+        <path d="M0 0 Q60 40 120 18 Q180 -2 240 18 Q300 38 360 15 Q390 5 400 0" fill="none" stroke="#c9a227" stroke-width="1" opacity="0.35"/>
+        ${Array.from({length: 16}, (_, i) => {
+          const x = i * 26 + 10;
+          const y = 15 + 12 * Math.sin((x / 400) * Math.PI * 2);
+          return `<circle cx="${x}" cy="${y}" r="2.5" fill="#f0d060" opacity="0.7"/>`;
+        }).join('')}
+        ${Array.from({length: 14}, (_, i) => {
+          const x = i * 30 + 15;
+          const y = 18 + 12 * Math.sin((x / 400) * Math.PI * 2 + 0.8);
+          return `<circle cx="${x}" cy="${y}" r="2" fill="#d4af37" opacity="0.45"/>`;
+        }).join('')}
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-1">
+      <svg viewBox="0 0 30 90" width="26" height="80">
+        <line x1="15" y1="0" x2="15" y2="25" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="23" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 27 Q7 25 9 25 L21 25 Q23 25 23 27 L23 58 Q23 66 15 66 Q7 66 7 58Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 27 Q7 25 9 25 L21 25 Q23 25 23 27 L23 58 Q23 66 15 66 Q7 66 7 58Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="45" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="45" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-2">
+      <svg viewBox="0 0 30 110" width="22" height="95">
+        <line x1="15" y1="0" x2="15" y2="40" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="38" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 42 Q7 40 9 40 L21 40 Q23 40 23 42 L23 73 Q23 81 15 81 Q7 81 7 73Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 42 Q7 40 9 40 L21 40 Q23 40 23 42 L23 73 Q23 81 15 81 Q7 81 7 73Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="60" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="60" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-3">
+      <svg viewBox="0 0 30 100" width="26" height="85">
+        <line x1="15" y1="0" x2="15" y2="30" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="28" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 32 Q7 30 9 30 L21 30 Q23 30 23 32 L23 63 Q23 71 15 71 Q7 71 7 63Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 32 Q7 30 9 30 L21 30 Q23 30 23 32 L23 63 Q23 71 15 71 Q7 71 7 63Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="50" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="50" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-4">
+      <svg viewBox="0 0 30 90" width="26" height="80">
+        <line x1="15" y1="0" x2="15" y2="25" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="23" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 27 Q7 25 9 25 L21 25 Q23 25 23 27 L23 58 Q23 66 15 66 Q7 66 7 58Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 27 Q7 25 9 25 L21 25 Q23 25 23 27 L23 58 Q23 66 15 66 Q7 66 7 58Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="45" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="45" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-5">
+      <svg viewBox="0 0 30 110" width="22" height="95">
+        <line x1="15" y1="0" x2="15" y2="40" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="38" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 42 Q7 40 9 40 L21 40 Q23 40 23 42 L23 73 Q23 81 15 81 Q7 81 7 73Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 42 Q7 40 9 40 L21 40 Q23 40 23 42 L23 73 Q23 81 15 81 Q7 81 7 73Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="60" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="60" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="eid-lantern eid-lantern-6">
+      <svg viewBox="0 0 30 100" width="20" height="75">
+        <line x1="15" y1="0" x2="15" y2="30" stroke="#c9a227" stroke-width="1"/>
+        <rect x="10" y="28" width="10" height="4" rx="1" fill="#c9a227"/>
+        <path d="M7 32 Q7 30 9 30 L21 30 Q23 30 23 32 L23 63 Q23 71 15 71 Q7 71 7 63Z" fill="none" stroke="#c9a227" stroke-width="1.5"/>
+        <path d="M7 32 Q7 30 9 30 L21 30 Q23 30 23 32 L23 63 Q23 71 15 71 Q7 71 7 63Z" fill="#d4af37" opacity="0.12"/>
+        <ellipse cx="15" cy="50" rx="4" ry="8" fill="#d4af37" opacity="0.25"/>
+        <ellipse cx="15" cy="50" rx="2" ry="4" fill="#f0d060" opacity="0.3"/>
+      </svg>
+    </div>
+    <div class="welcome-card eid-welcome-card">
+      <div class="eid-welcome-crescent">
+        <svg viewBox="0 0 240 240" width="200" height="200">
+          <defs>
+            <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#d4af37" stop-opacity="0.3"/>
+              <stop offset="60%" stop-color="#d4af37" stop-opacity="0.1"/>
+              <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="moonGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f0d060"/>
+              <stop offset="50%" stop-color="#d4af37"/>
+              <stop offset="100%" stop-color="#b8941f"/>
+            </linearGradient>
+          </defs>
+          <circle cx="120" cy="120" r="100" fill="url(#moonGlow)"/>
+          <!-- Crescent moon -->
+          <path d="M150 30 A80 80 0 1 0 150 210 A58 58 0 1 1 150 30Z" fill="url(#moonGold)" opacity="0.9"/>
+          <!-- Mosque silhouette inside crescent -->
+          <g fill="#1a1028" opacity="0.85">
+            <!-- Base platform -->
+            <rect x="72" y="158" width="96" height="6" rx="1"/>
+            <!-- Main building -->
+            <rect x="85" y="128" width="70" height="30"/>
+            <!-- Central large dome -->
+            <path d="M100 128 Q100 105 120 98 Q140 105 140 128Z"/>
+            <!-- Central finial (crescent on stick) -->
+            <line x1="120" y1="98" x2="120" y2="88" stroke="#1a1028" stroke-width="2"/>
+            <path d="M118 90 A3 3 0 1 1 122 88 A2 2 0 1 0 118 90Z"/>
+            <!-- Left small dome -->
+            <path d="M85 128 Q85 118 95 115 Q105 118 105 128Z"/>
+            <!-- Right small dome -->
+            <path d="M135 128 Q135 118 145 115 Q155 118 155 128Z"/>
+            <!-- Left tall minaret -->
+            <rect x="74" y="108" width="7" height="50"/>
+            <path d="M73 108 Q77.5 98 82 108Z"/>
+            <line x1="77.5" y1="98" x2="77.5" y2="92" stroke="#1a1028" stroke-width="1.5"/>
+            <circle cx="77.5" cy="91" r="2"/>
+            <rect x="73" y="125" width="9" height="2" rx="0.5"/>
+            <rect x="73" y="140" width="9" height="2" rx="0.5"/>
+            <!-- Right tall minaret -->
+            <rect x="159" y="112" width="7" height="46"/>
+            <path d="M158 112 Q162.5 102 167 112Z"/>
+            <line x1="162.5" y1="102" x2="162.5" y2="96" stroke="#1a1028" stroke-width="1.5"/>
+            <circle cx="162.5" cy="95" r="2"/>
+            <rect x="158" y="128" width="9" height="2" rx="0.5"/>
+            <rect x="158" y="142" width="9" height="2" rx="0.5"/>
+            <!-- Door arch -->
+            <path d="M114 158 L114 145 Q114 138 120 138 Q126 138 126 145 L126 158Z"/>
+            <!-- Windows -->
+            <path d="M96 148 Q96 143 100 143 Q104 143 104 148Z"/>
+            <path d="M136 148 Q136 143 140 143 Q144 143 144 148Z"/>
+          </g>
+          <!-- Stars -->
+          <circle cx="165" cy="55" r="5" fill="#f0d060"/>
+          <path d="M165 47 L165 63 M157 55 L173 55" stroke="#f0d060" stroke-width="2" opacity="0.8"/>
+          <circle cx="180" cy="85" r="3" fill="#d4af37" opacity="0.8"/>
+          <path d="M180 80 L180 90 M175 85 L185 85" stroke="#d4af37" stroke-width="1.2" opacity="0.6"/>
+          <circle cx="170" cy="40" r="2" fill="#d4af37" opacity="0.6"/>
+          <circle cx="55" cy="60" r="2.5" fill="#d4af37" opacity="0.5"/>
+          <circle cx="45" cy="90" r="2" fill="#d4af37" opacity="0.4"/>
+          <circle cx="65" cy="45" r="1.5" fill="#d4af37" opacity="0.5"/>
+          <circle cx="190" cy="110" r="1.5" fill="#d4af37" opacity="0.5"/>
+          <!-- Sparkle dots -->
+          <circle cx="75" cy="75" r="1" fill="#f0d060" opacity="0.6"/>
+          <circle cx="160" cy="150" r="1" fill="#f0d060" opacity="0.4"/>
+          <circle cx="50" cy="130" r="1" fill="#f0d060" opacity="0.3"/>
+          <circle cx="185" cy="140" r="1.2" fill="#f0d060" opacity="0.5"/>
+          <circle cx="70" cy="160" r="1" fill="#f0d060" opacity="0.3"/>
+        </svg>
+      </div>
+      <h1 class="eid-welcome-title">Eid Mubarak!</h1>
+      <p class="eid-welcome-dua">Taqabbalallahu minna wa minkum</p>
+      <a href="/eid" class="welcome-btn eid-welcome-btn" id="eidWelcomeBtn" data-link>View Eid Salah Times</a>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add('visible'));
+
+  overlay.querySelector('#eidWelcomeBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    overlay.classList.remove('visible');
+    overlay.addEventListener('transitionend', () => overlay.remove());
+    localStorage.setItem('iqamah-eid-dismissed', '1');
+    // Navigate after dismiss
+    import('../router.js').then(({ navigate }) => navigate('/eid'));
+  });
+
+  // Also dismiss on clicking overlay background
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) {
+      overlay.classList.remove('visible');
+      overlay.addEventListener('transitionend', () => overlay.remove());
+      localStorage.setItem('iqamah-eid-dismissed', '1');
+    }
+  });
+}
+
+function renderEidBrowseButton() {
+  const slot = document.getElementById('eidBrowseSlot');
+  if (!slot) return;
+
+  if (seasonConfig.season === 'eid') {
+    // Show Eid welcome if not dismissed
+    showEidWelcome();
+
+    const EID_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+    slot.innerHTML = `
+      <div class="home-browse-all">
+        <a href="/eid" class="home-browse-btn" data-link>
+          ${EID_SVG}
+          <span>Browse All Eid Salahs</span>
+          ${CHEVRON_SVG}
+        </a>
+      </div>`;
+  }
+}
+
+function updateGreetingForSeason() {
+  if (seasonConfig.season !== 'eid') return;
+  const greetingEl = document.querySelector('.greeting');
+  if (!greetingEl) return;
+  const userName = localStorage.getItem('iqamah-user-name');
+  greetingEl.className = 'greeting eid-greeting';
+  greetingEl.innerHTML = userName
+    ? `<div class="eid-greeting-title">Eid Mubarak,</div><div class="eid-greeting-name">${userName}!</div><div class="eid-greeting-subtitle">Taqabbalallahu minna wa minkum</div>`
+    : `<div class="eid-greeting-title">Eid Mubarak!</div><div class="eid-greeting-subtitle">Taqabbalallahu minna wa minkum</div>`;
+}
+
 async function loadMasjids() {
   try {
-    const res = await fetch('/data/mosques/index.json');
-    if (!res.ok) return;
-    cachedConfigs = (await res.json()).filter(c => !c.test_masjid);
+    const [masjidRes, seasonRes] = await Promise.all([
+      fetch('/data/mosques/index.json'),
+      fetch('/data/season.json').catch(() => null),
+    ]);
+    if (!masjidRes.ok) return;
+    cachedConfigs = (await masjidRes.json()).filter(c => !c.test_masjid);
+    if (seasonRes && seasonRes.ok) {
+      try { seasonConfig = await seasonRes.json(); } catch {}
+    }
     renderHero();
     renderRecentlyViewed();
+    renderEidBrowseButton();
+    updateGreetingForSeason();
   } catch (error) {
     console.error('Error loading masjids:', error);
   }
@@ -173,6 +400,21 @@ function renderHero() {
 
   const heroPendingBadge = pinnedConfig.approved === false ? '<span class="pending-badge">Pending Review</span>' : '';
 
+  // Eid pills for hero card
+  let heroEidHtml = '';
+  if (seasonConfig.season === 'eid' && pinnedConfig.eid_salah) {
+    const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
+    const pills = [];
+    let m;
+    while ((m = regex.exec(pinnedConfig.eid_salah)) !== null) {
+      pills.push(`<span class="eid-time-pill">${m[0]}</span>`);
+    }
+    if (pills.length > 0) {
+      const salahLabel = 'Eid Salah:';
+      heroEidHtml = `<div class="hero-eid-times"><span class="hero-eid-label">${salahLabel}</span>${pills.join('')}</div>`;
+    }
+  }
+
   heroContainer.innerHTML = `
     <a href="/${pinnedConfig.slug}" class="hero-card hero-card-link" data-link>
       <div class="hero-header">
@@ -185,6 +427,7 @@ function renderHero() {
         </div>
       </div>
       <div class="hero-name">${pinnedConfig.display_name}</div>
+      ${heroEidHtml}
       <div class="hero-body">
         <div class="hero-next-prayer" id="heroNextStart">
           <div class="hero-next-skeleton">
@@ -251,23 +494,34 @@ function renderSuggestedHero(heroContainer) {
     return;
   }
 
-  heroContainer.innerHTML = `
-    <div class="sehri-iftari-card">
-      <div class="sehri-iftari-header">
-        <span class="sehri-iftari-badge">Today's Times</span>
-        <span class="sehri-iftari-source">${config.display_name}</span>
-      </div>
-      <div class="sehri-iftari-body" id="sehriIftariBody">
-        <div class="sehri-iftari-loading">
-          <div class="skeleton-bone" style="width:80px;height:14px"></div>
-          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+  // Only show Sehri/Iftari card in ramadan mode
+  if (seasonConfig.season === 'ramadan') {
+    heroContainer.innerHTML = `
+      <div class="sehri-iftari-card">
+        <div class="sehri-iftari-header">
+          <span class="sehri-iftari-badge">Today's Times</span>
+          <span class="sehri-iftari-source">${config.display_name}</span>
         </div>
-      </div>
-      <a href="/masjids" class="sehri-iftari-cta sehri-iftari-cta-mobile" data-link>Choose My Masjid</a>
-      <div class="sehri-iftari-cta-desktop">Choose My Masjid below</div>
-    </div>`;
+        <div class="sehri-iftari-body" id="sehriIftariBody">
+          <div class="sehri-iftari-loading">
+            <div class="skeleton-bone" style="width:80px;height:14px"></div>
+            <div class="skeleton-bone" style="width:80px;height:14px"></div>
+          </div>
+        </div>
+        <a href="/masjids" class="sehri-iftari-cta sehri-iftari-cta-mobile" data-link>Choose My Masjid</a>
+        <div class="sehri-iftari-cta-desktop">Choose My Masjid below</div>
+      </div>`;
+    loadSehriIftari(config);
+    return;
+  }
 
-  loadSehriIftari(config);
+  // Default/eid mode: just show a "choose masjid" prompt
+  heroContainer.innerHTML = `
+    <div class="home-no-hero">
+      <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
+      <div class="home-no-hero-text">No masjid selected</div>
+      <div class="home-no-hero-sub">Set a masjid as My Masjid from the <a href="/masjids" data-link>Masjids</a> tab</div>
+    </div>`;
 }
 
 async function loadSehriIftari(config) {
@@ -442,8 +696,9 @@ function getNextJamaatFromRow(row) {
 }
 
 function getNextStartFromRow(row) {
+  const sehriLabel = seasonConfig.season === 'ramadan' ? 'Sehri' : 'Fajr';
   const prayers = [
-    { name: 'Sehri', keys: ['Sehri Ends'], isAM: true },
+    { name: sehriLabel, keys: ['Sehri Ends'], isAM: true },
     { name: 'Dhuhr', keys: ['Zohr Start', 'Zuhr Start', 'Zohr'], isAM: false },
     { name: 'Asr', keys: ['Asr Start', 'Asr'], isAM: false },
     { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },

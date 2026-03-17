@@ -22,6 +22,7 @@ async function loadView(viewName) {
     'settings': () => import('./views/settings.js'),
     'add-masjid': () => import('./views/add-masjid.js'),
     'update-masjid': () => import('./views/update-masjid.js'),
+    'eid-times': () => import('./views/eid-times.js'),
     'not-found': () => import('./views/not-found.js'),
   };
 

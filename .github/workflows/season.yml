@@ -1,0 +1,62 @@
+name: Set Season
+on:
+  workflow_dispatch:
+    inputs:
+      season:
+        description: 'Season mode'
+        required: true
+        type: choice
+        options:
+          - default
+          - ramadan
+          - eid
+  schedule:
+    - cron: '0 */4 * * *'  # Check every 4 hours
+
+jobs:
+  set-season:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Write season.json (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo '{ "season": "${{ inputs.season }}", "set_at": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'" }' > data/season.json
+
+      - name: Auto-expire eid to default (scheduled trigger)
+        if: github.event_name == 'schedule'
+        run: |
+          if [ ! -f data/season.json ]; then exit 0; fi
+          SHOULD_EXPIRE=$(python3 -c "
+          import json
+          from datetime import datetime, timedelta, timezone
+          data = json.load(open('data/season.json'))
+          if data.get('season') != 'eid' or not data.get('set_at'):
+              print('no')
+          else:
+              set_at = datetime.fromisoformat(data['set_at'].replace('Z','+00:00'))
+              # Expire at end of the day after it was set (midnight UTC)
+              # e.g. set 18 Mar 18:00 -> expires 20 Mar 00:00 (covers all of 19 Mar)
+              expire_at = (set_at.date() + timedelta(days=2))
+              now = datetime.now(timezone.utc).date()
+              print('yes' if now >= expire_at else 'no')
+              print(f'Set: {set_at.date()}, Expires: {expire_at}, Now: {now}', end='', file=__import__('sys').stderr)
+          ")
+          echo "Should expire: $SHOULD_EXPIRE"
+          if [ "$SHOULD_EXPIRE" = "yes" ]; then
+            echo '{ "season": "default" }' > data/season.json
+            echo "Switched to default mode"
+          else
+            echo "Keeping current season"
+            exit 0
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/season.json
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Set season to $(python3 -c "import json; print(json.load(open('data/season.json')).get('season',''))")"
+          git push

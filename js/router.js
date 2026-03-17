@@ -37,6 +37,9 @@ export function resolvePath(path) {
   if (clean === 'times') {
     return { view: 'prayer-times', params: { slug: null } };
   }
+  if (clean === 'eid') {
+    return { view: 'eid-times', params: {} };
+  }
 
   if (clean.startsWith('update/')) {
     return { view: 'update-masjid', params: { slug: clean.split('/')[1] } };

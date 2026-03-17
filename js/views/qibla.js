@@ -27,11 +27,11 @@ export function render(container) {
   container.innerHTML = `
     <div class="qibla-view">
       <div class="qibla-bearing-display" id="qiblaBearingDisplay">
-        <div class="qibla-bearing-value" id="qiblaBearing">--°</div>
         <div class="qibla-badge" id="qiblaBadge">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
           <span id="qiblaStatus">Getting location...</span>
         </div>
+        <div class="qibla-bearing-value" id="qiblaBearing">--°</div>
       </div>
 
       <div class="compass-container" id="compassContainer">
