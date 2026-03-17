@@ -1317,7 +1317,9 @@
     .qibla-desktop-sub { font-size: 0.9rem; }
 
     /* Bearing display */
-    .qibla-bearing-display { margin-bottom: 24px; }
+    .qibla-bearing-display { margin-bottom: 24px; display: flex; flex-direction: column; align-items: center; }
+    .qibla-bearing-display .qibla-badge { order: 0; }
+    .qibla-bearing-display .qibla-bearing-value { order: 1; }
     .qibla-badge {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 4px 14px; border-radius: 999px;
