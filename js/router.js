@@ -38,6 +38,10 @@ export function resolvePath(path) {
     return { view: 'prayer-times', params: { slug: null } };
   }
 
+  if (clean.startsWith('update/')) {
+    return { view: 'update-masjid', params: { slug: clean.split('/')[1] } };
+  }
+
   // Single segment = masjid slug
   if (!clean.includes('/') && !clean.includes('.')) {
     return { view: 'prayer-times', params: { slug: clean } };

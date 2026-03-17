@@ -92,13 +92,15 @@ export async function render(container, { slug }) {
 
     renderContent(container);
 
-    // Show pending notice if unapproved
-    if (config.approved === false) {
+    // Show pending notice if unapproved or pending update
+    if (config.approved === false || config.pending_update === true) {
       const ptView = container.querySelector('.prayer-times-view');
       if (ptView) {
         const notice = document.createElement('div');
         notice.className = 'pending-notice';
-        notice.innerHTML = 'This masjid is pending review<br>Times may not be verified yet';
+        notice.innerHTML = config.pending_update
+          ? 'Timetable update pending review<br>Times may not be verified yet'
+          : 'This masjid is pending review<br>Times may not be verified yet';
         const toggle = ptView.querySelector('.view-toggle');
         if (toggle) {
           toggle.parentNode.insertBefore(notice, toggle);
@@ -367,10 +369,10 @@ function renderTodayView(target) {
       target.innerHTML = `
         <div class="prayer-times-view">
           <header><h1>${config.display_name}</h1></header>
-          ${renderToggle('today')}
           <div class="stale-notice">
-            <h2>Times for ${currentMonth} are not yet available</h2>
-            <p>The current timetable has ended. New times will be added soon.</p>
+            <h2>No times for ${currentMonth}</h2>
+            <p>Could you help by uploading the latest timetable?</p>
+            <a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>
           </div>
         </div>`;
     } else {
@@ -470,6 +472,24 @@ function renderTodayView(target) {
       </div>
     </div>
   `;
+
+  // Expiring soon banner
+  const lastRow = csvData[csvData.length - 1];
+  if (lastRow) {
+    const lastDate = parseDate(lastRow['Date']);
+    const daysLeft = Math.ceil((lastDate - new Date()) / (1000 * 60 * 60 * 24));
+    if (daysLeft >= 0 && daysLeft <= 5) {
+      const ptView = target.querySelector('.prayer-times-view');
+      if (ptView) {
+        const notice = document.createElement('div');
+        notice.className = 'update-notice';
+        notice.innerHTML = `<p>This timetable ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}</p><a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload New Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>`;
+        const btnRow = ptView.querySelector('.btn-row');
+        if (btnRow) ptView.insertBefore(notice, btnRow);
+        else ptView.appendChild(notice);
+      }
+    }
+  }
 
   // Wire up events
   setupToggle(target);

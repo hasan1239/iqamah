@@ -1,0 +1,17 @@
+{
+  "display_name": "Test Masjid",
+  "slug": "test_masjid",
+  "csv": "test_masjid.csv",
+  "address": "123 Test Street, Birmingham, B1 1AA",
+  "phone": "0121 555 0000",
+  "month": "February-March 2026",
+  "islamic_month": "Ramadan 1447",
+  "jummah_times": "1:00pm & 1:30pm",
+  "eid_salah": "7:30am & 9:00am",
+  "sadaqatul_fitr": "£5.00",
+  "radio_frequency": "",
+  "approved": true,
+  "test_masjid": true,
+  "is_stale": false,
+  "notes": "Test masjid for development only."
+}
