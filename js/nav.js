@@ -51,6 +51,14 @@ export function initNav() {
 
   renderNav(nav);
 
+  // Show desktop Eid link if season is eid
+  fetch('/data/season.json').then(r => r.ok ? r.json() : null).then(s => {
+    if (s && s.season === 'eid') {
+      const eidLink = document.getElementById('desktopEidLink');
+      if (eidLink) eidLink.style.display = '';
+    }
+  }).catch(() => {});
+
   // Intercept tab clicks
   nav.addEventListener('click', (e) => {
     const tab = e.target.closest('.nav-tab');
@@ -101,6 +109,6 @@ export function updateActiveTab() {
   const activeView = route.view;
   desktopLinks.querySelectorAll('.desktop-nav-link').forEach(link => {
     const navId = link.dataset.nav;
-    link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times'));
+    link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times') || (navId === 'eid-times' && activeView === 'eid-times'));
   });
 }
