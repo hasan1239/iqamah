@@ -115,7 +115,7 @@ async function loadMasjids() {
   try {
     const res = await fetch('/data/mosques/index.json');
     if (!res.ok) return;
-    cachedConfigs = await res.json();
+    cachedConfigs = (await res.json()).filter(c => !c.test_masjid);
     renderCards();
   } catch (error) {
     console.error('Error loading masjids:', error);

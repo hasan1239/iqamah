@@ -368,7 +368,6 @@ function renderTodayView(target) {
       target.innerHTML = `
         <div class="prayer-times-view">
           <header><h1>${config.display_name}</h1></header>
-          ${renderToggle('today')}
           <div class="stale-notice">
             <h2>No times for ${currentMonth}</h2>
             <p>Could you help by uploading the latest timetable?</p>
