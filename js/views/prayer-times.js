@@ -371,7 +371,7 @@ function renderTodayView(target) {
           <div class="stale-notice">
             <h2>No times for ${currentMonth}</h2>
             <p>Could you help by uploading the latest timetable?</p>
-            <a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload Timetable</a>
+            <a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>
           </div>
         </div>`;
     } else {
@@ -482,7 +482,7 @@ function renderTodayView(target) {
       if (ptView) {
         const notice = document.createElement('div');
         notice.className = 'update-notice';
-        notice.innerHTML = `<p>This timetable ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}</p><a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload New Timetable</a>`;
+        notice.innerHTML = `<p>This timetable ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}</p><a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload New Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>`;
         const btnRow = ptView.querySelector('.btn-row');
         if (btnRow) ptView.insertBefore(notice, btnRow);
         else ptView.appendChild(notice);
