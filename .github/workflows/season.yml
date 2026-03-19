@@ -13,6 +13,9 @@ on:
   schedule:
     - cron: '0 */4 * * *'  # Check every 4 hours
 
+permissions:
+  contents: write
+
 jobs:
   set-season:
     runs-on: ubuntu-latest
