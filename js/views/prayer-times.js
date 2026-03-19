@@ -377,7 +377,7 @@ function renderTodayView(target) {
 
     // Build Eid banner even when no timetable data
     let noTimesEidHtml = '';
-    if (season === 'eid' && config.eid_salah) {
+    if ((season === 'eid' || season === 'ramadan') && config.eid_salah) {
       const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
       const pills = [];
       let m;
@@ -462,9 +462,15 @@ function renderTodayView(target) {
   // Maghrib label changes by season
   const maghribLabel = isRamadan ? 'Maghrib/Iftari' : 'Maghrib';
 
-  // Eid banner (shown in eid mode if masjid has eid_salah)
+  // Eid banner (shown in eid mode, or last few days of ramadan)
+  let showEidBanner = isEid;
+  if (isRamadan && config.eid_salah) {
+    const hijri = (todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '').trim();
+    const hijriMatch = hijri.match(/^(\d+)\s+Ram/i);
+    if (hijriMatch && parseInt(hijriMatch[1]) >= 28) showEidBanner = true;
+  }
   let eidBannerHtml = '';
-  if (isEid && config.eid_salah) {
+  if (showEidBanner && config.eid_salah) {
     const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
     const pills = [];
     let m;
@@ -479,7 +485,7 @@ function renderTodayView(target) {
       </div>`;
   }
 
-  // Build section banner HTML (Ramadan = Sehri + Iftari, others = just Eid or nothing)
+  // Build section banner HTML
   let sectionBannerHtml = '';
   if (isRamadan) {
     sectionBannerHtml = `
@@ -489,7 +495,8 @@ function renderTodayView(target) {
           <div class="banner-label">${maghribLabel}</div>
           <div class="banner-time">${ft(todayRow['Maghrib Iftari'], false)}</div>
         </div>
-      </div>`;
+      </div>
+      ${eidBannerHtml}`;
   } else if (eidBannerHtml) {
     sectionBannerHtml = eidBannerHtml;
   }
@@ -554,7 +561,8 @@ function renderTodayView(target) {
       if (ptView) {
         const notice = document.createElement('div');
         notice.className = 'update-notice';
-        notice.innerHTML = `<p>This timetable ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}</p><a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload New Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>`;
+        const endsText = daysLeft === 0 ? 'This timetable ends today' : `This timetable ends in ${daysLeft} day${daysLeft !== 1 ? 's' : ''}`;
+        notice.innerHTML = `<p>${endsText}</p><a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload New Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>`;
         const btnRow = ptView.querySelector('.btn-row');
         if (btnRow) ptView.insertBefore(notice, btnRow);
         else ptView.appendChild(notice);

@@ -53,7 +53,7 @@ export function initNav() {
 
   // Show desktop Eid link if season is eid
   fetch('/data/season.json').then(r => r.ok ? r.json() : null).then(s => {
-    if (s && s.season === 'eid') {
+    if (s && (s.season === 'eid' || s.season === 'ramadan')) {
       const eidLink = document.getElementById('desktopEidLink');
       if (eidLink) eidLink.style.display = '';
     }

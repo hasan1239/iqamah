@@ -10,6 +10,7 @@ let heroCountdownInterval = null;
 let toastTimer = null;
 let masjidsModule = null;
 let seasonConfig = { season: 'ramadan', eid_date: '' };
+let showEidContent = false;
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -236,79 +237,14 @@ function showEidWelcome() {
     </div>
     <div class="welcome-card eid-welcome-card">
       <div class="eid-welcome-crescent">
-        <svg viewBox="0 0 240 240" width="200" height="200">
-          <defs>
-            <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#d4af37" stop-opacity="0.3"/>
-              <stop offset="60%" stop-color="#d4af37" stop-opacity="0.1"/>
-              <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="moonGold" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#f0d060"/>
-              <stop offset="50%" stop-color="#d4af37"/>
-              <stop offset="100%" stop-color="#b8941f"/>
-            </linearGradient>
-          </defs>
-          <circle cx="120" cy="120" r="100" fill="url(#moonGlow)"/>
-          <!-- Crescent moon -->
-          <path d="M150 30 A80 80 0 1 0 150 210 A58 58 0 1 1 150 30Z" fill="url(#moonGold)" opacity="0.9"/>
-          <!-- Mosque silhouette inside crescent -->
-          <g fill="#1a1028" opacity="0.85">
-            <!-- Base platform -->
-            <rect x="72" y="158" width="96" height="6" rx="1"/>
-            <!-- Main building -->
-            <rect x="85" y="128" width="70" height="30"/>
-            <!-- Central large dome -->
-            <path d="M100 128 Q100 105 120 98 Q140 105 140 128Z"/>
-            <!-- Central finial (crescent on stick) -->
-            <line x1="120" y1="98" x2="120" y2="88" stroke="#1a1028" stroke-width="2"/>
-            <path d="M118 90 A3 3 0 1 1 122 88 A2 2 0 1 0 118 90Z"/>
-            <!-- Left small dome -->
-            <path d="M85 128 Q85 118 95 115 Q105 118 105 128Z"/>
-            <!-- Right small dome -->
-            <path d="M135 128 Q135 118 145 115 Q155 118 155 128Z"/>
-            <!-- Left tall minaret -->
-            <rect x="74" y="108" width="7" height="50"/>
-            <path d="M73 108 Q77.5 98 82 108Z"/>
-            <line x1="77.5" y1="98" x2="77.5" y2="92" stroke="#1a1028" stroke-width="1.5"/>
-            <circle cx="77.5" cy="91" r="2"/>
-            <rect x="73" y="125" width="9" height="2" rx="0.5"/>
-            <rect x="73" y="140" width="9" height="2" rx="0.5"/>
-            <!-- Right tall minaret -->
-            <rect x="159" y="112" width="7" height="46"/>
-            <path d="M158 112 Q162.5 102 167 112Z"/>
-            <line x1="162.5" y1="102" x2="162.5" y2="96" stroke="#1a1028" stroke-width="1.5"/>
-            <circle cx="162.5" cy="95" r="2"/>
-            <rect x="158" y="128" width="9" height="2" rx="0.5"/>
-            <rect x="158" y="142" width="9" height="2" rx="0.5"/>
-            <!-- Door arch -->
-            <path d="M114 158 L114 145 Q114 138 120 138 Q126 138 126 145 L126 158Z"/>
-            <!-- Windows -->
-            <path d="M96 148 Q96 143 100 143 Q104 143 104 148Z"/>
-            <path d="M136 148 Q136 143 140 143 Q144 143 144 148Z"/>
-          </g>
-          <!-- Stars -->
-          <circle cx="165" cy="55" r="5" fill="#f0d060"/>
-          <path d="M165 47 L165 63 M157 55 L173 55" stroke="#f0d060" stroke-width="2" opacity="0.8"/>
-          <circle cx="180" cy="85" r="3" fill="#d4af37" opacity="0.8"/>
-          <path d="M180 80 L180 90 M175 85 L185 85" stroke="#d4af37" stroke-width="1.2" opacity="0.6"/>
-          <circle cx="170" cy="40" r="2" fill="#d4af37" opacity="0.6"/>
-          <circle cx="55" cy="60" r="2.5" fill="#d4af37" opacity="0.5"/>
-          <circle cx="45" cy="90" r="2" fill="#d4af37" opacity="0.4"/>
-          <circle cx="65" cy="45" r="1.5" fill="#d4af37" opacity="0.5"/>
-          <circle cx="190" cy="110" r="1.5" fill="#d4af37" opacity="0.5"/>
-          <!-- Sparkle dots -->
-          <circle cx="75" cy="75" r="1" fill="#f0d060" opacity="0.6"/>
-          <circle cx="160" cy="150" r="1" fill="#f0d060" opacity="0.4"/>
-          <circle cx="50" cy="130" r="1" fill="#f0d060" opacity="0.3"/>
-          <circle cx="185" cy="140" r="1.2" fill="#f0d060" opacity="0.5"/>
-          <circle cx="70" cy="160" r="1" fill="#f0d060" opacity="0.3"/>
-        </svg>
+        <img src="/templates/crescent2.svg" alt="" width="180" height="180">
       </div>
       <h1 class="eid-welcome-title">Eid Mubarak!</h1>
+      <p class="eid-welcome-arabic">تَقَبَّلَ اللهُ مِنَّا وَمِنكُم</p>
       <p class="eid-welcome-dua">Taqabbalallahu minna wa minkum</p>
       <a href="/eid" class="welcome-btn eid-welcome-btn" id="eidWelcomeBtn" data-link>View Eid Salah Times</a>
     </div>
+    <div class="eid-welcome-icon"><img src="/iqamah-icon-transparent.png" alt=""></div>
   `;
   document.body.appendChild(overlay);
   requestAnimationFrame(() => overlay.classList.add('visible'));
@@ -337,19 +273,49 @@ function renderEidBrowseButton() {
   if (!slot) return;
 
   if (seasonConfig.season === 'eid') {
-    // Show Eid welcome if not dismissed
     showEidWelcome();
+  }
 
-    const EID_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-    const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
-    slot.innerHTML = `
-      <div class="home-browse-all">
-        <a href="/eid" class="home-browse-btn" data-link>
-          ${EID_SVG}
-          <span>Browse All Eid Salahs</span>
-          ${CHEVRON_SVG}
-        </a>
-      </div>`;
+  if (showEidContent) {
+    showEidBrowse(slot);
+  }
+}
+
+function showEidBrowse(slot) {
+  const EID_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+  slot.innerHTML = `
+    <div class="home-browse-all">
+      <a href="/eid" class="home-browse-btn" data-link>
+        ${EID_SVG}
+        <span>Browse All Eid Salahs</span>
+        ${CHEVRON_SVG}
+      </a>
+    </div>`;
+}
+
+async function isRamadanEndingSoon() {
+  try {
+    // Use pinned masjid or best masjid to check today's hijri date
+    const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+    const config = pinnedSlug
+      ? cachedConfigs.find(c => c.slug === pinnedSlug)
+      : findBestMasjid();
+    if (!config) return false;
+    const csvFile = config.csv || config.slug + '.csv';
+    const res = await fetch(`/data/${csvFile}`);
+    if (!res.ok) return false;
+    const csvData = parseCSV(await res.text());
+    const todayRow = getTodayRow(csvData);
+    if (!todayRow) return false;
+    const hijri = (todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '').trim();
+    // Check if hijri day is 28, 29 or 30 Ramadan
+    const match = hijri.match(/^(\d+)\s+Ram/i);
+    if (!match) return false;
+    const hijriDay = parseInt(match[1]);
+    return hijriDay >= 28;
+  } catch {
+    return false;
   }
 }
 
@@ -360,8 +326,8 @@ function updateGreetingForSeason() {
   const userName = localStorage.getItem('iqamah-user-name');
   greetingEl.className = 'greeting eid-greeting';
   greetingEl.innerHTML = userName
-    ? `<div class="eid-greeting-title">Eid Mubarak,</div><div class="eid-greeting-name">${userName}!</div><div class="eid-greeting-subtitle">Taqabbalallahu minna wa minkum</div>`
-    : `<div class="eid-greeting-title">Eid Mubarak!</div><div class="eid-greeting-subtitle">Taqabbalallahu minna wa minkum</div>`;
+    ? `<div class="eid-greeting-title">Eid Mubarak,</div><div class="eid-greeting-name">${userName}!</div>`
+    : `<div class="eid-greeting-title">Eid Mubarak!</div>`;
 }
 
 async function loadMasjids() {
@@ -375,6 +341,13 @@ async function loadMasjids() {
     if (seasonRes && seasonRes.ok) {
       try { seasonConfig = await seasonRes.json(); } catch {}
     }
+    // Determine if Eid content should show
+    if (seasonConfig.season === 'eid') {
+      showEidContent = true;
+    } else if (seasonConfig.season === 'ramadan') {
+      showEidContent = await isRamadanEndingSoon();
+    }
+
     renderHero();
     renderRecentlyViewed();
     renderEidBrowseButton();
@@ -402,7 +375,7 @@ function renderHero() {
 
   // Eid pills for hero card
   let heroEidHtml = '';
-  if (seasonConfig.season === 'eid' && pinnedConfig.eid_salah) {
+  if (showEidContent && pinnedConfig.eid_salah) {
     const regex = /(\d{1,2}(?::\d{2})?)\s*(am|pm)/gi;
     const pills = [];
     let m;
@@ -428,18 +401,10 @@ function renderHero() {
       </div>
       <div class="hero-name">${pinnedConfig.display_name}</div>
       ${heroEidHtml}
-      <div class="hero-body">
-        <div class="hero-next-prayer" id="heroNextStart">
-          <div class="hero-next-skeleton">
-            <div class="skeleton-bone"></div>
-            <div class="skeleton-bone"></div>
-          </div>
-        </div>
-        <div class="hero-next-prayer" id="heroNextJamaat">
-          <div class="hero-next-skeleton">
-            <div class="skeleton-bone"></div>
-            <div class="skeleton-bone"></div>
-          </div>
+      <div class="sehri-iftari-body" id="heroNextPrayer" style="margin-top:8px">
+        <div class="sehri-iftari-loading">
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
         </div>
       </div>
     </a>`;
@@ -515,13 +480,23 @@ function renderSuggestedHero(heroContainer) {
     return;
   }
 
-  // Default/eid mode: just show a "choose masjid" prompt
+  // Default/eid mode: show next prayer card like pinned hero
   heroContainer.innerHTML = `
-    <div class="home-no-hero">
-      <div class="home-no-hero-icon">${MOSQUE_SVG}</div>
-      <div class="home-no-hero-text">No masjid selected</div>
-      <div class="home-no-hero-sub">Set a masjid as My Masjid from the <a href="/masjids" data-link>Masjids</a> tab</div>
+    <div class="sehri-iftari-card">
+      <div class="sehri-iftari-header">
+        <span class="sehri-iftari-badge">Today's Times</span>
+        <span class="sehri-iftari-source">${config.display_name}</span>
+      </div>
+      <div class="sehri-iftari-body" id="suggestedNextPrayer">
+        <div class="sehri-iftari-loading">
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+          <div class="skeleton-bone" style="width:80px;height:14px"></div>
+        </div>
+      </div>
+      <a href="/masjids" class="sehri-iftari-cta sehri-iftari-cta-mobile" data-link>Choose My Masjid</a>
+      <div class="sehri-iftari-cta-desktop">Choose My Masjid below</div>
     </div>`;
+  loadSuggestedNextPrayer(config);
 }
 
 async function loadSehriIftari(config) {
@@ -569,6 +544,52 @@ async function loadSehriIftari(config) {
       const b = document.getElementById('sehriIftariBody');
       if (!b) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
       loadSehriIftari(config);
+    }, 60000);
+  } catch {
+    body.innerHTML = '';
+  }
+}
+
+async function loadSuggestedNextPrayer(config) {
+  const body = document.getElementById('suggestedNextPrayer');
+  if (!body) return;
+
+  try {
+    const csvFile = config.csv || config.slug + '.csv';
+    const res = await fetch(`/data/${csvFile}`);
+    if (!res.ok) { body.innerHTML = ''; return; }
+    const text = await res.text();
+    const csvData = parseCSV(text);
+    const todayRow = getTodayRow(csvData);
+    if (!todayRow) { body.innerHTML = '<div class="sehri-iftari-empty">No times available for today</div>'; return; }
+
+    function renderSuggestedPanels() {
+      const nextStart = getNextStartFromRow(todayRow);
+      const nextJamaat = getNextJamaatFromRow(todayRow);
+      const startHtml = nextStart
+        ? `<div class="sehri-iftari-item">
+            <div class="sehri-iftari-label">Next Start</div>
+            <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
+            <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
+          </div>`
+        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more prayers today</div></div>`;
+      const jamaatHtml = nextJamaat
+        ? `<div class="sehri-iftari-item">
+            <div class="sehri-iftari-label">Next Jama'at</div>
+            <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
+            <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
+          </div>`
+        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more jama'at today</div></div>`;
+      body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+    }
+
+    renderSuggestedPanels();
+
+    if (heroCountdownInterval) clearInterval(heroCountdownInterval);
+    heroCountdownInterval = setInterval(() => {
+      const b = document.getElementById('suggestedNextPrayer');
+      if (!b) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
+      renderSuggestedPanels();
     }, 60000);
   } catch {
     body.innerHTML = '';
@@ -748,61 +769,48 @@ function formatCardTime(timeStr, isAM) {
 // --- Hero next prayer ---
 
 async function loadHeroNextPrayer(config) {
-  const startPanel = document.getElementById('heroNextStart');
-  const jamaatPanel = document.getElementById('heroNextJamaat');
-  if (!startPanel && !jamaatPanel) return;
+  const body = document.getElementById('heroNextPrayer');
+  if (!body) return;
 
   try {
     const csvFile = config.csv || config.slug + '.csv';
     const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) { if (startPanel) startPanel.innerHTML = ''; if (jamaatPanel) jamaatPanel.innerHTML = ''; return; }
+    if (!res.ok) { body.innerHTML = ''; return; }
     const text = await res.text();
     const csvData = parseCSV(text);
     const todayRow = getTodayRow(csvData);
-    if (!todayRow) { if (startPanel) startPanel.innerHTML = ''; if (jamaatPanel) jamaatPanel.innerHTML = ''; return; }
+    if (!todayRow) { body.innerHTML = ''; return; }
 
-    updateHeroPanels(todayRow);
+    function renderHeroPanels() {
+      const nextStart = getNextStartFromRow(todayRow);
+      const nextJamaat = getNextJamaatFromRow(todayRow);
+      const startHtml = nextStart
+        ? `<div class="sehri-iftari-item">
+            <div class="sehri-iftari-label">Next Start</div>
+            <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
+            <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
+          </div>`
+        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more prayers today</div></div>`;
+      const jamaatHtml = nextJamaat
+        ? `<div class="sehri-iftari-item">
+            <div class="sehri-iftari-label">Next Jama'at</div>
+            <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
+            <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
+          </div>`
+        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more jama'at today</div></div>`;
+      body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+    }
+
+    renderHeroPanels();
 
     if (heroCountdownInterval) clearInterval(heroCountdownInterval);
     heroCountdownInterval = setInterval(() => {
-      const s = document.getElementById('heroNextStart');
-      if (!s) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
-      updateHeroPanels(todayRow);
+      const b = document.getElementById('heroNextPrayer');
+      if (!b) { clearInterval(heroCountdownInterval); heroCountdownInterval = null; return; }
+      renderHeroPanels();
     }, 60000);
   } catch {
-    if (startPanel) startPanel.innerHTML = '';
-    if (jamaatPanel) jamaatPanel.innerHTML = '';
-  }
-}
-
-function updateHeroPanels(todayRow) {
-  const startPanel = document.getElementById('heroNextStart');
-  const jamaatPanel = document.getElementById('heroNextJamaat');
-
-  // Next start time
-  if (startPanel) {
-    const nextStart = getNextStartFromRow(todayRow);
-    if (nextStart) {
-      startPanel.innerHTML = `
-        <div class="hero-next-label">Next Start</div>
-        <div class="hero-next-time">${formatTimeDisplay(nextStart.time, nextStart.isAM)}</div>
-        <div class="hero-next-detail">${nextStart.name}${nextStart.countdown ? ` <span class="hero-next-countdown">${nextStart.countdown}</span>` : ''}</div>`;
-    } else {
-      startPanel.innerHTML = `<div class="hero-next-label">No more prayers today</div>`;
-    }
-  }
-
-  // Next jama'at time
-  if (jamaatPanel) {
-    const nextJamaat = getNextJamaatFromRow(todayRow);
-    if (nextJamaat) {
-      jamaatPanel.innerHTML = `
-        <div class="hero-next-label">Next Jama'at</div>
-        <div class="hero-next-time">${formatTimeDisplay(nextJamaat.time, nextJamaat.isAM)}</div>
-        <div class="hero-next-detail">${nextJamaat.name}${nextJamaat.countdown ? ` <span class="hero-next-countdown">${nextJamaat.countdown}</span>` : ''}</div>`;
-    } else {
-      jamaatPanel.innerHTML = `<div class="hero-next-label">No more jama'at today</div>`;
-    }
+    body.innerHTML = '';
   }
 }
 
