@@ -193,11 +193,11 @@ def render_to_png(html_content: str, output_path: str, script_dir: Path):
     tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
     tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
 
-    # Copy logo to temp directory so relative paths work
-    logo_src = script_dir / "iqamah-icon.svg"
-    if logo_src.exists():
-        logo_dst = os.path.join(tmp_dir, "iqamah-icon.svg")
-        shutil.copy2(logo_src, logo_dst)
+    # Copy logos to temp directory so relative paths work
+    for logo_name in ["iqamah-icon.svg", "iqamah-icon-transparent.png"]:
+        logo_src = script_dir / logo_name
+        if logo_src.exists():
+            shutil.copy2(logo_src, os.path.join(tmp_dir, logo_name))
 
     Path(tmp_html).write_text(html_content, encoding="utf-8")
 
@@ -273,7 +273,8 @@ def main():
     args = sys.argv[1:]
 
     # Extract --template flag and value
-    template_version = "v3"  # default
+    # Auto-detect from season.json if no --template given
+    template_version = None
     if "--template" in args:
         template_idx = args.index("--template")
         if template_idx + 1 < len(args):
@@ -284,6 +285,23 @@ def main():
     # Now parse remaining positional arguments
     mosque_arg = args[0] if len(args) > 0 else "all"
     date_arg = args[1] if len(args) > 1 else None
+
+    # Auto-detect template from season.json if not specified
+    if template_version is None:
+        season_file = data_dir / "season.json"
+        season = "ramadan"
+        if season_file.exists():
+            import json
+            try:
+                with open(season_file, encoding="utf-8") as f:
+                    season = json.load(f).get("season", "ramadan")
+            except Exception:
+                pass
+        if season in ("default", "eid"):
+            template_version = "v4_default"
+        else:
+            template_version = "v4"
+        print(f"   Season: {season} → template {template_version}")
 
     template_path = script_dir / "templates" / f"lockscreen_{template_version}.html"
     if not template_path.exists():

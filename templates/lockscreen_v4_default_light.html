@@ -12,9 +12,9 @@
     height: 844px;
     overflow: hidden;
     font-family: 'Lato', sans-serif;
-    color: #f0e6c8;
+    color: #1a1a2e;
     position: relative;
-    background: linear-gradient(180deg, #050c18, #0a1628 40%, #0d1f15);
+    background: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
   }
 
   /* Gradient overlays */
@@ -23,9 +23,9 @@
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(ellipse at 50% -10%, #1a4a3a, transparent 60%),
-      radial-gradient(ellipse at 100% 50%, #0d2d40, transparent 50%),
-      radial-gradient(ellipse at 0% 80%, #1a2a0d, transparent 50%);
+      radial-gradient(ellipse at 50% -10%, #d4e8d0, transparent 60%),
+      radial-gradient(ellipse at 100% 50%, #cce0ec, transparent 50%),
+      radial-gradient(ellipse at 0% 80%, #e8e0c8, transparent 50%);
     z-index: 0;
   }
 
@@ -35,14 +35,14 @@
     position: absolute;
     inset: 0;
     background:
-      repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(212,175,55,0.03) 28px, rgba(212,175,55,0.03) 29px),
-      repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(212,175,55,0.03) 28px, rgba(212,175,55,0.03) 29px);
+      repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(180,140,30,0.04) 28px, rgba(180,140,30,0.04) 29px),
+      repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(180,140,30,0.04) 28px, rgba(180,140,30,0.04) 29px);
     z-index: 1;
     pointer-events: none;
   }
 
-  /* Stars container */
-  .stars {
+  /* Golden dust motes */
+  .dust-motes {
     position: absolute;
     top: 0;
     left: 0;
@@ -51,17 +51,15 @@
     z-index: 2;
     pointer-events: none;
   }
-  .star {
+  .mote {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background: white;
     border-radius: 50%;
-    animation: twinkle 3s ease-in-out infinite;
+    background: radial-gradient(circle, rgba(180,140,30,0.4), transparent);
+    animation: drift 8s ease-in-out infinite;
   }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; }
-    50% { opacity: 0.9; }
+  @keyframes drift {
+    0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+    50% { transform: translateY(-15px) translateX(8px); opacity: 0.5; }
   }
 
   /* Crescent moon */
@@ -72,8 +70,8 @@
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #d4af37, #f5d56a);
-    box-shadow: 0 0 20px rgba(212,175,55,0.4), 0 0 60px rgba(212,175,55,0.15);
+    background: linear-gradient(135deg, #b8941f, #9a7a10);
+    box-shadow: 0 0 20px rgba(180,140,30,0.3), 0 0 60px rgba(180,140,30,0.1);
     z-index: 3;
     opacity: 0.45;
   }
@@ -85,7 +83,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: #0a1628;
+    background: #f5eed9;
   }
 
   /* Iqamah Logo */
@@ -124,7 +122,7 @@
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     font-size: 10px;
-    color: #f0e6c8;
+    color: #1a1a2e;
     text-align: center;
   }
 
@@ -137,68 +135,22 @@
   .gold-divider .line {
     flex: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212,175,55,0.5), transparent);
+    background: linear-gradient(90deg, transparent, rgba(180,140,30,0.4), transparent);
   }
   .gold-divider .diamond {
     width: 8px;
     height: 8px;
-    background: #d4af37;
+    background: #b8941f;
     transform: rotate(45deg);
     margin: 0 8px;
-    opacity: 0.6;
-  }
-
-  /* Banners row */
-  .banners {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .banner {
-    flex: 1;
-    border-radius: 12px;
-    padding: 8px 10px;
-    text-align: center;
-    background: rgba(255,255,255,0.03);
-  }
-  .banner-sehri {
-    border: 1px solid rgba(212,175,55,0.35);
-  }
-  .banner-maghrib {
-    border: 1px solid rgba(80,180,120,0.3);
-  }
-  .banner-label {
-    font-family: 'Lato', sans-serif;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    opacity: 0.7;
-    margin-bottom: 2px;
-  }
-  .banner-subtitle {
-    font-family: 'Lato', sans-serif;
-    font-size: 7px;
-    opacity: 0.45;
-    margin-bottom: 4px;
-  }
-  .banner-time-gold {
-    font-family: 'Lato', sans-serif;
-    font-size: 30px;
-    font-weight: 600;
-    color: #f5d56a;
-  }
-  .banner-time-green {
-    font-family: 'Lato', sans-serif;
-    font-size: 30px;
-    font-weight: 600;
-    color: #6ed89a;
+    opacity: 0.5;
   }
 
   /* Main card — unified table layout */
   .main-card {
     flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,175,55,0.2);
+    background: rgba(255,255,255,0.75);
+    border: 1px solid rgba(180,140,30,0.2);
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -210,14 +162,14 @@
     display: grid;
     grid-template-columns: 1fr 1.2fr 1fr;
     padding: 7px 14px;
-    border-bottom: 1px solid rgba(212,175,55,0.15);
+    border-bottom: 1px solid rgba(180,140,30,0.12);
   }
   .table-header .col {
     font-family: 'Lato', sans-serif;
     font-size: 7px;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: rgba(212,175,55,0.5);
+    color: rgba(180,140,30,0.5);
     text-align: center;
   }
   .table-header .col:first-child { text-align: center; }
@@ -236,7 +188,7 @@
     grid-template-columns: 1fr 1.2fr 1fr;
     align-items: center;
     padding: 0 14px;
-    border-bottom: 1px solid rgba(212,175,55,0.08);
+    border-bottom: 1px solid rgba(180,140,30,0.06);
   }
   .time-row:last-child {
     border-bottom: none;
@@ -245,7 +197,7 @@
   .time-start {
     font-family: 'Lato', sans-serif;
     font-size: 14px;
-    color: rgba(240,230,200,0.7);
+    color: rgba(26,26,46,0.6);
     text-align: center;
   }
 
@@ -253,21 +205,21 @@
     font-family: 'Lato', sans-serif;
     font-size: 11px;
     font-weight: 400;
-    color: #f0e6c8;
+    color: #1a1a2e;
     text-align: center;
-    opacity: 0.9;
+    opacity: 0.85;
   }
 
   .time-jamaat {
     font-family: 'Lato', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    color: #f5d56a;
+    color: #9a7a10;
     text-align: center;
   }
 
   .time-start.empty, .time-jamaat.empty {
-    color: rgba(212,175,55,0.2);
+    color: rgba(180,140,30,0.2);
     font-size: 10px;
   }
 
@@ -280,13 +232,13 @@
   .footer-text {
     font-family: 'Lato', sans-serif;
     font-size: 10px;
-    color: rgba(212,175,55,0.4);
+    color: rgba(180,140,30,0.4);
     letter-spacing: 2px;
   }
   .footer-brand {
     font-family: 'Lato', sans-serif;
     font-size: 8px;
-    color: rgba(212,175,55,0.3);
+    color: rgba(180,140,30,0.3);
     letter-spacing: 1.5px;
     margin-top: 4px;
   }
@@ -294,8 +246,8 @@
 </head>
 <body>
 
-<!-- Stars -->
-<div class="stars" id="stars"></div>
+<!-- Golden dust motes -->
+<div class="dust-motes" id="dustMotes"></div>
 
 <!-- Moon -->
 <div class="moon"></div>
@@ -314,19 +266,6 @@
     <div class="line"></div>
     <div class="diamond"></div>
     <div class="line"></div>
-  </div>
-
-  <div class="banners">
-    <div class="banner banner-sehri">
-      <div class="banner-label">Sehri Ends</div>
-      <div class="banner-subtitle">Stop eating before</div>
-      <div class="banner-time-gold">{{SEHRI_ENDS}}</div>
-    </div>
-    <div class="banner banner-maghrib">
-      <div class="banner-label">Maghrib Iftari</div>
-      <div class="banner-subtitle">Break your fast</div>
-      <div class="banner-time-green">{{MAGHRIB_IFTARI}}</div>
-    </div>
   </div>
 
   <div class="main-card">
@@ -376,18 +315,18 @@
 </div>
 
 <script>
-  const starsContainer = document.getElementById('stars');
+  const container = document.getElementById('dustMotes');
   for (let i = 0; i < 60; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.animationDelay = (Math.random() * 3) + 's';
-    star.style.animationDuration = (2 + Math.random() * 2) + 's';
-    const size = Math.random() > 0.85 ? 3 : (Math.random() > 0.5 ? 2 : 1);
-    star.style.width = size + 'px';
-    star.style.height = size + 'px';
-    starsContainer.appendChild(star);
+    const mote = document.createElement('div');
+    mote.className = 'mote';
+    const size = 3 + Math.random() * 5;
+    mote.style.width = size + 'px';
+    mote.style.height = size + 'px';
+    mote.style.left = Math.random() * 100 + '%';
+    mote.style.top = Math.random() * 100 + '%';
+    mote.style.animationDelay = (Math.random() * 8) + 's';
+    mote.style.animationDuration = (6 + Math.random() * 6) + 's';
+    container.appendChild(mote);
   }
 </script>
 </body>
