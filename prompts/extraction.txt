@@ -111,7 +111,7 @@ Return this exact JSON structure. The example below shows all possible fields �
   "mosque_name": "Full Mosque Name as shown on the timetable",
   "suggested_slug": "faizul",
   "address": "Full address as shown on the timetable",
-  "phone": "Phone number as shown on the timetable",
+  "phone": "0121 554 9157 / 07980 924 816",
   "month": "June 2026",
   "year": 2026,
   "islamic_month": "Dhul Hijjah 1447",
@@ -147,7 +147,7 @@ METADATA FIELD DEFINITIONS:
 - "mosque_name": Full name as shown on the image
 - "suggested_slug": A short, URL-safe slug (lowercase, no spaces, underscores only) derived from the most distinctive word(s) in the mosque name. Strip common prefixes like Masjid, Masjid-e, Masjid-al, Jam-e, Jamia, Al, and common suffixes like Trust, Foundation, Association, Society, Centre, Mosque, Islamic Centre. Use what remains as the slug. If the remaining word is very long, abbreviate sensibly. Examples: "Masjid Faizul Islam" → "faizul", "Birmingham Jam-e-Masjid" → "jame", "Eden Foundation" → "eden", "Masjid Al Falaah" → "falaah", "Masjid Abu Bakr" → "abubakr", "Great Barr Muslim Foundation" → "gbmf", "Madinatul Uloom Al-Islamyah" → "muai".
 - "address": Full street address including postcode/ZIP if visible. Set to "" if not shown.
-- "phone": Phone number(s) as shown. Include multiple if listed (e.g. "0121 554 9157 / 07980 924 816"). Set to "" if not shown.
+- "phone": Raw phone number(s) only, without labels like "Tel:", "Mob:", "Phone:", "Fax:", etc. Include multiple numbers separated by " / " if listed (e.g. "0121 554 9157 / 07980 924 816"). Strip any labels or prefixes — only output the digits and spaces. Set to "" if not shown.
 - "year": The Gregorian year as an integer (e.g. 2026). Extract from the timetable header or date columns.
 - "month": The Gregorian month(s) and year covered (e.g. "June 2025", "February-March 2026")
 - "islamic_month": The Islamic month and Hijri year if shown (e.g. "Ramadan 1447", "Dhul Hijjah 1446"). Set to "" if not shown.
