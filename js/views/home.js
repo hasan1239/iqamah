@@ -566,21 +566,53 @@ async function loadSuggestedNextPrayer(config) {
     function renderSuggestedPanels() {
       const nextStart = getNextStartFromRow(todayRow);
       const nextJamaat = getNextJamaatFromRow(todayRow);
-      const startHtml = nextStart
-        ? `<div class="sehri-iftari-item">
-            <div class="sehri-iftari-label">Next Start</div>
-            <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
-            <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
-          </div>`
-        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more prayers today</div></div>`;
-      const jamaatHtml = nextJamaat
-        ? `<div class="sehri-iftari-item">
-            <div class="sehri-iftari-label">Next Jama'at</div>
-            <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
-            <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
-          </div>`
-        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more jama'at today</div></div>`;
-      body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+
+      if (nextStart || nextJamaat) {
+        const startHtml = nextStart
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Start</div>
+              <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
+              <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
+            </div>`
+          : `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Start</div>
+              <div class="sehri-iftari-countdown">Done for today</div>
+            </div>`;
+        const jamaatHtml = nextJamaat
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Jama'at</div>
+              <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
+              <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
+            </div>`
+          : `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Jama'at</div>
+              <div class="sehri-iftari-countdown">Done for today</div>
+            </div>`;
+        body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+        return;
+      }
+
+      // All prayers done — show tomorrow's Fajr
+      const tomorrowRow = getTomorrowRow(csvData);
+      if (tomorrowRow) {
+        const fajrStart = tomorrowRow['Fajr Start'] || tomorrowRow['Subha Sadiq'] || tomorrowRow['Sehri Ends'] || '';
+        const fajrJamaat = tomorrowRow["Fajr Jama'at"] || '';
+        if (fajrStart || fajrJamaat) {
+          const startHtml = fajrStart
+            ? `<div class="sehri-iftari-item"><div class="sehri-iftari-label">Tomorrow's Fajr</div><div class="sehri-iftari-time">${formatCardTime(fajrStart, true)}</div></div>`
+            : '';
+          const jamaatHtml = fajrJamaat
+            ? `<div class="sehri-iftari-item"><div class="sehri-iftari-label">Fajr Jama'at</div><div class="sehri-iftari-time">${formatCardTime(fajrJamaat, true)}</div></div>`
+            : '';
+          body.innerHTML = startHtml && jamaatHtml
+            ? `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`
+            : startHtml || jamaatHtml;
+          return;
+        }
+      }
+
+      // No tomorrow data — collapse
+      body.innerHTML = '';
     }
 
     renderSuggestedPanels();
