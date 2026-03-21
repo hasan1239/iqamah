@@ -4,15 +4,16 @@
   "csv": "quba.csv",
   "lat": 52.5127,
   "lon": -1.9206,
-  "notes": "Daily Zuhr Jama'at: 1:00pm. Fajr Jama'at is 15 minutes after Fajr start. Maghrib Jama'at is 10 minutes after Azan. English Sermons will start 30 minutes before Salah. Ramadan Daily Programme: Weekdays Mon-Fri: After Fajr - One Hadith 5-minute session Translation & Practical Lessons; After Zuhr - Ta'lim (in Urdu); After Asar - Darsul Qur'an Surah Yusuf; After Tarawih - Short Reminders. Saturday: After Zuhr - Darsul Qur'an Surah Al Fatihah; After Asar - English Talk. Sunday: After Zuhr - Darsul Hadith Riyadus Salihin; After Asar - Darsul Qur'an Surah Yusuf. Note: The programmes after Fajr and Tarawih will continue as normal on the weekend.",
+  "notes": "British Summertime starts on Sunday 29th March — please put clocks one hour forward. Wintertime Daily Zuhr Jama'at = 1:00pm; Summertime Daily Zuhr Jama'at = 2:00pm. Rows 1–17 are February (up to Ramadhaan); rows 20–31 are March after Ramadhaan. Dates 18–19 (Ramadan period) are not shown in this timetable.",
   "address": "316 Hamstead Road, Handsworth, Birmingham, B20 2RA",
   "phone": "07377 985866",
   "month": "February-March 2026",
-  "islamic_month": "Ramadan 1447",
-  "jummah_times": "Jumuah Sermon: 12:10pm, Jumuah Jama'at: 12:45pm",
+  "islamic_month": "Sha'ban-Shawwal 1447",
+  "jummah_times": "Wintertime: Jumuah Sermon 12:10pm, Jumuah Jama'at 12:45pm; Summertime: Jumuah Sermon 1:10pm, Jumuah",
   "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-  "sadaqatul_fitr": "\u00a34.50",
+  "sadaqatul_fitr": "£4.50",
   "radio_frequency": "454.3500",
   "is_stale": false,
-  "source_image": "sources/quba.jpg"
+  "source_image": "sources/quba.jpg",
+  "pending_update": true
 }
