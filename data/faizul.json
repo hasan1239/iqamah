@@ -5,11 +5,11 @@
   "year": 2026,
   "month": "March 2026",
   "islamic_month": "Shawwal 1447",
-  "jummah_times": "Jumuah 1:15pm (Bayaan starts 30 mins before Khutbah)",
+  "jummah_times": "Jumuah 1:15PM (Bayaan starts 30 mins before Khutbah)",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
   "sadaqatul_fitr": "Minimum £6.00 for adults & children",
   "radio_frequency": "454 7000",
-  "notes": "British Summer Time begins on 29 March, clocks go forward by one hour. Zohr Jama'at is 1:00pm daily (non-Friday). Jumuah is 1:15pm. On Sunday after Zuhr salah, Dars-e-Quraan will take place in Urdu.",
+  "notes": "Zohr Jama'at 1:00PM daily. Jumuah 1:15PM. British Summer Time begins on 29 March, clocks go forward by one hour. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
   "rows": [
     {
       "date": "20 Mar",
