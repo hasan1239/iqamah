@@ -1,7 +1,7 @@
 // Home view — hero card (pinned masjid) + recently viewed
 import { navigate } from '../router.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
-import { parseCSV, getTodayRow } from '../utils/csv.js';
+import { parseCSV, getTodayRow, getTomorrowRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { haversineDistance } from '../utils/geolocation.js';
 
@@ -401,7 +401,7 @@ function renderHero() {
       </div>
       <div class="hero-name">${pinnedConfig.display_name}</div>
       ${heroEidHtml}
-      <div class="sehri-iftari-body" id="heroNextPrayer" style="margin-top:8px">
+      <div class="sehri-iftari-body" id="heroNextPrayer">
         <div class="sehri-iftari-loading">
           <div class="skeleton-bone" style="width:80px;height:14px"></div>
           <div class="skeleton-bone" style="width:80px;height:14px"></div>
@@ -533,7 +533,7 @@ async function loadSehriIftari(config) {
       </div>
       <div class="sehri-iftari-divider"></div>
       <div class="sehri-iftari-item">
-        <div class="sehri-iftari-label">Maghrib/Iftari</div>
+        <div class="sehri-iftari-label">Maghrib/Iftar</div>
         <div class="sehri-iftari-time">${maghribFormatted}</div>
         ${maghribCd ? `<div class="sehri-iftari-countdown">${maghribCd}</div>` : ''}
       </div>`;
@@ -719,7 +719,7 @@ function getNextJamaatFromRow(row) {
 function getNextStartFromRow(row) {
   const sehriLabel = seasonConfig.season === 'ramadan' ? 'Sehri' : 'Fajr';
   const prayers = [
-    { name: sehriLabel, keys: ['Sehri Ends'], isAM: true },
+    { name: sehriLabel, keys: ['Sehri Ends', 'Fajr Start', 'Subha Sadiq'], isAM: true },
     { name: 'Dhuhr', keys: ['Zohr Start', 'Zuhr Start', 'Zohr'], isAM: false },
     { name: 'Asr', keys: ['Asr Start', 'Asr'], isAM: false },
     { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
@@ -779,26 +779,68 @@ async function loadHeroNextPrayer(config) {
     const text = await res.text();
     const csvData = parseCSV(text);
     const todayRow = getTodayRow(csvData);
-    if (!todayRow) { body.innerHTML = ''; return; }
+    if (!todayRow) {
+      body.innerHTML = `<a href="/update/${config.slug}" data-link class="hero-upload-cta" onclick="event.stopPropagation()">Upload timetable</a>`;
+      return;
+    }
 
     function renderHeroPanels() {
       const nextStart = getNextStartFromRow(todayRow);
       const nextJamaat = getNextJamaatFromRow(todayRow);
-      const startHtml = nextStart
-        ? `<div class="sehri-iftari-item">
-            <div class="sehri-iftari-label">Next Start</div>
-            <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
-            <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
-          </div>`
-        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more prayers today</div></div>`;
-      const jamaatHtml = nextJamaat
-        ? `<div class="sehri-iftari-item">
-            <div class="sehri-iftari-label">Next Jama'at</div>
-            <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
-            <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
-          </div>`
-        : `<div class="sehri-iftari-item"><div class="sehri-iftari-label">No more jama'at today</div></div>`;
-      body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+
+      // If both have upcoming prayers, show them
+      if (nextStart || nextJamaat) {
+        const startHtml = nextStart
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Start</div>
+              <div class="sehri-iftari-time">${formatCardTime(nextStart.time, nextStart.isAM)}</div>
+              <div class="sehri-iftari-countdown">${nextStart.name}${nextStart.countdown ? ' ' + nextStart.countdown : ''}</div>
+            </div>`
+          : `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Start</div>
+              <div class="sehri-iftari-countdown">Done for today</div>
+            </div>`;
+        const jamaatHtml = nextJamaat
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Jama'at</div>
+              <div class="sehri-iftari-time">${formatCardTime(nextJamaat.time, nextJamaat.isAM)}</div>
+              <div class="sehri-iftari-countdown">${nextJamaat.name}${nextJamaat.countdown ? ' ' + nextJamaat.countdown : ''}</div>
+            </div>`
+          : `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Next Jama'at</div>
+              <div class="sehri-iftari-countdown">Done for today</div>
+            </div>`;
+        body.innerHTML = `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`;
+        return;
+      }
+
+      // All prayers done — show tomorrow's Fajr if available
+      const tomorrowRow = getTomorrowRow(csvData);
+      if (tomorrowRow) {
+        const fajrStart = tomorrowRow['Fajr Start'] || tomorrowRow['Subha Sadiq'] || tomorrowRow['Sehri Ends'] || '';
+        const fajrJamaat = tomorrowRow["Fajr Jama'at"] || '';
+        const startHtml = fajrStart
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Tomorrow's Fajr</div>
+              <div class="sehri-iftari-time">${formatCardTime(fajrStart, true)}</div>
+            </div>`
+          : '';
+        const jamaatHtml = fajrJamaat
+          ? `<div class="sehri-iftari-item">
+              <div class="sehri-iftari-label">Fajr Jama'at</div>
+              <div class="sehri-iftari-time">${formatCardTime(fajrJamaat, true)}</div>
+            </div>`
+          : '';
+        if (startHtml || jamaatHtml) {
+          body.innerHTML = startHtml && jamaatHtml
+            ? `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`
+            : startHtml || jamaatHtml;
+          return;
+        }
+      }
+
+      // No tomorrow data either — collapse
+      body.innerHTML = '';
     }
 
     renderHeroPanels();

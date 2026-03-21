@@ -1,5 +1,6 @@
 // Prayer times view — today/month toggle, countdowns, download/share
 import { onThemeChange, getTheme } from '../theme.js';
+import { gregorianToHijri, formatHijriDate } from '../utils/hijri.js';
 
 let config = null;
 let csvData = [];
@@ -35,7 +36,7 @@ function ft(timeStr, isAM, skipSuffix) {
 
 // Column key → isAM mapping for CSV columns
 const COL_IS_AM = {
-  'Sehri Ends': true, "Fajr Jama'at": true, 'Sunrise': true,
+  'Sehri Ends': true, 'Fajr Start': true, 'Subha Sadiq': true, "Fajr Jama'at": true, 'Sunrise': true,
   'Zohr': false, "Zohar Jama'at": false, 'Zawal': false,
   'Asr': false, "Asr Jama'at": false,
   'Maghrib Iftari': false, "Maghrib Jama'at": false,
@@ -99,8 +100,12 @@ export async function render(container, { slug }) {
 
     renderContent(container);
 
-    // Show pending notice if unapproved or pending update
-    if (config.approved === false || config.pending_update === true) {
+    // Show pending notice if unapproved or pending update (only if future times exist)
+    const hasFutureTimes = csvData.some(row => {
+      const d = parseDate(row['Date']);
+      return d && d >= new Date(new Date().setHours(0, 0, 0, 0));
+    });
+    if ((config.approved === false || config.pending_update === true) && hasFutureTimes) {
       const ptView = container.querySelector('.prayer-times-view');
       if (ptView) {
         const notice = document.createElement('div');
@@ -248,7 +253,7 @@ function applyNextPrayerHighlight(todayRow) {
 
   // Next start time (independent)
   const startTimes = [
-    { name: 'Fajr', keys: ['Sehri Ends', 'Fajr Start'], isAM: true },
+    { name: 'Fajr', keys: ['Sehri Ends', 'Fajr Start', 'Subha Sadiq'], isAM: true },
     { name: 'Dhuhr', keys: ['Zohr'], isAM: false },
     { name: 'Asr', keys: ['Asr'], isAM: false },
     { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
@@ -414,12 +419,7 @@ function renderTodayView(target) {
   }
 
   const englishDate = formatFullDate(todayRow['Date'], todayRow['Day']);
-  const hijriRaw = todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '';
-  const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha'ban" };
-  const hijriParts = hijriRaw.trim().split(' ');
-  const hijriDate = (hijriParts.length === 2 && monthAbbrevMap[hijriParts[1]])
-    ? `${hijriParts[0]} ${monthAbbrevMap[hijriParts[1]]} 1447`
-    : `${hijriRaw} Ramadan 1447`;
+  const hijriDate = formatHijriDate(new Date());
 
   const isRamadan = season === 'ramadan';
   const isEid = season === 'eid';
@@ -460,7 +460,7 @@ function renderTodayView(target) {
   }
 
   // Maghrib label changes by season
-  const maghribLabel = isRamadan ? 'Maghrib/Iftari' : 'Maghrib';
+  const maghribLabel = isRamadan ? 'Maghrib/Iftar' : 'Maghrib';
 
   // Eid banner (shown in eid mode, or last few days of ramadan)
   let showEidBanner = isEid;
@@ -502,7 +502,7 @@ function renderTodayView(target) {
   }
 
   // Build unified prayer rows: Start | Name | Jama'at
-  const fajrStart = isRamadan ? (todayRow['Sehri Ends'] || null) : (todayRow['Fajr Start'] || todayRow['Sehri Ends'] || null);
+  const fajrStart = isRamadan ? (todayRow['Sehri Ends'] || null) : (todayRow['Fajr Start'] || todayRow['Subha Sadiq'] || todayRow['Sehri Ends'] || null);
   const prayerRows = [];
   prayerRows.push({ name: 'Fajr', isAM: true, start: fajrStart, jamaat: todayRow["Fajr Jama'at"] });
   if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', isAM: false, start: todayRow['Zawal'], jamaat: null });
@@ -608,15 +608,35 @@ function renderTodayView(target) {
 function renderMonthlyView(target) {
   const isDesktop = window.innerWidth >= 768;
   const isJamaat = monthlyMode === 'jamaat';
+  const isRamadanMode = season === 'ramadan';
 
-  const todayStr = new Date().toDateString();
+  // Filter rows: in non-ramadan mode, show only current calendar month
+  const now = new Date();
+  const displayRows = isRamadanMode
+    ? csvData
+    : csvData.filter(row => {
+        const d = parseDate(row['Date']);
+        return d && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+      });
+
+  if (displayRows.length === 0) {
+    target.innerHTML = `<div class="prayer-times-view" id="pt-content">
+      <header><h1>${config.display_name}</h1></header>
+      ${renderToggle('monthly')}
+      <div class="error">No timetable data for this month.</div>
+    </div>`;
+    setupToggle(target);
+    return;
+  }
+
+  const todayStr = now.toDateString();
   let tableHtml;
   let activeCols = [];
 
-  // Helper: check if a column has at least one non-empty value across all rows
+  // Helper: check if a column has at least one non-empty value across display rows
   function colHasData(col) {
-    return csvData.some(row => {
-      const val = row[col.key];
+    return displayRows.some(row => {
+      const val = row[col.key] || (col.altKey && row[col.altKey]);
       return val && val.trim();
     });
   }
@@ -624,7 +644,9 @@ function renderMonthlyView(target) {
   if (isDesktop) {
     // Combined view: start + jama'at columns
     const allStartCols = [
-      { label: 'Sehri', key: 'Sehri Ends', isAM: true, group: 'start' },
+      ...(isRamadanMode
+        ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true, group: 'start' }]
+        : [{ label: 'Fajr', key: 'Fajr Start', altKey: 'Subha Sadiq', isAM: true, group: 'start' }]),
       { label: 'Sunrise', key: 'Sunrise', isAM: true, group: 'start' },
       { label: 'Dhuhr', key: 'Zohr', isAM: false, group: 'start' },
       { label: 'Asr', key: 'Asr', isAM: false, group: 'start' },
@@ -643,13 +665,15 @@ function renderMonthlyView(target) {
     const combinedCols = [...startCols, ...jamaatCols];
     activeCols = combinedCols;
 
-    const rowsHtml = csvData.map(row => {
+    const rowsHtml = displayRows.map(row => {
       const isToday = parseDate(row['Date']).toDateString() === todayStr;
       const dateParts = row['Date'].trim().split(' ');
       const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
-      const hijri = row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '';
+      const rowDate = parseDate(row['Date']);
+      const h = gregorianToHijri(rowDate);
+      const hijri = `${h.day} ${h.monthShort}`;
       const cells = combinedCols.map(col => {
-        const val = row[col.key] || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
+        const val = row[col.key] || (col.altKey && row[col.altKey]) || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
         return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
       return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}</td><td class="hijri-col">${hijri}</td>${cells}</tr>`;
@@ -679,7 +703,9 @@ function renderMonthlyView(target) {
   } else {
     // Mobile: toggle between start/jama'at
     const allJamaatCols = [
-      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+      ...(isRamadanMode
+        ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true }]
+        : []),
       { label: 'Fajr', key: "Fajr Jama'at", isAM: true },
       { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
       { label: 'Asr', key: "Asr Jama'at", isAM: false },
@@ -687,7 +713,9 @@ function renderMonthlyView(target) {
       { label: 'Esha', key: "Esha Jama'at", isAM: false },
     ];
     const allStartCols = [
-      { label: 'Sehri', key: 'Sehri Ends', isAM: true },
+      ...(isRamadanMode
+        ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true }]
+        : [{ label: 'Fajr', key: 'Fajr Start', altKey: 'Subha Sadiq', isAM: true }]),
       { label: 'Sunrise', key: 'Sunrise', isAM: true },
       { label: 'Dhuhr', key: 'Zohr', isAM: false },
       { label: 'Asr', key: 'Asr', isAM: false },
@@ -699,13 +727,15 @@ function renderMonthlyView(target) {
       : allStartCols.filter(colHasData);
     activeCols = columns;
 
-    const rowsHtml = csvData.map(row => {
+    const rowsHtml = displayRows.map(row => {
       const isToday = parseDate(row['Date']).toDateString() === todayStr;
       const dateParts = row['Date'].trim().split(' ');
       const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
-      const hijri = row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '';
+      const rowDate = parseDate(row['Date']);
+      const h = gregorianToHijri(rowDate);
+      const hijri = `${h.day} ${h.monthShort}`;
       const cells = columns.map(col => {
-        const val = row[col.key] || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
+        const val = row[col.key] || (col.altKey && row[col.altKey]) || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
         return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
       return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}<span class="month-hijri">${hijri}</span></td>${cells}</tr>`;
@@ -725,12 +755,26 @@ function renderMonthlyView(target) {
       </table>`;
   }
 
+  // Header: Ramadan title vs month name
+  const headerTitle = isRamadanMode
+    ? 'Ramadan 2026 Timetable'
+    : `${now.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} Timetable`;
+
+  // Hijri range for header
+  const firstDate = parseDate(displayRows[0]['Date']);
+  const lastDate = parseDate(displayRows[displayRows.length - 1]['Date']);
+  const firstH = gregorianToHijri(firstDate);
+  const lastH = gregorianToHijri(lastDate);
+  const hijriRange = firstH.month === lastH.month
+    ? `${firstH.day}-${lastH.day} ${firstH.monthName} ${firstH.year}`
+    : `${firstH.day} ${firstH.monthName} \u2013 ${lastH.day} ${lastH.monthName} ${lastH.year}`;
+
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
         <h1>${config.display_name}</h1>
-        <div class="date-line">Ramadan 2026 Timetable</div>
-        <div class="hijri-line">${getHijriRange()}</div>
+        <div class="date-line">${headerTitle}</div>
+        <div class="hijri-line">${hijriRange}</div>
       </header>
 
       ${renderToggle('monthly')}
@@ -894,7 +938,8 @@ function updateDownloadLink() {
 
 function renderInfoSection() {
   if (!config) return '';
-  const hasInfo = config.address || config.phone || config.eid_salah || config.sadaqatul_fitr || config.radio_frequency;
+  const isSeasonalMode = season === 'ramadan' || season === 'eid';
+  const hasInfo = config.address || config.phone || (config.eid_salah && isSeasonalMode) || (config.sadaqatul_fitr && isSeasonalMode) || config.radio_frequency || config.jummah_times;
   if (!hasInfo) return '';
 
   const mapUrl = config.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(config.address) : '';
@@ -933,11 +978,11 @@ function renderInfoSection() {
   if (config.jummah_times) {
     gridItems += `<div class="info-grid-item info-grid-full"><div class="info-field-label">Jumu'ah Times</div><div class="info-field-value">${config.jummah_times}</div></div>`;
   }
-  if (config.eid_salah) {
+  if (config.eid_salah && (season === 'ramadan' || season === 'eid')) {
     gridItems += `<div class="info-grid-item info-grid-full"><div class="info-field-label">Eid Salah</div><div class="info-field-value info-field-bold">${config.eid_salah}</div></div>`;
   }
-  if (config.sadaqatul_fitr) {
-    gridItems += `<div class="info-grid-item info-grid-full info-fitrana"><div class="info-field-label">Fitrana</div><div class="info-field-value info-field-bold">${config.sadaqatul_fitr}</div></div>`;
+  if (config.sadaqatul_fitr && (season === 'ramadan' || season === 'eid')) {
+    gridItems += `<div class="info-grid-item info-grid-full info-fitrana"><div class="info-field-label">Sadaqah al-Fitr</div><div class="info-field-value info-field-bold">${config.sadaqatul_fitr}</div></div>`;
   }
 
   // Maps button
@@ -965,19 +1010,6 @@ function renderInfoSection() {
   </div>`;
 }
 
-function getHijriRange() {
-  const monthAbbrevMap = { 'Ram': 'Ramadan', 'Shaw': 'Shawwal', 'Sha': "Sha\u2019ban" };
-  const getIslamic = row => (row['Islamic Day'] || row['Ramadan'] || row['Hijri'] || '').trim();
-  const parseParts = raw => {
-    const parts = raw.split(' ');
-    if (parts.length === 2 && monthAbbrevMap[parts[1]]) return { day: parts[0], month: monthAbbrevMap[parts[1]] };
-    return { day: parseInt(raw), month: 'Ramadan' };
-  };
-  const first = parseParts(getIslamic(csvData[0]));
-  const last = parseParts(getIslamic(csvData[csvData.length - 1]));
-  if (first.month === last.month) return `${first.day}-${last.day} ${first.month} 1447`;
-  return `${first.day} ${first.month} \u2013 ${last.day} ${last.month} 1447`;
-}
 
 function renderPrimaryButton() {
   const current = localStorage.getItem('iqamah-pinned-masjid');

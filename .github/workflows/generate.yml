@@ -52,6 +52,53 @@ jobs:
           fi
           cd ../..
 
+      - name: Clear stale pending_update flags
+        run: |
+          cd data/mosques
+          for config in $(ls *.json | grep -v "index.json"); do
+            slug=$(echo "$config" | sed 's/\.json//')
+            pending=$(python3 -c "import json; c=json.load(open('$config')); print(c.get('pending_update', False))")
+            if [ "$pending" = "True" ]; then
+              csv_file="../${slug}.csv"
+              if [ ! -f "$csv_file" ]; then
+                echo "No CSV for $slug, clearing pending_update"
+                python3 -c "
+import json
+with open('$config') as f: c = json.load(f)
+c['pending_update'] = False
+with open('$config', 'w') as f: json.dump(c, f, indent=2)
+"
+                continue
+              fi
+              has_future=$(python3 -c "
+import csv, sys
+from datetime import datetime
+today = datetime.now().date()
+months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
+with open('$csv_file') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        parts = row.get('Date','').strip().split()
+        if len(parts) == 2 and parts[1] in months:
+            d = datetime(2026, months[parts[1]], int(parts[0])).date()
+            if d >= today:
+                print('yes')
+                sys.exit(0)
+print('no')
+")
+              if [ "$has_future" = "no" ]; then
+                echo "No future times for $slug, clearing pending_update"
+                python3 -c "
+import json
+with open('$config') as f: c = json.load(f)
+c['pending_update'] = False
+with open('$config', 'w') as f: json.dump(c, f, indent=2)
+"
+              fi
+            fi
+          done
+          cd ../..
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -133,7 +180,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/ latest/ data/mosques/index.json
+          git add output/ latest/ data/mosques/
           git commit -m "🌙 Lockscreen for ${{ steps.params.outputs.date }}" || echo "No changes to commit"
           git pull --rebase
           git push

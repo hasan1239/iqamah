@@ -1044,7 +1044,7 @@ async function handleSubmit(request, env) {
   }
 
   // Server-side field length truncation
-  const MAX_LENGTHS = { address: 200, phone: 30, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
+  const MAX_LENGTHS = { address: 200, phone: 60, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
   for (const [field, max] of Object.entries(MAX_LENGTHS)) {
     if (data[field]) data[field] = data[field].substring(0, max);
   }
@@ -1328,7 +1328,7 @@ async function handleUpdate(request, env) {
   const { rows: fixedRows } = validateAndFixRows(data.rows, notes);
 
   // Server-side field length truncation
-  const MAX_LENGTHS = { address: 200, phone: 30, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
+  const MAX_LENGTHS = { address: 200, phone: 60, notes: 500, jummah_times: 100, eid_salah: 100, sadaqatul_fitr: 50, radio_frequency: 20 };
   for (const [field, max] of Object.entries(MAX_LENGTHS)) {
     if (data[field]) data[field] = data[field].substring(0, max);
   }
