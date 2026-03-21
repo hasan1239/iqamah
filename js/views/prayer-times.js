@@ -245,7 +245,30 @@ function applyNextPrayerHighlight(todayRow) {
   document.querySelectorAll('.countdown').forEach(el => el.remove());
 
   const next = getNextPrayer(todayRow);
+
+  // Remove any existing tomorrow banner
+  document.querySelectorAll('.tomorrow-fajr-banner').forEach(el => el.remove());
+
   if (!next) {
+    // All prayers done — show tomorrow's Fajr banner if available
+    const tomorrowRow = getTomorrowRow();
+    if (tomorrowRow) {
+      const fajrStart = tomorrowRow['Fajr Start'] || tomorrowRow['Subha Sadiq'] || tomorrowRow['Sehri Ends'] || '';
+      const fajrJamaat = tomorrowRow["Fajr Jama'at"] || '';
+      if (fajrStart || fajrJamaat) {
+        const tableCard = document.querySelector('.times-table-card');
+        if (tableCard) {
+          const banner = document.createElement('div');
+          banner.className = 'tomorrow-fajr-banner';
+          const startHtml = fajrStart ? `<div class="sehri-iftari-item"><div class="sehri-iftari-label">Tomorrow's Fajr</div><div class="sehri-iftari-time">${ft(fajrStart, true)}</div></div>` : '';
+          const jamaatHtml = fajrJamaat ? `<div class="sehri-iftari-item"><div class="sehri-iftari-label">Fajr Jama'at</div><div class="sehri-iftari-time">${ft(fajrJamaat, true)}</div></div>` : '';
+          banner.innerHTML = startHtml && jamaatHtml
+            ? `${startHtml}<div class="sehri-iftari-divider"></div>${jamaatHtml}`
+            : startHtml || jamaatHtml;
+          tableCard.parentNode.insertBefore(banner, tableCard);
+        }
+      }
+    }
     if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
     return;
   }
