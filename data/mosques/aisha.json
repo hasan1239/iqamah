@@ -6,7 +6,7 @@
   "lon": -1.9279,
   "notes": "Jumu'ah Salaah will be at 1.00pm; from 29th March onwards Jumu'ah Salaah will be at 1.30pm. Programmes: Mon: Dars of Quran after Esha; Sun: Inspirations after Zohr; Thu: Durood program after Esha; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Programme for Women after Zohr. Summer Time Starts Sunday 29th March 2026 - put clocks one hour forward. Jama'at times are subject to change, therefore you are requested to check at the masjid. No separate Maghrib Jama'at column present.",
   "address": "The Grange Birmingham. B20 1BH",
-  "phone": "Tel: 0121 554 0200 | Mob: 0779",
+  "phone": "0121 554 0200 / 07795 965 736",
   "month": "March 2026",
   "islamic_month": "Shawwal 1447",
   "eid_salah": "9:00am (one jama'at only)",
@@ -15,5 +15,5 @@
   "is_stale": false,
   "source_image": "sources/aisha.jpg",
   "jummah_times": "1:00pm (from 29th March onwards: 1:30pm)",
-  "pending_update": true
+  "pending_update": false
 }

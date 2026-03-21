@@ -585,22 +585,30 @@ function setupEventListeners(container) {
 
     // Pre-populate metadata from existing config
     masjidNameInput.value = masjidConfig.display_name || '';
-    document.querySelector('#metaAddress').value = masjidConfig.address || '';
-    document.querySelector('#metaPhone').value = masjidConfig.phone || '';
-    document.querySelector('#metaJummah').value = masjidConfig.jummah_times || '';
-    document.querySelector('#metaEid').value = masjidConfig.eid_salah || '';
-    document.querySelector('#metaFitrana').value = masjidConfig.sadaqatul_fitr || '';
-    document.querySelector('#metaRadio').value = masjidConfig.radio_frequency || '';
-    document.querySelector('#metaNotes').value = masjidConfig.notes || '';
-
-    // Override with extracted data where non-empty
-    if (extractedData.address) document.querySelector('#metaAddress').value = extractedData.address;
-    if (extractedData.phone) document.querySelector('#metaPhone').value = extractedData.phone;
-    if (extractedData.jummah_times) document.querySelector('#metaJummah').value = extractedData.jummah_times;
-    if (extractedData.eid_salah) document.querySelector('#metaEid').value = extractedData.eid_salah;
-    if (extractedData.sadaqatul_fitr) document.querySelector('#metaFitrana').value = extractedData.sadaqatul_fitr;
-    if (extractedData.radio_frequency) document.querySelector('#metaRadio').value = extractedData.radio_frequency;
-    if (extractedData.notes) document.querySelector('#metaNotes').value = extractedData.notes;
+    const metaFields = [
+      { sel: '#metaAddress', configKey: 'address', extractKey: 'address' },
+      { sel: '#metaPhone', configKey: 'phone', extractKey: 'phone' },
+      { sel: '#metaJummah', configKey: 'jummah_times', extractKey: 'jummah_times' },
+      { sel: '#metaEid', configKey: 'eid_salah', extractKey: 'eid_salah' },
+      { sel: '#metaFitrana', configKey: 'sadaqatul_fitr', extractKey: 'sadaqatul_fitr' },
+      { sel: '#metaRadio', configKey: 'radio_frequency', extractKey: 'radio_frequency' },
+      { sel: '#metaNotes', configKey: 'notes', extractKey: 'notes' },
+    ];
+    for (const f of metaFields) {
+      const el = document.querySelector(f.sel);
+      const originalVal = masjidConfig[f.configKey] || '';
+      el.value = originalVal;
+      // Override with extracted data where non-empty
+      if (extractedData[f.extractKey]) {
+        el.value = extractedData[f.extractKey];
+      }
+      // Highlight if value changed from original
+      if (el.value !== originalVal && el.value !== '') {
+        el.classList.add('field-changed');
+      } else {
+        el.classList.remove('field-changed');
+      }
+    }
 
     const cols = getTableColumns(extractedData.rows);
     reviewThead.innerHTML = '<tr><th>#</th>' + cols.map(c => `<th>${c.label}</th>`).join('') + '</tr>';

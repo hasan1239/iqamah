@@ -22,13 +22,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Skip if not eid (scheduled trigger)
+        if: github.event_name == 'schedule'
+        id: check
+        run: |
+          if [ ! -f data/season.json ]; then echo "skip=true" >> $GITHUB_OUTPUT; exit 0; fi
+          SEASON=$(python3 -c "import json; print(json.load(open('data/season.json')).get('season',''))")
+          if [ "$SEASON" != "eid" ]; then
+            echo "Not eid season ($SEASON), skipping"
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Write season.json (manual trigger)
         if: github.event_name == 'workflow_dispatch'
         run: |
           echo '{ "season": "${{ inputs.season }}", "set_at": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'" }' > data/season.json
 
       - name: Auto-expire eid to default (scheduled trigger)
-        if: github.event_name == 'schedule'
+        if: github.event_name == 'schedule' && steps.check.outputs.skip != 'true'
         run: |
           if [ ! -f data/season.json ]; then exit 0; fi
           SHOULD_EXPIRE=$(python3 -c "
