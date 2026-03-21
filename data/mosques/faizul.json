@@ -6,13 +6,14 @@
   "lat": 52.5106,
   "lon": -1.8912,
   "phone": "07812372352",
-  "month": "February-March 2026",
-  "islamic_month": "Ramadan-Shawwal 1447",
-  "jummah_times": "",
+  "month": "March 2026",
+  "islamic_month": "Shawwal 1447",
+  "jummah_times": "Jumuah 1:15PM (Bayaan starts 30 mins before Khutbah)",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-  "sadaqatul_fitr": "Minimum \u00a36.00 for adults & children",
+  "sadaqatul_fitr": "Minimum £6.00 for adults & children",
   "radio_frequency": "454 7000",
   "is_stale": false,
-  "notes": "During the Month of Ramadhan Fajr Jamaat will be 15 mins after Sehri Ends. Zohr 1:00PM & Jumuah @ 1:15PM. As a precaution please close your fast 5 minutes before Sehri ends.",
-  "source_image": "sources/faizul.jpg"
+  "notes": "British Summer Time begins on 29 March, clocks go forward by one hour. Zohr Jama'at is 1:00PM daily (1:15PM on Fridays for Jumuah). On Sunday after Zuhr salah, Dars-e-Quraan will take place in Urdu. Jumuah Bayaan starts half an hour before Khutbah.",
+  "source_image": "sources/faizul.jpg",
+  "pending_update": true
 }
