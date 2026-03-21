@@ -15,5 +15,5 @@
   "radio_frequency": "454.3500",
   "is_stale": false,
   "source_image": "sources/quba.jpg",
-  "pending_update": true
+  "approved": true
 }
