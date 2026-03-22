@@ -95,8 +95,11 @@ export async function render(container, { slug }) {
     document.title = `${config.display_name} - Iqamah`;
 
     const csvRes = await fetch(`/data/${config.csv}`);
-    if (!csvRes.ok) throw new Error('Timetable not found');
-    csvData = parseCSV(await csvRes.text());
+    if (csvRes.ok) {
+      csvData = parseCSV(await csvRes.text());
+    } else {
+      csvData = [];
+    }
 
     renderContent(container);
 
@@ -430,14 +433,34 @@ function renderTodayView(target) {
             <p>Could you help by uploading the latest timetable?</p>
             <a href="/update/${masjidId}" data-link class="btn btn-primary update-btn">Upload Timetable <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>
           </div>
+          ${renderInfoSection()}
+          <div class="btn-row">
+            ${renderPrimaryButton()}
+          </div>
         </div>`;
+    } else if (csvData.length === 0) {
+      target.innerHTML = `<div class="prayer-times-view">
+        <header><h1>${config.display_name}</h1></header>
+        ${noTimesEidHtml}
+        <div class="error">No timetable available yet.<br><small>Times will appear once a timetable is uploaded.</small></div>
+        ${renderInfoSection()}
+        <div class="btn-row">
+          ${renderPrimaryButton()}
+        </div>
+      </div>`;
     } else {
       target.innerHTML = `<div class="prayer-times-view">
         <header><h1>${config.display_name}</h1></header>
         ${noTimesEidHtml}
         <div class="error">No prayer times available for today.<br><small>Check back when the timetable period begins.</small></div>
+        ${renderInfoSection()}
+        <div class="btn-row">
+          ${renderPrimaryButton()}
+        </div>
       </div>`;
     }
+    setupInfoToggle();
+    setupPrimaryButton();
     return;
   }
 
