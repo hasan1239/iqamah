@@ -55,7 +55,9 @@ function timeToMinutes(t, forcePm = false) {
   const h = parseInt(parts[0], 10);
   const m = parseInt(parts[1], 10);
   if (isNaN(h) || isNaN(m)) return null;
-  const hour = (forcePm && h >= 1 && h <= 11) ? h + 12 : h;
+  // If h >= 13 or === 0, already in 24h format — skip forcePm conversion
+  const already24h = h >= 13 || h === 0;
+  const hour = (!already24h && forcePm && h >= 1 && h <= 11) ? h + 12 : h;
   return hour * 60 + m;
 }
 
