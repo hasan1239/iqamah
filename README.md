@@ -1,6 +1,6 @@
 # Iqamah
 
-**Prayer times for your local masjid — always up to date.**
+**Prayer times for your local masjid - always up to date.**
 
 A progressive web app for viewing daily prayer times, downloading lockscreen wallpapers, and discovering nearby masjids. Currently serving **16 masjids** with auto-generated lockscreens and self-service timetable submissions.
 
@@ -8,19 +8,19 @@ Live at [iqamah.co.uk](https://iqamah.co.uk)
 
 ## Features
 
-- **Today & Month views** — animated toggle between daily prayer times and full monthly timetable
-- **Next prayer countdown** — independent countdowns for both start times and jama'at times
-- **Lockscreen wallpapers** — downloadable 1080x2400 PNGs in dark and light themes, auto-generated daily
-- **PWA support** — installable on Android and iOS with platform-specific prompts
-- **Set My Masjid** — pin your primary masjid for quick access from the home screen
-- **Qibla compass** — device orientation-based qibla direction finder
-- **Self-service submissions** — upload a timetable image and AI extracts the data automatically
-- **Timetable updates** — submit updated times for existing masjids
-- **Seasonal modes** — adapts between Ramadan, Eid, and default layouts via a config flag
-- **Eid salah times** — dedicated `/eid` page with all masjids sorted by earliest jama'at
-- **Light/dark mode** — smooth crossfade transitions with animated stars (dark) or golden dust motes (light)
-- **Masjid info** — address with Google Maps link, contact number, radio frequency, Eid salah, Fitrana
-- **Auto version bumping** — PR labels (`major`, `minor`, `patch`) trigger automatic semver updates on merge
+- **Today & Month views** - animated toggle between daily prayer times and full monthly timetable
+- **Next prayer countdown** - independent countdowns for both start times and jama'at times
+- **Lockscreen wallpapers** - downloadable 1080x2400 PNGs in dark and light themes, auto-generated daily
+- **PWA support** - installable on Android and iOS with platform-specific prompts
+- **Set My Masjid** - pin your primary masjid for quick access from the home screen
+- **Qibla compass** - device orientation-based qibla direction finder
+- **Self-service submissions** - upload a timetable image and AI extracts the data automatically
+- **Timetable updates** - submit updated times for existing masjids
+- **Seasonal modes** - adapts between Ramadan, Eid, and default layouts via a config flag
+- **Eid salah times** - dedicated `/eid` page with all masjids sorted by earliest jama'at
+- **Light/dark mode** - smooth crossfade transitions with animated stars (dark) or golden dust motes (light)
+- **Masjid info** - address with Google Maps link, contact number, radio frequency, Eid salah, Fitrana
+- **Auto version bumping** - PR labels (`major`, `minor`, `patch`) trigger automatic semver updates on merge
 
 ## How It Works
 
@@ -36,13 +36,13 @@ Live at [iqamah.co.uk](https://iqamah.co.uk)
 1. Go to [iqamah.co.uk/add](https://iqamah.co.uk/add)
 2. Upload a photo of the timetable and enter the masjid name
 3. Review the AI-extracted times in an editable table
-4. Submit — the masjid is added immediately (pending approval)
+4. Submit - the masjid is added immediately (pending approval)
 
 ## Updating a Timetable
 
 1. Go to `iqamah.co.uk/update/<slug>` (or click "Upload Timetable" on a masjid page with stale times)
 2. Upload the new timetable image
-3. Review and submit — the updated times replace the existing CSV
+3. Review and submit - the updated times replace the existing CSV
 
 ## Running Locally
 
@@ -59,7 +59,7 @@ python generate.py faizul 2026-02-22
 
 ```
 
-For the website, serve the repo root with any static server (e.g. `npx serve .`). The `_worker.js` routing only runs on Cloudflare — locally, use `?id=slug` query params or access files directly.
+For the website, serve the repo root with any static server (e.g. `npx serve .`). The `_worker.js` routing only runs on Cloudflare - locally, use `?id=slug` query params or access files directly.
 
 ## Project Structure
 
@@ -98,7 +98,7 @@ generate_eid.py           Eid Mubarak greeting image generator
 
 ## Tech Stack
 
-- **Frontend:** Single-page app — vanilla JavaScript, CSS, client-side router
+- **Frontend:** Single-page app - vanilla JavaScript, CSS, client-side router
 - **Backend:** Cloudflare Pages Worker (API endpoints for extraction and submission)
 - **AI:** Anthropic Claude API (vision-based timetable extraction)
 - **Generation:** Python, Playwright (HTML → PNG), Pillow (image resizing)
