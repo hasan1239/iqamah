@@ -1,4 +1,5 @@
-const CACHE_NAME = 'iqamah-v2';
+const APP_VERSION = '2.4.0'; // Must match version.json
+const CACHE_NAME = `iqamah-v${APP_VERSION}`;
 
 const PRECACHE_URLS = [
   './',
@@ -46,6 +47,13 @@ self.addEventListener('activate', event => {
       )
     ).then(() => self.clients.claim())
   );
+});
+
+// Message: allow clients to trigger skipWaiting
+self.addEventListener('message', event => {
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // Fetch: route requests by caching strategy
@@ -120,7 +128,25 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Everything else (JS modules, JSON, images) — stale while revalidate
+  // Same-origin assets (JS, JSON, images) — network first, fall back to cache
+  if (url.origin === self.location.origin) {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() =>
+          caches.match(event.request).then(cached =>
+            cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' })
+          )
+        )
+    );
+    return;
+  }
+
+  // Third-party assets — stale while revalidate
   event.respondWith(
     caches.match(event.request).then(cached => {
       const fetchPromise = fetch(event.request).then(response => {

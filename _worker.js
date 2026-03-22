@@ -688,6 +688,12 @@ export default {
       });
     }
 
+    // www → non-www canonical redirect
+    if (url.hostname === 'www.iqamah.co.uk') {
+      url.hostname = 'iqamah.co.uk';
+      return Response.redirect(url.toString(), 301);
+    }
+
     // --- API endpoints ---
 
     if (path === '/api/extract' && request.method === 'POST') {

@@ -1,5 +1,8 @@
 /*.html
   Cache-Control: no-cache
 
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /data/*
   Cache-Control: no-cache
