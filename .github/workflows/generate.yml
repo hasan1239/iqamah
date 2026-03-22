@@ -1,7 +1,7 @@
-name: Generate Daily Ramadan Lockscreen
+name: Generate Daily Lockscreen
 
 on:
-  # Run daily at 12:07am UK time (GMT during Ramadan 2026)
+  # Run daily at 12:07am UK time
   schedule:
     - cron: '07 0 * * *'
 
@@ -25,9 +25,8 @@ on:
         required: false
         default: 'all'
       template:
-        description: 'Template version (e.g. v4, v3, v2, v2.1, v2.2, v2.3, v1)'
+        description: 'Template version (leave blank to auto-detect from season)'
         required: false
-        default: 'v4'
 
 permissions:
   contents: write
@@ -106,34 +105,25 @@ jobs:
           MOSQUE="${{ github.event.inputs.mosque }}"
           echo "mosque=${MOSQUE:-all}" >> $GITHUB_OUTPUT
           TEMPLATE="${{ github.event.inputs.template }}"
-          echo "template=${TEMPLATE:-v4}" >> $GITHUB_OUTPUT
+          echo "template=${TEMPLATE}" >> $GITHUB_OUTPUT
 
       - name: List available templates
         run: |
           echo "📋 Available templates:"
           ls -1 templates/lockscreen_*.html | sed 's/templates\/lockscreen_/  - /' | sed 's/\.html//'
 
-      - name: Check if date is within Ramadan
-        id: check
-        run: |
-          DATE="${{ steps.params.outputs.date }}"
-          if [[ "$DATE" < "2026-02-18" ]] || [[ "$DATE" > "2026-03-19" ]]; then
-            echo "skip=true" >> $GITHUB_OUTPUT
-            echo "⏭️ $DATE is outside Ramadan 2026 (18 Feb – 19 Mar). Skipping."
-          else
-            echo "skip=false" >> $GITHUB_OUTPUT
-            echo "✅ $DATE is within Ramadan. Generating..."
-          fi
-
       - name: Generate lockscreen(s)
-        if: steps.check.outputs.skip == 'false'
         env:
           OUTPUT_DIR: ${{ github.workspace }}/output
         run: |
-          python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }} --template ${{ steps.params.outputs.template }}
+          TEMPLATE="${{ steps.params.outputs.template }}"
+          if [ -n "$TEMPLATE" ]; then
+            python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }} --template "$TEMPLATE"
+          else
+            python generate.py ${{ steps.params.outputs.mosque }} ${{ steps.params.outputs.date }}
+          fi
 
       - name: Clean up old lockscreens
-        if: steps.check.outputs.skip == 'false'
         run: |
           # Compute the 3 dates to keep (today, -1d, -2d) in ddmmm format
           KEEP_DATES=""
@@ -162,7 +152,6 @@ jobs:
           echo "🧹 Removed $removed old lockscreen(s)"
 
       - name: Commit and push
-        if: steps.check.outputs.skip == 'false'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
