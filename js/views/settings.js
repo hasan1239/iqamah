@@ -1,5 +1,5 @@
 // Settings view — preferences and app info
-import { getTheme, toggleTheme, onThemeChange } from '../theme.js';
+import { getTheme, setTheme, onThemeChange } from '../theme.js';
 
 let unsubTheme = null;
 
@@ -38,18 +38,20 @@ export function render(container) {
           <div class="settings-item-left">
             <span class="settings-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                ${theme === 'dark'
+                ${theme === 'light'
                   ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
                   : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
                 }
               </svg>
             </span>
-            <span class="settings-label">Dark Mode</span>
+            <span class="settings-label">Theme</span>
           </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="darkModeToggle" ${theme === 'dark' ? 'checked' : ''}>
-            <span class="toggle-track"></span>
-          </label>
+          <div class="theme-segmented" data-active="${theme}" id="themeSegmented">
+            <div class="theme-segmented-slider"></div>
+            <button data-theme="light" class="${theme === 'light' ? 'active' : ''}">Light</button>
+            <button data-theme="night" class="${theme === 'night' ? 'active' : ''}">Night</button>
+            <button data-theme="dark" class="${theme === 'dark' ? 'active' : ''}">Dark</button>
+          </div>
         </div>
 
         <div class="settings-item" id="timeFormatSetting">
@@ -185,15 +187,22 @@ export function render(container) {
     }).catch(() => {});
   }
 
-  // Dark mode toggle
-  document.getElementById('darkModeToggle').addEventListener('change', () => {
-    toggleTheme();
+  // Theme segmented control
+  const segmented = document.getElementById('themeSegmented');
+  segmented.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-theme]');
+    if (!btn) return;
+    setTheme(btn.dataset.theme);
   });
 
-  // Update toggle icon on theme change
+  // Update segmented control on theme change
   unsubTheme = onThemeChange((newTheme) => {
-    const toggle = document.getElementById('darkModeToggle');
-    if (toggle) toggle.checked = newTheme === 'dark';
+    const seg = document.getElementById('themeSegmented');
+    if (!seg) return;
+    seg.setAttribute('data-active', newTheme);
+    seg.querySelectorAll('button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === newTheme);
+    });
   });
 
   // Time format toggle
