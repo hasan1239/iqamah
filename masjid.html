@@ -1361,8 +1361,11 @@
       const parts = timeStr.trim().split(':');
       let hours = parseInt(parts[0]);
       const minutes = parseInt(parts[1]);
-      if (!isAM && hours !== 12) hours += 12;
-      if (isAM && hours === 12) hours = 0;
+      var already24h = hours >= 13 || hours === 0;
+      if (!already24h) {
+        if (!isAM && hours !== 12) hours += 12;
+        if (isAM && hours === 12) hours = 0;
+      }
       const now = new Date();
       return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
     }

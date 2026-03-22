@@ -24,11 +24,23 @@ function ft(timeStr, isAM, skipSuffix) {
   if (!match) return timeStr;
   let hours = parseInt(match[1]);
   const minutes = match[2];
+  // If hours >= 13, the time is already in 24h format — derive isAM from the value
+  const already24h = hours >= 13 || (hours === 0);
+  if (already24h) isAM = hours < 12;
 
   if (use24h()) {
-    if (!isAM && hours !== 12) hours += 12;
-    if (isAM && hours === 12) hours = 0;
+    if (!already24h) {
+      if (!isAM && hours !== 12) hours += 12;
+      if (isAM && hours === 12) hours = 0;
+    }
     return `${hours}:${minutes}`;
+  }
+  // Convert to 12h display
+  if (already24h) {
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    const h12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    if (skipSuffix) return `${h12}:${minutes}`;
+    return `${h12}:${minutes} ${suffix}`;
   }
   if (skipSuffix) return `${hours}:${minutes}`;
   return `${hours}:${minutes} ${isAM ? 'AM' : 'PM'}`;
@@ -200,8 +212,12 @@ function parseTimeToDate(timeStr, isAM) {
   const parts = timeStr.trim().split(':');
   let hours = parseInt(parts[0]);
   const minutes = parseInt(parts[1]);
-  if (!isAM && hours !== 12) hours += 12;
-  if (isAM && hours === 12) hours = 0;
+  // If hours >= 13 or === 0, already in 24h format — skip conversion
+  const already24h = hours >= 13 || (hours === 0);
+  if (!already24h) {
+    if (!isAM && hours !== 12) hours += 12;
+    if (isAM && hours === 12) hours = 0;
+  }
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 }
