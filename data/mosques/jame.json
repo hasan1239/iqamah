@@ -4,15 +4,16 @@
   "csv": "jame.csv",
   "address": "Trinity Road, Aston, Birmingham B6 6AG",
   "lat": 52.5084,
-  "lon": -1.9020,
+  "lon": -1.902,
   "phone": "0121 554 9157",
-  "month": "February-March 2026",
-  "islamic_month": "Ramadan 1447",
-  "jummah_times": "",
+  "month": "March 2026",
+  "islamic_month": "1447 Shawwal",
+  "jummah_times": "Zohar & Juma Jamat at 1:00 PM till 28th March; from 29th March at 2:00 PM",
   "eid_salah": "1st Salah: 7:00am, 2nd Salah: 8:00am",
-  "sadaqatul_fitr": "\u00a37 per person",
+  "sadaqatul_fitr": "£7 per person",
   "radio_frequency": "454.1500",
   "is_stale": false,
-  "notes": "Qur'an completion in Taraweeh will be taking place on 29th Ramadhan. Zuhr Jamat 1:00 (vertical text indicates fixed Zuhr Jama'at at 1:00). Jumu'ah Jamat 1:00. This timetable has been donated by Mr & Mrs. Maksud Ahmed Shaikh for Esal-E-Sawab of Late Shafi Ahmed Sheikh. Charity Registration: 1188915 (UK). Website: www.birminghamjamemasjid.org.uk. Facebook: www.facebook.com/BirminghamJameMasjid.",
-  "source_image": "sources/jame.jpg"
+  "notes": "British Summer Time starts on Sunday 29th March — please put clock one hour forward. Zohar & Juma Jamat is at 1:00 PM till 28th March and from 29th March at 2:00 PM. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to combine Maghrib Azan and Jama'at into one column — values used as maghrib_iftari. No separate Maghrib Jama'at column exists. Zohar Jamaat applied as 1:00 for non-Fri",
+  "source_image": "sources/jame.jpg",
+  "pending_update": true
 }
