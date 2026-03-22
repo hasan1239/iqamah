@@ -13,12 +13,16 @@
   <script>
     (function() {
       function syncTheme() {
-        var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
+        var stored = localStorage.getItem('iqamah-theme');
+        if (!localStorage.getItem('iqamah-theme-v2')) {
+          if (stored === 'dark') { stored = 'night'; localStorage.setItem('iqamah-theme', 'night'); }
+          var legacy = localStorage.getItem('prayerly-theme');
+          if (!stored && legacy) { stored = legacy === 'dark' ? 'night' : legacy; localStorage.setItem('iqamah-theme', stored); }
+          localStorage.setItem('iqamah-theme-v2', '1');
+        }
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
-        var isLight = document.documentElement.classList.contains('light-mode');
-        if (shouldBeLight && !isLight) document.documentElement.classList.add('light-mode');
-        else if (!shouldBeLight && isLight) document.documentElement.classList.remove('light-mode');
+        var theme = stored || (prefersDark ? 'night' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
       }
       syncTheme();
       window.addEventListener('pageshow', function(e) { if (e.persisted) syncTheme(); });
@@ -59,7 +63,7 @@
       --table-border: rgba(212,175,55,0.12);
     }
 
-    :root.light-mode {
+    :root[data-theme="light"] {
       --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
       --overlay-1: #d4e8d0;
       --overlay-2: #cce0ec;
@@ -91,6 +95,20 @@
       --table-header-bg: rgba(180,140,30,0.12);
       --table-row-hover: rgba(0,0,0,0.03);
       --table-border: rgba(180,140,30,0.15);
+    }
+
+    :root[data-theme="dark"] {
+      --bg-gradient: #000000;
+      --overlay-1: transparent;
+      --overlay-2: transparent;
+      --overlay-3: transparent;
+      --pattern-line: transparent;
+      --card-bg: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --card-hover-bg: rgba(255,255,255,0.09);
+      --card-active-bg: rgba(255,255,255,0.12);
+      --star-opacity: 0;
+      --card-shadow: none;
     }
 
     .theme-transitioning,
@@ -135,6 +153,9 @@
       pointer-events: none;
     }
 
+    :root[data-theme="dark"] body::before,
+    :root[data-theme="dark"] body::after { display: none; }
+
     .stars {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 2; pointer-events: none; opacity: var(--star-opacity); transition: opacity 0.4s ease;
@@ -149,7 +170,7 @@
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       z-index: 2; pointer-events: none; opacity: 0; transition: opacity 0.4s ease;
     }
-    :root.light-mode .dust-motes { opacity: 1; }
+    :root[data-theme="light"] .dust-motes { opacity: 1; }
     .mote {
       position: absolute; border-radius: 50%;
       background: radial-gradient(circle, rgba(180,140,30,0.4), rgba(180,140,30,0) 70%);
@@ -182,8 +203,8 @@
     .theme-toggle svg { width: 16px; height: 16px; }
     .theme-icon--sun { display: block; color: var(--gold); }
     .theme-icon--moon { display: none; color: var(--gold); }
-    :root.light-mode .theme-icon--sun { display: none; }
-    :root.light-mode .theme-icon--moon { display: block; }
+    :root[data-theme="light"] .theme-icon--sun { display: none; }
+    :root[data-theme="light"] .theme-icon--moon { display: block; }
 
     /* Header */
     header { text-align: center; margin-bottom: 25px; }
@@ -424,7 +445,7 @@
       background: var(--gold);
       color: var(--bg-dark, #050c18);
     }
-    :root.light-mode .zoom-controls button:hover {
+    :root[data-theme="light"] .zoom-controls button:hover {
       color: #fff;
     }
     .zoom-controls .zoom-level {
@@ -877,21 +898,25 @@
       var toggle = document.getElementById('themeToggle');
       var root = document.documentElement;
       var meta = document.querySelector('meta[name="theme-color"]');
+      var themeColors = { light: '#faf6ef', night: '#050c18', dark: '#000000' };
+
+      function getTheme() { return root.getAttribute('data-theme') || 'night'; }
 
       function updateThemeColor() {
-        var isLight = root.classList.contains('light-mode');
-        if (meta) meta.content = isLight ? '#faf6ef' : '#050c18';
+        if (meta) meta.content = themeColors[getTheme()] || themeColors.night;
       }
 
       toggle.addEventListener('click', function() {
+        var order = ['light', 'night', 'dark'];
+        var next = order[(order.indexOf(getTheme()) + 1) % order.length];
         var overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;inset:0;z-index:3;pointer-events:none;transition:opacity 0.4s ease;';
         overlay.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+        overlay.style.backgroundColor = getComputedStyle(document.body).backgroundColor;
         document.body.appendChild(overlay);
         root.classList.add('theme-transitioning');
-        root.classList.toggle('light-mode');
-        var isLight = root.classList.contains('light-mode');
-        localStorage.setItem('iqamah-theme', isLight ? 'light' : 'dark');
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('iqamah-theme', next);
         updateThemeColor();
         requestAnimationFrame(function() {
           requestAnimationFrame(function() { overlay.style.opacity = '0'; });
