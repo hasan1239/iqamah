@@ -1,101 +1,111 @@
-# Prayerly
+# Iqamah
 
-**Daily Ramadan prayer times for your local masjid.**
+**Prayer times for your local masjid — always up to date.**
 
-View prayer times online or download as a beautifully designed phone lockscreen wallpaper (1080×2400). Supports any masjid from [eSalaat.com](https://esalaat.com) — just add the timetable code and it extracts the data automatically using Claude's vision API.
+A progressive web app for viewing daily prayer times, downloading lockscreen wallpapers, and discovering nearby masjids. Currently serving **16 masjids** with auto-generated lockscreens and self-service timetable submissions.
+
+Live at [iqamah.co.uk](https://iqamah.co.uk)
 
 ## Features
 
-- 🌐 **View online:** Today's times and full monthly timetable with animated toggle
-- 📱 **Download lockscreen:** PNG wallpaper optimized for modern phones
-- 🤖 **Auto-updates:** Generates daily at 2am GMT throughout Ramadan 2026
-- 🕌 **Multi-masjid:** Easily add any masjid from eSalaat
-
-**Available masjids:**
-- [Masjid Faizul Islam](https://hasan1239.github.io/ramadan-lockscreen/masjid.html?id=faizul)
-- [Masjid Quba Trust](https://hasan1239.github.io/ramadan-lockscreen/masjid.html?id=quba)
-- [Masjid Aisha](https://hasan1239.github.io/ramadan-lockscreen/masjid.html?id=aisha)
+- **Today & Month views** — animated toggle between daily prayer times and full monthly timetable
+- **Next prayer countdown** — independent countdowns for both start times and jama'at times
+- **Lockscreen wallpapers** — downloadable 1080x2400 PNGs in dark and light themes, auto-generated daily
+- **PWA support** — installable on Android and iOS with platform-specific prompts
+- **Set My Masjid** — pin your primary masjid for quick access from the home screen
+- **Qibla compass** — device orientation-based qibla direction finder
+- **Self-service submissions** — upload a timetable image and AI extracts the data automatically
+- **Timetable updates** — submit updated times for existing masjids
+- **Seasonal modes** — adapts between Ramadan, Eid, and default layouts via a config flag
+- **Eid salah times** — dedicated `/eid` page with all masjids sorted by earliest jama'at
+- **Light/dark mode** — smooth crossfade transitions with animated stars (dark) or golden dust motes (light)
+- **Masjid info** — address with Google Maps link, contact number, radio frequency, Eid salah, Fitrana
+- **Auto version bumping** — PR labels (`major`, `minor`, `patch`) trigger automatic semver updates on merge
 
 ## How It Works
 
-1. **Website:** Static HTML pages hosted on GitHub Pages display prayer times dynamically
-2. **Daily generation:** A GitHub Actions workflow runs every day at **2:00am GMT** during Ramadan
-3. It reads prayer times from CSV timetables and renders styled lockscreen PNGs
-4. Images are committed to `output/` (date-stamped) and `latest/` (stable URL)
-5. Website auto-discovers all available masjids from JSON configs
+1. **Timetable data** is extracted from uploaded timetable images using Claude's vision API, producing CSV files
+2. **Masjid configs** (`data/mosques/*.json`) store display name, slug, CSV reference, and metadata
+3. **The SPA** (`index.html`) fetches `data/mosques/index.json` to discover all masjids, then loads each config dynamically
+4. **Clean URLs** (`/aisha`, `/quba`) are handled by a Cloudflare Pages Worker (`_worker.js`) that routes requests to the SPA
+5. **Daily at 2am GMT**, a GitHub Actions workflow generates lockscreen PNGs from HTML templates using Playwright, commits them to `output/` (date-stamped) and `latest/` (stable URLs)
+6. **Cloudflare Pages** auto-deploys on every push to main
 
 ## Adding a New Masjid
 
-You can add any masjid from eSalaat in a couple of clicks:
+1. Go to [iqamah.co.uk/add](https://iqamah.co.uk/add)
+2. Upload a photo of the timetable and enter the masjid name
+3. Review the AI-extracted times in an editable table
+4. Submit — the masjid is added immediately (pending approval)
 
-1. Go to [esalaat.com](https://esalaat.com), find your city, click your masjid
-2. Note the timetable code from the URL (e.g. `1003` from `esalaat.com/timetables/1003.jpg`)
-3. Go to the **Actions** tab → **"Add Masjid from eSalaat"** → **Run workflow**
-4. Enter the code (e.g. `1003`) and optionally the masjid name
-5. The workflow downloads the image, extracts all 30 days of times using Claude API, saves a CSV, and commits it
-6. From the next daily run onwards, lockscreens will be generated for that masjid too
+## Updating a Timetable
 
-## Phone Automation
-
-The latest lockscreen for each masjid is always available at a stable URL:
-
-```
-https://raw.githubusercontent.com/hasan1239/ramadan-lockscreen/main/latest/ramadan_lockscreen_<slug>_latest.png
-```
-
-### Android (Tasker)
-
-1. Create a profile triggered at 3:00am daily
-2. Task: **HTTP Get** → download your masjid's `latest/` PNG URL
-3. Task: **Set Wallpaper** → apply to lock screen
-
-Your lockscreen will update itself every morning without any manual effort.
+1. Go to `iqamah.co.uk/update/<slug>` (or click "Upload Timetable" on a masjid page with stale times)
+2. Upload the new timetable image
+3. Review and submit — the updated times replace the existing CSV
 
 ## Running Locally
 
 ```bash
+# Install dependencies
 pip install playwright Pillow anthropic
 playwright install --with-deps chromium
 
-# Generate for all masjids, today's date
+# Generate lockscreens for all masjids (today's date)
 python generate.py
 
-# Generate for one masjid on a specific date
+# Generate for a specific masjid and date
 python generate.py faizul 2026-02-22
 
-# Extract a new masjid from eSalaat
-ANTHROPIC_API_KEY=sk-ant-... python extract_timetable.py 1003
 ```
+
+For the website, serve the repo root with any static server (e.g. `npx serve .`). The `_worker.js` routing only runs on Cloudflare — locally, use `?id=slug` query params or access files directly.
 
 ## Project Structure
 
 ```
-├── .github/workflows/
-│   ├── generate.yml          # Daily lockscreen generation
-│   └── add_mosque.yml        # Add new masjid from eSalaat
-├── data/
-│   ├── mosques/              # JSON configs + index for dynamic discovery
-│   └── *.csv                 # Prayer timetable data
-├── templates/
-│   └── lockscreen*.html      # HTML templates for PNG generation
-├── index.html                # Homepage with masjid cards
-├── masjid.html               # Prayer times page with Today/Month views
-├── output/                   # Generated PNGs (date-stamped)
-├── latest/                   # Stable-URL copies (always today's)
-├── generate.py               # Main generation script
-├── extract_timetable.py      # eSalaat → Claude API → CSV extractor
-├── favicon.ico               # Site favicon
-├── salahdaily_icon.png       # Logo
-└── requirements.txt
+.github/workflows/
+  generate.yml            Daily lockscreen generation (2am GMT cron)
+  add_masjid.yml          Add masjid from self-service submission
+  update_masjid.yml       Update existing timetable
+  approve_masjid.yml      Approve pending masjid submissions
+  season.yml              Switch seasonal mode (ramadan/eid/default)
+  version_bump.yml        Auto-bump version on PR merge
+
+data/
+  mosques/                Masjid JSON configs + index.json manifest
+  *.csv                   Prayer timetable CSVs
+  season.json             Current seasonal mode
+
+js/
+  app.js                  SPA entry point
+  router.js               Client-side router (clean URLs)
+  nav.js                  Bottom navigation bar
+  theme.js                Light/dark mode logic
+  background.js           Stars and dust mote animations
+  views/                  View modules (home, prayer-times, masjids, etc.)
+  utils/                  Shared utilities (CSV parsing, hijri dates, etc.)
+
+templates/
+  lockscreen_v*.html      Lockscreen HTML templates (dark + light variants)
+  eid_mubarak.html        Eid greeting image template
+
+index.html                SPA shell + all CSS
+_worker.js                Cloudflare Pages Worker (routing + API endpoints)
+generate.py               Lockscreen PNG generator (Playwright + Pillow)
+generate_eid.py           Eid Mubarak greeting image generator
 ```
 
 ## Tech Stack
 
-- **Frontend:** Static HTML, CSS, vanilla JavaScript
-- **Backend:** Python + Playwright (HTML → PNG) + Anthropic Claude (vision API)
-- **Hosting:** GitHub Pages + GitHub Actions
-- **Fonts:** Google Fonts (Cinzel, Amiri, Lato)
+- **Frontend:** Single-page app — vanilla JavaScript, CSS, client-side router
+- **Backend:** Cloudflare Pages Worker (API endpoints for extraction and submission)
+- **AI:** Anthropic Claude API (vision-based timetable extraction)
+- **Generation:** Python, Playwright (HTML → PNG), Pillow (image resizing)
+- **Hosting:** Cloudflare Pages with custom domain, auto-deploy on push
+- **CI/CD:** GitHub Actions (daily generation, masjid management, version bumping)
+- **Fonts:** Google Fonts (Amiri for Arabic, Lato for UI)
 
 ---
 
-© Prayerly
+&copy; Iqamah
