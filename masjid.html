@@ -13,12 +13,16 @@
   <script>
     (function() {
       function syncTheme() {
-        var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
+        var stored = localStorage.getItem('iqamah-theme');
+        if (!localStorage.getItem('iqamah-theme-v2')) {
+          if (stored === 'dark') { stored = 'night'; localStorage.setItem('iqamah-theme', 'night'); }
+          var legacy = localStorage.getItem('prayerly-theme');
+          if (!stored && legacy) { stored = legacy === 'dark' ? 'night' : legacy; localStorage.setItem('iqamah-theme', stored); }
+          localStorage.setItem('iqamah-theme-v2', '1');
+        }
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
-        var isLight = document.documentElement.classList.contains('light-mode');
-        if (shouldBeLight && !isLight) document.documentElement.classList.add('light-mode');
-        else if (!shouldBeLight && isLight) document.documentElement.classList.remove('light-mode');
+        var theme = stored || (prefersDark ? 'night' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
       }
       syncTheme();
       window.addEventListener('pageshow', function(e) { if (e.persisted) syncTheme(); });
@@ -70,7 +74,7 @@
       --theme-color-value: #050c18;
     }
 
-    :root.light-mode {
+    :root[data-theme="light"] {
       --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
       --overlay-1: #d4e8d0;
       --overlay-2: #cce0ec;
@@ -113,6 +117,25 @@
       --install-border: rgba(180,140,30,0.25);
       --theme-color-value: #faf6ef;
     }
+
+    :root[data-theme="dark"] {
+      --bg-gradient: #000000;
+      --overlay-1: transparent;
+      --overlay-2: transparent;
+      --overlay-3: transparent;
+      --pattern-line: transparent;
+      --card-bg: rgba(255,255,255,0.06);
+      --card-border: rgba(255,255,255,0.12);
+      --card-hover-bg: rgba(255,255,255,0.09);
+      --star-opacity: 0;
+      --card-shadow: none;
+      --nav-bg: #0a0a0a;
+      --month-header-bg: #0a0a0a;
+      --theme-color-value: #000000;
+    }
+    :root[data-theme="dark"] .toggle-container { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+    :root[data-theme="dark"] .toggle-slider { background: #ffffff; box-shadow: none; }
+    :root[data-theme="dark"] .toggle-btn.active { color: #000000; }
 
     .theme-transitioning,
     .theme-transitioning *,
@@ -162,6 +185,9 @@
       pointer-events: none;
     }
 
+    :root[data-theme="dark"] body::before,
+    :root[data-theme="dark"] body::after { display: none; }
+
     .stars {
       position: fixed;
       top: 0;
@@ -200,7 +226,7 @@
       opacity: 0;
       transition: opacity 0.4s ease;
     }
-    :root.light-mode .dust-motes { opacity: 1; }
+    :root[data-theme="light"] .dust-motes { opacity: 1; }
 
     .mote {
       position: absolute;
@@ -885,8 +911,8 @@
 
     .theme-icon--sun { display: block; color: var(--gold); }
     .theme-icon--moon { display: none; color: var(--gold); }
-    :root.light-mode .theme-icon--sun { display: none; }
-    :root.light-mode .theme-icon--moon { display: block; }
+    :root[data-theme="light"] .theme-icon--sun { display: none; }
+    :root[data-theme="light"] .theme-icon--moon { display: block; }
 
     /* Collapsible masjid info section */
     .info-section {
@@ -1224,8 +1250,8 @@
           scope: './',
           display: 'standalone',
           orientation: 'portrait',
-          background_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
-          theme_color: document.documentElement.classList.contains('light-mode') ? '#faf6ef' : '#050c18',
+          background_color: {'light':'#faf6ef','night':'#050c18','dark':'#000000'}[document.documentElement.getAttribute('data-theme') || 'night'],
+          theme_color: {'light':'#faf6ef','night':'#050c18','dark':'#000000'}[document.documentElement.getAttribute('data-theme') || 'night'],
           icons: [
             { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png' },
             { src: 'iqamah-icon.png?v=2', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
@@ -2068,10 +2094,14 @@
       var toggle = document.getElementById('themeToggle');
       var root = document.documentElement;
       var meta = document.querySelector('meta[name="theme-color"]');
+      var themeColors = { light: '#faf6ef', night: '#050c18', dark: '#000000' };
+
+      function getTheme() {
+        return root.getAttribute('data-theme') || 'night';
+      }
 
       function updateThemeColor() {
-        var isLight = root.classList.contains('light-mode');
-        if (meta) meta.content = isLight ? '#faf6ef' : '#050c18';
+        if (meta) meta.content = themeColors[getTheme()] || themeColors.night;
       }
 
       function updateDownloadLink() {
@@ -2079,7 +2109,7 @@
         if (!downloadLink) return;
         var id = getMasjidId();
         var darkUrl = 'latest/ramadan_lockscreen_' + id + '_latest.png';
-        if (!root.classList.contains('light-mode')) {
+        if (getTheme() !== 'light') {
           downloadLink.href = darkUrl;
           return;
         }
@@ -2098,16 +2128,20 @@
       updateDownloadLink();
 
       toggle.addEventListener('click', function() {
-        // Crossfade overlay: capture current bg gradient, fade it out over the new theme
+        var order = ['light', 'night', 'dark'];
+        var current = getTheme();
+        var next = order[(order.indexOf(current) + 1) % order.length];
+
+        // Crossfade overlay
         var overlay = document.createElement('div');
         overlay.style.cssText = 'position:fixed;inset:0;z-index:3;pointer-events:none;transition:opacity 0.4s ease;';
         overlay.style.backgroundImage = getComputedStyle(document.body).backgroundImage;
+        overlay.style.backgroundColor = getComputedStyle(document.body).backgroundColor;
         document.body.appendChild(overlay);
 
         root.classList.add('theme-transitioning');
-        root.classList.toggle('light-mode');
-        var isLight = root.classList.contains('light-mode');
-        localStorage.setItem('iqamah-theme', isLight ? 'light' : 'dark');
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('iqamah-theme', next);
         updateThemeColor();
         updateDownloadLink();
         requestAnimationFrame(function() {
@@ -2119,7 +2153,7 @@
         }, 400);
         if (window.goatcounter) {
           window.goatcounter.count({
-            path: '/theme/' + (isLight ? 'light' : 'dark'),
+            path: '/theme/' + next,
             title: 'Theme toggle',
             event: true,
           });
@@ -2128,16 +2162,12 @@
 
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
         if (localStorage.getItem('iqamah-theme')) return;
-        if (e.matches) {
-          root.classList.remove('light-mode');
-        } else {
-          root.classList.add('light-mode');
-        }
+        var theme = e.matches ? 'night' : 'light';
+        root.setAttribute('data-theme', theme);
         updateThemeColor();
       });
 
       // Sync theme-color meta and download link on bfcache restore
-      // (the <head> script already handles the light-mode class toggle)
       window.addEventListener('pageshow', function(e) {
         if (e.persisted) {
           updateThemeColor();

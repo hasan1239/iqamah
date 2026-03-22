@@ -8,10 +8,16 @@
   <title>Page Not Found - Iqamah</title>
   <script>
     (function() {
-      var stored = localStorage.getItem('iqamah-theme') || localStorage.getItem('prayerly-theme');
+      var stored = localStorage.getItem('iqamah-theme');
+      if (!localStorage.getItem('iqamah-theme-v2')) {
+        if (stored === 'dark') { stored = 'night'; localStorage.setItem('iqamah-theme', 'night'); }
+        var legacy = localStorage.getItem('prayerly-theme');
+        if (!stored && legacy) { stored = legacy === 'dark' ? 'night' : legacy; localStorage.setItem('iqamah-theme', stored); }
+        localStorage.setItem('iqamah-theme-v2', '1');
+      }
       var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      var shouldBeLight = stored === 'light' || (!stored && !prefersDark);
-      if (shouldBeLight) document.documentElement.classList.add('light-mode');
+      var theme = stored || (prefersDark ? 'night' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
   <style>
@@ -21,11 +27,14 @@
       --text-muted: #808080;
       --gold: #d4af37;
     }
-    :root.light-mode {
+    :root[data-theme="light"] {
       --bg-gradient: linear-gradient(180deg, #faf6ef, #f5eed9 40%, #f0ebe0);
       --text-primary: #1a1a2e;
       --text-muted: #7a7a8a;
       --gold: #b8941f;
+    }
+    :root[data-theme="dark"] {
+      --bg-gradient: #000000;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
