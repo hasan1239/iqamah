@@ -1,0 +1,19 @@
+{
+  "display_name": "Masjid Hamza",
+  "slug": "hamza",
+  "csv": "hamza.csv",
+  "address": "90 Church Road, Moseley, Birmingham, B13 9AE",
+  "phone": "",
+  "month": "March 2026",
+  "islamic_month": "",
+  "jummah_times": "Winter Time: Bayaan starts 12:20pm, Jamat 1:10pm; Summer Time: Bayaan starts 12:50pm, Jamaah 1:40pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "454.775",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Jummah Salaah: Winter Time - Bayaan will start at 12:20pm and jamat time 1:10pm; Summer Time - Bayaan will start at 12:50pm and Jamaah will begin at 1:40pm.",
+  "source_image": "sources/hamza.png",
+  "lat": 52.4493645,
+  "lon": -1.8828855
+}
