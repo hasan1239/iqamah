@@ -460,6 +460,7 @@
     .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
     .btn-row .download-btn, .btn-row .btn-primary { margin-top: 0; }
     .btn-row .set-primary-btn { margin-top: 0; width: auto; }
+    .btn-row:has(.set-primary-btn:only-child) { grid-template-columns: 1fr; }
 
     /* Footer */
     footer, .home-footer {
