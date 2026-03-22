@@ -217,8 +217,11 @@ function formatCardTime(timeStr, isAM) {
   const h = parseInt(parts[0]);
   const m = parts[1];
   if (localStorage.getItem('iqamah-time-format') === '12') {
+    if (h >= 13) return `${h - 12}:${m} PM`;
+    if (h === 0) return `12:${m} AM`;
     return `${h}:${m} ${isAM ? 'AM' : 'PM'}`;
   }
+  if (h >= 13) return `${h}:${m}`;
   const h24 = isAM ? (h === 12 ? 0 : h) : (h === 12 ? 12 : h + 12);
   return `${h24}:${m}`;
 }
@@ -229,8 +232,11 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
   let hours = parseInt(parts[0]);
   const minutes = parseInt(parts[1]);
   if (isNaN(hours) || isNaN(minutes)) return null;
-  if (!isAM && hours !== 12) hours += 12;
-  if (isAM && hours === 12) hours = 0;
+  // If hours >= 13, time is already in 24h format — no conversion needed
+  if (hours < 13) {
+    if (!isAM && hours !== 12) hours += 12;
+    if (isAM && hours === 12) hours = 0;
+  }
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
 }
