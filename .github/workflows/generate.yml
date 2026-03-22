@@ -39,18 +39,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Regenerate mosque index
-        run: |
-          # Bundle all mosque configs into index.json so the landing page needs one fetch
-          cd data/mosques
-          if ls *.json 1> /dev/null 2>&1; then
-            jq -s '.' $(ls *.json | grep -v "index.json" | sort) > index.json
-            echo "✅ Regenerated data/mosques/index.json"
-          else
-            echo "⚠️ No mosque configs found, skipping index regeneration"
-          fi
-          cd ../..
-
       - name: Clear stale pending_update flags
         shell: python3 {0}
         run: |
@@ -83,6 +71,18 @@ jobs:
                   with open(path, 'w') as f:
                       json.dump(c, f, indent=2)
                       f.write('\n')
+
+      - name: Regenerate mosque index
+        run: |
+          # Bundle all mosque configs into index.json so the landing page needs one fetch
+          cd data/mosques
+          if ls *.json 1> /dev/null 2>&1; then
+            jq -s '.' $(ls *.json | grep -v "index.json" | sort) > index.json
+            echo "✅ Regenerated data/mosques/index.json"
+          else
+            echo "⚠️ No mosque configs found, skipping index regeneration"
+          fi
+          cd ../..
 
       - name: Set up Python
         uses: actions/setup-python@v5
