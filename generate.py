@@ -297,10 +297,10 @@ def main():
                     season = json.load(f).get("season", "ramadan")
             except Exception:
                 pass
-        if season in ("default", "eid"):
-            template_version = "v4_default"
+        if season == "ramadan":
+            template_version = "v4_ramadan"
         else:
-            template_version = "v4"
+            template_version = "v4_default"
         print(f"   Season: {season} → template {template_version}")
 
     template_path = script_dir / "templates" / f"lockscreen_{template_version}.html"
