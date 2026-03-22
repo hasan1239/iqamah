@@ -39,7 +39,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Clear stale pending_update flags
+      - name: Clear stale pending flags
         shell: python3 {0}
         run: |
           import json, csv, os, glob
@@ -51,7 +51,9 @@ jobs:
                   continue
               with open(path) as f:
                   c = json.load(f)
-              if not c.get('pending_update'):
+              is_pending_update = c.get('pending_update')
+              is_unapproved = c.get('approved') == False
+              if not is_pending_update and not is_unapproved:
                   continue
               slug = os.path.basename(path).replace('.json', '')
               csv_path = os.path.join('data', c.get('csv', slug + '.csv'))
@@ -66,11 +68,19 @@ jobs:
                                   has_future = True
                                   break
               if not has_future:
-                  print(f'Clearing pending_update for {slug}')
-                  c['pending_update'] = False
-                  with open(path, 'w') as f:
-                      json.dump(c, f, indent=2)
-                      f.write('\n')
+                  changed = False
+                  if is_pending_update:
+                      print(f'Clearing pending_update for {slug}')
+                      c['pending_update'] = False
+                      changed = True
+                  if is_unapproved:
+                      print(f'Clearing pending review for {slug}')
+                      c['approved'] = True
+                      changed = True
+                  if changed:
+                      with open(path, 'w') as f:
+                          json.dump(c, f, indent=2)
+                          f.write('\n')
 
       - name: Regenerate mosque index
         run: |
