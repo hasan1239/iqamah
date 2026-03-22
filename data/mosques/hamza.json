@@ -10,7 +10,7 @@
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "454.775",
-  "approved": false,
+  "approved": true,
   "is_stale": false,
   "notes": "Jummah Salaah: Winter Time - Bayaan will start at 12:20pm and jamat time 1:10pm; Summer Time - Bayaan will start at 12:50pm and Jamaah will begin at 1:40pm.",
   "source_image": "sources/hamza.png",
