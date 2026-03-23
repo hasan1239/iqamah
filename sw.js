@@ -1,4 +1,4 @@
-const APP_VERSION = '2.4.5'; // Must match version.json
+const APP_VERSION = '2.4.6'; // Must match version.json
 const CACHE_NAME = `iqamah-v${APP_VERSION}`;
 
 const PRECACHE_URLS = [
