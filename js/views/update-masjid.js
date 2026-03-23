@@ -527,6 +527,8 @@ function setupEventListeners(container) {
       } else {
         const formData = new FormData();
         formData.append('image', selectedFile);
+        formData.append('action', 'update');
+        formData.append('slug', masjidSlug);
         formData.append('cf-turnstile-response', turnstileToken);
         const resp = await fetch('/api/extract', { method: 'POST', body: formData });
         result = await resp.json();
