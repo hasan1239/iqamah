@@ -34,6 +34,7 @@ const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 let searchQuery = '';
 let loadGeneration = 0;
 let masjidsLoadPromise = null;
+let hasTimesMap = {}; // slug -> true/false, populated after CSV check
 
 export function render(container) {
   viewContainer = container;
@@ -138,11 +139,16 @@ export function renderCards() {
     );
   }
 
-  // Sort: approved first, then by distance if location active, otherwise alphabetical
+  // Sort: approved first, then has-times first, then by distance if location active, otherwise alphabetical
   filtered.sort((a, b) => {
     const aApproved = a.approved !== false ? 1 : 0;
     const bApproved = b.approved !== false ? 1 : 0;
     if (aApproved !== bApproved) return bApproved - aApproved;
+
+    // Masjids with current times above those without (only if we've checked)
+    const aHas = hasTimesMap[a.slug] !== false ? 1 : 0;
+    const bHas = hasTimesMap[b.slug] !== false ? 1 : 0;
+    if (aHas !== bHas) return bHas - aHas;
 
     if (locationActive) {
       const distA = distanceMap[a.slug];
@@ -268,6 +274,7 @@ function getNextPrayerFromRow(row) {
 
 async function loadCardPrayers(configs) {
   const gen = ++loadGeneration;
+  let changed = false;
   const promises = configs.map(async (config) => {
     try {
       const csvFile = config.csv || config.slug + '.csv';
@@ -275,12 +282,18 @@ async function loadCardPrayers(configs) {
       if (gen !== loadGeneration) return;
       const root = (viewContainer && viewContainer.isConnected) ? viewContainer : document;
       const el = root.querySelector(`[data-card-next="${config.slug}"]`);
-      if (!el) return;
-      if (!res.ok) { el.innerHTML = ''; return; }
+      if (!res.ok) {
+        if (hasTimesMap[config.slug] !== false) { hasTimesMap[config.slug] = false; changed = true; }
+        if (el) el.innerHTML = '';
+        return;
+      }
       const text = await res.text();
       if (gen !== loadGeneration) return;
       const csvData = parseCSV(text);
       const todayRow = getTodayRow(csvData);
+      const hasTimes = !!todayRow;
+      if (hasTimesMap[config.slug] !== hasTimes) { hasTimesMap[config.slug] = hasTimes; changed = true; }
+      if (!el) return;
       if (!todayRow) { el.innerHTML = ''; return; }
       const next = getNextPrayerFromRow(todayRow);
       if (next) {
@@ -292,12 +305,29 @@ async function loadCardPrayers(configs) {
       }
     } catch {
       if (gen !== loadGeneration) return;
+      if (hasTimesMap[config.slug] !== false) { hasTimesMap[config.slug] = false; changed = true; }
       const root = (viewContainer && viewContainer.isConnected) ? viewContainer : document;
       const el = root.querySelector(`[data-card-next="${config.slug}"]`);
       if (el) el.innerHTML = '';
     }
   });
   await Promise.all(promises);
+  // Re-sort cards now that we know which masjids have times
+  if (gen === loadGeneration && changed) reorderCards();
+}
+
+function reorderCards() {
+  const grid = (viewContainer && viewContainer.querySelector('#masjidsGrid')) || document.getElementById('masjidsGrid');
+  if (!grid) return;
+  const cards = Array.from(grid.children);
+  cards.sort((a, b) => {
+    const slugA = a.dataset.slug;
+    const slugB = b.dataset.slug;
+    const hasA = hasTimesMap[slugA] !== false ? 1 : 0;
+    const hasB = hasTimesMap[slugB] !== false ? 1 : 0;
+    return hasB - hasA;
+  });
+  cards.forEach(card => grid.appendChild(card));
 }
 
 // --- Search ---

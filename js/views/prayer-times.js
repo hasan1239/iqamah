@@ -698,7 +698,7 @@ function renderMonthlyView(target) {
   // Helper: check if a column has at least one non-empty value across display rows
   function colHasData(col) {
     return displayRows.some(row => {
-      const val = row[col.key] || (col.altKey && row[col.altKey]);
+      const val = row[col.key] || (col.altKey && row[col.altKey]) || (col.fallbackKey && row[col.fallbackKey]);
       return val && val.trim();
     });
   }

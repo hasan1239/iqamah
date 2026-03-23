@@ -5,8 +5,8 @@
 
 // --- Rate limiting (persistent via Cloudflare KV) ---
 const RATE_LIMITS_CONFIG = {
-  extract: { max: 3, windowSecs: 30 * 24 * 60 * 60 }, // 3 per month
-  submit: { max: 3, windowSecs: 30 * 24 * 60 * 60 },  // 3 per month
+  extract: { max: 5, windowSecs: 30 * 24 * 60 * 60 }, // 5 per month
+  submit: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
   update: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
 };
 
@@ -551,14 +551,15 @@ async function uploadImageToRepo(imageBase64, ext, env) {
   return null;
 }
 
-async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted, imageBase64, mediaType) {
+async function createExtractionNotification(mosqueName, ip, success, errorMsg, env, extracted, imageBase64, mediaType, action, slug) {
   try {
+    const actionLabel = action === 'update' ? 'Update' : 'Add';
     const title = success
-      ? `Extraction succeeded: ${mosqueName || 'Unknown'}`
-      : `Extraction failed: ${mosqueName || 'Unknown'}`;
+      ? `[${actionLabel}] Extraction succeeded: ${mosqueName || 'Unknown'}`
+      : `[${actionLabel}] Extraction failed: ${mosqueName || 'Unknown'}`;
     let body = success
-      ? `A timetable extraction completed successfully.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
-      : `A timetable extraction failed.\n\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
+      ? `A timetable extraction completed successfully.\n\n**Action:** ${actionLabel}${action === 'update' && slug ? ` ([${slug}](https://iqamah.co.uk/${slug}))` : ''}\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}`
+      : `A timetable extraction failed.\n\n**Action:** ${actionLabel}${action === 'update' && slug ? ` ([${slug}](https://iqamah.co.uk/${slug}))` : ''}\n**Name:** ${mosqueName || '(none)'}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**Error:** ${errorMsg || 'Unknown'}`;
 
     // Upload image and include in issue
     if (imageBase64) {
@@ -741,7 +742,7 @@ async function handleExtract(request, env) {
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (await isRateLimited(ip, 'extract', env)) {
-    return errorResponse('You\'ve reached the limit of 3 extractions per month. Please try again next month.', 429);
+    return errorResponse('You\'ve reached the limit of 5 extractions per month. Please try again next month.', 429);
   }
 
   let formData;
@@ -759,6 +760,8 @@ async function handleExtract(request, env) {
 
   const imageFile = formData.get('image');
   const mosqueName = sanitiseMasjidName(formData.get('name') || '');
+  const action = formData.get('action') || 'add'; // 'add' or 'update'
+  const slug = formData.get('slug') || '';
 
   if (!imageFile || !imageFile.size) {
     return errorResponse('No file provided');
@@ -838,7 +841,7 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
-      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env, null, imageBase64, mediaType);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env, null, imageBase64, mediaType, action, slug);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -854,7 +857,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
-      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType);
+      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType, action, slug);
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -871,12 +874,12 @@ async function handleExtract(request, env) {
 
     // Notify about successful extraction (use extracted name as fallback)
     const notifName = mosqueName || extracted.mosque_name || '';
-    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType);
+    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType, action, slug);
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
-    await createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType);
+    await createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType, action, slug);
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
 }
@@ -1019,7 +1022,7 @@ async function handleSubmit(request, env) {
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (await isRateLimited(ip, 'submit', env)) {
-    return errorResponse('You\'ve reached the limit of 3 submissions per month. Please try again next month.', 429);
+    return errorResponse('You\'ve reached the limit of 5 submissions per month. Please try again next month.', 429);
   }
 
   let body;
