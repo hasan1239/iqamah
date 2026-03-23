@@ -1,0 +1,36 @@
+name: Sync SW Version
+
+on:
+  push:
+    branches: [main]
+    paths: [version.json]
+
+permissions:
+  contents: write
+
+jobs:
+  sync-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync APP_VERSION in sw.js
+        run: |
+          VERSION=$(jq -r '.version' version.json)
+          CURRENT=$(grep -oP "^const APP_VERSION = '\K[^']+" sw.js)
+          if [ "$VERSION" = "$CURRENT" ]; then
+            echo "Already in sync ($VERSION)"
+            exit 0
+          fi
+          sed -i "s/^const APP_VERSION = '.*';/const APP_VERSION = '$VERSION';/" sw.js
+          echo "Synced sw.js APP_VERSION: $CURRENT -> $VERSION"
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sw.js
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Sync sw.js APP_VERSION to $(jq -r '.version' version.json)"
+          git push
