@@ -567,11 +567,21 @@ function renderTodayView(target) {
   const fajrStart = isRamadan ? (todayRow['Sehri Ends'] || null) : (todayRow['Fajr Start'] || todayRow['Subha Sadiq'] || todayRow['Sehri Ends'] || null);
   const prayerRows = [];
   prayerRows.push({ name: 'Fajr', isAM: true, start: fajrStart, jamaat: todayRow["Fajr Jama'at"] });
-  if (todayRow['Zawal']) prayerRows.push({ name: 'Zawal', isAM: false, start: todayRow['Zawal'], jamaat: null });
   prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'] || null, jamaat: todayRow["Zohar Jama'at"] || '1:00' });
   prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'] || null, jamaat: todayRow["Asr Jama'at"] });
   prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'] || null, jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
   prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'] || null, jamaat: todayRow["Esha Jama'at"] });
+
+  // Build sunrise/zawal split row (inserted after Fajr in the table)
+  const hasSunrise = !!todayRow['Sunrise'];
+  const hasZawal = !!todayRow['Zawal'];
+  let sunZawalRowHtml = '';
+  if (hasSunrise || hasZawal) {
+    const sunriseHtml = hasSunrise ? `<div class="sun-zawal-cell${!hasZawal ? ' full-width' : ''}"><span class="sun-zawal-label">Sunrise</span><span class="sun-zawal-time">${ft(todayRow['Sunrise'], true)}</span></div>` : '';
+    const zawalHtml = hasZawal ? `<div class="sun-zawal-cell${!hasSunrise ? ' full-width' : ''}"><span class="sun-zawal-label">Zawal</span><span class="sun-zawal-time">${ft(todayRow['Zawal'], false)}</span></div>` : '';
+    const divider = hasSunrise && hasZawal ? '<div class="sun-zawal-divider"></div>' : '';
+    sunZawalRowHtml = `<div class="time-row sun-zawal-row">${sunriseHtml}${divider}${zawalHtml}</div>`;
+  }
 
   const prayerRowsHtml = prayerRows.map(p => `
     <div class="time-row" data-prayer="${p.name}">
@@ -594,6 +604,7 @@ function renderTodayView(target) {
       ${sectionBannerHtml}
 
       <div class="times-table-card">
+        ${sunZawalRowHtml}
         <div class="times-table-header">
           <div class="time-col">Start</div>
           <div class="time-col">Prayer</div>
