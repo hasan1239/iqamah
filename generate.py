@@ -155,6 +155,8 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
         "{{ZOHAR_JAMAAT}}": t(times["zohar_jamaat"]),
         "{{ASR_JAMAAT}}": t(times["asr_jamaat"]),
         "{{ESHA_JAMAAT}}": t(times["esha_jamaat"]),
+        "{{MAGHRIB_JAMAAT}}": t(times.get("maghrib_jamaat", times["maghrib_iftari"])),
+        "{{ZAWAL}}": t(times.get("zawal", "")),
     }
 
     fajr_start = times.get("fajr_start", "")
