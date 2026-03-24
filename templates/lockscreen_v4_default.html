@@ -225,6 +225,43 @@
     font-size: 10px;
   }
 
+  /* Sunrise / Zawal split row */
+  .sun-zawal-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    gap: 0;
+    border-bottom: 1px solid rgba(212,175,55,0.15);
+  }
+  .sun-zawal-cell {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .sun-zawal-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 8px;
+    color: rgba(240,230,200,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .sun-zawal-time {
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(240,230,200,0.8);
+  }
+  .sun-zawal-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(212,175,55,0.25);
+    flex-shrink: 0;
+    margin: 0 10px;
+  }
+
   /* Footer with Iqamah branding */
   .footer {
     text-align: center;
@@ -271,6 +308,11 @@
   </div>
 
   <div class="main-card">
+    <div class="sun-zawal-row">
+      <div class="sun-zawal-cell"><span class="sun-zawal-label">Sunrise</span><span class="sun-zawal-time">{{SUNRISE}}</span></div>
+      <div class="sun-zawal-divider"></div>
+      <div class="sun-zawal-cell"><span class="sun-zawal-label">Zawal</span><span class="sun-zawal-time">{{ZAWAL}}</span></div>
+    </div>
     <div class="table-header">
       <div class="col">Start</div>
       <div class="col">Prayer</div>
@@ -281,11 +323,6 @@
         <div class="time-start">{{SEHRI_ENDS}}</div>
         <div class="time-name">Fajr</div>
         <div class="time-jamaat">{{FAJR_JAMAAT}}</div>
-      </div>
-      <div class="time-row">
-        <div class="time-start">{{SUNRISE}}</div>
-        <div class="time-name">Sunrise</div>
-        <div class="time-jamaat empty">—</div>
       </div>
       <div class="time-row">
         <div class="time-start">{{ZOHR}}</div>
@@ -300,7 +337,7 @@
       <div class="time-row">
         <div class="time-start">{{MAGHRIB_IFTARI}}</div>
         <div class="time-name">Maghrib</div>
-        <div class="time-jamaat">{{MAGHRIB_IFTARI}}</div>
+        <div class="time-jamaat">{{MAGHRIB_JAMAAT}}</div>
       </div>
       <div class="time-row">
         <div class="time-start">{{ESHA}}</div>
