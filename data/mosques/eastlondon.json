@@ -10,7 +10,7 @@
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
-  "approved": false,
+  "approved": true,
   "is_stale": false,
   "notes": "Asr column used is '1 Mithl' (first shadow). '2 Mithl' column ignored. Zuhr Jama'ah on Fridays is 1:00 as shown. Maghrib Jama'ah on 19 Mar has asterisk (6:30*). From 29 Mar clocks go forward — times shift significantly (BST).",
   "source_image": "sources/eastlondon.jpg",
