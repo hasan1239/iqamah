@@ -1,0 +1,19 @@
+{
+  "display_name": "East London Mosque  London Muslim Centre",
+  "slug": "eastlondon",
+  "csv": "eastlondon.csv",
+  "address": "82-92 Whitechapel Road",
+  "phone": "02076503000",
+  "month": "March 2026",
+  "islamic_month": "",
+  "jummah_times": "1:00pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Asr column used is '1 Mithl' (first shadow). '2 Mithl' column ignored. Zuhr Jama'ah on Fridays is 1:00 as shown. Maghrib Jama'ah on 19 Mar has asterisk (6:30*). From 29 Mar clocks go forward — times shift significantly (BST).",
+  "source_image": "sources/eastlondon.jpg",
+  "lat": 51.5173982,
+  "lon": -0.0653616
+}
