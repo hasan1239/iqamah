@@ -17,6 +17,7 @@ const PRECACHE_URLS = [
   './js/utils/countdown.js',
   './js/utils/geolocation.js',
   './js/utils/pwa.js',
+  './js/utils/admin.js',
   './js/views/home.js',
   './js/views/prayer-times.js',
   './js/views/qibla.js',
