@@ -1166,7 +1166,16 @@ async function renderAdminControls(container) {
     toolbar.appendChild(approveBtn);
   }
 
-  // Edit name button
+  // Insert toolbar before btn-row (Update Timetable + Approve only)
+  if (toolbar.children.length > 0) {
+    btnRow.parentNode.insertBefore(toolbar, btnRow);
+  }
+
+  // Rename and Delete go inside btn-row (after download + set as my masjid)
+  const adminBtnRow = document.createElement('div');
+  adminBtnRow.className = 'btn-row admin-btn-row';
+
+  // Rename button
   const editBtn = document.createElement('button');
   editBtn.className = 'btn btn-admin admin-edit-btn';
   editBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Rename';
@@ -1214,26 +1223,14 @@ async function renderAdminControls(container) {
       if (e.key === 'Escape') { input.value = currentName; input.blur(); }
     });
   });
-  toolbar.appendChild(editBtn);
+  adminBtnRow.appendChild(editBtn);
 
-  // Delete button (two-click confirm)
+  // Delete button (confirm dialog)
   const deleteBtn = document.createElement('button');
   deleteBtn.className = 'btn btn-admin admin-delete-btn';
   deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete';
-  let deleteConfirmTimeout = null;
   deleteBtn.addEventListener('click', async () => {
-    if (!deleteBtn.dataset.confirm) {
-      deleteBtn.dataset.confirm = '1';
-      deleteBtn.textContent = 'Confirm Delete?';
-      deleteBtn.classList.add('admin-delete-confirm');
-      deleteConfirmTimeout = setTimeout(() => {
-        delete deleteBtn.dataset.confirm;
-        deleteBtn.classList.remove('admin-delete-confirm');
-        deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete';
-      }, 3000);
-      return;
-    }
-    clearTimeout(deleteConfirmTimeout);
+    if (!confirm(`Are you sure you want to delete ${config.display_name}? This cannot be undone.`)) return;
     deleteBtn.disabled = true;
     deleteBtn.textContent = 'Deleting...';
     try {
@@ -1244,31 +1241,26 @@ async function renderAdminControls(container) {
       });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Failed');
-      // Clear pinned if this was the pinned masjid
       if (localStorage.getItem('iqamah-pinned-masjid') === masjidId) {
         localStorage.removeItem('iqamah-pinned-masjid');
       }
-      // Remove from recent
       try {
         let recent = JSON.parse(localStorage.getItem('iqamah-recent-masjids') || '[]');
         recent = recent.filter(s => s !== masjidId);
         localStorage.setItem('iqamah-recent-masjids', JSON.stringify(recent));
       } catch {}
-      // Navigate away
       window.history.pushState({}, '', '/masjids');
       window.dispatchEvent(new PopStateEvent('popstate'));
     } catch (e) {
       deleteBtn.disabled = false;
-      delete deleteBtn.dataset.confirm;
-      deleteBtn.classList.remove('admin-delete-confirm');
       deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Delete';
       alert('Failed to delete: ' + e.message);
     }
   });
-  toolbar.appendChild(deleteBtn);
+  adminBtnRow.appendChild(deleteBtn);
 
-  // Insert toolbar before btn-row
-  btnRow.parentNode.insertBefore(toolbar, btnRow);
+  // Insert admin btn-row after the main btn-row
+  btnRow.parentNode.insertBefore(adminBtnRow, btnRow.nextSibling);
 }
 
 function getSkeleton() {
