@@ -3,6 +3,13 @@
 // Handles clean URL routing + Add Your Masjid API endpoints
 // ============================================================
 
+// --- Admin check ---
+function isAdminRequest(request, env) {
+  if (!env.ADMIN_NAME) return false;
+  const header = request?.headers?.get('X-User-Name');
+  return header === env.ADMIN_NAME;
+}
+
 // --- Rate limiting (persistent via Cloudflare KV) ---
 const RATE_LIMITS_CONFIG = {
   extract: { max: 5, windowSecs: 30 * 24 * 60 * 60 }, // 5 per month
@@ -10,8 +17,9 @@ const RATE_LIMITS_CONFIG = {
   update: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
 };
 
-async function isRateLimited(ip, action, env) {
+async function isRateLimited(ip, action, env, request) {
   if (!env.RATE_LIMITS) return false;
+  if (isAdminRequest(request, env)) return false;
   const config = RATE_LIMITS_CONFIG[action];
   if (!config) return false;
   const key = `${action}:${ip}`;
@@ -429,7 +437,10 @@ async function githubCommitFiles(files, message, env) {
       const baseTreeSha = commitData.tree.sha;
 
       // 3. Create blobs in parallel (content-addressed, safe to re-create)
-      const blobPromises = files.map(async (f) => {
+      // Files with delete: true are removed (sha: null in tree)
+      const filesToCreate = files.filter(f => !f.delete);
+      const filesToDelete = files.filter(f => f.delete);
+      const blobPromises = filesToCreate.map(async (f) => {
         const blobResp = await fetch(`${api}/git/blobs`, {
           method: 'POST', headers,
           body: JSON.stringify({
@@ -442,6 +453,9 @@ async function githubCommitFiles(files, message, env) {
         return { path: f.path, mode: '100644', type: 'blob', sha: blob.sha };
       });
       const tree = await Promise.all(blobPromises);
+      for (const f of filesToDelete) {
+        tree.push({ path: f.path, mode: '100644', type: 'blob', sha: null });
+      }
 
       // 4. Create tree
       const treeResp = await fetch(`${api}/git/trees`, {
@@ -684,8 +698,8 @@ export default {
       return new Response(null, {
         headers: {
           'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, X-User-Name',
           'Access-Control-Max-Age': '86400',
         },
       });
@@ -709,6 +723,24 @@ export default {
 
     if (path === '/api/update' && request.method === 'POST') {
       return handleUpdate(request, env);
+    }
+
+    // --- Admin endpoints ---
+
+    if (path === '/api/admin/verify' && request.method === 'GET') {
+      return jsonResponse({ admin: isAdminRequest(request, env) });
+    }
+
+    if (path === '/api/admin/delete' && request.method === 'POST') {
+      return handleAdminDelete(request, env);
+    }
+
+    if (path === '/api/admin/approve' && request.method === 'POST') {
+      return handleAdminApprove(request, env);
+    }
+
+    if (path === '/api/admin/rename' && request.method === 'POST') {
+      return handleAdminRename(request, env);
     }
 
     // --- SPA routing ---
@@ -741,7 +773,7 @@ async function handleExtract(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'extract', env)) {
+  if (await isRateLimited(ip, 'extract', env, request)) {
     return errorResponse('You\'ve reached the limit of 5 extractions per month. Please try again next month.', 429);
   }
 
@@ -752,10 +784,12 @@ async function handleExtract(request, env) {
     return errorResponse('Invalid form data');
   }
 
-  // Verify Turnstile
-  const turnstileToken = formData.get('cf-turnstile-response');
-  if (!await verifyTurnstile(turnstileToken, ip, env)) {
-    return errorResponse('Security check failed. Please refresh and try again.', 403);
+  // Verify Turnstile (skip for admin)
+  if (!isAdminRequest(request, env)) {
+    const turnstileToken = formData.get('cf-turnstile-response');
+    if (!await verifyTurnstile(turnstileToken, ip, env)) {
+      return errorResponse('Security check failed. Please refresh and try again.', 403);
+    }
   }
 
   const imageFile = formData.get('image');
@@ -1021,7 +1055,7 @@ async function handleSubmit(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'submit', env)) {
+  if (await isRateLimited(ip, 'submit', env, request)) {
     return errorResponse('You\'ve reached the limit of 5 submissions per month. Please try again next month.', 429);
   }
 
@@ -1032,10 +1066,13 @@ async function handleSubmit(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  // Verify Turnstile
-  const turnstileToken = body['cf-turnstile-response'];
-  if (!await verifyTurnstile(turnstileToken, ip, env)) {
-    return errorResponse('Security check failed. Please refresh and try again.', 403);
+  // Verify Turnstile (skip for admin)
+  const admin = isAdminRequest(request, env);
+  if (!admin) {
+    const turnstileToken = body['cf-turnstile-response'];
+    if (!await verifyTurnstile(turnstileToken, ip, env)) {
+      return errorResponse('Security check failed. Please refresh and try again.', 403);
+    }
   }
 
   const { data, image } = body;
@@ -1115,7 +1152,7 @@ async function handleSubmit(request, env) {
     eid_salah: data.eid_salah || '',
     sadaqatul_fitr: data.sadaqatul_fitr || '',
     radio_frequency: data.radio_frequency || '',
-    approved: false,
+    approved: admin ? true : false,
     is_stale: false,
     notes: data.notes || '',
   };
@@ -1161,8 +1198,8 @@ async function handleSubmit(request, env) {
     // Single commit for all files
     await githubCommitFiles(files, `Add ${mosqueName}`, env);
 
-    // Create GitHub issue notification
-    await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
+    // Create GitHub issue notification (skip for admin)
+    if (!admin) await createNotificationIssue(slug, mosqueName, sourceImageExt, env);
 
     // Trigger lockscreen generation workflow
     triggerLockscreenGeneration(slug, env);
@@ -1171,8 +1208,8 @@ async function handleSubmit(request, env) {
       success: true,
       slug,
       url: `/${slug}`,
-      pending: true,
-      message: `${mosqueName} has been submitted for review!`,
+      pending: !admin,
+      message: admin ? `${mosqueName} has been added!` : `${mosqueName} has been submitted for review!`,
     });
   } catch (e) {
     console.error('Submit error:', e);
@@ -1276,7 +1313,7 @@ async function handleUpdate(request, env) {
 
   // Rate limit
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'update', env)) {
+  if (await isRateLimited(ip, 'update', env, request)) {
     return errorResponse('You\'ve reached the limit of 5 timetable updates per month. Please try again next month.', 429);
   }
 
@@ -1287,10 +1324,13 @@ async function handleUpdate(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  // Verify Turnstile
-  const turnstileToken = body['cf-turnstile-response'];
-  if (!await verifyTurnstile(turnstileToken, ip, env)) {
-    return errorResponse('Security check failed. Please refresh and try again.', 403);
+  // Verify Turnstile (skip for admin)
+  const admin = isAdminRequest(request, env);
+  if (!admin) {
+    const turnstileToken = body['cf-turnstile-response'];
+    if (!await verifyTurnstile(turnstileToken, ip, env)) {
+      return errorResponse('Security check failed. Please refresh and try again.', 403);
+    }
   }
 
   const { data, slug, image } = body;
@@ -1362,7 +1402,8 @@ async function handleUpdate(request, env) {
     }
   }
   existingConfig.is_stale = false;
-  existingConfig.pending_update = true;
+  existingConfig.pending_update = admin ? false : true;
+  if (admin) existingConfig.approved = true;
   if (data.month) existingConfig.month = data.month;
   if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
 
@@ -1424,8 +1465,8 @@ async function handleUpdate(request, env) {
     // Single commit
     await githubCommitFiles(files, `Update timetable: ${existingConfig.display_name}`, env);
 
-    // Create notification issue
-    await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
+    // Create notification issue (skip for admin)
+    if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
 
     // Trigger lockscreen generation
     triggerLockscreenGeneration(slug, env);
@@ -1434,11 +1475,210 @@ async function handleUpdate(request, env) {
       success: true,
       slug,
       url: `/${slug}`,
-      pending: true,
+      pending: !admin,
       message: `Timetable for ${existingConfig.display_name} has been updated!`,
     });
   } catch (e) {
     console.error('Update error:', e);
     return errorResponse('Failed to update timetable: ' + e.message, 500);
+  }
+}
+
+// ============================================================
+// Admin endpoints
+// ============================================================
+
+async function handleAdminDelete(request, env) {
+  if (!isAdminRequest(request, env)) {
+    return errorResponse('Unauthorized', 403);
+  }
+  if (!env.GITHUB_PAT) {
+    return errorResponse('Server configuration error: missing GitHub token', 500);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse('Invalid JSON body');
+  }
+
+  const { slug } = body;
+  if (!slug || typeof slug !== 'string') {
+    return errorResponse('Missing slug');
+  }
+
+  try {
+    // Get config to find CSV filename and source image
+    const configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+    if (!configFile) {
+      return errorResponse('Masjid not found', 404);
+    }
+    const config = JSON.parse(atob(configFile.content));
+
+    // Get index.json
+    const indexFile = await githubGetFile('data/mosques/index.json', env);
+    if (!indexFile) {
+      return errorResponse('Index file not found', 500);
+    }
+    const indexList = JSON.parse(atob(indexFile.content));
+    const newIndex = indexList.filter(entry => {
+      const entrySlug = typeof entry === 'string' ? entry : entry.slug;
+      return entrySlug !== slug;
+    });
+
+    // Build files to delete and update
+    const files = [];
+
+    // Delete config
+    files.push({ path: `data/mosques/${slug}.json`, delete: true });
+
+    // Delete CSV
+    const csvFilename = config.csv || `${slug}.csv`;
+    const csvFile = await githubGetFile(`data/${csvFilename}`, env);
+    if (csvFile) {
+      files.push({ path: `data/${csvFilename}`, delete: true });
+    }
+
+    // Delete raw extracted JSON if exists
+    const rawJson = await githubGetFile(`data/${slug}.json`, env);
+    if (rawJson) {
+      files.push({ path: `data/${slug}.json`, delete: true });
+    }
+
+    // Delete source image if exists
+    if (config.source_image) {
+      const sourceFile = await githubGetFile(config.source_image, env);
+      if (sourceFile) {
+        files.push({ path: config.source_image, delete: true });
+      }
+    }
+
+    // Update index.json
+    files.push({ path: 'data/mosques/index.json', content: JSON.stringify(newIndex, null, 2) });
+
+    await githubCommitFiles(files, `Delete ${config.display_name || slug}`, env);
+
+    return jsonResponse({ success: true, message: `${config.display_name || slug} has been deleted.` });
+  } catch (e) {
+    console.error('Admin delete error:', e);
+    return errorResponse('Failed to delete masjid: ' + e.message, 500);
+  }
+}
+
+async function handleAdminApprove(request, env) {
+  if (!isAdminRequest(request, env)) {
+    return errorResponse('Unauthorized', 403);
+  }
+  if (!env.GITHUB_PAT) {
+    return errorResponse('Server configuration error: missing GitHub token', 500);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse('Invalid JSON body');
+  }
+
+  const { slug } = body;
+  if (!slug || typeof slug !== 'string') {
+    return errorResponse('Missing slug');
+  }
+
+  try {
+    // Get config
+    const configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+    if (!configFile) {
+      return errorResponse('Masjid not found', 404);
+    }
+    const config = JSON.parse(atob(configFile.content));
+    config.approved = true;
+    delete config.pending_update;
+
+    // Get index.json
+    const indexFile = await githubGetFile('data/mosques/index.json', env);
+    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const updatedIndex = indexList.map(entry => {
+      const entrySlug = typeof entry === 'string' ? entry : entry.slug;
+      if (entrySlug === slug) {
+        if (typeof entry === 'object') {
+          return { ...entry, approved: true, pending_update: undefined };
+        }
+      }
+      return entry;
+    });
+
+    const files = [
+      { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
+      { path: 'data/mosques/index.json', content: JSON.stringify(updatedIndex, null, 2) },
+    ];
+
+    await githubCommitFiles(files, `Approve: ${config.display_name || slug}`, env);
+
+    // Trigger lockscreen generation for the approved masjid
+    triggerLockscreenGeneration(slug, env);
+
+    return jsonResponse({ success: true, message: `${config.display_name || slug} has been approved.` });
+  } catch (e) {
+    console.error('Admin approve error:', e);
+    return errorResponse('Failed to approve masjid: ' + e.message, 500);
+  }
+}
+
+async function handleAdminRename(request, env) {
+  if (!isAdminRequest(request, env)) {
+    return errorResponse('Unauthorized', 403);
+  }
+  if (!env.GITHUB_PAT) {
+    return errorResponse('Server configuration error: missing GitHub token', 500);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return errorResponse('Invalid JSON body');
+  }
+
+  const { slug, name } = body;
+  if (!slug || typeof slug !== 'string') {
+    return errorResponse('Missing slug');
+  }
+  if (!name || typeof name !== 'string' || !name.trim()) {
+    return errorResponse('Missing name');
+  }
+  const newName = name.trim().substring(0, 100);
+
+  try {
+    // Get config
+    const configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+    if (!configFile) {
+      return errorResponse('Masjid not found', 404);
+    }
+    const config = JSON.parse(atob(configFile.content));
+    config.display_name = newName;
+
+    // Get index.json and update the entry
+    const indexFile = await githubGetFile('data/mosques/index.json', env);
+    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const updatedIndex = indexList.map(entry => {
+      if (typeof entry === 'object' && entry.slug === slug) {
+        return { ...entry, display_name: newName };
+      }
+      return entry;
+    });
+
+    const files = [
+      { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
+      { path: 'data/mosques/index.json', content: JSON.stringify(updatedIndex, null, 2) },
+    ];
+
+    await githubCommitFiles(files, `Rename ${slug} to ${newName}`, env);
+
+    return jsonResponse({ success: true, message: `Renamed to ${newName}.`, name: newName });
+  } catch (e) {
+    console.error('Admin rename error:', e);
+    return errorResponse('Failed to rename masjid: ' + e.message, 500);
   }
 }

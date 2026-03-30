@@ -38,10 +38,13 @@ async function pdfToImageDataUrl(dataUrl) {
   return canvas.toDataURL('image/png');
 }
 
+import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+
 const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
 let turnstileToken = null;
 let turnstileWidgetId = null;
 let isSubmitting = false;
+let isAdminUser = false;
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
@@ -79,10 +82,11 @@ export async function render(container, { slug }) {
     return;
   }
 
+  isAdminUser = await isAdmin();
   document.title = `Update ${masjidConfig.display_name} - Iqamah`;
   container.innerHTML = getWizardHTML();
   setupEventListeners(container);
-  loadTurnstile(container);
+  if (!isAdminUser) loadTurnstile(container);
 }
 
 function loadTurnstile(container) {
@@ -474,7 +478,7 @@ function setupEventListeners(container) {
   let isExtracting = false;
   extractBtn.addEventListener('click', async () => {
     if (extractBtn.disabled || isExtracting) return;
-    if (!USE_DUMMY_DATA && !turnstileToken) {
+    if (!USE_DUMMY_DATA && !isAdminUser && !turnstileToken) {
       clearError(extractError);
       const origText = extractBtn.textContent;
       extractBtn.textContent = 'Verifying...';
@@ -529,8 +533,8 @@ function setupEventListeners(container) {
         formData.append('image', selectedFile);
         formData.append('action', 'update');
         formData.append('slug', masjidSlug);
-        formData.append('cf-turnstile-response', turnstileToken);
-        const resp = await fetch('/api/extract', { method: 'POST', body: formData });
+        if (turnstileToken) formData.append('cf-turnstile-response', turnstileToken);
+        const resp = await fetch('/api/extract', { method: 'POST', headers: getAdminHeaders(), body: formData });
         result = await resp.json();
         if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
       }
@@ -683,8 +687,8 @@ function setupEventListeners(container) {
     }
 
     try {
-      // Wait for turnstile token
-      if (!turnstileToken) {
+      // Wait for turnstile token (skip for admin)
+      if (!isAdminUser && !turnstileToken) {
         for (let i = 0; i < 10 && !turnstileToken; i++) {
           await new Promise(r => setTimeout(r, 500));
         }
@@ -700,11 +704,11 @@ function setupEventListeners(container) {
         data,
         slug: masjidSlug,
         image: imageDataUrl,
-        'cf-turnstile-response': turnstileToken,
+        'cf-turnstile-response': turnstileToken || '',
       };
       const resp = await fetch('/api/update', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminHeaders() },
         body: JSON.stringify(payload),
       });
       const result = await resp.json();

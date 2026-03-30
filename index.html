@@ -1221,6 +1221,53 @@
       line-height: 1.4;
     }
 
+    /* Admin toolbar */
+    .admin-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .btn-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--gold-tint-30);
+      background: var(--gold-tint-08);
+      color: var(--text);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-admin:hover { background: var(--gold-tint-15); border-color: var(--gold); }
+    .btn-admin svg { flex-shrink: 0; }
+    .admin-approve-btn { border-color: rgba(76, 175, 80, 0.3); background: rgba(76, 175, 80, 0.08); }
+    .admin-approve-btn:hover { background: rgba(76, 175, 80, 0.15); border-color: rgba(76, 175, 80, 0.5); }
+    .admin-delete-btn { border-color: rgba(244, 67, 54, 0.2); background: rgba(244, 67, 54, 0.05); }
+    .admin-delete-btn:hover { background: rgba(244, 67, 54, 0.1); border-color: rgba(244, 67, 54, 0.4); }
+    .admin-delete-confirm { background: rgba(244, 67, 54, 0.15) !important; border-color: rgba(244, 67, 54, 0.5) !important; color: #f44336; }
+    .admin-rename-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--gold);
+      border-radius: 6px;
+      padding: 4px 8px;
+      color: var(--text);
+      font-size: inherit;
+      font-family: inherit;
+      outline: none;
+    }
+    .admin-badge-item .admin-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(76, 175, 80, 0.12);
+      color: #4caf50;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
     /* Duplicate warning */
     .duplicate-warning {
       margin-top: 16px;
