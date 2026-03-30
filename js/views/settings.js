@@ -1,5 +1,6 @@
 // Settings view — preferences and app info
 import { getTheme, setTheme, onThemeChange } from '../theme.js';
+import { isAdmin, clearAdminCache } from '../utils/admin.js';
 
 let unsubTheme = null;
 
@@ -230,6 +231,28 @@ export function render(container) {
     const val = nameInput.value.trim();
     if (val) localStorage.setItem('iqamah-user-name', val);
     else localStorage.removeItem('iqamah-user-name');
+    clearAdminCache();
+  });
+
+  // Admin badge
+  isAdmin().then(admin => {
+    if (!admin) return;
+    const profileGroup = container.querySelector('.settings-group');
+    if (!profileGroup) return;
+    const badge = document.createElement('div');
+    badge.className = 'settings-item admin-badge-item';
+    badge.innerHTML = `
+      <div class="settings-item-left">
+        <span class="settings-icon" style="color: #4caf50">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </span>
+        <span class="settings-label">Admin Mode</span>
+      </div>
+      <span class="admin-badge">Active</span>
+    `;
+    profileGroup.appendChild(badge);
   });
 
   // Reset app
