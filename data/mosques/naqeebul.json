@@ -1,0 +1,19 @@
+{
+  "display_name": "Masjid Naqeebul Islam",
+  "slug": "naqeebul",
+  "csv": "naqeebul.csv",
+  "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD, UK",
+  "phone": "",
+  "month": "April 2026",
+  "islamic_month": "Shawwaal - Dhul Qa'dah 1447",
+  "jummah_times": "Bayaan starts at 1:00pm, Khutbah at 1:30pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Jumu'ah Bayaan starts at 1:00pm, Khutbah at 1:30pm. The timetable header column is labelled 'FAJR & SEHRI' for the pre-dawn column. Sunset column exists separately from Maghrib & Iftari column — Sunset values ignored. No Maghrib Jama'at column present.",
+  "source_image": "sources/naqeebul.jpg",
+  "lat": 52.4924826,
+  "lon": -1.8582255
+}
