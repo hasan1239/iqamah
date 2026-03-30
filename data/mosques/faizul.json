@@ -6,14 +6,14 @@
   "lat": 52.5106,
   "lon": -1.8912,
   "phone": "07812372352",
-  "month": "March 2026",
-  "islamic_month": "Shawwal 1447",
-  "jummah_times": "Jumuah 1:15PM (Bayaan starts 30 mins before Khutbah)",
+  "month": "April 2026",
+  "islamic_month": "Shawwal - Thul-Qaidah 1447",
+  "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM (2nd Jummah starts from 3rd April)",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
   "sadaqatul_fitr": "Minimum £6.00 for adults & children",
   "radio_frequency": "454 7000",
   "is_stale": false,
-  "notes": "Zohr Jama'at 1:00PM daily. Jumuah 1:15PM. British Summer Time begins on 29 March, clocks go forward by one hour. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
+  "notes": "Zuhr 2PM. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Darse Quran will take place in Urdu. Jamaat times are subject to change, please refer to Masjid notice board for changes.",
   "source_image": "sources/faizul.jpg",
   "approved": true
 }

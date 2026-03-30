@@ -39,10 +39,13 @@ async function pdfToImageDataUrl(dataUrl) {
   return canvas.toDataURL('image/png');
 }
 
+import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+
 const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
 let turnstileToken = null;
 let turnstileWidgetId = null;
 let isSubmitting = false;
+let isAdminUser = false;
 let selectedFile = null;
 let imageDataUrl = null;
 let extractedData = null;
@@ -90,15 +93,16 @@ function getDummyData() {
   };
 }
 
-export function render(container) {
+export async function render(container) {
   selectedFile = null;
   imageDataUrl = null;
   extractedData = null;
+  isAdminUser = await isAdmin();
 
   container.innerHTML = getWizardHTML();
 
   setupEventListeners(container);
-  loadTurnstile(container);
+  if (!isAdminUser) loadTurnstile(container);
 }
 
 function loadTurnstile(container) {
@@ -504,7 +508,7 @@ function setupEventListeners(container) {
   let isExtracting = false;
   extractBtn.addEventListener('click', async () => {
     if (extractBtn.disabled || isExtracting) return;
-    if (!USE_DUMMY_DATA && !turnstileToken) {
+    if (!USE_DUMMY_DATA && !isAdminUser && !turnstileToken) {
       // Wait up to 5 seconds for the Turnstile token to arrive
       clearError(extractError);
       const origText = extractBtn.textContent;
@@ -538,8 +542,8 @@ function setupEventListeners(container) {
         const formData = new FormData();
         formData.append('image', selectedFile);
         formData.append('action', 'add');
-        formData.append('cf-turnstile-response', turnstileToken);
-        const resp = await fetch('/api/extract', { method: 'POST', body: formData });
+        if (turnstileToken) formData.append('cf-turnstile-response', turnstileToken);
+        const resp = await fetch('/api/extract', { method: 'POST', headers: getAdminHeaders(), body: formData });
         result = await resp.json();
         if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
       }
@@ -665,8 +669,8 @@ function setupEventListeners(container) {
 
   // Submit helper — performs the actual submit call
   async function doSubmit(data, confirmNotDuplicate) {
-    // Wait for turnstile token if not yet available
-    if (!turnstileToken) {
+    // Wait for turnstile token if not yet available (skip for admin)
+    if (!isAdminUser && !turnstileToken) {
       for (let i = 0; i < 10 && !turnstileToken; i++) {
         await new Promise(r => setTimeout(r, 500));
       }
@@ -677,9 +681,10 @@ function setupEventListeners(container) {
         throw new Error('Security check expired. Please scroll up and try again.');
       }
     }
-    const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken };
+    const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken || '' };
     if (confirmNotDuplicate) payload.confirm_not_duplicate = true;
-    const resp = await fetch('/api/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+    const submitHeaders = { 'Content-Type': 'application/json', ...getAdminHeaders() };
+    const resp = await fetch('/api/submit', { method: 'POST', headers: submitHeaders, body: JSON.stringify(payload) });
     const result = await resp.json();
     return { resp, result };
   }
