@@ -670,11 +670,11 @@
       }
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs" type="module" id="pdfjsLib"></script>
-  <script type="module">
-    import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs';
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
-    window._pdfjsLib = pdfjsLib;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
   </script>
 </head>
 <body>
@@ -987,11 +987,13 @@
       // --- PDF to image conversion ---
 
       async function convertPdfToImage(file) {
-        var pdfjsLib = window._pdfjsLib;
-        if (!pdfjsLib) throw new Error('PDF library not loaded. Please refresh and try again.');
+        if (!window.pdfjsLib) {
+          throw new Error('PDF conversion library failed to load. Please take a screenshot of the timetable and upload that instead.');
+        }
+        var pdfjs = window.pdfjsLib;
 
         var arrayBuffer = await file.arrayBuffer();
-        var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        var pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
         var page = await pdf.getPage(1);
 
         // Render at 300 DPI equivalent (scale factor for high-res output)
@@ -1049,8 +1051,10 @@
         var error = validateFile(file);
         if (error) { showUploadError(error); return; }
 
+        var isPdf = file.type === 'application/pdf';
+
         // Convert PDF to image client-side for better extraction accuracy
-        if (file.type === 'application/pdf') {
+        if (isPdf) {
           clearUploadError();
           fileInfo.textContent = 'Converting PDF to image...';
           previewImg.style.display = 'none';
@@ -1060,7 +1064,7 @@
           try {
             file = await convertPdfToImage(file);
           } catch (e) {
-            showUploadError('Failed to convert PDF: ' + e.message);
+            showUploadError(e.message || 'Failed to process PDF. Please take a screenshot of the timetable and upload that instead.');
             imagePreview.classList.remove('visible');
             uploadArea.style.display = '';
             return;
