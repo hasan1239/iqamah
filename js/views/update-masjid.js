@@ -8,34 +8,48 @@ async function loadPdfJs() {
   if (pdfjsLoaded) return;
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs';
-    script.type = 'module';
+    script.src = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
     script.onload = resolve;
     script.onerror = reject;
     document.head.appendChild(script);
   });
-  const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs');
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
-  window._pdfjsLib = pdfjsLib;
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+  }
   pdfjsLoaded = true;
 }
 
-async function pdfToImageDataUrl(dataUrl) {
+async function convertPdfToImage(file) {
   await loadPdfJs();
-  const pdfjsLib = window._pdfjsLib;
-  const data = atob(dataUrl.split(',')[1]);
-  const uint8 = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) uint8[i] = data.charCodeAt(i);
-  const pdf = await pdfjsLib.getDocument({ data: uint8 }).promise;
+  if (!window.pdfjsLib) {
+    throw new Error('PDF conversion library failed to load. Please take a screenshot of the timetable and upload that instead.');
+  }
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const page = await pdf.getPage(1);
-  const scale = 2;
-  const viewport = page.getViewport({ scale });
+
+  // Render at high resolution then cap at 2000px longest side
+  let viewport = page.getViewport({ scale: 3.0 });
+  const maxSide = 2000;
+  const longest = Math.max(viewport.width, viewport.height);
+  if (longest > maxSide) {
+    viewport = page.getViewport({ scale: 3.0 * (maxSide / longest) });
+  }
+
   const canvas = document.createElement('canvas');
   canvas.width = viewport.width;
   canvas.height = viewport.height;
   const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   await page.render({ canvasContext: ctx, viewport }).promise;
-  return canvas.toDataURL('image/png');
+
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (!blob) { reject(new Error('Failed to convert PDF to image')); return; }
+      resolve(new File([blob], file.name.replace(/\.pdf$/i, '.jpg'), { type: 'image/jpeg' }));
+    }, 'image/jpeg', 0.85);
+  });
 }
 
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
@@ -430,30 +444,41 @@ function setupEventListeners(container) {
   async function setFile(file) {
     const error = validateFile(file);
     if (error) { showError(uploadError, error); return; }
-    if (file.type !== 'application/pdf') {
-      const resError = await checkImageResolution(file);
-      if (resError) { showError(uploadError, resError); return; }
+
+    // Convert PDF to image client-side for better extraction accuracy
+    if (file.type === 'application/pdf') {
+      clearError(uploadError);
+      fileInfo.textContent = 'Converting PDF to image...';
+      previewImg.style.display = 'none';
+      imagePreview.classList.add('visible');
+      uploadArea.style.display = 'none';
+
+      try {
+        const converted = await convertPdfToImage(file);
+        selectedFile = converted;
+        imageDataUrl = URL.createObjectURL(converted);
+        previewImg.src = imageDataUrl;
+        previewImg.style.display = '';
+        fileInfo.textContent = `${converted.name} (${(converted.size / 1024 / 1024).toFixed(1)} MB)`;
+        extractBtn.disabled = false;
+        return;
+      } catch (e) {
+        showError(uploadError, e.message || 'Failed to process PDF. Please take a screenshot of the timetable and upload that instead.');
+        imagePreview.classList.remove('visible');
+        uploadArea.style.display = '';
+        return;
+      }
     }
+
+    const resError = await checkImageResolution(file);
+    if (resError) { showError(uploadError, resError); return; }
     clearError(uploadError);
     selectedFile = await resizeImage(file);
     const reader = new FileReader();
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       imageDataUrl = e.target.result;
-      if (file.type === 'application/pdf') {
-        try {
-          fileInfo.textContent = 'Converting PDF...';
-          const pdfImageUrl = await pdfToImageDataUrl(imageDataUrl);
-          imageDataUrl = pdfImageUrl;
-          previewImg.src = pdfImageUrl;
-          previewImg.style.display = '';
-        } catch (err) {
-          showError(uploadError, 'Could not render PDF. Try converting to an image first.');
-          return;
-        }
-      } else {
-        previewImg.src = imageDataUrl;
-        previewImg.style.display = '';
-      }
+      previewImg.src = imageDataUrl;
+      previewImg.style.display = '';
       fileInfo.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
       imagePreview.classList.add('visible');
       uploadArea.style.display = 'none';
@@ -530,7 +555,9 @@ function setupEventListeners(container) {
         result = { success: true, data: { mosque_name: masjidConfig.display_name, rows: dummyRows, year: 2026, month: 'March-April 2026', islamic_month: 'Shawwal 1447' } };
       } else {
         const formData = new FormData();
-        formData.append('image', selectedFile);
+        const uploadName = selectedFile.name && selectedFile.name.toLowerCase().endsWith('.pdf')
+          ? selectedFile.name.replace(/\.pdf$/i, '.jpg') : (selectedFile.name || 'timetable.jpg');
+        formData.append('image', selectedFile, uploadName);
         formData.append('action', 'update');
         formData.append('slug', masjidSlug);
         if (turnstileToken) formData.append('cf-turnstile-response', turnstileToken);

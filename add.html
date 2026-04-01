@@ -670,6 +670,12 @@
       }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    }
+  </script>
 </head>
 <body>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
@@ -978,6 +984,50 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
+      // --- PDF to image conversion ---
+
+      async function convertPdfToImage(file) {
+        if (!window.pdfjsLib) {
+          throw new Error('PDF conversion library failed to load. Please take a screenshot of the timetable and upload that instead.');
+        }
+        var pdfjs = window.pdfjsLib;
+
+        var arrayBuffer = await file.arrayBuffer();
+        var pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+        var page = await pdf.getPage(1);
+
+        // Render at high resolution then cap at 2000px longest side
+        var viewport = page.getViewport({ scale: 3.0 });
+
+        // Cap at 2000px longest side to avoid oversized payloads
+        var maxSide = 2000;
+        var longest = Math.max(viewport.width, viewport.height);
+        if (longest > maxSide) {
+          var scale = 3.0 * (maxSide / longest);
+          viewport = page.getViewport({ scale: scale });
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        var ctx = canvas.getContext('2d');
+
+        // Fill white background (PDFs may have transparency, JPEG doesn't support alpha)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        // Convert to JPEG blob
+        return new Promise(function(resolve, reject) {
+          canvas.toBlob(function(blob) {
+            if (!blob) { reject(new Error('Failed to convert PDF to image')); return; }
+            var converted = new File([blob], file.name.replace(/\.pdf$/i, '.jpg'), { type: 'image/jpeg' });
+            resolve(converted);
+          }, 'image/jpeg', 0.85);
+        });
+      }
+
       // --- File validation ---
 
       function validateFile(file) {
@@ -1010,45 +1060,55 @@
         uploadError.classList.remove('visible');
       }
 
-      function setFile(file) {
-        var error = validateFile(file);
+      async function setFile(originalFile) {
+        var error = validateFile(originalFile);
         if (error) { showUploadError(error); return; }
 
-        if (file.type === 'application/pdf') {
+        // Convert PDF to image client-side for better extraction accuracy
+        if (originalFile.type === 'application/pdf') {
           clearUploadError();
-          selectedFile = file;
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            imageDataUrl = e.target.result;
-            previewImg.style.display = 'none';
-            fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
-            imagePreview.classList.add('visible');
-            uploadArea.style.display = 'none';
+          fileInfo.textContent = 'Converting PDF to image...';
+          previewImg.style.display = 'none';
+          imagePreview.classList.add('visible');
+          uploadArea.style.display = 'none';
 
+          try {
+            var converted = await convertPdfToImage(originalFile);
+            // Set selectedFile immediately — don't rely on callbacks
+            selectedFile = converted;
+            imageDataUrl = URL.createObjectURL(converted);
+            previewImg.src = imageDataUrl;
+            previewImg.style.display = '';
+            fileInfo.textContent = converted.name + ' (' + (converted.size / 1024 / 1024).toFixed(1) + ' MB)';
             updateExtractBtn();
-          };
-          reader.readAsDataURL(file);
-          return;
+            return;
+          } catch (e) {
+            showUploadError(e.message || 'Failed to process PDF. Please take a screenshot of the timetable and upload that instead.');
+            imagePreview.classList.remove('visible');
+            uploadArea.style.display = '';
+            return;
+          }
         }
 
-        checkImageResolution(file, function(resError) {
+        checkImageResolution(originalFile, function(resError) {
           if (resError) { showUploadError(resError); return; }
 
           clearUploadError();
-          selectedFile = file;
+          selectedFile = originalFile;
 
           // Show preview
           var reader = new FileReader();
           reader.onload = function(e) {
             imageDataUrl = e.target.result;
             previewImg.src = imageDataUrl;
-            fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
+            previewImg.style.display = '';
+            fileInfo.textContent = originalFile.name + ' (' + (originalFile.size / 1024 / 1024).toFixed(1) + ' MB)';
             imagePreview.classList.add('visible');
             uploadArea.style.display = 'none';
 
             updateExtractBtn();
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(originalFile);
         });
       }
 
@@ -1143,7 +1203,10 @@
         }
 
         var formData = new FormData();
-        formData.append('image', selectedFile);
+        // Force .jpg extension — PDF conversions may not preserve the new filename
+        var uploadName = selectedFile.name || 'timetable.jpg';
+        if (uploadName.toLowerCase().endsWith('.pdf')) uploadName = uploadName.replace(/\.pdf$/i, '.jpg');
+        formData.append('image', selectedFile, uploadName);
 
         try {
           var resp = await fetch('/api/extract', { method: 'POST', body: formData });

@@ -818,9 +818,8 @@ async function handleExtract(request, env) {
   // Determine media type
   const fileName = imageFile.name || '';
   const ext = fileName.split('.').pop().toLowerCase();
-  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', pdf: 'application/pdf' };
+  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
   const mediaType = mediaTypeMap[ext] || 'image/jpeg';
-  const isPdf = mediaType === 'application/pdf';
 
   // Load extraction prompt from static asset
   let extractionPrompt;
@@ -848,14 +847,7 @@ async function handleExtract(request, env) {
         messages: [{
           role: 'user',
           content: [
-            isPdf ? {
-              type: 'document',
-              source: {
-                type: 'base64',
-                media_type: 'application/pdf',
-                data: imageBase64,
-              },
-            } : {
+            {
               type: 'image',
               source: {
                 type: 'base64',
@@ -875,7 +867,8 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
-      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}`, env, null, imageBase64, mediaType, action, slug);
+      const sizeMB = (imageBase64.length * 0.75 / 1024 / 1024).toFixed(2);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status} — ${sizeMB}MB ${mediaType} (${fileName})\n\n${errBody.substring(0, 300)}`, env, null, imageBase64, mediaType, action, slug);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
