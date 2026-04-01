@@ -867,8 +867,8 @@ async function handleExtract(request, env) {
     if (!claudeResp.ok) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
-      const b64SizeMB = (imageBase64.length * 0.75 / 1024 / 1024).toFixed(2);
-      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status}: ${errBody.substring(0, 500)}\n\nImage size: ${b64SizeMB}MB, mediaType: ${mediaType}, fileName: ${fileName}`, env, null, imageBase64, mediaType, action, slug);
+      const sizeMB = (imageBase64.length * 0.75 / 1024 / 1024).toFixed(2);
+      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status} — ${sizeMB}MB ${mediaType} (${fileName})\n\n${errBody.substring(0, 300)}`, env, null, imageBase64, mediaType, action, slug);
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
