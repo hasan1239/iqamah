@@ -1066,8 +1066,6 @@
         var error = validateFile(originalFile);
         if (error) { showUploadError(error); return; }
 
-        var fileToUse = originalFile;
-
         // Convert PDF to image client-side for better extraction accuracy
         if (originalFile.type === 'application/pdf') {
           clearUploadError();
@@ -1077,7 +1075,15 @@
           uploadArea.style.display = 'none';
 
           try {
-            fileToUse = await convertPdfToImage(originalFile);
+            var converted = await convertPdfToImage(originalFile);
+            // Set selectedFile immediately — don't rely on callbacks
+            selectedFile = converted;
+            imageDataUrl = URL.createObjectURL(converted);
+            previewImg.src = imageDataUrl;
+            previewImg.style.display = '';
+            fileInfo.textContent = converted.name + ' (' + (converted.size / 1024 / 1024).toFixed(1) + ' MB)';
+            updateExtractBtn();
+            return;
           } catch (e) {
             showUploadError(e.message || 'Failed to process PDF. Please take a screenshot of the timetable and upload that instead.');
             imagePreview.classList.remove('visible');
@@ -1086,11 +1092,11 @@
           }
         }
 
-        checkImageResolution(fileToUse, function(resError) {
+        checkImageResolution(originalFile, function(resError) {
           if (resError) { showUploadError(resError); return; }
 
           clearUploadError();
-          selectedFile = fileToUse;
+          selectedFile = originalFile;
 
           // Show preview
           var reader = new FileReader();
@@ -1098,13 +1104,13 @@
             imageDataUrl = e.target.result;
             previewImg.src = imageDataUrl;
             previewImg.style.display = '';
-            fileInfo.textContent = fileToUse.name + ' (' + (fileToUse.size / 1024 / 1024).toFixed(1) + ' MB)';
+            fileInfo.textContent = originalFile.name + ' (' + (originalFile.size / 1024 / 1024).toFixed(1) + ' MB)';
             imagePreview.classList.add('visible');
             uploadArea.style.display = 'none';
 
             updateExtractBtn();
           };
-          reader.readAsDataURL(fileToUse);
+          reader.readAsDataURL(originalFile);
         });
       }
 
