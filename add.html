@@ -1012,7 +1012,13 @@
         canvas.height = viewport.height;
         var ctx = canvas.getContext('2d');
 
+        // Fill white background (PDFs may have transparency, JPEG doesn't support alpha)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
         await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        console.log('PDF rendered to canvas:', canvas.width + 'x' + canvas.height);
 
         // Convert to JPEG blob
         return new Promise(function(resolve, reject) {
