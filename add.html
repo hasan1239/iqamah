@@ -996,8 +996,17 @@
         var pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
         var page = await pdf.getPage(1);
 
-        // Render at 300 DPI equivalent (scale factor for high-res output)
+        // Render at high resolution then cap at 2000px longest side
         var viewport = page.getViewport({ scale: 3.0 });
+
+        // Cap at 2000px longest side to avoid oversized payloads
+        var maxSide = 2000;
+        var longest = Math.max(viewport.width, viewport.height);
+        if (longest > maxSide) {
+          var scale = 3.0 * (maxSide / longest);
+          viewport = page.getViewport({ scale: scale });
+        }
+
         var canvas = document.createElement('canvas');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
@@ -1011,7 +1020,7 @@
             if (!blob) { reject(new Error('Failed to convert PDF to image')); return; }
             var converted = new File([blob], file.name.replace(/\.pdf$/i, '.jpg'), { type: 'image/jpeg' });
             resolve(converted);
-          }, 'image/jpeg', 0.92);
+          }, 'image/jpeg', 0.85);
         });
       }
 
