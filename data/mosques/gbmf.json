@@ -4,16 +4,17 @@
   "csv": "gbmf.csv",
   "address": "394 Walsall Road, B42 2LX",
   "phone": "0121 250 4981",
-  "month": "March 2026",
-  "islamic_month": "Shawwal 1447AH",
-  "jummah_times": "1st Jumma Salah: Speech 12pm, Khutbah 12:30pm; 2nd Jumma Salah: Speech 1:15pm, Khutbah 1:30pm",
+  "month": "April 2026",
+  "islamic_month": "Shawwal - Dhul-Qa'dah 1447AH",
+  "jummah_times": "1st Jumma Salah: Speech 1pm, Khutbah 1:30pm; 2nd Jumma Salah: Speech 2pm, Khutbah 2:30pm",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "461.2375",
   "is_stale": false,
-  "notes": "British Summer Time starts after 28 Mar — clocks go forward by 1 hour. Bank: Al Rayan, Account Name: GBMF, S/C: 30-00-83, A/C: 01364401. Website: gbmf.uk | gbmf.mixlr.com",
+  "notes": "Bank: Al Rayan | Account Name: GBMF | S/C: 30-00-83 | A/C: 01364401. Website: gbmf.uk | gbmf.mixlr.com",
   "source_image": "sources/gbmf.jpg",
   "lat": 52.5310268,
   "lon": -1.9131514,
-  "approved": true
+  "approved": true,
+  "pending_update": false
 }
