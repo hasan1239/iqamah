@@ -1062,14 +1062,14 @@
         uploadError.classList.remove('visible');
       }
 
-      async function setFile(file) {
-        var error = validateFile(file);
+      async function setFile(originalFile) {
+        var error = validateFile(originalFile);
         if (error) { showUploadError(error); return; }
 
-        var isPdf = file.type === 'application/pdf';
+        var fileToUse = originalFile;
 
         // Convert PDF to image client-side for better extraction accuracy
-        if (isPdf) {
+        if (originalFile.type === 'application/pdf') {
           clearUploadError();
           fileInfo.textContent = 'Converting PDF to image...';
           previewImg.style.display = 'none';
@@ -1077,7 +1077,7 @@
           uploadArea.style.display = 'none';
 
           try {
-            file = await convertPdfToImage(file);
+            fileToUse = await convertPdfToImage(originalFile);
           } catch (e) {
             showUploadError(e.message || 'Failed to process PDF. Please take a screenshot of the timetable and upload that instead.');
             imagePreview.classList.remove('visible');
@@ -1086,11 +1086,11 @@
           }
         }
 
-        checkImageResolution(file, function(resError) {
+        checkImageResolution(fileToUse, function(resError) {
           if (resError) { showUploadError(resError); return; }
 
           clearUploadError();
-          selectedFile = file;
+          selectedFile = fileToUse;
 
           // Show preview
           var reader = new FileReader();
@@ -1098,13 +1098,13 @@
             imageDataUrl = e.target.result;
             previewImg.src = imageDataUrl;
             previewImg.style.display = '';
-            fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
+            fileInfo.textContent = fileToUse.name + ' (' + (fileToUse.size / 1024 / 1024).toFixed(1) + ' MB)';
             imagePreview.classList.add('visible');
             uploadArea.style.display = 'none';
 
             updateExtractBtn();
           };
-          reader.readAsDataURL(file);
+          reader.readAsDataURL(fileToUse);
         });
       }
 
@@ -1199,7 +1199,10 @@
         }
 
         var formData = new FormData();
-        formData.append('image', selectedFile);
+        // Force .jpg extension — PDF conversions may not preserve the new filename
+        var uploadName = selectedFile.name || 'timetable.jpg';
+        if (uploadName.toLowerCase().endsWith('.pdf')) uploadName = uploadName.replace(/\.pdf$/i, '.jpg');
+        formData.append('image', selectedFile, uploadName);
 
         try {
           var resp = await fetch('/api/extract', { method: 'POST', body: formData });
