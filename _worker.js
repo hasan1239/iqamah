@@ -818,9 +818,8 @@ async function handleExtract(request, env) {
   // Determine media type
   const fileName = imageFile.name || '';
   const ext = fileName.split('.').pop().toLowerCase();
-  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', pdf: 'application/pdf' };
+  const mediaTypeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
   const mediaType = mediaTypeMap[ext] || 'image/jpeg';
-  const isPdf = mediaType === 'application/pdf';
 
   // Load extraction prompt from static asset
   let extractionPrompt;
@@ -848,14 +847,7 @@ async function handleExtract(request, env) {
         messages: [{
           role: 'user',
           content: [
-            isPdf ? {
-              type: 'document',
-              source: {
-                type: 'base64',
-                media_type: 'application/pdf',
-                data: imageBase64,
-              },
-            } : {
+            {
               type: 'image',
               source: {
                 type: 'base64',

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       image_url:
-        description: 'URL of the timetable image (JPG/PNG)'
+        description: 'URL of the timetable file (JPG/PNG/PDF)'
         required: true
       name:
         description: 'Masjid name override (leave blank to auto-detect from image)'
@@ -28,20 +28,30 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install anthropic
+          sudo apt-get update && sudo apt-get install -y poppler-utils
+          pip install anthropic pdf2image Pillow
 
-      - name: Download timetable image
+      - name: Download timetable file
         run: |
-          curl -L -o /tmp/timetable.jpg "${{ github.event.inputs.image_url }}"
+          # Preserve original extension for PDF detection
+          URL="${{ github.event.inputs.image_url }}"
+          EXT="${URL##*.}"
+          EXT="${EXT,,}"
+          case "$EXT" in
+            pdf) OUT="/tmp/timetable.pdf" ;;
+            *) OUT="/tmp/timetable.jpg" ;;
+          esac
+          curl -L -o "$OUT" "$URL"
+          echo "TIMETABLE_PATH=$OUT" >> $GITHUB_ENV
 
       - name: Extract timetable
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ -n "${{ github.event.inputs.name }}" ]; then
-            python extract_timetable.py add --image /tmp/timetable.jpg --name "${{ github.event.inputs.name }}"
+            python extract_timetable.py add --image "$TIMETABLE_PATH" --name "${{ github.event.inputs.name }}"
           else
-            python extract_timetable.py add --image /tmp/timetable.jpg
+            python extract_timetable.py add --image "$TIMETABLE_PATH"
           fi
 
       - name: Commit new masjid data

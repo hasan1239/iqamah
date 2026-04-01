@@ -670,6 +670,12 @@
       }
     }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs" type="module" id="pdfjsLib"></script>
+  <script type="module">
+    import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.min.mjs';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.9.155/pdf.worker.min.mjs';
+    window._pdfjsLib = pdfjsLib;
+  </script>
 </head>
 <body>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
@@ -978,6 +984,35 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
+      // --- PDF to image conversion ---
+
+      async function convertPdfToImage(file) {
+        var pdfjsLib = window._pdfjsLib;
+        if (!pdfjsLib) throw new Error('PDF library not loaded. Please refresh and try again.');
+
+        var arrayBuffer = await file.arrayBuffer();
+        var pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        var page = await pdf.getPage(1);
+
+        // Render at 300 DPI equivalent (scale factor for high-res output)
+        var viewport = page.getViewport({ scale: 3.0 });
+        var canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        var ctx = canvas.getContext('2d');
+
+        await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+        // Convert to JPEG blob
+        return new Promise(function(resolve, reject) {
+          canvas.toBlob(function(blob) {
+            if (!blob) { reject(new Error('Failed to convert PDF to image')); return; }
+            var converted = new File([blob], file.name.replace(/\.pdf$/i, '.jpg'), { type: 'image/jpeg' });
+            resolve(converted);
+          }, 'image/jpeg', 0.92);
+        });
+      }
+
       // --- File validation ---
 
       function validateFile(file) {
@@ -1010,25 +1045,26 @@
         uploadError.classList.remove('visible');
       }
 
-      function setFile(file) {
+      async function setFile(file) {
         var error = validateFile(file);
         if (error) { showUploadError(error); return; }
 
+        // Convert PDF to image client-side for better extraction accuracy
         if (file.type === 'application/pdf') {
           clearUploadError();
-          selectedFile = file;
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            imageDataUrl = e.target.result;
-            previewImg.style.display = 'none';
-            fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
-            imagePreview.classList.add('visible');
-            uploadArea.style.display = 'none';
+          fileInfo.textContent = 'Converting PDF to image...';
+          previewImg.style.display = 'none';
+          imagePreview.classList.add('visible');
+          uploadArea.style.display = 'none';
 
-            updateExtractBtn();
-          };
-          reader.readAsDataURL(file);
-          return;
+          try {
+            file = await convertPdfToImage(file);
+          } catch (e) {
+            showUploadError('Failed to convert PDF: ' + e.message);
+            imagePreview.classList.remove('visible');
+            uploadArea.style.display = '';
+            return;
+          }
         }
 
         checkImageResolution(file, function(resError) {
@@ -1042,6 +1078,7 @@
           reader.onload = function(e) {
             imageDataUrl = e.target.result;
             previewImg.src = imageDataUrl;
+            previewImg.style.display = '';
             fileInfo.textContent = file.name + ' (' + (file.size / 1024 / 1024).toFixed(1) + ' MB)';
             imagePreview.classList.add('visible');
             uploadArea.style.display = 'none';
