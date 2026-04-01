@@ -15,6 +15,7 @@ import anthropic
 import base64
 import csv
 import datetime
+import io
 import json
 import os
 import re
@@ -44,24 +45,34 @@ def download_timetable(code: str, output_path: str) -> bool:
         return False
 
 
+def convert_pdf_to_image(pdf_bytes: bytes) -> bytes:
+    """Convert first page of PDF to high-res PNG bytes."""
+    from pdf2image import convert_from_bytes
+
+    print("  📄 Converting PDF to image (300 DPI)...")
+    images = convert_from_bytes(pdf_bytes, dpi=300, first_page=1, last_page=1)
+    buf = io.BytesIO()
+    images[0].save(buf, format="PNG")
+    print(f"  ✅ PDF converted to {images[0].size[0]}x{images[0].size[1]} image")
+    return buf.getvalue()
+
+
 def preprocess_image(image_bytes: bytes) -> tuple[bytes, str]:
     """Resize large images to max 2000px on longest side and convert to JPEG.
 
     Returns (processed_bytes, media_type).
     """
     from PIL import Image
-    import io
 
     img = Image.open(io.BytesIO(image_bytes))
     max_side = 2000
-    resized = False
 
     if max(img.size) > max_side:
         ratio = max_side / max(img.size)
         new_size = (int(img.width * ratio), int(img.height * ratio))
+        original_size = img.size
         img = img.resize(new_size, Image.LANCZOS)
-        resized = True
-        print(f"  📐 Resized from {Image.open(io.BytesIO(image_bytes)).size} to {new_size}")
+        print(f"  📐 Resized from {original_size} to {new_size}")
 
     # Convert to JPEG if PNG or if resized
     if img.mode in ("RGBA", "P"):
@@ -78,6 +89,10 @@ def extract_with_claude(image_path: str, api_key: str) -> dict:
 
     with open(image_path, "rb") as f:
         raw_bytes = f.read()
+
+    # Convert PDF to image first — forces visual-only parsing for better accuracy
+    if image_path.lower().endswith(".pdf"):
+        raw_bytes = convert_pdf_to_image(raw_bytes)
 
     # Preprocess image (resize + convert to JPEG)
     processed_bytes, media_type = preprocess_image(raw_bytes)
