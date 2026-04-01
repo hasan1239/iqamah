@@ -4,16 +4,17 @@
   "csv": "eastlondon.csv",
   "address": "82-92 Whitechapel Road",
   "phone": "02076503000",
-  "month": "March 2026",
+  "month": "April 2026",
   "islamic_month": "",
-  "jummah_times": "1:00pm",
+  "jummah_times": "Khutbah begins about 30 minutes before the Jama'ah",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
   "approved": true,
   "is_stale": false,
-  "notes": "Asr column used is '1 Mithl' (first shadow). '2 Mithl' column ignored. Zuhr Jama'ah on Fridays is 1:00 as shown. Maghrib Jama'ah on 19 Mar has asterisk (6:30*). From 29 Mar clocks go forward — times shift significantly (BST).",
+  "notes": "Asr begins: 2 Mithl is the time according to Hanafi opinion; 1 Mithl is the time according to other scholars' opinion. Khutbah (sermon) on Friday begins about 30 minutes before the Jama'ah. Based on the London Unified Prayer Timetable. Zuhr Jama'ah on Fridays is 1:45. Asr Jama'ah changes from 6:00 to 6:15 from 14 Apr, then to 6:30 from 26 Apr.",
   "source_image": "sources/eastlondon.jpg",
   "lat": 51.5173982,
-  "lon": -0.0653616
+  "lon": -0.0653616,
+  "pending_update": false
 }
