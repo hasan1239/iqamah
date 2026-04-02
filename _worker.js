@@ -681,7 +681,7 @@ function errorResponse(message, status = 400) {
 // ============================================================
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -706,7 +706,7 @@ export default {
     // --- API endpoints ---
 
     if (path === '/api/extract' && request.method === 'POST') {
-      return handleExtract(request, env);
+      return handleExtract(request, env, ctx);
     }
 
     if (path === '/api/submit' && request.method === 'POST') {
@@ -757,7 +757,7 @@ export default {
 // POST /api/extract — Extract prayer times from image via Claude
 // ============================================================
 
-async function handleExtract(request, env) {
+async function handleExtract(request, env, ctx) {
   // Check required env vars
   if (!env.ANTHROPIC_API_KEY) {
     return errorResponse('Server configuration error: missing API key', 500);
@@ -860,7 +860,7 @@ async function handleExtract(request, env) {
       const errBody = await claudeResp.text();
       console.error('Claude API error:', claudeResp.status, errBody);
       const sizeMB = (imageBase64.length * 0.75 / 1024 / 1024).toFixed(2);
-      await createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status} — ${sizeMB}MB ${mediaType} (${fileName})\n\n${errBody.substring(0, 300)}`, env, null, imageBase64, mediaType, action, slug);
+      ctx.waitUntil(createExtractionNotification(mosqueName, ip, false, `Claude API ${claudeResp.status} — ${sizeMB}MB ${mediaType} (${fileName})\n\n${errBody.substring(0, 300)}`, env, null, imageBase64, mediaType, action, slug));
       return errorResponse('AI extraction failed. Please try again.', 502);
     }
 
@@ -876,7 +876,7 @@ async function handleExtract(request, env) {
     try {
       extracted = JSON.parse(responseText);
     } catch (e) {
-      await createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType, action, slug);
+      ctx.waitUntil(createExtractionNotification(mosqueName, ip, false, 'Failed to parse AI response', env, null, imageBase64, mediaType, action, slug));
       return errorResponse('Failed to parse AI response. Please try with a clearer file.', 502);
     }
 
@@ -893,12 +893,12 @@ async function handleExtract(request, env) {
 
     // Notify about successful extraction (use extracted name as fallback)
     const notifName = mosqueName || extracted.mosque_name || '';
-    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType, action, slug);
+    ctx.waitUntil(createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType, action, slug));
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
     console.error('Extract error:', e);
-    await createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType, action, slug);
+    ctx.waitUntil(createExtractionNotification(mosqueName, ip, false, e.message, env, null, imageBase64, mediaType, action, slug));
     return errorResponse('Extraction failed: ' + e.message, 500);
   }
 }
