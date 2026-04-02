@@ -40,17 +40,9 @@ async function isRateLimited(ip, action, env, request) {
   return false;
 }
 
-// --- Turnstile verification ---
+// --- Turnstile verification (disabled — was causing user-facing errors) ---
 async function verifyTurnstile(token, ip, env) {
-  if (!env.TURNSTILE_SECRET) return true; // skip if not configured
-  if (!token) return false;
-  const resp = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `secret=${encodeURIComponent(env.TURNSTILE_SECRET)}&response=${encodeURIComponent(token)}&remoteip=${encodeURIComponent(ip)}`,
-  });
-  const result = await resp.json();
-  return result.success === true;
+  return true;
 }
 
 // --- Validation helpers (ported from extract_timetable.py) ---

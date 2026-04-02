@@ -41,9 +41,6 @@ async function pdfToImageDataUrl(dataUrl) {
 
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
 
-const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
-let turnstileToken = null;
-let turnstileWidgetId = null;
 let isSubmitting = false;
 let isAdminUser = false;
 let selectedFile = null;
@@ -102,52 +99,11 @@ export async function render(container) {
   container.innerHTML = getWizardHTML();
 
   setupEventListeners(container);
-  if (!isAdminUser) loadTurnstile(container);
+  // Turnstile disabled — was causing user-facing errors
 }
 
-function loadTurnstile(container) {
-  const widgetEl = container.querySelector('#turnstileWidget');
-  if (!widgetEl) return;
-
-  function renderWidget() {
-    if (turnstileWidgetId !== null && window.turnstile) {
-      window.turnstile.remove(turnstileWidgetId);
-    }
-    turnstileToken = null;
-    turnstileWidgetId = window.turnstile.render('#turnstileWidget', {
-      sitekey: TURNSTILE_SITE_KEY,
-      appearance: 'interaction-only',
-      'refresh-expired': 'auto',
-      callback: (token) => { turnstileToken = token; },
-      'expired-callback': () => {
-        turnstileToken = null;
-        if (window.turnstile && turnstileWidgetId !== null) {
-          window.turnstile.reset(turnstileWidgetId);
-        }
-      },
-      'error-callback': () => {
-        turnstileToken = null;
-      },
-    });
-  }
-
-  if (window.turnstile) {
-    renderWidget();
-  } else {
-    const script = document.createElement('script');
-    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad';
-    script.async = true;
-    window.onTurnstileLoad = renderWidget;
-    document.head.appendChild(script);
-  }
-}
 
 export function destroy() {
-  if (turnstileWidgetId !== null && window.turnstile) {
-    window.turnstile.remove(turnstileWidgetId);
-    turnstileWidgetId = null;
-  }
-  turnstileToken = null;
   isSubmitting = false;
   selectedFile = null;
   imageDataUrl = null;
@@ -194,7 +150,6 @@ function getWizardHTML() {
               <span class="change-btn" id="changeBtn">Change file</span>
             </div>
           </div>
-          <div id="turnstileWidget" class="turnstile-container"></div>
           <div class="btn-row">
             <button class="btn btn-primary" id="extractBtn" disabled>Extract Prayer Times</button>
           </div>
@@ -508,26 +463,6 @@ function setupEventListeners(container) {
   let isExtracting = false;
   extractBtn.addEventListener('click', async () => {
     if (extractBtn.disabled || isExtracting) return;
-    if (!USE_DUMMY_DATA && !isAdminUser && !turnstileToken) {
-      // Wait up to 5 seconds for the Turnstile token to arrive
-      clearError(extractError);
-      const origText = extractBtn.textContent;
-      extractBtn.textContent = 'Verifying...';
-      extractBtn.disabled = true;
-      for (let i = 0; i < 10 && !turnstileToken; i++) {
-        await new Promise(r => setTimeout(r, 500));
-      }
-      if (!turnstileToken) {
-        if (window.turnstile && turnstileWidgetId !== null) {
-          window.turnstile.reset(turnstileWidgetId);
-        }
-        showError(extractError, 'Security check failed to load. Please refresh page.');
-        extractBtn.textContent = origText;
-        extractBtn.disabled = false;
-        return;
-      }
-      extractBtn.textContent = origText;
-    }
     clearError(extractError);
     isExtracting = true;
     extractBtn.disabled = true;
@@ -542,7 +477,6 @@ function setupEventListeners(container) {
         const formData = new FormData();
         formData.append('image', selectedFile);
         formData.append('action', 'add');
-        if (turnstileToken) formData.append('cf-turnstile-response', turnstileToken);
         const resp = await fetch('/api/extract', { method: 'POST', headers: getAdminHeaders(), body: formData });
         result = await resp.json();
         if (!resp.ok || !result.success) throw new Error(result.error || 'Extraction failed');
@@ -555,11 +489,6 @@ function setupEventListeners(container) {
         throw new Error(validationError);
       }
 
-      // Reset turnstile for submit step
-      if (window.turnstile && turnstileWidgetId !== null) {
-        window.turnstile.reset(turnstileWidgetId);
-        turnstileToken = null;
-      }
       populateReview();
       goToStep(3);
       showReviewOverlay();
@@ -669,19 +598,7 @@ function setupEventListeners(container) {
 
   // Submit helper — performs the actual submit call
   async function doSubmit(data, confirmNotDuplicate) {
-    // Wait for turnstile token if not yet available (skip for admin)
-    if (!isAdminUser && !turnstileToken) {
-      for (let i = 0; i < 10 && !turnstileToken; i++) {
-        await new Promise(r => setTimeout(r, 500));
-      }
-      if (!turnstileToken) {
-        if (window.turnstile && turnstileWidgetId !== null) {
-          window.turnstile.reset(turnstileWidgetId);
-        }
-        throw new Error('Security check expired. Please scroll up and try again.');
-      }
-    }
-    const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken || '' };
+    const payload = { data, image: imageDataUrl };
     if (confirmNotDuplicate) payload.confirm_not_duplicate = true;
     const submitHeaders = { 'Content-Type': 'application/json', ...getAdminHeaders() };
     const resp = await fetch('/api/submit', { method: 'POST', headers: submitHeaders, body: JSON.stringify(payload) });
