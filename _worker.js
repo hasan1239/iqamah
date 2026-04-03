@@ -214,6 +214,32 @@ function validateAndFixRows(rows, notes) {
   return { rows, fixCounts };
 }
 
+// --- Extraction quality check (mirrors client-side validateExtractedData) ---
+
+function checkExtractionQuality(rows) {
+  if (!rows || rows.length === 0) return 'No rows extracted';
+  let failures = 0;
+  for (const row of rows) {
+    const fajrJ = timeToMinutes(row.fajr_jamaat || '', false);
+    const sunrise = timeToMinutes(row.sunrise || '', false);
+    const sehri = timeToMinutes(row.sehri_ends || '', false);
+    const asr = timeToMinutes(row.asr || '', true);
+    const maghrib = timeToMinutes(row.maghrib_iftari || '', false);
+    const maghribJ = timeToMinutes(row.maghrib_jamaat || '', false);
+    const esha = timeToMinutes(row.esha || '', false);
+    const eshaJ = timeToMinutes(row.esha_jamaat || '', false);
+    if (fajrJ !== null && sunrise !== null && fajrJ >= sunrise) failures++;
+    if (sehri !== null && sunrise !== null && sehri >= sunrise) failures++;
+    if (asr !== null && maghrib !== null && maghrib <= asr) failures++;
+    if (esha !== null && maghrib !== null && (esha - maghrib) < 30) failures++;
+    if (maghribJ !== null && eshaJ !== null && maghribJ === eshaJ) failures++;
+  }
+  if (failures > rows.length / 2) {
+    return `Quality check failed: ${failures}/${rows.length} rows have timing issues (fajr>=sunrise, maghrib<=asr, etc.)`;
+  }
+  return null;
+}
+
 // --- Slug helpers ---
 
 function slugify(name) {
@@ -899,9 +925,12 @@ async function handleExtract(request, env) {
     // Override mosque name with user-provided name if given
     if (mosqueName) extracted.mosque_name = mosqueName;
 
-    // Notify about successful extraction (use extracted name as fallback)
+    // Check extraction quality (mirrors client-side validation)
+    const qualityError = checkExtractionQuality(extracted.rows);
+
+    // Notify about extraction (use extracted name as fallback)
     const notifName = mosqueName || extracted.mosque_name || '';
-    await createExtractionNotification(notifName, ip, true, null, env, extracted, imageBase64, mediaType, action, slug);
+    ctx.waitUntil(createExtractionNotification(notifName, ip, !qualityError, qualityError, env, extracted, imageBase64, mediaType, action, slug));
 
     return jsonResponse({ success: true, data: extracted });
   } catch (e) {
