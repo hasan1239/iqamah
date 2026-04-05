@@ -10,10 +10,10 @@
   "month": "April 2026",
   "islamic_month": "Shawwal/Dhul Qa'dah 1447",
   "eid_salah": "9:00am (one jama'at only)",
-  "sadaqatul_fitr": "£5.00 per person",
+  "sadaqatul_fitr": "Â£5.00 per person",
   "radio_frequency": "460.375",
   "is_stale": false,
   "source_image": "sources/aisha.jpg",
   "jummah_times": "1:30pm",
-  "pending_update": true
+  "approved": true
 }
