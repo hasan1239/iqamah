@@ -570,10 +570,6 @@ function setupEventListeners(container) {
       const validationError = validateExtractedData(extractedData);
       if (validationError) throw new Error(validationError);
 
-      if (window.turnstile && turnstileWidgetId !== null) {
-        window.turnstile.reset(turnstileWidgetId);
-        turnstileToken = null;
-      }
       populateReview();
       goToStep(3);
       showReviewOverlay();
@@ -714,24 +710,10 @@ function setupEventListeners(container) {
     }
 
     try {
-      // Wait for turnstile token (skip for admin)
-      if (!isAdminUser && !turnstileToken) {
-        for (let i = 0; i < 10 && !turnstileToken; i++) {
-          await new Promise(r => setTimeout(r, 500));
-        }
-        if (!turnstileToken) {
-          if (window.turnstile && turnstileWidgetId !== null) {
-            window.turnstile.reset(turnstileWidgetId);
-          }
-          throw new Error('Security check expired. Please scroll up and try again.');
-        }
-      }
-
       const payload = {
         data,
         slug: masjidSlug,
         image: imageDataUrl,
-        'cf-turnstile-response': turnstileToken || '',
       };
       const resp = await fetch('/api/update', {
         method: 'POST',
