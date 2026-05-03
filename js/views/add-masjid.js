@@ -555,11 +555,6 @@ function setupEventListeners(container) {
         throw new Error(validationError);
       }
 
-      // Reset turnstile for submit step
-      if (window.turnstile && turnstileWidgetId !== null) {
-        window.turnstile.reset(turnstileWidgetId);
-        turnstileToken = null;
-      }
       populateReview();
       goToStep(3);
       showReviewOverlay();
@@ -669,19 +664,7 @@ function setupEventListeners(container) {
 
   // Submit helper — performs the actual submit call
   async function doSubmit(data, confirmNotDuplicate) {
-    // Wait for turnstile token if not yet available (skip for admin)
-    if (!isAdminUser && !turnstileToken) {
-      for (let i = 0; i < 10 && !turnstileToken; i++) {
-        await new Promise(r => setTimeout(r, 500));
-      }
-      if (!turnstileToken) {
-        if (window.turnstile && turnstileWidgetId !== null) {
-          window.turnstile.reset(turnstileWidgetId);
-        }
-        throw new Error('Security check expired. Please scroll up and try again.');
-      }
-    }
-    const payload = { data, image: imageDataUrl, 'cf-turnstile-response': turnstileToken || '' };
+    const payload = { data, image: imageDataUrl };
     if (confirmNotDuplicate) payload.confirm_not_duplicate = true;
     const submitHeaders = { 'Content-Type': 'application/json', ...getAdminHeaders() };
     const resp = await fetch('/api/submit', { method: 'POST', headers: submitHeaders, body: JSON.stringify(payload) });
