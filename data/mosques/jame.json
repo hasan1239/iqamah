@@ -6,14 +6,15 @@
   "lat": 52.5084,
   "lon": -1.902,
   "phone": "0121 554 9157",
-  "month": "March 2026",
-  "islamic_month": "1447 Shawwal",
-  "jummah_times": "Zohar & Juma Jamat at 1:00 PM till 28th March; from 29th March at 2:00 PM",
-  "eid_salah": "1st Salah: 7:00am, 2nd Salah: 8:00am",
+  "month": "May 2026",
+  "islamic_month": "1447 Dhu al-Qadah / Dhu al-Hijjah",
+  "jummah_times": "2:00pm",
+  "eid_salah": "6:30am & 8:00am",
   "sadaqatul_fitr": "£7 per person",
   "radio_frequency": "454.1500",
   "is_stale": false,
-  "notes": "British Summer Time starts on Sunday 29th March — please put clock one hour forward. Zohar & Juma Jamat is at 1:00 PM till 28th March and from 29th March at 2:00 PM. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to combine Maghrib Azan and Jama'at into one column — values used as maghrib_iftari. No separate Maghrib Jama'at column exists. Zohar Jamaat applied as 1:00 for non-Fri",
+  "notes": "Zohar and Jumma Jamat at 2:00pm. Eid Al Adha Salah at 6:30am & 8:00am. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to serve as both the Maghrib Azan time and Jama'at time combined into one column — no separate Maghrib Jama'at column exists. Masjid Frequency: 454.1500.",
   "source_image": "sources/jame.jpg",
-  "approved": true
+  "approved": true,
+  "pending_update": false
 }
