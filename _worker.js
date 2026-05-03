@@ -1059,14 +1059,7 @@ async function handleSubmit(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  // Verify Turnstile (skip for admin)
   const admin = isAdminRequest(request, env);
-  if (!admin) {
-    const turnstileToken = body['cf-turnstile-response'];
-    if (!await verifyTurnstile(turnstileToken, ip, env)) {
-      return errorResponse('Security check failed. Please refresh and try again.', 403);
-    }
-  }
 
   const { data, image } = body;
   if (!data || !data.rows || !data.rows.length) {
@@ -1317,14 +1310,7 @@ async function handleUpdate(request, env) {
     return errorResponse('Invalid JSON body');
   }
 
-  // Verify Turnstile (skip for admin)
   const admin = isAdminRequest(request, env);
-  if (!admin) {
-    const turnstileToken = body['cf-turnstile-response'];
-    if (!await verifyTurnstile(turnstileToken, ip, env)) {
-      return errorResponse('Security check failed. Please refresh and try again.', 403);
-    }
-  }
 
   const { data, slug, image } = body;
   if (!data || !data.rows || !data.rows.length) {
