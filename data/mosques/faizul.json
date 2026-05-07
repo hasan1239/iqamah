@@ -10,11 +10,10 @@
   "islamic_month": "Thul-Qaidah - Hijjah 1447",
   "jummah_times": "1st Jumu'ah: 1:30pm, 2nd Jumu'ah: 4:10pm",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-  "sadaqatul_fitr": "Minimum £6.00 for adults & children",
+  "sadaqatul_fitr": "Minimum Â£6.00 for adults & children",
   "radio_frequency": "453.7000",
   "is_stale": false,
   "notes": "Zuhr Jama'at: 2:00pm on Saturdays and Sundays (as shown in table). Jamaat times are subject to change, please refer to Masjid notice board for changes. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Darse-Quraan will take place in Urdu.",
   "source_image": "sources/faizul.jpg",
-  "approved": true,
-  "pending_update": true
+  "approved": true
 }
