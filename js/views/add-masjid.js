@@ -614,7 +614,9 @@ function setupEventListeners(container) {
     const cols = getTableColumns(extractedData.rows);
     reviewThead.innerHTML = '<tr><th>#</th>' + cols.map(c => `<th>${c.label}</th>`).join('') + '</tr>';
     reviewTbody.innerHTML = extractedData.rows.map((row, idx) => {
-      return '<tr><td class="row-num">' + (idx + 1) + '</td>' +
+      const isFriday = String(row.day || '').trim().toLowerCase() === 'fri';
+      const trClass = isFriday ? ' class="friday"' : '';
+      return `<tr${trClass}><td class="row-num">` + (idx + 1) + '</td>' +
         cols.map(col => {
           const val = row[col.key] != null ? String(row[col.key]) : '';
           return `<td><input type="text" data-row="${idx}" data-key="${col.key}" value="${escapeAttr(val)}" style="max-width:${col.width}"></td>`;
