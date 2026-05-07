@@ -743,17 +743,20 @@ function renderMonthlyView(target) {
     activeCols = combinedCols;
 
     const rowsHtml = displayRows.map(row => {
-      const isToday = parseDate(row['Date']).toDateString() === todayStr;
+      const rowDate = parseDate(row['Date']);
+      const isToday = rowDate.toDateString() === todayStr;
+      const isFriday = rowDate.getDay() === 5;
       const dateParts = row['Date'].trim().split(' ');
       const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
-      const rowDate = parseDate(row['Date']);
       const h = gregorianToHijri(rowDate);
       const hijri = `${h.day} ${h.monthShort}`;
       const cells = combinedCols.map(col => {
         const val = row[col.key] || (col.altKey && row[col.altKey]) || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
         return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
-      return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}</td><td class="hijri-col">${hijri}</td>${cells}</tr>`;
+      const cls = [isToday && 'today', isFriday && 'friday'].filter(Boolean).join(' ');
+      const trAttrs = (cls ? ` class="${cls}"` : '') + (isToday ? ' id="monthTodayRow"' : '');
+      return `<tr${trAttrs}><td class="date-col">${dateDisplay}</td><td class="hijri-col">${hijri}</td>${cells}</tr>`;
     }).join('');
 
     const startHeader = startCols.length > 0 ? `<th colspan="${startCols.length}" class="month-group-header">Start Times</th>` : '';
@@ -805,17 +808,20 @@ function renderMonthlyView(target) {
     activeCols = columns;
 
     const rowsHtml = displayRows.map(row => {
-      const isToday = parseDate(row['Date']).toDateString() === todayStr;
+      const rowDate = parseDate(row['Date']);
+      const isToday = rowDate.toDateString() === todayStr;
+      const isFriday = rowDate.getDay() === 5;
       const dateParts = row['Date'].trim().split(' ');
       const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
-      const rowDate = parseDate(row['Date']);
       const h = gregorianToHijri(rowDate);
       const hijri = `${h.day} ${h.monthShort}`;
       const cells = columns.map(col => {
         const val = row[col.key] || (col.altKey && row[col.altKey]) || (col.fallbackKey && row[col.fallbackKey]) || col.fallback || '\u2014';
         return `<td>${ft(val, col.isAM, true) || val}</td>`;
       }).join('');
-      return `<tr${isToday ? ' class="today" id="monthTodayRow"' : ''}><td class="date-col">${dateDisplay}<span class="month-hijri">${hijri}</span></td>${cells}</tr>`;
+      const cls = [isToday && 'today', isFriday && 'friday'].filter(Boolean).join(' ');
+      const trAttrs = (cls ? ` class="${cls}"` : '') + (isToday ? ' id="monthTodayRow"' : '');
+      return `<tr${trAttrs}><td class="date-col">${dateDisplay}<span class="month-hijri">${hijri}</span></td>${cells}</tr>`;
     }).join('');
 
     tableHtml = `
