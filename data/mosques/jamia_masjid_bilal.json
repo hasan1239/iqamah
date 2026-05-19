@@ -1,5 +1,5 @@
 {
-  "slug": "jamia_masjid",
+  "slug": "jamia_masjid_bilal",
   "display_name": "Jamia Masjid Bilal",
   "city": "Wolverhampton",
   "latitude": 52.5935582,
@@ -15,7 +15,7 @@
   "association": "Jamia Masjid Bilal Wolverhampton",
   "timezone": "Europe/London",
   "jummah_times": "13:40, 16:00",
-  "csv": "jamia_masjid.csv",
+  "csv": "jamia_masjid_bilal.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {

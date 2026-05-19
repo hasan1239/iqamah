@@ -1,27 +1,27 @@
 {
-  "slug": "sultan",
-  "display_name": "Sultan Bahu Centre",
-  "city": "Birmingham",
-  "latitude": 52.492097727352,
-  "longitude": -1.8231934455078,
+  "slug": "gambian_islamic_community_centre",
+  "display_name": "Gambian Islamic Community Centre",
+  "city": "Smethwick",
+  "latitude": 52.490133466215,
+  "longitude": -1.9581493735313,
   "country_code": "GB",
-  "website": "https://sultanbahucentre.org.uk/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/68f2b9de-61ed-4ffa-bd87-ecd7aed405a6/mosque/1f0c9cc8-d8e3-61e8-925f-0a58a9feac02.jpeg",
-  "address": "17-22 Emerald Court, Ward End, Birmingham, B8 2LS",
+  "website": "http://www.gambianmasjid.com",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a0660659-09c1-411a-9160-31b513a8e659/mosque/1eecabc0-44d8-62b4-b523-06acfcd1c88a.png",
+  "address": "Windmill Lane, Soho and Victoria, Sandwell, B66 3EU",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Sultan Bahu Centre",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:00",
-  "csv": "sultan.csv",
+  "jummah_times": "13:30",
+  "csv": "gambian_islamic_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
+      "path": "gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
   },
   "quality": {
     "status": "warnings",

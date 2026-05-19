@@ -1,27 +1,27 @@
 {
-  "slug": "mahmudsabir",
-  "display_name": "Mahmudsabir (Al Furqan) Masjid",
+  "slug": "al_huda_masjid",
+  "display_name": "Al-Huda Masjid",
   "city": "",
-  "latitude": 52.4486208,
-  "longitude": -1.8480156,
+  "latitude": 52.4698817,
+  "longitude": -1.8309234,
   "country_code": "GB",
-  "website": "https://www.facebook.com/people/MahmudSabir-Al-Furqan-Masjid/100077918033245/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c2f433e9-720b-47da-a3c8-7573dec66b82/mosque/1ef9a2bd-c2c2-67e6-8171-0671c73660c5.png",
-  "address": "Reddings Lane, Hall Green North, Birmingham, B11 3BZ",
+  "website": "",
+  "logo": "",
+  "address": "228 Heybarnes Road, Small Heath, Birmingham, B10 9JF",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
   "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:35, 14:15",
-  "csv": "mahmudsabir.csv",
+  "jummah_times": "",
+  "csv": "al_huda_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
+      "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
   },
   "quality": {
     "status": "warnings",

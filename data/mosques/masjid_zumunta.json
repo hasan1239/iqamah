@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_usman",
-  "display_name": "Masjid Usman Ar Rahmantrust",
+  "slug": "masjid_zumunta",
+  "display_name": "Masjid Zumunta",
   "city": "Birmingham",
-  "latitude": 52.5242061,
-  "longitude": -1.8589892,
+  "latitude": 52.497555402566,
+  "longitude": -1.8958451511032,
   "country_code": "GB",
-  "website": "https://www.masjidusmanahlesunnahwaljamat.org/",
-  "logo": "",
-  "address": "Slade Road, Stockland Green, Birmingham, B23 7JG",
+  "website": "https://www.facebook.com/zumuntacommunity/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/19f6cd95-a644-4ae9-849d-ae8658308dc9/mosque/1eea8e93-695b-62c2-9bae-066ed47a7584.png",
+  "address": "High Street, Newtown, Birmingham, B19 2SS",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": null,
+  "association": "Zumunta community centre",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "masjid_usman.csv",
+  "jummah_times": "13:45",
+  "csv": "masjid_zumunta.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
+      "path": "masjid-zamunta-birmingham-b192ss-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-zamunta-birmingham-b192ss-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -1,27 +1,27 @@
 {
-  "slug": "yca",
-  "display_name": "YCA Cultural Centre Masjid",
+  "slug": "faizan_e_madina_stechford",
+  "display_name": "Faizan E Madina Stechford",
   "city": "",
-  "latitude": 52.526134120312,
-  "longitude": -2.0071096538212,
+  "latitude": 52.4783958,
+  "longitude": -1.814082,
   "country_code": "GB",
-  "website": "https://www.yca-sandwell.org.uk/cultural-centre/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/22f1c67e-2980-4828-bbf0-3a460f527014/mosque/1efebcfc-bcbb-6268-8c1a-06ef9144e88f.png",
-  "address": "Tildasley Street, West Bromwich Central, Sandwell, B70 9SJ",
+  "website": "https://dawateislamimidlands.net",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
+  "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "YCA Cultural Centre Masjid",
+  "association": "Dawat e Islami",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:30",
-  "csv": "yca.csv",
+  "jummah_times": "13:30, 14:30, 16:00",
+  "csv": "faizan_e_madina_stechford.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+      "path": "faizan-e-madina-stechford"
     },
-    "source_url": "https://mawaqit.net/en/m/yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
   },
   "quality": {
     "status": "warnings",

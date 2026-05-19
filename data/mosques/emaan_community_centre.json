@@ -1,27 +1,27 @@
 {
-  "slug": "al_falah",
-  "display_name": "Al Falah Community Support Centre",
+  "slug": "emaan_community_centre",
+  "display_name": "Emaan Community Centre",
   "city": "",
-  "latitude": 52.4554274,
-  "longitude": -1.8899398,
+  "latitude": 52.504105164844,
+  "longitude": -1.8792553894927,
   "country_code": "GB",
-  "website": "https://www.facebook.com/profile.php?id=100090923871478",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/59caad85-e706-4810-9804-92f6a6f71742/mosque/1eea8ea3-1766-6af6-bf34-066ed47a7584.png",
-  "address": "Park Avenue, Balsall Heath West, Birmingham, B12 9QU",
+  "website": "",
+  "logo": "",
+  "address": "Sycamore Road, Nechells, Birmingham, B6 5UH",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "ALFALAH COUMMINTY SUPPORT CENTRE",
+  "association": "EMAAN COMMUNITY CENTRE",
   "timezone": "Europe/London",
   "jummah_times": "13:30",
-  "csv": "al_falah.csv",
+  "csv": "emaan_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
+      "path": "emaan-community-centre-birmingham-b6-5uh-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/emaan-community-centre-birmingham-b6-5uh-united-kingdom"
   },
   "quality": {
     "status": "warnings",

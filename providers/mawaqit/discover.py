@@ -142,6 +142,33 @@ def write_tsv(masjids: list, out_path: Path) -> None:
             })
 
 
+def discover_search(
+    base_params: dict,
+    max_pages: int = 20,
+    uk_only: bool = True,
+    verbose: bool = True,
+) -> list[dict]:
+    """
+    Run one search against Mawaqit, paginate to exhaustion, optionally UK-filter,
+    sort with iqama-enabled first. Returns the raw masjid dicts (same shape as
+    Mawaqit's API response). Used by both the CLI and the sweep tool — keeps
+    the side-effect (TSV write) out of the reusable path.
+    """
+    if verbose:
+        print(f"Searching Mawaqit ({base_params})...")
+    all_results = paginate(base_params, max_pages=max_pages)
+    if verbose:
+        print(f"  fetched {len(all_results)} masjid(s) total")
+    results = [m for m in all_results if is_uk(m)] if uk_only else list(all_results)
+    if verbose and uk_only:
+        print(f"  UK-filtered: {len(results)}")
+    results.sort(key=lambda m: (
+        0 if m.get("iqamaEnabled") else 1,
+        m.get("slug") or "",
+    ))
+    return results
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Discover UK masjids on Mawaqit and write a curatable TSV.",
@@ -174,21 +201,7 @@ def main():
         base = {"lat": args.lat, "lon": args.lon}
         label = args.label or f"geo_{args.lat:.3f}_{args.lon:.3f}".replace("-", "n")
 
-    print(f"Searching Mawaqit ({base})...")
-    all_results = paginate(base, max_pages=args.max_pages)
-    print(f"\nFetched {len(all_results)} masjid(s) total")
-
-    if args.no_uk_filter:
-        uk = all_results
-    else:
-        uk = [m for m in all_results if is_uk(m)]
-        print(f"UK-filtered: {len(uk)}")
-
-    # Sort: iqama-enabled first, then alphabetically by slug
-    uk.sort(key=lambda m: (
-        0 if m.get("iqamaEnabled") else 1,
-        m.get("slug") or "",
-    ))
+    uk = discover_search(base, max_pages=args.max_pages, uk_only=not args.no_uk_filter)
 
     out_path = Path(args.data_dir) / f"mawaqit_candidates_{label}.tsv"
     write_tsv(uk, out_path)

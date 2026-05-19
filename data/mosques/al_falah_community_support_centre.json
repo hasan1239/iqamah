@@ -1,27 +1,27 @@
 {
-  "slug": "adam",
-  "display_name": "Adam Mosque & Dawah Academy",
-  "city": "Birmingham",
-  "latitude": 52.4571396,
-  "longitude": -1.8816212,
+  "slug": "al_falah_community_support_centre",
+  "display_name": "Al Falah Community Support Centre",
+  "city": "",
+  "latitude": 52.4554274,
+  "longitude": -1.8899398,
   "country_code": "GB",
-  "website": "",
-  "logo": "",
-  "address": "15 Brunswick Road, Sparkbrook & Balsall Heath East, Birmingham, B12 8NP",
+  "website": "https://www.facebook.com/profile.php?id=100090923871478",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/59caad85-e706-4810-9804-92f6a6f71742/mosque/1eea8ea3-1766-6af6-bf34-066ed47a7584.png",
+  "address": "Park Avenue, Balsall Heath West, Birmingham, B12 9QU",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": null,
+  "association": "ALFALAH COUMMINTY SUPPORT CENTRE",
   "timezone": "Europe/London",
   "jummah_times": "13:30",
-  "csv": "adam.csv",
+  "csv": "al_falah_community_support_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1"
+      "path": "al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1"
+    "source_url": "https://mawaqit.net/en/m/al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
   },
   "quality": {
     "status": "warnings",

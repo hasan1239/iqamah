@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_zamunta",
-  "display_name": "Masjid Zumunta",
-  "city": "Birmingham",
-  "latitude": 52.497555402566,
-  "longitude": -1.8958451511032,
+  "slug": "old_hill_masjid",
+  "display_name": "Old Hill Masjid",
+  "city": "",
+  "latitude": 52.4746976,
+  "longitude": -2.0667783,
   "country_code": "GB",
-  "website": "https://www.facebook.com/zumuntacommunity/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/19f6cd95-a644-4ae9-849d-ae8658308dc9/mosque/1eea8e93-695b-62c2-9bae-066ed47a7584.png",
-  "address": "High Street, Newtown, Birmingham, B19 2SS",
+  "website": "http://oldhillmasjid.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/0370c722-1da3-4f4b-9183-ec36b2e80394/mosque/1eea8dab-f2ca-612c-aebc-066ed47a7584.png",
+  "address": "Halesowen Road, Cradley Heath and Old Hill, Sandwell, B64 6JE",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Zumunta community centre",
+  "association": "BICS",
   "timezone": "Europe/London",
-  "jummah_times": "13:45",
-  "csv": "masjid_zamunta.csv",
+  "jummah_times": "14:00",
+  "csv": "old_hill_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-zamunta-birmingham-b192ss-united-kingdom"
+      "path": "old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-zamunta-birmingham-b192ss-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
   },
   "quality": {
     "status": "warnings",

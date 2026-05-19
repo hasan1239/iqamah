@@ -1,5 +1,5 @@
 {
-  "slug": "marwa",
+  "slug": "marwa_masjid",
   "display_name": "Marwa Masjid",
   "city": "Birmingham",
   "latitude": 52.4583596,
@@ -15,7 +15,7 @@
   "association": "Marwa Community Centre",
   "timezone": "Europe/London",
   "jummah_times": "13:30, 14:30",
-  "csv": "marwa.csv",
+  "csv": "marwa_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {

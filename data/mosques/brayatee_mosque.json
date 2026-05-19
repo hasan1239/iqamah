@@ -1,41 +1,41 @@
 {
-  "slug": "zawia",
-  "display_name": "Zawia Mosque",
+  "slug": "brayatee_mosque",
+  "display_name": "Brayatee Mosque",
   "city": "Birmingham",
-  "latitude": 52.4590212,
-  "longitude": -1.9009364,
+  "latitude": 52.487676,
+  "longitude": -1.9219111,
   "country_code": "GB",
-  "website": "https://www.zawia.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/2e45df47-0de7-41fd-80b7-3d12f5fb1bf7/mosque/1ef0db4d-ac46-62e6-964e-0a33d0408e15.jpeg",
-  "address": "Edward Road, Balsall Heath West, Birmingham, B5 7PH",
+  "website": "https://brayatee.com/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/4d0920b1-6463-4318-96f9-e5806e468177/mosque/1ef8bee0-5657-642e-ac34-0671c73660c5.jpeg",
+  "address": "Camden Street, Soho & Jewellery Quarter, Birmingham, B18 7PW",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Zawia Aid",
+  "association": "brayatee kurdish community",
   "timezone": "Europe/London",
   "jummah_times": "13:30",
-  "csv": "zawia.csv",
+  "csv": "brayatee_mosque.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "zawia-mosque-birmingham-b5-7ph-united-kingdom"
+      "path": "brayatee-mosque-birmingham-b18-7pw-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/zawia-mosque-birmingham-b5-7ph-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/brayatee-mosque-birmingham-b18-7pw-united-kingdom"
   },
   "quality": {
     "status": "warnings",
     "checked_at": "2026-05-19",
     "row_count": 365,
     "warnings": [
-      "Isha clamped to Maghrib on 56 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
+      "Isha clamped to Maghrib on 60 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
     ],
     "issues": [
       {
         "type": "isha_clamped",
         "severity": "medium",
-        "count": 56,
+        "count": 60,
         "first_date": "2026-06-01",
         "last_date": "2026-07-31",
         "affected_dates": [
@@ -67,16 +67,18 @@
           "2026-06-26",
           "2026-06-27",
           "2026-06-28",
+          "2026-06-29",
           "2026-06-30",
           "2026-07-01",
           "2026-07-02",
           "2026-07-03",
-          "2026-07-04",
           "2026-07-05",
           "2026-07-06",
           "2026-07-07",
           "2026-07-08",
           "2026-07-09",
+          "2026-07-10",
+          "2026-07-11",
           "2026-07-12",
           "2026-07-13",
           "2026-07-14",
@@ -88,11 +90,13 @@
           "2026-07-20",
           "2026-07-21",
           "2026-07-22",
+          "2026-07-23",
           "2026-07-24",
           "2026-07-25",
           "2026-07-26",
           "2026-07-27",
           "2026-07-28",
+          "2026-07-29",
           "2026-07-30",
           "2026-07-31"
         ],

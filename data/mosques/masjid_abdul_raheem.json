@@ -1,27 +1,27 @@
 {
-  "slug": "gambian",
-  "display_name": "Gambian Islamic Community Centre",
-  "city": "Smethwick",
-  "latitude": 52.490133466215,
-  "longitude": -1.9581493735313,
+  "slug": "masjid_abdul_raheem",
+  "display_name": "Masjid Abdul Raheem",
+  "city": "Birmingham",
+  "latitude": 52.49118,
+  "longitude": -1.8124484,
   "country_code": "GB",
-  "website": "http://www.gambianmasjid.com",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a0660659-09c1-411a-9160-31b513a8e659/mosque/1eecabc0-44d8-62b4-b523-06acfcd1c88a.png",
-  "address": "Windmill Lane, Soho and Victoria, Sandwell, B66 3EU",
+  "website": "",
+  "logo": "",
+  "address": "54 Stechford Road, Hodge Hill, Birmingham, B34 6BG",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
   "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:30",
-  "csv": "gambian.csv",
+  "jummah_times": "",
+  "csv": "masjid_abdul_raheem.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
+      "path": "masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
   },
   "quality": {
     "status": "warnings",

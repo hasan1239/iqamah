@@ -1,27 +1,27 @@
 {
-  "slug": "stoney",
-  "display_name": "Stoney Lane Islamic Community Centre",
-  "city": "Birmingham",
-  "latitude": 52.4545049,
-  "longitude": -1.8732774,
+  "slug": "tamworth_masjid",
+  "display_name": "Tamworth Masjid",
+  "city": "",
+  "latitude": 52.619005578935,
+  "longitude": -1.6862079900742,
   "country_code": "GB",
-  "website": "",
-  "logo": "",
-  "address": "Wilton Road, Sparkhill, Birmingham, B12 8AJ",
+  "website": "https://www.facebook.com/tamworthmasjid",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6de5e409-74ea-4242-a5cf-5bafc6b5cc95/mosque/1f0dd9f1-a56a-65c0-a985-0a58a9feac02.png",
+  "address": "Greatmead, Belgrave, Tamworth, B77 1DL",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Stoney Lane Islamic Community Centre",
+  "association": "Tamworth Community Hub",
   "timezone": "Europe/London",
-  "jummah_times": "13:45",
-  "csv": "stoney.csv",
+  "jummah_times": "13:30, 14:30",
+  "csv": "tamworth_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
+      "path": "tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
   },
   "quality": {
     "status": "warnings",
