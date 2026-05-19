@@ -1,0 +1,43 @@
+{
+  "slug": "masjid_adam_a_s",
+  "display_name": "Masjid Adam (A.s)",
+  "city": "",
+  "latitude": 52.5969295,
+  "longitude": -1.0811693,
+  "country_code": "GB",
+  "website": "http://oadbych.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/01239c6c-ec3a-427d-b077-9c38921386c8/mosque/1efaf4a3-1cd5-61c4-a7c2-066b4b62726d.png",
+  "address": "Wigston Road, Oadby St Peter's, Oadby and Wigston, LE2 5QF",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Oadby Community Hub",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "masjid_adam_a_s.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "majid-adam-a-s-leicester-le2-5qf-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/majid-adam-a-s-leicester-le2-5qf-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
