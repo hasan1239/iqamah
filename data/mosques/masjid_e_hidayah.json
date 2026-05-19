@@ -1,0 +1,43 @@
+{
+  "slug": "masjid_e_hidayah",
+  "display_name": "Masjid-e-Hidayah",
+  "city": "Manchester",
+  "latitude": 53.461177720959,
+  "longitude": -2.2751191564487,
+  "country_code": "GB",
+  "website": "https://www.masjidehidayah.org.uk/",
+  "logo": "",
+  "address": "19 Humphrey Road, Old Trafford, Trafford, M16 9DD",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": null,
+  "timezone": "UTC",
+  "jummah_times": "13:30, 15:00",
+  "csv": "masjid_e_hidayah.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "masjid-e-hidayah-manchester-m16-9dd-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/masjid-e-hidayah-manchester-m16-9dd-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
