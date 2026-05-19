@@ -47,6 +47,46 @@ function ft(timeStr, isAM, skipSuffix) {
   return `${hours}:${minutes} ${isAM ? 'AM' : 'PM'}`;
 }
 
+const PROVIDER_LABELS = {
+  mawaqit: 'Mawaqit',
+  esalaat: 'eSalaat',
+  image: 'Community upload',
+  manual: 'Entered by maintainer',
+};
+
+const MASJID_LOGO_FALLBACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
+
+function renderMasjidLogo(cfg) {
+  if (cfg && cfg.logo) {
+    return `<div class="masjid-logo has-logo"><img src="${cfg.logo}" alt="" loading="lazy" decoding="async"></div>`;
+  }
+  return `<div class="masjid-logo">${MASJID_LOGO_FALLBACK_SVG}</div>`;
+}
+
+function renderSourceTag(cfg) {
+  const provider = cfg && cfg.provider;
+  if (!provider || !provider.type) return '';
+  const label = PROVIDER_LABELS[provider.type] || provider.type;
+  const isExternal = provider.type === 'mawaqit' || provider.type === 'esalaat';
+  const providerHtml = isExternal && provider.source_url
+    ? `<a href="${provider.source_url}" target="_blank" rel="noopener" class="source-link">${label}</a>`
+    : label;
+
+  let dateHtml = '';
+  const checkedAt = cfg.quality && cfg.quality.checked_at;
+  if (checkedAt) {
+    const d = new Date(checkedAt + 'T00:00:00');
+    if (!isNaN(d.getTime())) {
+      const ageMs = Date.now() - d.getTime();
+      const stale = ageMs > 14 * 24 * 60 * 60 * 1000;
+      const formatted = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      dateHtml = ` · Updated <span class="source-date${stale ? ' source-date-stale' : ''}">${formatted}</span>`;
+    }
+  }
+
+  return `<div class="source-tag">Times from ${providerHtml}${dateHtml}</div>`;
+}
+
 // Column key → isAM mapping for CSV columns
 const COL_IS_AM = {
   'Sehri Ends': true, 'Fajr Start': true, 'Subha Sadiq': true, "Fajr Jama'at": true, 'Sunrise': true,
@@ -169,9 +209,23 @@ function recordRecentVisit(slug) {
 
 // --- CSV parsing (local to this view, matches original exactly) ---
 
+// Snake-case headers from fetch_mawaqit.py map to legacy title-case headers
+// used throughout the UI. Keeps both CSV layouts readable by a single parser.
+const HEADER_ALIASES = {
+  'date': 'Date', 'day': 'Day', 'islamic_day': 'Islamic Day',
+  'sehri_ends': 'Sehri Ends', 'fajr_start': 'Fajr Start',
+  'sunrise': 'Sunrise', 'zawal': 'Zawal', 'zohr': 'Zohr', 'asr': 'Asr', 'esha': 'Esha',
+  'fajr_jamaat': "Fajr Jama'at", 'zohar_jamaat': "Zohar Jama'at",
+  'asr_jamaat': "Asr Jama'at", 'maghrib_iftari': 'Maghrib Iftari',
+  'maghrib_jamaat': "Maghrib Jama'at", 'esha_jamaat': "Esha Jama'at",
+};
+
 function parseCSV(text) {
   const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim());
+  const headers = lines[0].split(',').map(h => {
+    const trimmed = h.trim();
+    return HEADER_ALIASES[trimmed] || trimmed;
+  });
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',').map(v => v.trim());
@@ -183,7 +237,15 @@ function parseCSV(text) {
 }
 
 function parseDate(dateStr) {
-  const parts = dateStr.trim().split(' ');
+  if (!dateStr) return null;
+  const trimmed = dateStr.trim();
+  // ISO format from fetch_mawaqit.py (e.g. "2026-05-19")
+  const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    return new Date(parseInt(isoMatch[1]), parseInt(isoMatch[2]) - 1, parseInt(isoMatch[3]));
+  }
+  // Legacy "18 Feb" format from image-extraction CSVs
+  const parts = trimmed.split(' ');
   const day = parseInt(parts[0]);
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthIndex = monthNames.indexOf(parts[1]);
@@ -209,6 +271,12 @@ function getTomorrowRow() {
 
 function formatFullDate(dateStr, dayStr) {
   const dayMap = { 'Mon': 'Monday', 'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday', 'Sat': 'Saturday', 'Sun': 'Sunday' };
+  const d = parseDate(dateStr);
+  if (d) {
+    const dayName = dayMap[dayStr] || d.toLocaleDateString('en-GB', { weekday: 'long' });
+    const monthName = d.toLocaleDateString('en-GB', { month: 'long' });
+    return `${dayName} ${d.getDate()} ${monthName} ${d.getFullYear()}`;
+  }
   return `${dayMap[dayStr] || dayStr} ${dateStr} 2026`;
 }
 
@@ -446,7 +514,7 @@ function renderTodayView(target) {
     if (isStale) {
       target.innerHTML = `
         <div class="prayer-times-view">
-          <header><h1>${config.display_name}</h1></header>
+          <header>${renderMasjidLogo(config)}<h1>${config.display_name}</h1>${renderSourceTag(config)}</header>
           ${noTimesEidHtml}
           <div class="stale-notice">
             <h2>No times for ${currentMonth}</h2>
@@ -460,7 +528,7 @@ function renderTodayView(target) {
         </div>`;
     } else if (csvData.length === 0) {
       target.innerHTML = `<div class="prayer-times-view">
-        <header><h1>${config.display_name}</h1></header>
+        <header>${renderMasjidLogo(config)}<h1>${config.display_name}</h1>${renderSourceTag(config)}</header>
         ${noTimesEidHtml}
         <div class="error">No timetable available yet.<br><small>Times will appear once a timetable is uploaded.</small></div>
         ${renderInfoSection()}
@@ -470,7 +538,7 @@ function renderTodayView(target) {
       </div>`;
     } else {
       target.innerHTML = `<div class="prayer-times-view">
-        <header><h1>${config.display_name}</h1></header>
+        <header>${renderMasjidLogo(config)}<h1>${config.display_name}</h1>${renderSourceTag(config)}</header>
         ${noTimesEidHtml}
         <div class="error">No prayer times available for today.<br><small>Check back when the timetable period begins.</small></div>
         ${renderInfoSection()}
@@ -576,6 +644,16 @@ function renderTodayView(target) {
   prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'] || null, jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
   prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'] || null, jamaat: todayRow["Esha Jama'at"] });
 
+  // Isha + Maghrib combine detection (common in UK summer)
+  const eshaStartRaw = (todayRow['Esha'] || '').trim();
+  const eshaJamRaw = (todayRow["Esha Jama'at"] || '').trim();
+  const maghribJamRaw = (todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] || '').trim();
+  const eshaEmpty = !eshaStartRaw && !eshaJamRaw;
+  const eshaCombined = !eshaEmpty && !!eshaJamRaw && !!maghribJamRaw && eshaJamRaw === maghribJamRaw;
+  const eshaCombineNote = (eshaEmpty || eshaCombined)
+    ? "This masjid combines Isha with Maghrib during summer. Check the masjid directly if unsure."
+    : '';
+
   // Build sunrise/zawal split row (inserted after Fajr in the table)
   const hasSunrise = !!todayRow['Sunrise'];
   const hasZawal = !!todayRow['Zawal'];
@@ -587,18 +665,35 @@ function renderTodayView(target) {
     sunZawalRowHtml = `<div class="time-row sun-zawal-row">${sunriseHtml}${divider}${zawalHtml}</div>`;
   }
 
-  const prayerRowsHtml = prayerRows.map(p => `
-    <div class="time-row" data-prayer="${p.name}">
-      <div class="time-col time-start"><span class="time-value">${ft(p.start, p.isAM) || '-'}</span></div>
-      <div class="time-col time-name">${p.name}</div>
-      <div class="time-col time-jamaat"><span class="time-value">${ft(p.jamaat, p.isAM) || '-'}</span></div>
-    </div>`).join('');
+  const prayerRowsHtml = prayerRows.map(p => {
+    const isEsha = p.name === 'Esha';
+    const noteForRow = isEsha ? eshaCombineNote : '';
+    const showAsterisk = isEsha && !!eshaCombineNote;
+    const nameHtml = showAsterisk
+      ? `${p.name}<sup class="esha-note" title="${noteForRow}">*</sup>`
+      : p.name;
+    const startVal = (isEsha && eshaEmpty) ? '—' : (ft(p.start, p.isAM) || '-');
+    const jamaatVal = (isEsha && eshaEmpty) ? '—' : (ft(p.jamaat, p.isAM) || '-');
+    const rowTitle = noteForRow ? ` title="${noteForRow}"` : '';
+    return `
+    <div class="time-row" data-prayer="${p.name}"${rowTitle}>
+      <div class="time-col time-start"><span class="time-value">${startVal}</span></div>
+      <div class="time-col time-name">${nameHtml}</div>
+      <div class="time-col time-jamaat"><span class="time-value">${jamaatVal}</span></div>
+    </div>`;
+  }).join('');
+
+  const eshaFootnoteHtml = eshaCombineNote
+    ? `<div class="esha-combined-note">* Isha may be combined with Maghrib at this masjid during summer. Check the masjid directly if unsure.</div>`
+    : '';
 
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
         <button class="share-icon-btn" id="shareBtn" aria-label="Share"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+        ${renderMasjidLogo(config)}
         <h1>${config.display_name}</h1>
+        ${renderSourceTag(config)}
         <div class="date-line">${englishDate}</div>
         <div class="hijri-line">${hijriDisplay}</div>
       </header>
@@ -618,6 +713,7 @@ function renderTodayView(target) {
           ${prayerRowsHtml}
         </div>
       </div>
+      ${eshaFootnoteHtml}
 
       ${renderInfoSection()}
 
@@ -698,7 +794,7 @@ function renderMonthlyView(target) {
 
   if (displayRows.length === 0) {
     target.innerHTML = `<div class="prayer-times-view" id="pt-content">
-      <header><h1>${config.display_name}</h1></header>
+      <header>${renderMasjidLogo(config)}<h1>${config.display_name}</h1>${renderSourceTag(config)}</header>
       ${renderToggle('monthly')}
       <div class="error">No timetable data for this month.</div>
     </div>`;
@@ -746,8 +842,7 @@ function renderMonthlyView(target) {
       const rowDate = parseDate(row['Date']);
       const isToday = rowDate.toDateString() === todayStr;
       const isFriday = rowDate.getDay() === 5;
-      const dateParts = row['Date'].trim().split(' ');
-      const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
+      const dateDisplay = `${rowDate.getDate()} ${rowDate.toLocaleDateString('en-GB', { month: 'short' })}`;
       const h = gregorianToHijri(rowDate);
       const hijri = `${h.day} ${h.monthShort}`;
       const cells = combinedCols.map(col => {
@@ -811,8 +906,7 @@ function renderMonthlyView(target) {
       const rowDate = parseDate(row['Date']);
       const isToday = rowDate.toDateString() === todayStr;
       const isFriday = rowDate.getDay() === 5;
-      const dateParts = row['Date'].trim().split(' ');
-      const dateDisplay = `${dateParts[0]} ${dateParts[1]}`;
+      const dateDisplay = `${rowDate.getDate()} ${rowDate.toLocaleDateString('en-GB', { month: 'short' })}`;
       const h = gregorianToHijri(rowDate);
       const hijri = `${h.day} ${h.monthShort}`;
       const cells = columns.map(col => {
@@ -855,7 +949,9 @@ function renderMonthlyView(target) {
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
+        ${renderMasjidLogo(config)}
         <h1>${config.display_name}</h1>
+        ${renderSourceTag(config)}
         <div class="date-line">${headerTitle}</div>
         <div class="hijri-line">${hijriRange}</div>
       </header>
@@ -1022,7 +1118,9 @@ function updateDownloadLink() {
 function renderInfoSection() {
   if (!config) return '';
   const isSeasonalMode = season === 'ramadan' || season === 'eid';
-  const hasInfo = config.address || config.phone || (config.eid_salah && isSeasonalMode) || (config.sadaqatul_fitr && isSeasonalMode) || config.radio_frequency || config.jummah_times;
+  const hasInfo = config.address || config.phone || config.email || config.website
+    || (config.eid_salah && isSeasonalMode) || (config.sadaqatul_fitr && isSeasonalMode)
+    || config.radio_frequency || config.jummah_times;
   if (!hasInfo) return '';
 
   const mapUrl = config.address ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(config.address) : '';
@@ -1057,6 +1155,15 @@ function renderInfoSection() {
   }
   if (config.radio_frequency) {
     gridItems += `<div class="info-grid-item"><div class="info-field-label">Radio Freq</div><div class="info-field-value">${config.radio_frequency}</div></div>`;
+  }
+  if (config.email) {
+    const email = String(config.email).trim();
+    gridItems += `<div class="info-grid-item"><div class="info-field-label">Email</div><div class="info-field-value"><a href="mailto:${email}">${email}</a></div></div>`;
+  }
+  if (config.website) {
+    const url = String(config.website).trim();
+    let display = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    gridItems += `<div class="info-grid-item"><div class="info-field-label">Website</div><div class="info-field-value"><a href="${url}" target="_blank" rel="noopener">${display}</a></div></div>`;
   }
   if (config.jummah_times) {
     gridItems += `<div class="info-grid-item info-grid-full"><div class="info-field-label">Jumu'ah Times</div><div class="info-field-value">${config.jummah_times}</div></div>`;

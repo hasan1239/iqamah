@@ -51,6 +51,7 @@ MANAGED_FIELDS = {
     "slug", "display_name", "city", "association", "address", "address_source",
     "phone", "email", "notes", "website", "logo", "latitude", "longitude",
     "timezone", "country_code", "jummah_times", "csv", "provider", "quality",
+    "acknowledged_issues",
 }
 
 # UK postcode pattern: outward code (1-2 letters + 1-2 digits + optional letter)
@@ -349,23 +350,45 @@ def normalise(data: dict, year: int) -> list[dict]:
     return rows
 
 
-def quality_check(rows: list[dict], data: dict, blank_unreliable: bool = True) -> dict:
-    """Run quality checks against the normalised rows. Returns a status dict."""
+def quality_check(
+    rows: list[dict],
+    data: dict,
+    blank_unreliable: bool = True,
+    acknowledged: list[str] | None = None,
+) -> dict:
+    """
+    Run quality checks against the normalised rows. Returns a status dict.
+
+    Any issue whose `type` is in `acknowledged` is flagged as such and skipped
+    when computing the overall status — letting the maintainer accept an issue
+    permanently (e.g. an Isha+Maghrib combine that's genuine for that masjid)
+    so it stops blocking the masjid from public lists on re-fetch.
+    """
+    acknowledged = set(acknowledged or [])
     warnings = []
     issues = []
     isha_clamped_days = []
 
-    # Isha clamping (UK summer)
+    # Isha clamping (UK summer). When the maintainer has acknowledged this
+    # issue, leave the times in place — the masjid genuinely combines them and
+    # the UI's combine detection will flag the row with a tooltip.
+    isha_clamp_acknowledged = "isha_clamped" in acknowledged
     for row in rows:
         m_start, i_start = row["maghrib_iftari"], row["esha"]
         m_jam, i_jam = row["maghrib_jamaat"], row["esha_jamaat"]
         if m_start and i_start and m_start == i_start and m_jam == i_jam:
             isha_clamped_days.append(row["date"])
-            if blank_unreliable:
+            if blank_unreliable and not isha_clamp_acknowledged:
                 row["esha"] = ""
                 row["esha_jamaat"] = ""
 
     if isha_clamped_days:
+        if isha_clamp_acknowledged:
+            action_taken = "kept as-is (combine acknowledged)"
+        elif blank_unreliable:
+            action_taken = "esha and esha_jamaat blanked"
+        else:
+            action_taken = "none (--keep-raw set)"
         warnings.append(
             f"Isha clamped to Maghrib on {len(isha_clamped_days)} days "
             f"({isha_clamped_days[0]} to {isha_clamped_days[-1]}). "
@@ -378,7 +401,7 @@ def quality_check(rows: list[dict], data: dict, blank_unreliable: bool = True) -
             "count": len(isha_clamped_days),
             "first_date": isha_clamped_days[0],
             "last_date": isha_clamped_days[-1],
-            "action_taken": "esha and esha_jamaat blanked" if blank_unreliable else "none (--keep-raw set)",
+            "action_taken": action_taken,
             "fix": "Verify masjid's summer Isha policy and either accept the combine or add an override",
         })
 
@@ -428,8 +451,22 @@ def quality_check(rows: list[dict], data: dict, blank_unreliable: bool = True) -
             "fix": "Reach out to masjid, or skip this masjid",
         })
 
-    high_severity = any(i.get("severity") == "high" for i in issues)
-    status = "ok" if not issues else ("needs_review" if high_severity else "warnings")
+    # Mark acknowledged issues so the audit trail records they were accepted
+    for issue in issues:
+        if issue.get("type") in acknowledged:
+            issue["acknowledged"] = True
+
+    unacknowledged_high = any(
+        i.get("severity") == "high" and not i.get("acknowledged")
+        for i in issues
+    )
+    unacknowledged = [i for i in issues if not i.get("acknowledged")]
+    if not unacknowledged:
+        status = "ok"
+    elif unacknowledged_high:
+        status = "needs_review"
+    else:
+        status = "warnings"
 
     return {
         "status": status,
@@ -563,6 +600,7 @@ def build_config(
             "source_url": MAWAQIT_URL.format(path=mawaqit_path),
         },
         "quality": quality,
+        "acknowledged_issues": list(existing.get("acknowledged_issues") or []),
     }
 
     # Carry forward any unknown fields from the existing config
@@ -637,10 +675,17 @@ def main():
     rows = normalise(data, year)
     print(f"Normalised {len(rows)} days")
 
-    quality = quality_check(rows, data, blank_unreliable=blank_unreliable)
+    acknowledged = existing.get("acknowledged_issues") or []
+    quality = quality_check(
+        rows, data,
+        blank_unreliable=blank_unreliable,
+        acknowledged=acknowledged,
+    )
     print(f"\nQuality: {quality['status']}")
     for w in quality["warnings"]:
         print(f"  WARNING: {w}")
+    if acknowledged:
+        print(f"  Acknowledged: {', '.join(acknowledged)}")
 
     config = build_config(data, slug, args.path, quality, existing)
 

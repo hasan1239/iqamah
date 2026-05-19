@@ -115,7 +115,9 @@ async function loadMasjids() {
   try {
     const res = await fetch('/data/mosques/index.json');
     if (!res.ok) return;
-    cachedConfigs = (await res.json()).filter(c => !c.test_masjid);
+    cachedConfigs = (await res.json()).filter(c =>
+      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+    );
     renderCards();
   } catch (error) {
     console.error('Error loading masjids:', error);
@@ -184,9 +186,13 @@ export function renderCards() {
       subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
     }
 
-    return `<a href="/${config.slug}" class="masjid-card" data-link data-slug="${config.slug}">
+    const thumbContent = config.logo
+      ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
+      : MOSQUE_SVG;
+    const cityAttr = config.city ? ` data-city="${config.city}"` : '';
+    return `<a href="/${config.slug}" class="masjid-card" data-link data-slug="${config.slug}"${cityAttr}>
       <div class="masjid-card-top">
-        <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
+        <div class="masjid-card-thumb${config.logo ? ' has-logo' : ''}">${thumbContent}</div>
         <div class="masjid-card-info">
           <div class="masjid-name-row">
             <div class="masjid-name">${config.display_name}</div>
@@ -487,9 +493,11 @@ function setupLocationBtn() {
 
       distanceMap = {};
       cachedConfigs.forEach(config => {
-        if (config.lat != null && config.lon != null) {
+        const lat = config.lat != null ? config.lat : config.latitude;
+        const lon = config.lon != null ? config.lon : config.longitude;
+        if (lat != null && lon != null) {
           distanceMap[config.slug] = haversineDistance(
-            userLocation.lat, userLocation.lon, config.lat, config.lon
+            userLocation.lat, userLocation.lon, lat, lon
           );
         }
       });

@@ -510,6 +510,21 @@
       font-size: 0.85rem;
     }
 
+    /* Global attribution footer (OSM/Postcodes.io) */
+    .site-footer {
+      text-align: center;
+      padding: 16px 20px 8px;
+      margin-top: 32px;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      opacity: 0.55;
+      line-height: 1.5;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .site-footer a { color: inherit; }
+
     /* Error */
     .error { text-align: center; padding: 60px 20px; font-size: 1.1rem; color: var(--error); }
 
@@ -671,10 +686,19 @@
       color: var(--gold-tint-40);
     }
     .masjid-card-thumb svg { width: 18px; height: 18px; }
+    .masjid-card-thumb.has-logo {
+      background: rgba(255,255,255,0.95);
+      padding: 3px;
+    }
+    .masjid-card-thumb.has-logo img {
+      width: 100%; height: 100%; object-fit: contain;
+      border-radius: 5px; display: block;
+    }
     :root[data-theme="light"] .masjid-card-thumb {
       background: radial-gradient(circle at top right, #e8dfc0, #f0ebe0);
       color: var(--gold-tint-50);
     }
+    :root[data-theme="light"] .masjid-card-thumb.has-logo { background: #fff; }
     .masjid-card-info { min-width: 0; flex: 1; }
     .masjid-name { font-size: 0.85rem; color: var(--text-primary); font-weight: 700; text-align: left; line-height: 1.3; }
     .masjid-card-sub { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
@@ -950,6 +974,39 @@
     .share-icon-btn svg { width: 20px; height: 20px; }
     .date-line { font-size: 0.85rem; color: var(--text-tertiary); margin-bottom: 4px; }
     .hijri-line { font-family: 'Amiri', serif; font-size: 0.95rem; color: var(--green); margin-bottom: 10px; }
+    .masjid-logo {
+      width: 72px; height: 72px; border-radius: 16px;
+      margin: 0 auto 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--gold-tint-08);
+      border: 1px solid var(--gold-tint-30);
+      color: var(--gold);
+      overflow: hidden;
+    }
+    .masjid-logo.has-logo {
+      background: rgba(255,255,255,0.95);
+      padding: 4px;
+    }
+    :root[data-theme="light"] .masjid-logo.has-logo { background: #fff; }
+    .masjid-logo svg { width: 36px; height: 36px; }
+    .masjid-logo img {
+      width: 100%; height: 100%; object-fit: contain;
+      border-radius: 12px; display: block;
+    }
+    @media (min-width: 768px) {
+      .masjid-logo { width: 96px; height: 96px; border-radius: 20px; }
+      .masjid-logo svg { width: 48px; height: 48px; }
+    }
+    .source-tag {
+      font-size: 0.72rem; color: var(--text-muted);
+      margin: -2px 0 8px; line-height: 1.4;
+    }
+    .source-tag .source-link {
+      color: var(--text-tertiary); text-decoration: none;
+      border-bottom: 1px dotted var(--text-muted); transition: color 0.2s, border-color 0.2s;
+    }
+    .source-tag .source-link:hover { color: var(--gold); border-bottom-color: var(--gold); }
+    .source-tag .source-date-stale { color: var(--gold); font-weight: 600; }
 
     /* Toggle */
     .view-toggle { display: flex; justify-content: center; margin-bottom: 16px; max-width: 400px; margin-left: auto; margin-right: auto; }
@@ -1028,6 +1085,16 @@
     .time-row .countdown {
       font-size: 0.6rem; color: var(--green); font-weight: 400;
       white-space: nowrap; margin-top: 4px; margin-left: -5px;
+    }
+    .esha-note {
+      color: var(--gold); font-size: 0.7em; margin-left: 2px;
+      font-weight: 700; cursor: help; vertical-align: super;
+      text-decoration: none;
+    }
+    .esha-combined-note {
+      font-size: 0.7rem; color: var(--text-muted);
+      text-align: center; margin: -6px 0 16px;
+      font-style: italic; padding: 0 12px; line-height: 1.4;
     }
     .section-title { font-size: 1rem; color: var(--gold); margin-bottom: 12px; text-align: center; font-weight: 600; }
     .countdown { font-family: 'Lato', sans-serif; font-size: 0.7rem; color: var(--green); font-weight: 400; margin-left: 6px; }
@@ -1930,6 +1997,11 @@
 
   <!-- App content area -->
   <div id="app"></div>
+
+  <!-- Global attribution footer -->
+  <footer class="site-footer">
+    Geographic data © OpenStreetMap contributors. Postcode data from Postcodes.io.
+  </footer>
 
   <!-- Bottom navigation bar -->
   <nav id="bottom-nav" class="bottom-nav"></nav>
