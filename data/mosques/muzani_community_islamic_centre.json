@@ -1,0 +1,112 @@
+{
+  "slug": "muzani_community_islamic_centre",
+  "display_name": "Muzani Community & Islamic Centre",
+  "city": "London",
+  "latitude": 51.5478216,
+  "longitude": -0.2486256,
+  "country_code": "GB",
+  "website": "https://www.muzani.co.uk/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/17b26f92-26ff-47a0-82bf-00dc1c938bf3/mosque/1eea8ded-df72-6baa-b99b-066ed47a7584.png",
+  "address": "Church Road, Harlesden, Greater London, NW10 9NP",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Muzani Community Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "muzani_community_islamic_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "muzani-community-islamic-centre-london"
+    },
+    "source_url": "https://mawaqit.net/en/m/muzani-community-islamic-centre-london"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+      "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      },
+      {
+        "type": "fajr_after_sunrise",
+        "severity": "high",
+        "count": 54,
+        "first_date": "2026-05-22",
+        "last_date": "2026-07-14",
+        "affected_dates": [
+          "2026-05-22",
+          "2026-05-23",
+          "2026-05-24",
+          "2026-05-25",
+          "2026-05-26",
+          "2026-05-27",
+          "2026-05-28",
+          "2026-05-29",
+          "2026-05-30",
+          "2026-05-31",
+          "2026-06-01",
+          "2026-06-02",
+          "2026-06-03",
+          "2026-06-04",
+          "2026-06-05",
+          "2026-06-06",
+          "2026-06-07",
+          "2026-06-08",
+          "2026-06-09",
+          "2026-06-10",
+          "2026-06-11",
+          "2026-06-12",
+          "2026-06-13",
+          "2026-06-14",
+          "2026-06-15",
+          "2026-06-16",
+          "2026-06-17",
+          "2026-06-18",
+          "2026-06-19",
+          "2026-06-20",
+          "2026-06-21",
+          "2026-06-22",
+          "2026-06-23",
+          "2026-06-24",
+          "2026-06-25",
+          "2026-06-26",
+          "2026-06-27",
+          "2026-06-28",
+          "2026-06-29",
+          "2026-06-30",
+          "2026-07-01",
+          "2026-07-02",
+          "2026-07-03",
+          "2026-07-04",
+          "2026-07-05",
+          "2026-07-06",
+          "2026-07-07",
+          "2026-07-08",
+          "2026-07-09",
+          "2026-07-10",
+          "2026-07-11",
+          "2026-07-12",
+          "2026-07-13",
+          "2026-07-14"
+        ],
+        "action_taken": "none",
+        "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+        "acknowledged": true
+      }
+    ]
+  },
+  "acknowledged_issues": [
+    "fajr_after_sunrise"
+  ]
+}

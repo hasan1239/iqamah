@@ -1,0 +1,87 @@
+{
+  "slug": "redbridge_muslim_community_centre",
+  "display_name": "Redbridge Muslim Community Centre",
+  "city": "",
+  "latitude": 51.573051752109,
+  "longitude": 0.084335676444312,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/mosque/1eebd19e-ef3f-6272-acb3-06acfcd1c88a.jpg",
+  "address": "Eastern Avenue, Newbury Park, Redbridge, IG2 6PE",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Install the Mawaqit application on your phone and choose the Redbridge Muslim Community Center to set up this live timetable.",
+  "timezone": "Europe/London",
+  "jummah_times": "13:20, 14:10",
+  "csv": "redbridge_muslim_community_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "rmcc-ilford-ig2-6pe-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/rmcc-ilford-ig2-6pe-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+      "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error — Fajr jamaat must always be before sunrise."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      },
+      {
+        "type": "fajr_after_sunrise",
+        "severity": "high",
+        "count": 29,
+        "first_date": "2026-09-02",
+        "last_date": "2026-09-30",
+        "affected_dates": [
+          "2026-09-02",
+          "2026-09-03",
+          "2026-09-04",
+          "2026-09-05",
+          "2026-09-06",
+          "2026-09-07",
+          "2026-09-08",
+          "2026-09-09",
+          "2026-09-10",
+          "2026-09-11",
+          "2026-09-12",
+          "2026-09-13",
+          "2026-09-14",
+          "2026-09-15",
+          "2026-09-16",
+          "2026-09-17",
+          "2026-09-18",
+          "2026-09-19",
+          "2026-09-20",
+          "2026-09-21",
+          "2026-09-22",
+          "2026-09-23",
+          "2026-09-24",
+          "2026-09-25",
+          "2026-09-26",
+          "2026-09-27",
+          "2026-09-28",
+          "2026-09-29",
+          "2026-09-30"
+        ],
+        "action_taken": "none",
+        "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+        "acknowledged": true
+      }
+    ]
+  },
+  "acknowledged_issues": [
+    "fajr_after_sunrise"
+  ]
+}

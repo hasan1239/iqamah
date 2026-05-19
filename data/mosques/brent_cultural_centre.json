@@ -1,0 +1,43 @@
+{
+  "slug": "brent_cultural_centre",
+  "display_name": "Brent Cultural Centre",
+  "city": "",
+  "latitude": 51.5357542,
+  "longitude": -0.2443074,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c33afa41-3129-44b4-bfd4-3093994cd397/mosque/1eea8eda-a6db-6056-b2bb-066ed47a7584.png",
+  "address": "128 High Street Harlesden, Harlesden, Brent, NW10 4SP",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Brent Cultural Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:15, 14:15",
+  "csv": "brent_cultural_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "brent-cultural-centre-masjid-anuur-london-nw10-4sp-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/brent-cultural-centre-masjid-anuur-london-nw10-4sp-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

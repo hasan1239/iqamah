@@ -1,0 +1,43 @@
+{
+  "slug": "muslim_welfare_house",
+  "display_name": "Muslim Welfare House",
+  "city": "",
+  "latitude": 51.5635681,
+  "longitude": -0.1071701,
+  "country_code": "GB",
+  "website": "https://www.islingtonjamah.co.uk/muslimwelfarehouse",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/44dfa98e-a742-4686-97cd-b4f858fa9a7c/mosque/1f0fe12e-65b1-68c0-91c3-06442f0951bf.jpg",
+  "address": "233 Seven Sisters Road, Finsbury Park, Islington, N4 2DA",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Muslim Welfare House - IslingtonJamah.co.uk",
+  "timezone": "Europe/London",
+  "jummah_times": "12:30",
+  "csv": "muslim_welfare_house.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "muslim-welfare-house-london-n4-2da-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/muslim-welfare-house-london-n4-2da-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
