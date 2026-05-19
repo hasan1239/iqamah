@@ -221,3 +221,19 @@ faizane-madina-burnley-burnley-bb10-1xa-united-kingdom  faizan_e_madina_burnley
 jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom  jamia_masjid_usman_ghani
 jamia-masjid-sultania-brierfield-bb9-5le-united-kingdom  jamia_masjid_sultania
 city-mosque-preston-preston-pr11yq-united-kingdom  city_mosque
+# Metro sweep: newport — 2026-05-20
+# Metro area: newport
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 5 new entries
+shah-poran-mosque-newport-np9-8dt-united-kingdom  shah_poran_mosque
+ummah-masjid-newport-np198fh-united-kingdom  ummah_masjid
+masjed-al-taqwa-newport-np20-2gy-united-kingdom  masjed_al_taqwa
+newport-diyanet-newport-np20-2je-united-kingdom  newport_diyanet
+newport-central-jame-masjid-newport-np20-4dx-united-kingdom  newport_central_jam_e_masjid_ncjm
+# Metro sweep: swansea — 2026-05-20
+# Metro area: swansea
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 3 new entries
+swansea-mosque-swansea-sa1-4dg-united-kingdom-1  swansea_mosque
+sketty-mosque-and-community-centre-sketty-swansea-sa2-9as-united-kingdom  sketty_mosque_community_centre
+al-mutawa-mosque-swansea-sa5-9lh-united-kingdom  al_mutawa_mosque
