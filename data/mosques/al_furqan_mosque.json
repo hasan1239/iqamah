@@ -1,0 +1,43 @@
+{
+  "slug": "al_furqan_mosque",
+  "display_name": "Al-Furqan Mosque",
+  "city": "Glasgow",
+  "latitude": 55.871635506808,
+  "longitude": -4.2717046233135,
+  "country_code": "GB",
+  "website": "https://alfurqanmosque.com/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/99f42b22-ee0e-4005-83ef-19d31e9572c6/mosque/1f137106-247b-62be-8ecb-064cc2fa7f21.png",
+  "address": "13 Carrington Street, Hillhead, Glasgow City, G4 9AJ",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "مسجد الفرقان",
+  "timezone": "Europe/London",
+  "jummah_times": "13:50, 14:30",
+  "csv": "al_furqan_mosque.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
