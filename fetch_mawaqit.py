@@ -581,6 +581,28 @@ def write_csv(rows: list[dict], out_path: Path) -> None:
         writer.writerows(rows)
 
 
+def regenerate_index(mosques_dir: Path) -> int:
+    """
+    Rebuild data/mosques/index.json by bundling every masjid config in the
+    directory. Mirrors the `jq -s '.' $(ls *.json | sort)` step in the
+    GitHub Actions workflows so local runs stay in sync without a deploy.
+    Returns the number of masjids written.
+    """
+    index_path = mosques_dir / "index.json"
+    configs = []
+    for path in sorted(mosques_dir.glob("*.json")):
+        if path.name == "index.json":
+            continue
+        try:
+            with open(path, encoding="utf-8") as f:
+                configs.append(json.load(f))
+        except Exception as e:
+            print(f"  Skipping {path.name} in index ({e})")
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(configs, f, indent=2, ensure_ascii=False)
+    return len(configs)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("path", help="Mawaqit URL path, e.g. amanah-masjid-birmingham-b11-1jb-united-kingdom")
@@ -631,6 +653,9 @@ def main():
     print(f"Wrote {csv_path}")
     print(f"Wrote {config_path}")
     print(f"Address: {config['address']} ({config['address_source']})")
+
+    count = regenerate_index(config_path.parent)
+    print(f"Wrote {config_path.parent / 'index.json'} ({count} masjids)")
 
     today_row = next((r for r in rows if r["date"] == date.today().isoformat()), rows[0])
     print(f"\nToday's row: {today_row}")
