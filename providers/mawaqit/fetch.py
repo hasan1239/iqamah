@@ -298,6 +298,31 @@ def sub_minutes(time_str: str, mins: int) -> str:
     return f"{total // 60:02d}:{total % 60:02d}"
 
 
+def resolve_iqama(iqama: str, start: str) -> str:
+    """
+    Mawaqit's iqamaCalendar uses '+N' strings (e.g. '+0', '+15') to mean
+    'N minutes after the prayer start time'. Resolve to an absolute HH:MM
+    so downstream consumers (UI, lockscreen generator) only ever see real
+    times. Pass through anything that's already HH:MM or empty.
+    """
+    if not isinstance(iqama, str) or not iqama:
+        return iqama or ""
+    if not iqama.startswith("+"):
+        return iqama
+    try:
+        offset = int(iqama[1:])
+    except ValueError:
+        return iqama  # unrecognised — leave as-is so the issue is visible
+    if not start:
+        return iqama  # can't resolve without a start anchor
+    try:
+        h, m = map(int, start.split(":"))
+    except ValueError:
+        return iqama
+    total = h * 60 + m + offset
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
 def detect_year(data: dict) -> int:
     """Mawaqit calendar arrays are always for the current year."""
     return date.today().year
@@ -325,10 +350,15 @@ def normalise(data: dict, year: int) -> list[dict]:
             i = month_iqamas.get(day_str, ["", "", "", "", ""])
 
             fajr_start = s[START_FAJR]
-            zohar_jamaat = i[IQ_DHUHR]
+            # Resolve Mawaqit's '+N' shorthand to absolute HH:MM up-front
+            fajr_iqama = resolve_iqama(i[IQ_FAJR], fajr_start)
+            dhuhr_iqama = resolve_iqama(i[IQ_DHUHR], s[START_DHUHR])
+            asr_iqama = resolve_iqama(i[IQ_ASR], s[START_ASR])
+            maghrib_iqama = resolve_iqama(i[IQ_MAGHRIB], s[START_MAGHRIB])
+            esha_iqama = resolve_iqama(i[IQ_ISHA], s[START_ISHA])
 
             if d.weekday() == 4 and jumua_as_duhr and jumua:
-                zohar_jamaat = jumua
+                dhuhr_iqama = jumua
 
             rows.append({
                 "date": d.isoformat(),
@@ -341,12 +371,12 @@ def normalise(data: dict, year: int) -> list[dict]:
                 "zohr": s[START_DHUHR],
                 "asr": s[START_ASR],
                 "esha": s[START_ISHA],
-                "fajr_jamaat": i[IQ_FAJR],
-                "zohar_jamaat": zohar_jamaat,
-                "asr_jamaat": i[IQ_ASR],
+                "fajr_jamaat": fajr_iqama,
+                "zohar_jamaat": dhuhr_iqama,
+                "asr_jamaat": asr_iqama,
                 "maghrib_iftari": s[START_MAGHRIB],
-                "maghrib_jamaat": i[IQ_MAGHRIB],
-                "esha_jamaat": i[IQ_ISHA],
+                "maghrib_jamaat": maghrib_iqama,
+                "esha_jamaat": esha_iqama,
             })
     return rows
 
