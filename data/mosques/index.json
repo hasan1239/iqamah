@@ -106,6 +106,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "al_furqan_mosque",
+    "display_name": "Al-Furqan Mosque",
+    "city": "Glasgow",
+    "latitude": 55.871635506808,
+    "longitude": -4.2717046233135,
+    "country_code": "GB",
+    "website": "https://alfurqanmosque.com/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/99f42b22-ee0e-4005-83ef-19d31e9572c6/mosque/1f137106-247b-62be-8ecb-064cc2fa7f21.png",
+    "address": "13 Carrington Street, Hillhead, Glasgow City, G4 9AJ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "مسجد الفرقان",
+    "timezone": "Europe/London",
+    "jummah_times": "13:50, 14:30",
+    "csv": "al_furqan_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "al_huda_masjid",
     "display_name": "Al-Huda Masjid",
     "city": "",
@@ -129,6 +172,49 @@
         "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_ma_rifah_academy",
+    "display_name": "Al Ma'rifah Academy",
+    "city": "Leicester",
+    "latitude": 52.6471983,
+    "longitude": -1.0603312,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/63d03220-de61-46b0-91a4-49b5bfcd1396/mosque/1f113952-86e3-680e-90dd-0a58a9feac02.png",
+    "address": "Armadale Drive, Humberstone & Hamilton, Leicester, LE5 1GZ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "al_ma_rifah_academy.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-marifah-academy-leicester-le5-1gz-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-marifah-academy-leicester-le5-1gz-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -714,6 +800,49 @@
     "source_image": "sources/central.jpg",
     "lat": 52.4646458,
     "lon": -1.8905789
+  },
+  {
+    "slug": "dawatul_islam",
+    "display_name": "Dawatul Islam",
+    "city": "Glasgow",
+    "latitude": 55.874458961852,
+    "longitude": -4.2844143411045,
+    "country_code": "GB",
+    "website": "http://www.dawatulig.org.uk/Default.aspx",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/fe553db6-f038-4492-b3ff-9ba90ee9d1b5/mosque/1f022ae8-0995-6ece-86d7-0e61b0058d45.png",
+    "address": "Oakfield Avenue, Hillhead, Glasgow City, G12 8LL",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "مسجد دعوة الاسلام",
+    "timezone": "Europe/London",
+    "jummah_times": "13:45",
+    "csv": "dawatul_islam.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "dawatul-islam-glasgow-glasgow-g12-8ll-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/dawatul-islam-glasgow-glasgow-g12-8ll-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "display_name": "East London Mosque",
@@ -1880,6 +2009,49 @@
           ],
           "action_taken": "none",
           "fix": "Investigate — likely a Mawaqit data bug for this masjid"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_mu_adh_ibn_jabal",
+    "display_name": "Masjid Mu'adh Ibn Jabal",
+    "city": "Leicester",
+    "latitude": 52.6328031,
+    "longitude": -1.0722415,
+    "country_code": "GB",
+    "website": "https://www.muadhibnjabal.org/",
+    "logo": "",
+    "address": "60 Gamel Road, Evington, Leicester, LE5 6TB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "masjid_mu_adh_ibn_jabal.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-muadh-ibn-jabal-leicester-le5-6tb-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-muadh-ibn-jabal-leicester-le5-6tb-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
         }
       ]
     },
