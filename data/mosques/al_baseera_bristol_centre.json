@@ -1,0 +1,43 @@
+{
+  "slug": "al_baseera_bristol_centre",
+  "display_name": "Al-Baseera Bristol Centre",
+  "city": "Bristol",
+  "latitude": 51.45921,
+  "longitude": -2.579925,
+  "country_code": "GB",
+  "website": "http://www.albaseera.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/ad7a3511-531a-4d22-9ed9-4372968852e3/mosque/1eea8e00-b8bc-6cbe-9242-066ed47a7584.png",
+  "address": "20 Wade Street, St Paul's, Bristol, BS2 9DR",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Al-Baseera Bristol Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "al_baseera_bristol_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "al-baseera-bristol-centre-bristol"
+    },
+    "source_url": "https://mawaqit.net/en/m/al-baseera-bristol-centre-bristol"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

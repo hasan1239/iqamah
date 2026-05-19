@@ -153,3 +153,29 @@ iaman-foundation-uk-london-w14-8xp-united-kingdom  aman_foundation_uk
 kings-cross-mosque-islamic-cultural-london-wc1h-8du-united-kingdom  kings_cross_mosque_islamic_cultural
 nhc-mosque-london-wc2n-5bx-united-kingdom  nhc_mosque
 jesus-the-son-of-mary-community-centre-watford-united-kingdom  jsmcc
+# Metro sweep: sheffield — 2026-05-19
+# Metro area: sheffield
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 2 new entries
+madina-masjid-sheffield-sheffield-s8-0zu-united-kingdom  madina_masjid_sheffield
+masjid-abu-bakr-sheffield-s9-1wa-united-kingdom  masjid_abu_bakr
+# Metro sweep: edinburgh — 2026-05-19
+# Metro area: edinburgh
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 2 new entries
+idarataleem-ul-quran-trust-polwarth-mosq-edinburgh-eh11-1ht-united-kingdom  idarataleem_ul_quran_polwarth_mosque
+medina-mosque-trust-eh8-9ta-edinburgh-united-kingdom  roxburgh_street_masjid
+# Metro sweep: bristol — 2026-05-19
+# Metro area: bristol
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 3 new entries
+al-baseera-bristol-centre-bristol  al_baseera_bristol_centre
+shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom  shahjalal_jame_mosque
+tawfiq-masjid-and-centre-bristol-bs5-9tg-united-kingdom  tawfiq_masjid_and_centre
+# Metro sweep: slough — 2026-05-19
+# Metro area: slough
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 3 new entries
+markaz-muaadh-bin-jabal-slough-sl1-2sa-united-kingdom  markaz_mu_aadh_bin_jabal
+masjid-ibrahim-slough-sl1-3ag-united-kingdom  masjid_ibrahim
+masjid-al-jannah-slough-sl2-5ah-united-kingdom  masjid_al_jannah
