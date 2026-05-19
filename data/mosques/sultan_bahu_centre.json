@@ -1,5 +1,5 @@
 {
-  "slug": "sultan",
+  "slug": "sultan_bahu_centre",
   "display_name": "Sultan Bahu Centre",
   "city": "Birmingham",
   "latitude": 52.492097727352,
@@ -15,7 +15,7 @@
   "association": "Sultan Bahu Centre",
   "timezone": "Europe/London",
   "jummah_times": "13:00",
-  "csv": "sultan.csv",
+  "csv": "sultan_bahu_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {

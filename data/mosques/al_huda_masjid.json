@@ -1,27 +1,27 @@
 {
-  "slug": "south",
-  "display_name": "South Birmingham Central Masjid",
-  "city": "Birmingham",
-  "latitude": 52.4432816,
-  "longitude": -1.8565489,
+  "slug": "al_huda_masjid",
+  "display_name": "Al-Huda Masjid",
+  "city": "",
+  "latitude": 52.4698817,
+  "longitude": -1.8309234,
   "country_code": "GB",
-  "website": "https://www.facebook.com/SBCMasjid",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/33c97ff3-0337-410d-8c4b-1f8792046015/mosque/1eea8ed7-9610-67c4-a817-066ed47a7584.png",
-  "address": "1 College Road, Sparkhill, Birmingham, B13 9LS",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a3020e3e-b76c-405f-8538-3b256c81ac10/mosque/1eff08f8-666b-6f50-8832-06ef9144e88f.jpeg",
+  "address": "228 Heybarnes Road, Small Heath, Birmingham, B10 9JF",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "South Birmingham Central Masjid",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15, 15:00",
-  "csv": "south.csv",
+  "jummah_times": "",
+  "csv": "al_huda_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
+      "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
   },
   "quality": {
     "status": "warnings",

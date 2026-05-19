@@ -1,27 +1,27 @@
 {
-  "slug": "adam",
-  "display_name": "Adam Mosque & Dawah Academy",
-  "city": "Birmingham",
-  "latitude": 52.4571396,
-  "longitude": -1.8816212,
+  "slug": "faizan_e_islam",
+  "display_name": "Faizan-e-Islam",
+  "city": "Coventry",
+  "latitude": 52.4311241,
+  "longitude": -1.5034999,
   "country_code": "GB",
   "website": "",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/cbf44142-569a-440b-8705-efc7dba042b8/mosque/1f00d946-f8db-64a6-9209-06bdda781935.jpg",
-  "address": "15 Brunswick Road, Sparkbrook & Balsall Heath East, Birmingham, B12 8NP",
+  "logo": "",
+  "address": "Lockhurst Lane, Foleshill, Coventry, CV6 5NJ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
   "association": null,
-  "timezone": "Europe/London",
-  "jummah_times": "13:30",
-  "csv": "adam.csv",
+  "timezone": "UTC",
+  "jummah_times": "13:30, 14:30",
+  "csv": "faizan_e_islam.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1"
+      "path": "faizan-e-islam-coventry-cv6-5nj-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1"
+    "source_url": "https://mawaqit.net/en/m/faizan-e-islam-coventry-cv6-5nj-united-kingdom"
   },
   "quality": {
     "status": "warnings",

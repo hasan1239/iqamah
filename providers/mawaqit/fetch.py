@@ -83,6 +83,39 @@ NAME_LOWERCASE_WORDS = {
 }
 
 
+def strip_non_english(text: str) -> str:
+    """
+    Remove non-ASCII characters from a name (Arabic, Urdu, French accents)
+    and clean up any dangling separators left behind.
+
+    Mawaqit labels are often bilingual — "ZAYTUNA MASJID مسجد الزيتونة" or
+    "M.S.H.M.C.C. | مسجد دار الطلبة المسلمين" or
+    "Masjid Al-Warith - (مسجد الوارث)". The site already shows the name in
+    latin script + a separate Arabic name, so the bilingual blob in
+    display_name produces ugly UI. Strip the non-ASCII portion and tidy
+    the leftover punctuation.
+    """
+    if not text:
+        return text
+    ascii_only = "".join(c for c in text if ord(c) < 128)
+    # Drop now-empty parens/brackets left behind by the Arabic stripping
+    cleaned = re.sub(r"\(\s*\)", "", ascii_only)
+    cleaned = re.sub(r"\[\s*\]", "", cleaned)
+    cleaned = re.sub(r"\{\s*\}", "", cleaned)
+    # Collapse internal pipes (used as bilingual separators)
+    cleaned = re.sub(r"\s*\|\s*", " ", cleaned)
+    # Collapse repeated " - " separators (e.g. "A - - B" left after a middle
+    # Arabic chunk was stripped from "A - <arabic> - B")
+    cleaned = re.sub(r"(\s+-\s+){2,}", " - ", cleaned)
+    # Trim trailing separator punctuation left dangling at the boundary
+    cleaned = re.sub(r"\s*[\-–—]\s*$", "", cleaned)
+    cleaned = re.sub(r"^\s*[\-–—]\s*", "", cleaned)
+    cleaned = cleaned.strip(" |-–—")
+    # Collapse runs of whitespace
+    cleaned = " ".join(cleaned.split())
+    return cleaned
+
+
 def normalise_name(text: str) -> str:
     """
     Normalise a masjid or city name to consistent Title Case.
@@ -134,12 +167,13 @@ def parse_mawaqit_label(label: str | None, fallback_name: str | None = None) -> 
     """
     Mawaqit's `label` field is consistently formatted as "Masjid Name - City"
     (e.g. "Amanah Masjid - Birmingham"). Split on the last " - " to extract
-    a clean display name and the city.
+    a clean display name and the city. Strip any Arabic/non-ASCII text
+    (Mawaqit labels are often bilingual).
 
     Returns (display_name, city). City is empty string if the label doesn't
     follow the convention.
     """
-    text = (label or fallback_name or "").strip()
+    text = strip_non_english((label or fallback_name or "").strip())
     if not text:
         return "", ""
 

@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_al_huda",
-  "display_name": "Al-Huda Masjid",
-  "city": "",
-  "latitude": 52.4698817,
-  "longitude": -1.8309234,
+  "slug": "masjid_usman_ar_rahmantrust",
+  "display_name": "Masjid Usman Ar Rahmantrust",
+  "city": "Birmingham",
+  "latitude": 52.5242061,
+  "longitude": -1.8589892,
   "country_code": "GB",
-  "website": "",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a3020e3e-b76c-405f-8538-3b256c81ac10/mosque/1eff08f8-666b-6f50-8832-06ef9144e88f.jpeg",
-  "address": "228 Heybarnes Road, Small Heath, Birmingham, B10 9JF",
+  "website": "https://www.masjidusmanahlesunnahwaljamat.org/",
+  "logo": "",
+  "address": "Slade Road, Stockland Green, Birmingham, B23 7JG",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
   "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "",
-  "csv": "masjid_al_huda.csv",
+  "jummah_times": "13:30, 14:15",
+  "csv": "masjid_usman_ar_rahmantrust.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
+      "path": "masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
   },
   "quality": {
     "status": "warnings",

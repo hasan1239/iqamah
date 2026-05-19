@@ -1,27 +1,27 @@
 {
-  "slug": "msh",
-  "display_name": "Muslim Students House Masjid",
+  "slug": "stoney_lane_islamic_community_centre",
+  "display_name": "Stoney Lane Islamic Community Centre",
   "city": "Birmingham",
-  "latitude": 52.457245026083,
-  "longitude": -1.885866522789,
+  "latitude": 52.4545049,
+  "longitude": -1.8732774,
   "country_code": "GB",
-  "website": "https://www.mshuk.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-  "address": "A435, Moseley, Birmingham, B12 9BX",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/5f8f2fbe-76ac-4165-b09c-a19b75118852/mosque/1eea8ed8-10a7-6460-9f4b-066ed47a7584.jpg",
+  "address": "Wilton Road, Sparkhill, Birmingham, B12 8AJ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Muslim Students House Masjid and community centre",
+  "association": "Stoney Lane Islamic Community Centre",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "msh.csv",
+  "jummah_times": "13:45",
+  "csv": "stoney_lane_islamic_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "msh-birmingham"
+      "path": "stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    "source_url": "https://mawaqit.net/en/m/stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
   },
   "quality": {
     "status": "warnings",

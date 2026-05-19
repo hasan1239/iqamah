@@ -1,27 +1,27 @@
 {
-  "slug": "msh",
-  "display_name": "Muslim Students House Masjid",
-  "city": "Birmingham",
-  "latitude": 52.457245026083,
-  "longitude": -1.885866522789,
+  "slug": "faizan_e_madina_stechford",
+  "display_name": "Faizan E Madina Stechford",
+  "city": "",
+  "latitude": 52.4783958,
+  "longitude": -1.814082,
   "country_code": "GB",
-  "website": "https://www.mshuk.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-  "address": "A435, Moseley, Birmingham, B12 9BX",
+  "website": "https://dawateislamimidlands.net",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
+  "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Muslim Students House Masjid and community centre",
+  "association": "Dawat e Islami",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "msh.csv",
+  "jummah_times": "13:30, 14:30, 16:00",
+  "csv": "faizan_e_madina_stechford.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "msh-birmingham"
+      "path": "faizan-e-madina-stechford"
     },
-    "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
   },
   "quality": {
     "status": "warnings",

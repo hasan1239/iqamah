@@ -1,27 +1,27 @@
 {
-  "slug": "stoney",
-  "display_name": "Stoney Lane Islamic Community Centre",
+  "slug": "south_birmingham_central_masjid",
+  "display_name": "South Birmingham Central Masjid",
   "city": "Birmingham",
-  "latitude": 52.4545049,
-  "longitude": -1.8732774,
+  "latitude": 52.4432816,
+  "longitude": -1.8565489,
   "country_code": "GB",
-  "website": "",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/5f8f2fbe-76ac-4165-b09c-a19b75118852/mosque/1eea8ed8-10a7-6460-9f4b-066ed47a7584.jpg",
-  "address": "Wilton Road, Sparkhill, Birmingham, B12 8AJ",
+  "website": "https://www.facebook.com/SBCMasjid",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/33c97ff3-0337-410d-8c4b-1f8792046015/mosque/1eea8ed7-9610-67c4-a817-066ed47a7584.png",
+  "address": "1 College Road, Sparkhill, Birmingham, B13 9LS",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Stoney Lane Islamic Community Centre",
+  "association": "South Birmingham Central Masjid",
   "timezone": "Europe/London",
-  "jummah_times": "13:45",
-  "csv": "stoney.csv",
+  "jummah_times": "13:30, 14:15, 15:00",
+  "csv": "south_birmingham_central_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
+      "path": "south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
   },
   "quality": {
     "status": "warnings",

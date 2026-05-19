@@ -1,6 +1,6 @@
 [
   {
-    "slug": "adam",
+    "slug": "adam_mosque_dawah_academy",
     "display_name": "Adam Mosque & Dawah Academy",
     "city": "Birmingham",
     "latitude": 52.4571396,
@@ -16,7 +16,7 @@
     "association": null,
     "timezone": "Europe/London",
     "jummah_times": "13:30",
-    "csv": "adam.csv",
+    "csv": "adam_mosque_dawah_academy.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -63,7 +63,7 @@
     "pending_update": false
   },
   {
-    "slug": "al_falah",
+    "slug": "al_falah_community_support_centre",
     "display_name": "Al Falah Community Support Centre",
     "city": "",
     "latitude": 52.4554274,
@@ -79,13 +79,56 @@
     "association": "ALFALAH COUMMINTY SUPPORT CENTRE",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
-    "csv": "al_falah.csv",
+    "csv": "al_falah_community_support_centre.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
         "path": "al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_huda_masjid",
+    "display_name": "Al-Huda Masjid",
+    "city": "",
+    "latitude": 52.4698817,
+    "longitude": -1.8309234,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a3020e3e-b76c-405f-8538-3b256c81ac10/mosque/1eff08f8-666b-6f50-8832-06ef9144e88f.jpeg",
+    "address": "228 Heybarnes Road, Small Heath, Birmingham, B10 9JF",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "al_huda_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -126,7 +169,7 @@
     "approved": true
   },
   {
-    "slug": "amanah",
+    "slug": "amanah_masjid",
     "display_name": "Amanah Masjid",
     "city": "Birmingham",
     "latitude": 52.4670705,
@@ -142,7 +185,7 @@
     "association": "The Muath Trust",
     "timezone": "Europe/London",
     "jummah_times": "Jum'a Speech (Khutba) Starts at 1:30pm",
-    "csv": "amanah.csv",
+    "csv": "amanah_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -286,7 +329,140 @@
     "lon": -1.1101507
   },
   {
-    "slug": "brayatee",
+    "slug": "bournville_masjid_community_centre",
+    "display_name": "Bournville Masjid & Community Centre",
+    "city": "Birmingham",
+    "latitude": 52.4250446,
+    "longitude": -1.9500744,
+    "country_code": "GB",
+    "website": "http://Www.sbmca.org.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e52002f6-0f22-4f9a-bfcf-ccba03526da8/mosque/1ef52338-8aa6-676c-9587-0a67bcb0d635.jpg",
+    "address": "Cob Lane, Bournville, Birmingham, B30 1QD",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:15, 14:00",
+    "csv": "bournville_masjid_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "sbmca-birmingham-b30-1qd-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/sbmca-birmingham-b30-1qd-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "Isha clamped to Maghrib on 78 days (2026-05-17 to 2026-08-07). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "isha_clamped",
+          "severity": "medium",
+          "count": 78,
+          "first_date": "2026-05-17",
+          "last_date": "2026-08-07",
+          "affected_dates": [
+            "2026-05-17",
+            "2026-05-18",
+            "2026-05-19",
+            "2026-05-20",
+            "2026-05-21",
+            "2026-05-22",
+            "2026-05-23",
+            "2026-05-24",
+            "2026-05-25",
+            "2026-05-26",
+            "2026-05-27",
+            "2026-05-28",
+            "2026-05-29",
+            "2026-05-30",
+            "2026-05-31",
+            "2026-06-01",
+            "2026-06-02",
+            "2026-06-03",
+            "2026-06-04",
+            "2026-06-05",
+            "2026-06-06",
+            "2026-06-07",
+            "2026-06-08",
+            "2026-06-09",
+            "2026-06-10",
+            "2026-06-11",
+            "2026-06-12",
+            "2026-06-13",
+            "2026-06-14",
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19",
+            "2026-06-20",
+            "2026-06-21",
+            "2026-06-22",
+            "2026-06-23",
+            "2026-06-24",
+            "2026-06-25",
+            "2026-06-26",
+            "2026-06-27",
+            "2026-06-28",
+            "2026-06-29",
+            "2026-06-30",
+            "2026-07-01",
+            "2026-07-02",
+            "2026-07-03",
+            "2026-07-05",
+            "2026-07-06",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-09",
+            "2026-07-12",
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-15",
+            "2026-07-16",
+            "2026-07-17",
+            "2026-07-18",
+            "2026-07-19",
+            "2026-07-20",
+            "2026-07-21",
+            "2026-07-22",
+            "2026-07-23",
+            "2026-07-24",
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28",
+            "2026-07-30",
+            "2026-07-31",
+            "2026-08-02",
+            "2026-08-03",
+            "2026-08-04",
+            "2026-08-05",
+            "2026-08-06",
+            "2026-08-07"
+          ],
+          "action_taken": "none (UI flags affected days for users)",
+          "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib"
+        },
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "brayatee_mosque",
     "display_name": "Brayatee Mosque",
     "city": "Birmingham",
     "latitude": 52.487676,
@@ -302,7 +478,7 @@
     "association": "brayatee kurdish community",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
-    "csv": "brayatee.csv",
+    "csv": "brayatee_mosque.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -440,7 +616,7 @@
     "pending_update": false
   },
   {
-    "slug": "emaan",
+    "slug": "emaan_community_centre",
     "display_name": "Emaan Community Centre",
     "city": "",
     "latitude": 52.504105164844,
@@ -456,7 +632,7 @@
     "association": "EMAAN COMMUNITY CENTRE",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
-    "csv": "emaan.csv",
+    "csv": "emaan_community_centre.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -483,7 +659,50 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "faizan",
+    "slug": "faizan_e_islam",
+    "display_name": "Faizan-e-Islam",
+    "city": "Coventry",
+    "latitude": 52.4311241,
+    "longitude": -1.5034999,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Lockhurst Lane, Foleshill, Coventry, CV6 5NJ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "UTC",
+    "jummah_times": "13:30, 14:30",
+    "csv": "faizan_e_islam.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-islam-coventry-cv6-5nj-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-islam-coventry-cv6-5nj-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "faizan_e_madina_stechford",
     "display_name": "Faizan E Madina Stechford",
     "city": "",
     "latitude": 52.4783958,
@@ -499,7 +718,7 @@
     "association": "Dawat e Islami",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:30, 16:00",
-    "csv": "faizan.csv",
+    "csv": "faizan_e_madina_stechford.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -562,6 +781,49 @@
     "source_image": "sources/falaah.jpg"
   },
   {
+    "slug": "gambian_islamic_community_centre",
+    "display_name": "Gambian Islamic Community Centre",
+    "city": "Smethwick",
+    "latitude": 52.490133466215,
+    "longitude": -1.9581493735313,
+    "country_code": "GB",
+    "website": "http://www.gambianmasjid.com",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a0660659-09c1-411a-9160-31b513a8e659/mosque/1eecabc0-44d8-62b4-b523-06acfcd1c88a.png",
+    "address": "Windmill Lane, Soho and Victoria, Sandwell, B66 3EU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "gambian_islamic_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Great Barr Muslim Foundation",
     "slug": "gbmf",
     "csv": "gbmf.csv",
@@ -600,7 +862,7 @@
     "lon": -1.8828855
   },
   {
-    "slug": "huda",
+    "slug": "huda_masjid",
     "display_name": "Huda Masjid",
     "city": "",
     "latitude": 52.4916923,
@@ -616,7 +878,7 @@
     "association": "HUDA MASJID & COMMUNITY CENTRE",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:15",
-    "csv": "huda.csv",
+    "csv": "huda_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -749,6 +1011,65 @@
     "pending_update": false
   },
   {
+    "slug": "jamia_masjid_bilal",
+    "display_name": "Jamia Masjid Bilal",
+    "city": "Wolverhampton",
+    "latitude": 52.5935582,
+    "longitude": -2.1465594,
+    "country_code": "GB",
+    "website": "http://www.jamiamasjidbilal.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/2870ad8a-63af-408b-be08-a586c1773db4/mosque/1f01ae3f-5fc2-6764-b6b8-0ac73cfd41db.png",
+    "address": "Sweetman Street, Park, Wolverhampton, WV6 0RU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Jamia Masjid Bilal Wolverhampton",
+    "timezone": "Europe/London",
+    "jummah_times": "13:40, 16:00",
+    "csv": "jamia_masjid_bilal.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamia-masjid-bilal-wolverhampton-wv6-0ru-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamia-masjid-bilal-wolverhampton-wv6-0ru-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-27 to 2026-03-27). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 1,
+          "first_date": "2026-03-27",
+          "last_date": "2026-03-27",
+          "affected_dates": [
+            "2026-03-27"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "display_name": "Kings Heath Masjid",
     "slug": "kingsheath",
     "csv": "kingsheath.csv",
@@ -805,7 +1126,7 @@
     "lon": -1.896682
   },
   {
-    "slug": "mahmudsabir",
+    "slug": "mahmudsabir_al_furqan_masjid",
     "display_name": "Mahmudsabir (Al Furqan) Masjid",
     "city": "",
     "latitude": 52.4486208,
@@ -821,7 +1142,7 @@
     "association": null,
     "timezone": "Europe/London",
     "jummah_times": "13:35, 14:15",
-    "csv": "mahmudsabir.csv",
+    "csv": "mahmudsabir_al_furqan_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -848,7 +1169,7 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "marwa",
+    "slug": "marwa_masjid",
     "display_name": "Marwa Masjid",
     "city": "Birmingham",
     "latitude": 52.4583596,
@@ -864,7 +1185,7 @@
     "association": "Marwa Community Centre",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:30",
-    "csv": "marwa.csv",
+    "csv": "marwa_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -911,7 +1232,7 @@
     ]
   },
   {
-    "slug": "masjid_abdul",
+    "slug": "masjid_abdul_raheem",
     "display_name": "Masjid Abdul Raheem",
     "city": "Birmingham",
     "latitude": 52.49118,
@@ -927,7 +1248,7 @@
     "association": null,
     "timezone": "Europe/London",
     "jummah_times": "",
-    "csv": "masjid_abdul.csv",
+    "csv": "masjid_abdul_raheem.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -954,38 +1275,111 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "masjid_al_huda",
-    "display_name": "Al-Huda Masjid",
-    "city": "",
-    "latitude": 52.4698817,
-    "longitude": -1.8309234,
+    "slug": "masjid_al_warith",
+    "display_name": "Masjid Al-Warith",
+    "city": "Halesowen",
+    "latitude": 52.448624289027,
+    "longitude": -2.0605105161667,
     "country_code": "GB",
-    "website": "",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a3020e3e-b76c-405f-8538-3b256c81ac10/mosque/1eff08f8-666b-6f50-8832-06ef9144e88f.jpeg",
-    "address": "228 Heybarnes Road, Small Heath, Birmingham, B10 9JF",
+    "website": "http://www.yca-halesowen.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/42a93b0e-4a00-467c-9e98-953d98e156ce/mosque/1eea8dff-2a97-6ade-9b05-066ed47a7584.png",
+    "address": "Highfield Lane, Dudley, B63 4RY",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
     "notes": "",
-    "association": null,
+    "association": "Halesowen/Dudley Yemeni Community Association",
     "timezone": "Europe/London",
-    "jummah_times": "",
-    "csv": "masjid_al_huda.csv",
+    "jummah_times": "13:30",
+    "csv": "masjid_al_warith.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
-        "path": "masjid-al-huda-birmingham-b109jf-united-kingdom"
+        "path": "masjid-al-warith-halesowen"
       },
-      "source_url": "https://mawaqit.net/en/m/masjid-al-huda-birmingham-b109jf-united-kingdom"
+      "source_url": "https://mawaqit.net/en/m/masjid-al-warith-halesowen"
     },
     "quality": {
       "status": "warnings",
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
+        "Isha clamped to Maghrib on 61 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
+        {
+          "type": "isha_clamped",
+          "severity": "medium",
+          "count": 61,
+          "first_date": "2026-06-01",
+          "last_date": "2026-07-31",
+          "affected_dates": [
+            "2026-06-01",
+            "2026-06-02",
+            "2026-06-03",
+            "2026-06-04",
+            "2026-06-05",
+            "2026-06-06",
+            "2026-06-07",
+            "2026-06-08",
+            "2026-06-09",
+            "2026-06-10",
+            "2026-06-11",
+            "2026-06-12",
+            "2026-06-13",
+            "2026-06-14",
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19",
+            "2026-06-20",
+            "2026-06-21",
+            "2026-06-22",
+            "2026-06-23",
+            "2026-06-24",
+            "2026-06-25",
+            "2026-06-26",
+            "2026-06-27",
+            "2026-06-28",
+            "2026-06-29",
+            "2026-06-30",
+            "2026-07-01",
+            "2026-07-02",
+            "2026-07-03",
+            "2026-07-04",
+            "2026-07-05",
+            "2026-07-06",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-09",
+            "2026-07-10",
+            "2026-07-11",
+            "2026-07-12",
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-15",
+            "2026-07-16",
+            "2026-07-17",
+            "2026-07-18",
+            "2026-07-19",
+            "2026-07-20",
+            "2026-07-21",
+            "2026-07-22",
+            "2026-07-23",
+            "2026-07-24",
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28",
+            "2026-07-29",
+            "2026-07-30",
+            "2026-07-31"
+          ],
+          "action_taken": "none (UI flags affected days for users)",
+          "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib"
+        },
         {
           "type": "sehri_unconfigured",
           "severity": "medium",
@@ -997,7 +1391,7 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "masjid_usman",
+    "slug": "masjid_usman_ar_rahmantrust",
     "display_name": "Masjid Usman Ar Rahmantrust",
     "city": "Birmingham",
     "latitude": 52.5242061,
@@ -1013,7 +1407,7 @@
     "association": null,
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:15",
-    "csv": "masjid_usman.csv",
+    "csv": "masjid_usman_ar_rahmantrust.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -1040,7 +1434,7 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "masjid_zamunta",
+    "slug": "masjid_zumunta",
     "display_name": "Masjid Zumunta",
     "city": "Birmingham",
     "latitude": 52.497555402566,
@@ -1056,7 +1450,7 @@
     "association": "Zumunta community centre",
     "timezone": "Europe/London",
     "jummah_times": "13:45",
-    "csv": "masjid_zamunta.csv",
+    "csv": "masjid_zumunta.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -1084,7 +1478,7 @@
   },
   {
     "slug": "msh",
-    "display_name": "M.s.h.m.c.c. |  مسجد دار الطلبة المسلمين",
+    "display_name": "Muslim Students House Masjid",
     "city": "Birmingham",
     "latitude": 52.457245026083,
     "longitude": -1.885866522789,
@@ -1106,6 +1500,49 @@
         "path": "msh-birmingham"
       },
       "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "najashi_islamic_centre",
+    "display_name": "Najashi Islamic Centre",
+    "city": "",
+    "latitude": 52.5222499,
+    "longitude": -1.8423857,
+    "country_code": "GB",
+    "website": "https://najashiislamiccentre.org/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/32dfc192-ad01-4408-886c-75630e0a2738/mosque/1ef16f02-a370-6290-83a6-060437b03c07.jpg",
+    "address": "262 High Street, Erdington, Birmingham, B23 6SN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "NAJASHI ISLAMIC CENTRE",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "najashi_islamic_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "najashi-islamic-centre-erdington-b23-6sn-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/najashi-islamic-centre-erdington-b23-6sn-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -1178,6 +1615,49 @@
     "is_stale": false,
     "notes": "Jumu'ah (Friday) prayer times: 1st Summer 1:30pm, 2nd Summer 2:15pm; 1st Winter 12:45pm, 2nd Winter 1:30pm. End of Sehri 5 minutes before Subah-Sadiq. Zawaal time is 10 minutes before Dhur beginning time. Jama'at times are subject to changes at short notice to allow for exceptional circumstances. Charity Trust No: 1062761. Bankers: Lloyds 102-104 High Road, Ilford. Sorting Code 30-94-51, A/C No. 01807188 & 01807285.",
     "source_image": "sources/northilford.jpg"
+  },
+  {
+    "slug": "old_hill_masjid",
+    "display_name": "Old Hill Masjid",
+    "city": "",
+    "latitude": 52.4746976,
+    "longitude": -2.0667783,
+    "country_code": "GB",
+    "website": "http://oldhillmasjid.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/0370c722-1da3-4f4b-9183-ec36b2e80394/mosque/1eea8dab-f2ca-612c-aebc-066ed47a7584.png",
+    "address": "Halesowen Road, Cradley Heath and Old Hill, Sandwell, B64 6JE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "BICS",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "old_hill_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "display_name": "Masjid Quba Trust",
@@ -1262,139 +1742,6 @@
     "lon": -2.2513595
   },
   {
-    "slug": "sbmca",
-    "display_name": "Bournville Masjid & Community Centre",
-    "city": "Birmingham",
-    "latitude": 52.4250446,
-    "longitude": -1.9500744,
-    "country_code": "GB",
-    "website": "http://Www.sbmca.org.uk",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e52002f6-0f22-4f9a-bfcf-ccba03526da8/mosque/1ef52338-8aa6-676c-9587-0a67bcb0d635.jpg",
-    "address": "Cob Lane, Bournville, Birmingham, B30 1QD",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": null,
-    "timezone": "Europe/London",
-    "jummah_times": "13:15, 14:00",
-    "csv": "sbmca.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "sbmca-birmingham-b30-1qd-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/sbmca-birmingham-b30-1qd-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "Isha clamped to Maghrib on 78 days (2026-05-17 to 2026-08-07). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "isha_clamped",
-          "severity": "medium",
-          "count": 78,
-          "first_date": "2026-05-17",
-          "last_date": "2026-08-07",
-          "affected_dates": [
-            "2026-05-17",
-            "2026-05-18",
-            "2026-05-19",
-            "2026-05-20",
-            "2026-05-21",
-            "2026-05-22",
-            "2026-05-23",
-            "2026-05-24",
-            "2026-05-25",
-            "2026-05-26",
-            "2026-05-27",
-            "2026-05-28",
-            "2026-05-29",
-            "2026-05-30",
-            "2026-05-31",
-            "2026-06-01",
-            "2026-06-02",
-            "2026-06-03",
-            "2026-06-04",
-            "2026-06-05",
-            "2026-06-06",
-            "2026-06-07",
-            "2026-06-08",
-            "2026-06-09",
-            "2026-06-10",
-            "2026-06-11",
-            "2026-06-12",
-            "2026-06-13",
-            "2026-06-14",
-            "2026-06-15",
-            "2026-06-16",
-            "2026-06-17",
-            "2026-06-18",
-            "2026-06-19",
-            "2026-06-20",
-            "2026-06-21",
-            "2026-06-22",
-            "2026-06-23",
-            "2026-06-24",
-            "2026-06-25",
-            "2026-06-26",
-            "2026-06-27",
-            "2026-06-28",
-            "2026-06-29",
-            "2026-06-30",
-            "2026-07-01",
-            "2026-07-02",
-            "2026-07-03",
-            "2026-07-05",
-            "2026-07-06",
-            "2026-07-07",
-            "2026-07-08",
-            "2026-07-09",
-            "2026-07-12",
-            "2026-07-13",
-            "2026-07-14",
-            "2026-07-15",
-            "2026-07-16",
-            "2026-07-17",
-            "2026-07-18",
-            "2026-07-19",
-            "2026-07-20",
-            "2026-07-21",
-            "2026-07-22",
-            "2026-07-23",
-            "2026-07-24",
-            "2026-07-25",
-            "2026-07-26",
-            "2026-07-27",
-            "2026-07-28",
-            "2026-07-30",
-            "2026-07-31",
-            "2026-08-02",
-            "2026-08-03",
-            "2026-08-04",
-            "2026-08-05",
-            "2026-08-06",
-            "2026-08-07"
-          ],
-          "action_taken": "none (UI flags affected days for users)",
-          "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib"
-        },
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
     "display_name": "Jami Masjid",
     "slug": "smethwick",
     "csv": "smethwick.csv",
@@ -1414,7 +1761,7 @@
     "lon": -1.9661248
   },
   {
-    "slug": "south",
+    "slug": "south_birmingham_central_masjid",
     "display_name": "South Birmingham Central Masjid",
     "city": "Birmingham",
     "latitude": 52.4432816,
@@ -1430,7 +1777,7 @@
     "association": "South Birmingham Central Masjid",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:15, 15:00",
-    "csv": "south.csv",
+    "csv": "south_birmingham_central_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -1457,7 +1804,7 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "stoney",
+    "slug": "stoney_lane_islamic_community_centre",
     "display_name": "Stoney Lane Islamic Community Centre",
     "city": "Birmingham",
     "latitude": 52.4545049,
@@ -1473,7 +1820,7 @@
     "association": "Stoney Lane Islamic Community Centre",
     "timezone": "Europe/London",
     "jummah_times": "13:45",
-    "csv": "stoney.csv",
+    "csv": "stoney_lane_islamic_community_centre.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -1500,7 +1847,7 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "sultan",
+    "slug": "sultan_bahu_centre",
     "display_name": "Sultan Bahu Centre",
     "city": "Birmingham",
     "latitude": 52.492097727352,
@@ -1516,13 +1863,56 @@
     "association": "Sultan Bahu Centre",
     "timezone": "Europe/London",
     "jummah_times": "13:00",
-    "csv": "sultan.csv",
+    "csv": "sultan_bahu_centre.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
         "path": "sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "tamworth_masjid",
+    "display_name": "Tamworth Masjid",
+    "city": "",
+    "latitude": 52.619005578935,
+    "longitude": -1.6862079900742,
+    "country_code": "GB",
+    "website": "https://www.facebook.com/tamworthmasjid",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6de5e409-74ea-4242-a5cf-5bafc6b5cc95/mosque/1f0dd9f1-a56a-65c0-a985-0a58a9feac02.png",
+    "address": "Greatmead, Belgrave, Tamworth, B77 1DL",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Tamworth Community Hub",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "tamworth_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -1578,7 +1968,50 @@
     "source_image": "sources/vali.jpg"
   },
   {
-    "slug": "zawia",
+    "slug": "yca",
+    "display_name": "YCA Cultural Centre Masjid",
+    "city": "",
+    "latitude": 52.526134120312,
+    "longitude": -2.0071096538212,
+    "country_code": "GB",
+    "website": "https://www.yca-sandwell.org.uk/cultural-centre/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/22f1c67e-2980-4828-bbf0-3a460f527014/mosque/1efebcfc-bcbb-6268-8c1a-06ef9144e88f.png",
+    "address": "Tildasley Street, West Bromwich Central, Sandwell, B70 9SJ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "YCA Cultural Centre Masjid",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "yca.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "zawia_mosque",
     "display_name": "Zawia Mosque",
     "city": "Birmingham",
     "latitude": 52.4590212,
@@ -1594,7 +2027,7 @@
     "association": "Zawia Aid",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
-    "csv": "zawia.csv",
+    "csv": "zawia_mosque.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
@@ -1689,8 +2122,8 @@
     "acknowledged_issues": []
   },
   {
-    "slug": "zaytuna",
-    "display_name": "Zaytuna Masjid مسجد الزيتونة",
+    "slug": "zaytuna_masjid",
+    "display_name": "Zaytuna Masjid",
     "city": "",
     "latitude": 52.454499126901,
     "longitude": -1.9996726512909,
@@ -1705,7 +2138,7 @@
     "association": "Zaytuna Masjid",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:30",
-    "csv": "zaytuna.csv",
+    "csv": "zaytuna_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
