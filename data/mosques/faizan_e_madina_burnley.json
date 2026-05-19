@@ -1,0 +1,43 @@
+{
+  "slug": "faizan_e_madina_burnley",
+  "display_name": "Faizan E Madina Burnley",
+  "city": "Burnley",
+  "latitude": 53.802840812126,
+  "longitude": -2.2322139531316,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Briercliffe Road, Bank Hall, Burnley, BB10 1XA",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Dawat E Islami UK",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 14:30, 15:40",
+  "csv": "faizan_e_madina_burnley.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "faizane-madina-burnley-burnley-bb10-1xa-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/faizane-madina-burnley-burnley-bb10-1xa-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

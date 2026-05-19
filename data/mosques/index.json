@@ -833,6 +833,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "alberr",
+    "display_name": "Alberr",
+    "city": "Blackburn",
+    "latitude": 53.7359052,
+    "longitude": -2.4546096,
+    "country_code": "GB",
+    "website": "https://alberr.org/masjid-alberr/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1f826680-2465-465b-9020-da38be1595ac/mosque/1f114b4c-e688-6e1a-a6a9-0a58a9feac02.jpeg",
+    "address": "Shadsworth Road, Blackburn South East, Blackburn with Darwen, BB1 2HU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "ALBERR",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "alberr.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "alberr-blackburn-bb1-2hu-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/alberr-blackburn-bb1-2hu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid-E-Aman",
     "slug": "aman",
     "csv": "aman.csv",
@@ -1705,6 +1748,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "city_mosque",
+    "display_name": "City Mosque",
+    "city": "Preston",
+    "latitude": 53.763116073165,
+    "longitude": -2.6983666368197,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7645d234-4466-47fd-92c9-bd046afafe7b/mosque/1efc3d63-aef1-6f4e-a48d-0a21b15e7a1f.jpg",
+    "address": "North Road, City Centre, Preston, PR1 1YQ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "AL-QURAN LEARNING CENTRE",
+    "timezone": "Europe/London",
+    "jummah_times": "13:20",
+    "csv": "city_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "city-mosque-preston-preston-pr11yq-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/city-mosque-preston-preston-pr11yq-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "danescourt_masjid",
     "display_name": "Danescourt Masjid",
     "city": "Cardiff",
@@ -2315,6 +2401,49 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
+  },
+  {
+    "slug": "faizan_e_madina_burnley",
+    "display_name": "Faizan E Madina Burnley",
+    "city": "Burnley",
+    "latitude": 53.802840812126,
+    "longitude": -2.2322139531316,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Briercliffe Road, Bank Hall, Burnley, BB10 1XA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat E Islami UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30, 15:40",
+    "csv": "faizan_e_madina_burnley.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizane-madina-burnley-burnley-bb10-1xa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizane-madina-burnley-burnley-bb10-1xa-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "faizan_e_madina_hx1",
@@ -3367,6 +3496,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "jamia_masjid_sultania",
+    "display_name": "Jamia Masjid Sultania",
+    "city": "Brierfield",
+    "latitude": 53.8228071,
+    "longitude": -2.2360093,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Sackville Street, Brierfield West & Reedley, Pendle, BB9 5LE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "jamia_masjid_sultania.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamia-masjid-sultania-brierfield-bb9-5le-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamia-masjid-sultania-brierfield-bb9-5le-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "jamia_masjid_tabligh_ul_islam_ryan_st",
     "display_name": "Jamia Masjid Tabligh-Ul-Islam Ryan St",
     "city": "",
@@ -3394,6 +3566,49 @@
     "quality": {
       "status": "warnings",
       "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jamia_masjid_usman_ghani",
+    "display_name": "Jamia Masjid Usman Ghani",
+    "city": "Brierfield",
+    "latitude": 53.824337009457,
+    "longitude": -2.2315934966555,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Stanley Street, Brierfield West & Reedley, Pendle, BB9 5AW",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "UTC",
+    "jummah_times": "14:00",
+    "csv": "jamia_masjid_usman_ghani.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
