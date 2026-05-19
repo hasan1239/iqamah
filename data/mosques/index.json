@@ -165,6 +165,49 @@
     "pending_update": false
   },
   {
+    "slug": "al_baseera_bristol_centre",
+    "display_name": "Al-Baseera Bristol Centre",
+    "city": "Bristol",
+    "latitude": 51.45921,
+    "longitude": -2.579925,
+    "country_code": "GB",
+    "website": "http://www.albaseera.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/ad7a3511-531a-4d22-9ed9-4372968852e3/mosque/1eea8e00-b8bc-6cbe-9242-066ed47a7584.png",
+    "address": "20 Wade Street, St Paul's, Bristol, BS2 9DR",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Baseera Bristol Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "al_baseera_bristol_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-baseera-bristol-centre-bristol"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-baseera-bristol-centre-bristol"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "al_bayaan_academy",
     "display_name": "Al-Bayaan Academy",
     "city": "London",
@@ -2692,6 +2735,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "idarataleem_ul_quran_polwarth_mosque",
+    "display_name": "Idarataleem-Ul-Quran Polwarth Mosque",
+    "city": "Edinburgh",
+    "latitude": 55.938319428194,
+    "longitude": -3.2184034697351,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/16e302ad-a162-4755-a7e8-a8865e888960/mosque/1f0ff81b-c149-6e54-99fb-0ad821d248f3.png",
+    "address": "Temple Park Crescent, Morningside, City of Edinburgh, EH11 1HT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "UTC",
+    "jummah_times": "13:30, 15:00",
+    "csv": "idarataleem_ul_quran_polwarth_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "idarataleem-ul-quran-trust-polwarth-mosq-edinburgh-eh11-1ht-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/idarataleem-ul-quran-trust-polwarth-mosq-edinburgh-eh11-1ht-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "islamic_cultural_centre_wembley",
     "display_name": "Islamic Cultural Centre (Wembley)",
     "city": "",
@@ -3239,6 +3325,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "madina_masjid_sheffield",
+    "display_name": "Madina Masjid Sheffield",
+    "city": "Sheffield",
+    "latitude": 53.3640525,
+    "longitude": -1.4733266,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Glover Road, Nether Edge and Sharrow, Sheffield, S8 0ZU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Sheffield Islamic Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "madina_masjid_sheffield.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "madina-masjid-sheffield-sheffield-s8-0zu-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/madina-masjid-sheffield-sheffield-s8-0zu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Madinatul Uloom Masjid",
     "slug": "madinatul",
     "csv": "madinatul.csv",
@@ -3323,6 +3452,49 @@
         "path": "makki-masjid-halifax"
       },
       "source_url": "https://mawaqit.net/en/m/makki-masjid-halifax"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "markaz_mu_aadh_bin_jabal",
+    "display_name": "Markaz Mu'aadh Bin Jabal",
+    "city": "Slough",
+    "latitude": 51.5043821,
+    "longitude": -0.6090463,
+    "country_code": "GB",
+    "website": "https://markazmuaadh.com/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/65806698-b191-491e-acf6-44c875b6314a/mosque/1eea8edb-8125-6c52-9b2b-066ed47a7584.png",
+    "address": "Spackmans Way, Chalvey, Slough, SL1 2SA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Markaz Muaadh bin Jabal",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30",
+    "csv": "markaz_mu_aadh_bin_jabal.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "markaz-muaadh-bin-jabal-slough-sl1-2sa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/markaz-muaadh-bin-jabal-slough-sl1-2sa-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -3492,6 +3664,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_abu_bakr",
+    "display_name": "Masjid Abu Bakr",
+    "city": "",
+    "latitude": 53.411085898617,
+    "longitude": -1.3960790634155,
+    "country_code": "GB",
+    "website": "http://MABTinsley.com",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/dd3df547-7d71-4df2-aff3-1b65298c383b/mosque/1eef8ec4-1f53-6aea-9662-0621eb7171ad.png",
+    "address": "Bawtry Road, Darnall, Sheffield, S9 1WA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:45, 16:00",
+    "csv": "masjid_abu_bakr.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-abu-bakr-sheffield-s9-1wa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-abu-bakr-sheffield-s9-1wa-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_adam_a_s",
     "display_name": "Masjid Adam (A.s)",
     "city": "",
@@ -3604,6 +3819,114 @@
             "2026-04-28",
             "2026-04-29",
             "2026-04-30"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
+    "slug": "masjid_al_jannah",
+    "display_name": "Masjid Al Jannah",
+    "city": "",
+    "latitude": 51.512874856372,
+    "longitude": -0.5940818041563,
+    "country_code": "GB",
+    "website": "https://aljannah.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/32b83d5d-bf86-4bd1-b088-a7b60c57a638/mosque/1eea8e99-74fd-6c96-87fa-066ed47a7584.png",
+    "address": "Stoke Road, Elliman, Slough, SL2 5AH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Sri Lanka Muslim Association-UK, SLMA-UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "masjid_al_jannah.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-al-jannah-slough-sl2-5ah-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-al-jannah-slough-sl2-5ah-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 50,
+          "first_date": "2026-01-01",
+          "last_date": "2026-12-12",
+          "affected_dates": [
+            "2026-01-01",
+            "2026-01-02",
+            "2026-01-03",
+            "2026-01-04",
+            "2026-01-05",
+            "2026-01-06",
+            "2026-01-07",
+            "2026-01-08",
+            "2026-01-09",
+            "2026-01-10",
+            "2026-01-11",
+            "2026-01-12",
+            "2026-02-02",
+            "2026-02-03",
+            "2026-02-04",
+            "2026-02-05",
+            "2026-02-06",
+            "2026-02-07",
+            "2026-02-08",
+            "2026-02-09",
+            "2026-02-10",
+            "2026-02-11",
+            "2026-02-12",
+            "2026-09-05",
+            "2026-09-06",
+            "2026-09-07",
+            "2026-09-08",
+            "2026-10-05",
+            "2026-10-06",
+            "2026-10-07",
+            "2026-10-08",
+            "2026-11-03",
+            "2026-11-04",
+            "2026-11-05",
+            "2026-11-06",
+            "2026-11-07",
+            "2026-11-08",
+            "2026-11-09",
+            "2026-11-11",
+            "2026-12-02",
+            "2026-12-03",
+            "2026-12-04",
+            "2026-12-05",
+            "2026-12-06",
+            "2026-12-07",
+            "2026-12-08",
+            "2026-12-09",
+            "2026-12-10",
+            "2026-12-11",
+            "2026-12-12"
           ],
           "action_taken": "none",
           "fix": "Investigate — likely a Mawaqit data bug for this masjid",
@@ -4125,6 +4448,49 @@
         "path": "miec"
       },
       "source_url": "https://mawaqit.net/en/m/miec"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_ibrahim",
+    "display_name": "Masjid Ibrahim",
+    "city": "Slough",
+    "latitude": 51.5257301,
+    "longitude": -0.6122638,
+    "country_code": "GB",
+    "website": "http://www.masjidibrahimslough.com",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a52064ef-205e-478b-8209-e7ffd7060903/mosque/1ef24fc0-09f7-65ba-9fd5-069cfb0c4e97.png",
+    "address": "Hampshire Avenue, Farnham, Slough, SL1 3AG",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "masjid_ibrahim.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-ibrahim-slough-sl1-3ag-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-ibrahim-slough-sl1-3ag-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -5197,6 +5563,92 @@
     ]
   },
   {
+    "slug": "roxburgh_street_masjid",
+    "display_name": "Roxburgh Street Masjid",
+    "city": "",
+    "latitude": 55.947553214504,
+    "longitude": -3.1830538105799,
+    "country_code": "GB",
+    "website": "https://roxburgh-street-masjid.co.uk",
+    "logo": "",
+    "address": "13 Roxburgh Street, Southside, City of Edinburgh, EH8 9TA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "UTC",
+    "jummah_times": "13:30",
+    "csv": "roxburgh_street_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "medina-mosque-trust-eh8-9ta-edinburgh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/medina-mosque-trust-eh8-9ta-edinburgh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "shahjalal_jame_mosque",
+    "display_name": "Shahjalal Jame Mosque",
+    "city": "Bristol",
+    "latitude": 51.470711155886,
+    "longitude": -2.5638484954834,
+    "country_code": "GB",
+    "website": "https://shahjalalmosquebristol.co.uk/",
+    "logo": "",
+    "address": "Redding Road, Eastville, Bristol, City of, BS5 6PE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00",
+    "csv": "shahjalal_jame_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Jami Masjid",
     "slug": "smethwick",
     "csv": "smethwick.csv",
@@ -5583,6 +6035,49 @@
         "path": "tawakal-masjid-london-nw10-8se-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/tawakal-masjid-london-nw10-8se-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "tawfiq_masjid_and_centre",
+    "display_name": "Tawfiq Masjid and Centre",
+    "city": "Bristol",
+    "latitude": 51.45356069423,
+    "longitude": -2.5626825530444,
+    "country_code": "GB",
+    "website": "http://www.tawfiqmasjid.co.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/mosque/1f041bd1-4839-64ce-ae8b-06bf79de48f3.png",
+    "address": "Aiken Street, Lawrence Hill, Bristol, City of, BS5 9TG",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "TAWFIQ MASJID AND CENTRE",
+    "timezone": "UTC",
+    "jummah_times": "13:00",
+    "csv": "tawfiq_masjid_and_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "tawfiq-masjid-and-centre-bristol-bs5-9tg-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/tawfiq-masjid-and-centre-bristol-bs5-9tg-united-kingdom"
     },
     "quality": {
       "status": "warnings",

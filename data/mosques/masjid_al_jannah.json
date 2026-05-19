@@ -1,0 +1,108 @@
+{
+  "slug": "masjid_al_jannah",
+  "display_name": "Masjid Al Jannah",
+  "city": "",
+  "latitude": 51.512874856372,
+  "longitude": -0.5940818041563,
+  "country_code": "GB",
+  "website": "https://aljannah.org.uk/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/32b83d5d-bf86-4bd1-b088-a7b60c57a638/mosque/1eea8e99-74fd-6c96-87fa-066ed47a7584.png",
+  "address": "Stoke Road, Elliman, Slough, SL2 5AH",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Sri Lanka Muslim Association-UK, SLMA-UK",
+  "timezone": "Europe/London",
+  "jummah_times": "13:15",
+  "csv": "masjid_al_jannah.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "masjid-al-jannah-slough-sl2-5ah-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/masjid-al-jannah-slough-sl2-5ah-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+      "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error — Fajr jamaat must always be before sunrise."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      },
+      {
+        "type": "fajr_after_sunrise",
+        "severity": "high",
+        "count": 50,
+        "first_date": "2026-01-01",
+        "last_date": "2026-12-12",
+        "affected_dates": [
+          "2026-01-01",
+          "2026-01-02",
+          "2026-01-03",
+          "2026-01-04",
+          "2026-01-05",
+          "2026-01-06",
+          "2026-01-07",
+          "2026-01-08",
+          "2026-01-09",
+          "2026-01-10",
+          "2026-01-11",
+          "2026-01-12",
+          "2026-02-02",
+          "2026-02-03",
+          "2026-02-04",
+          "2026-02-05",
+          "2026-02-06",
+          "2026-02-07",
+          "2026-02-08",
+          "2026-02-09",
+          "2026-02-10",
+          "2026-02-11",
+          "2026-02-12",
+          "2026-09-05",
+          "2026-09-06",
+          "2026-09-07",
+          "2026-09-08",
+          "2026-10-05",
+          "2026-10-06",
+          "2026-10-07",
+          "2026-10-08",
+          "2026-11-03",
+          "2026-11-04",
+          "2026-11-05",
+          "2026-11-06",
+          "2026-11-07",
+          "2026-11-08",
+          "2026-11-09",
+          "2026-11-11",
+          "2026-12-02",
+          "2026-12-03",
+          "2026-12-04",
+          "2026-12-05",
+          "2026-12-06",
+          "2026-12-07",
+          "2026-12-08",
+          "2026-12-09",
+          "2026-12-10",
+          "2026-12-11",
+          "2026-12-12"
+        ],
+        "action_taken": "none",
+        "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+        "acknowledged": true
+      }
+    ]
+  },
+  "acknowledged_issues": [
+    "fajr_after_sunrise"
+  ]
+}
