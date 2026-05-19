@@ -1,27 +1,27 @@
 {
-  "slug": "quba_aston",
-  "display_name": "Quba Islamic Centre",
-  "city": "Birmingham",
-  "latitude": 52.492565,
-  "longitude": -1.8757116,
+  "slug": "al_falah",
+  "display_name": "Al Falah Community Support Centre",
+  "city": "",
+  "latitude": 52.4554274,
+  "longitude": -1.8899398,
   "country_code": "GB",
-  "website": "https://qubaic.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
-  "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+  "website": "https://www.facebook.com/profile.php?id=100090923871478",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/59caad85-e706-4810-9804-92f6a6f71742/mosque/1eea8ea3-1766-6af6-bf34-066ed47a7584.png",
+  "address": "Park Avenue, Balsall Heath West, Birmingham, B12 9QU",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "QUBA Islamic & Cultural Centre",
+  "association": "ALFALAH COUMMINTY SUPPORT CENTRE",
   "timezone": "Europe/London",
-  "jummah_times": "13:15, 14:15",
-  "csv": "quba_aston.csv",
+  "jummah_times": "13:30",
+  "csv": "al_falah.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      "path": "al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom"
   },
   "quality": {
     "status": "warnings",

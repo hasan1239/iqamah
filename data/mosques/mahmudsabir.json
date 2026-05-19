@@ -1,27 +1,27 @@
 {
-  "slug": "quba_aston",
-  "display_name": "Quba Islamic Centre",
-  "city": "Birmingham",
-  "latitude": 52.492565,
-  "longitude": -1.8757116,
+  "slug": "mahmudsabir",
+  "display_name": "Mahmudsabir (Al Furqan) Masjid",
+  "city": "",
+  "latitude": 52.4486208,
+  "longitude": -1.8480156,
   "country_code": "GB",
-  "website": "https://qubaic.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
-  "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+  "website": "https://www.facebook.com/people/MahmudSabir-Al-Furqan-Masjid/100077918033245/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c2f433e9-720b-47da-a3c8-7573dec66b82/mosque/1ef9a2bd-c2c2-67e6-8171-0671c73660c5.png",
+  "address": "Reddings Lane, Hall Green North, Birmingham, B11 3BZ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "QUBA Islamic & Cultural Centre",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:15, 14:15",
-  "csv": "quba_aston.csv",
+  "jummah_times": "13:35, 14:15",
+  "csv": "mahmudsabir.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      "path": "mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -1,43 +1,43 @@
 {
-  "slug": "amanah",
-  "display_name": "Amanah Masjid",
+  "slug": "sbmca",
+  "display_name": "Bournville Masjid & Community Centre",
   "city": "Birmingham",
-  "latitude": 52.4670705,
-  "longitude": -1.8761104,
+  "latitude": 52.4250446,
+  "longitude": -1.9500744,
   "country_code": "GB",
-  "website": "https://amanahmasjid.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a2ace75f-fbca-4c86-b94e-8944f7529867/mosque/1eea8e00-dacd-6132-b6f4-066ed47a7584.png",
-  "address": "29-33 Henley St, Birmingham, B11 1JB",
-  "address_source": "manual",
-  "phone": "0121 772 7370",
+  "website": "http://Www.sbmca.org.uk",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/e52002f6-0f22-4f9a-bfcf-ccba03526da8/mosque/1ef52338-8aa6-676c-9587-0a67bcb0d635.jpg",
+  "address": "Cob Lane, Bournville, Birmingham, B30 1QD",
+  "address_source": "geocoded",
+  "phone": "",
   "email": "",
-  "notes": "Email: amanahmasjid@muathtrust.org. Jum'a Speech (Khutba) Starts at 1.30pm. No separate Maghrib Jama'at column present.",
-  "association": "The Muath Trust",
+  "notes": "",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "Jum'a Speech (Khutba) Starts at 1:30pm",
-  "csv": "amanah.csv",
+  "jummah_times": "13:15, 14:00",
+  "csv": "sbmca.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "amanah-masjid-birmingham-b11-1jb-united-kingdom"
+      "path": "sbmca-birmingham-b30-1qd-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/amanah-masjid-birmingham-b11-1jb-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/sbmca-birmingham-b30-1qd-united-kingdom"
   },
   "quality": {
     "status": "warnings",
     "checked_at": "2026-05-19",
     "row_count": 365,
     "warnings": [
-      "Isha clamped to Maghrib on 75 days (2026-05-17 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
+      "Isha clamped to Maghrib on 78 days (2026-05-17 to 2026-08-07). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
     ],
     "issues": [
       {
         "type": "isha_clamped",
         "severity": "medium",
-        "count": 75,
+        "count": 78,
         "first_date": "2026-05-17",
-        "last_date": "2026-07-31",
+        "last_date": "2026-08-07",
         "affected_dates": [
           "2026-05-17",
           "2026-05-18",
@@ -92,8 +92,6 @@
           "2026-07-07",
           "2026-07-08",
           "2026-07-09",
-          "2026-07-10",
-          "2026-07-11",
           "2026-07-12",
           "2026-07-13",
           "2026-07-14",
@@ -111,13 +109,17 @@
           "2026-07-26",
           "2026-07-27",
           "2026-07-28",
-          "2026-07-29",
           "2026-07-30",
-          "2026-07-31"
+          "2026-07-31",
+          "2026-08-02",
+          "2026-08-03",
+          "2026-08-04",
+          "2026-08-05",
+          "2026-08-06",
+          "2026-08-07"
         ],
         "action_taken": "none (UI flags affected days for users)",
-        "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib",
-        "acknowledged": true
+        "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib"
       },
       {
         "type": "sehri_unconfigured",
@@ -127,15 +129,5 @@
       }
     ]
   },
-  "acknowledged_issues": [
-    "isha_clamped"
-  ],
-  "month": "April 2026",
-  "islamic_month": "Shawwal - Dhul Qadah 1447",
-  "eid_salah": "",
-  "sadaqatul_fitr": "",
-  "radio_frequency": "",
-  "is_stale": false,
-  "source_image": "sources/amanah.jpg",
-  "approved": true
+  "acknowledged_issues": []
 }

@@ -33,7 +33,7 @@ export function parseCSV(text) {
 export function parseDate(dateStr) {
   if (!dateStr) return null;
   const trimmed = dateStr.trim();
-  // ISO format from fetch_mawaqit.py: "2026-05-19"
+  // ISO format from providers/mawaqit/fetch.py: "2026-05-19"
   const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     return new Date(parseInt(isoMatch[1]), parseInt(isoMatch[2]) - 1, parseInt(isoMatch[3]));

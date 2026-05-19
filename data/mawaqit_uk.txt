@@ -1,0 +1,26 @@
+# Birmingham pilot - 22 masjids
+# Generated from data/mawaqit_candidates_birmingham.tsv
+# Comment out lines (with #) to skip; add a 2nd column to override the short slug
+
+adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1
+al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom
+amanah-masjid-birmingham-b11-1jb-united-kingdom
+brayatee-mosque-birmingham-b18-7pw-united-kingdom
+emaan-community-centre-birmingham-b6-5uh-united-kingdom
+faizan-e-madina-stechford
+huda-birmingham
+mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom
+marwa-masjid-birmingham-b12-9lb-united-kingdom
+masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom
+masjid-al-huda-birmingham-b109jf-united-kingdom
+masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom
+masjid-zamunta-birmingham-b192ss-united-kingdom
+msh-birmingham
+quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom
+sbmca-birmingham-b30-1qd-united-kingdom
+south-birmingham-central-masjid-birmingham-b139ls-united-kingdom
+stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom
+sultan-bahu-centre-birmingham-b8-2ls-united-kingdom
+zawia-mosque-birmingham-b5-7ph-united-kingdom
+zaytuna-masjid-birmingham-b32-1pj-united-kingdom
+# triage-deleted: zia-ul-quran-jamia-mosque-birmingham-b8-1er-united-kingdom

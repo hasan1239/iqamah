@@ -1,27 +1,27 @@
 {
-  "slug": "quba_aston",
-  "display_name": "Quba Islamic Centre",
+  "slug": "masjid_abdul",
+  "display_name": "Masjid Abdul Raheem",
   "city": "Birmingham",
-  "latitude": 52.492565,
-  "longitude": -1.8757116,
+  "latitude": 52.49118,
+  "longitude": -1.8124484,
   "country_code": "GB",
-  "website": "https://qubaic.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
-  "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+  "website": "",
+  "logo": "",
+  "address": "54 Stechford Road, Hodge Hill, Birmingham, B34 6BG",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "QUBA Islamic & Cultural Centre",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:15, 14:15",
-  "csv": "quba_aston.csv",
+  "jummah_times": "",
+  "csv": "masjid_abdul.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      "path": "masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -209,7 +209,7 @@ function recordRecentVisit(slug) {
 
 // --- CSV parsing (local to this view, matches original exactly) ---
 
-// Snake-case headers from fetch_mawaqit.py map to legacy title-case headers
+// Snake-case headers from providers/mawaqit/fetch.py map to legacy title-case headers
 // used throughout the UI. Keeps both CSV layouts readable by a single parser.
 const HEADER_ALIASES = {
   'date': 'Date', 'day': 'Day', 'islamic_day': 'Islamic Day',
@@ -239,7 +239,7 @@ function parseCSV(text) {
 function parseDate(dateStr) {
   if (!dateStr) return null;
   const trimmed = dateStr.trim();
-  // ISO format from fetch_mawaqit.py (e.g. "2026-05-19")
+  // ISO format from providers/mawaqit/fetch.py (e.g. "2026-05-19")
   const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (isoMatch) {
     return new Date(parseInt(isoMatch[1]), parseInt(isoMatch[2]) - 1, parseInt(isoMatch[3]));
