@@ -1,27 +1,27 @@
 {
-  "slug": "quba_aston",
-  "display_name": "Quba Islamic Centre",
+  "slug": "masjid_zamunta",
+  "display_name": "Masjid Zumunta",
   "city": "Birmingham",
-  "latitude": 52.492565,
-  "longitude": -1.8757116,
+  "latitude": 52.497555402566,
+  "longitude": -1.8958451511032,
   "country_code": "GB",
-  "website": "https://qubaic.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
-  "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+  "website": "https://www.facebook.com/zumuntacommunity/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/19f6cd95-a644-4ae9-849d-ae8658308dc9/mosque/1eea8e93-695b-62c2-9bae-066ed47a7584.png",
+  "address": "High Street, Newtown, Birmingham, B19 2SS",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "QUBA Islamic & Cultural Centre",
+  "association": "Zumunta community centre",
   "timezone": "Europe/London",
-  "jummah_times": "13:15, 14:15",
-  "csv": "quba_aston.csv",
+  "jummah_times": "13:45",
+  "csv": "masjid_zamunta.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      "path": "masjid-zamunta-birmingham-b192ss-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/masjid-zamunta-birmingham-b192ss-united-kingdom"
   },
   "quality": {
     "status": "warnings",

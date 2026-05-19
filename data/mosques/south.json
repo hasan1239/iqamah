@@ -1,27 +1,27 @@
 {
-  "slug": "quba_aston",
-  "display_name": "Quba Islamic Centre",
+  "slug": "south",
+  "display_name": "South Birmingham Central Masjid",
   "city": "Birmingham",
-  "latitude": 52.492565,
-  "longitude": -1.8757116,
+  "latitude": 52.4432816,
+  "longitude": -1.8565489,
   "country_code": "GB",
-  "website": "https://qubaic.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
-  "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+  "website": "https://www.facebook.com/SBCMasjid",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/33c97ff3-0337-410d-8c4b-1f8792046015/mosque/1eea8ed7-9610-67c4-a817-066ed47a7584.png",
+  "address": "1 College Road, Sparkhill, Birmingham, B13 9LS",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "QUBA Islamic & Cultural Centre",
+  "association": "South Birmingham Central Masjid",
   "timezone": "Europe/London",
-  "jummah_times": "13:15, 14:15",
-  "csv": "quba_aston.csv",
+  "jummah_times": "13:30, 14:15, 15:00",
+  "csv": "south.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      "path": "south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/south-birmingham-central-masjid-birmingham-b139ls-united-kingdom"
   },
   "quality": {
     "status": "warnings",

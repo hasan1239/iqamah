@@ -1,5 +1,5 @@
 """
-fetch_mawaqit.py — Phase 1 single-masjid Mawaqit fetcher.
+providers/mawaqit/fetch.py — Single-masjid Mawaqit fetcher.
 
 Pulls a year of prayer times from a Mawaqit mosque page, normalises it to
 Iqamah's 16-field schema, runs quality checks, reverse-geocodes the address
@@ -20,9 +20,8 @@ Geocoding (UK masjids):
   When Nominatim's postcode disagrees with the slug's, the house number is
   dropped (Nominatim has likely hit a neighbouring building).
 
-Usage:
-    python fetch_mawaqit.py amanah-masjid-birmingham-b11-1jb-united-kingdom --slug amanah
-    python fetch_mawaqit.py amanah-masjid-birmingham-b11-1jb-united-kingdom --slug amanah --keep-raw
+Usage (run from repo root):
+    python -m providers.mawaqit.fetch amanah-masjid-birmingham-b11-1jb-united-kingdom --slug amanah
 
 Outputs:
     data/{slug}.csv               — parsed prayer times
@@ -36,6 +35,8 @@ import re
 import urllib.request
 from datetime import date
 from pathlib import Path
+
+from providers import regenerate_index
 
 
 MAWAQIT_URL = "https://mawaqit.net/en/m/{path}"
@@ -353,7 +354,6 @@ def normalise(data: dict, year: int) -> list[dict]:
 def quality_check(
     rows: list[dict],
     data: dict,
-    blank_unreliable: bool = True,
     acknowledged: list[str] | None = None,
 ) -> dict:
     """
@@ -361,34 +361,26 @@ def quality_check(
 
     Any issue whose `type` is in `acknowledged` is flagged as such and skipped
     when computing the overall status — letting the maintainer accept an issue
-    permanently (e.g. an Isha+Maghrib combine that's genuine for that masjid)
-    so it stops blocking the masjid from public lists on re-fetch.
+    permanently (e.g. a known data quirk) so it stops blocking the masjid from
+    public lists on re-fetch.
     """
     acknowledged = set(acknowledged or [])
     warnings = []
     issues = []
     isha_clamped_days = []
 
-    # Isha clamping (UK summer). When the maintainer has acknowledged this
-    # issue, leave the times in place — the masjid genuinely combines them and
-    # the UI's combine detection will flag the row with a tooltip.
-    isha_clamp_acknowledged = "isha_clamped" in acknowledged
+    # Isha clamping (UK summer). We keep the values as-is — the UI flags
+    # affected days per-row via its eshaCombined detection, so showing the
+    # real times (which equal Maghrib) is more useful than blanking them.
+    # Recorded as a medium-severity issue: informational for the maintainer,
+    # not blocking the masjid from public lists.
     for row in rows:
         m_start, i_start = row["maghrib_iftari"], row["esha"]
         m_jam, i_jam = row["maghrib_jamaat"], row["esha_jamaat"]
         if m_start and i_start and m_start == i_start and m_jam == i_jam:
             isha_clamped_days.append(row["date"])
-            if blank_unreliable and not isha_clamp_acknowledged:
-                row["esha"] = ""
-                row["esha_jamaat"] = ""
 
     if isha_clamped_days:
-        if isha_clamp_acknowledged:
-            action_taken = "kept as-is (combine acknowledged)"
-        elif blank_unreliable:
-            action_taken = "esha and esha_jamaat blanked"
-        else:
-            action_taken = "none (--keep-raw set)"
         warnings.append(
             f"Isha clamped to Maghrib on {len(isha_clamped_days)} days "
             f"({isha_clamped_days[0]} to {isha_clamped_days[-1]}). "
@@ -397,12 +389,13 @@ def quality_check(
         )
         issues.append({
             "type": "isha_clamped",
-            "severity": "high",
+            "severity": "medium",
             "count": len(isha_clamped_days),
             "first_date": isha_clamped_days[0],
             "last_date": isha_clamped_days[-1],
-            "action_taken": action_taken,
-            "fix": "Verify masjid's summer Isha policy and either accept the combine or add an override",
+            "affected_dates": isha_clamped_days,
+            "action_taken": "none (UI flags affected days for users)",
+            "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib",
         })
 
     # Sehri not configured
@@ -425,13 +418,17 @@ def quality_check(
     ]
     if fajr_after_sunrise:
         warnings.append(
-            f"Fajr jamaat is at or after sunrise on {len(fajr_after_sunrise)} days. "
+            f"Fajr jamaat is at or after sunrise on {len(fajr_after_sunrise)} days "
+            f"({fajr_after_sunrise[0]} to {fajr_after_sunrise[-1]}). "
             "Indicates a data error — Fajr jamaat must always be before sunrise."
         )
         issues.append({
             "type": "fajr_after_sunrise",
             "severity": "high",
             "count": len(fajr_after_sunrise),
+            "first_date": fajr_after_sunrise[0],
+            "last_date": fajr_after_sunrise[-1],
+            "affected_dates": fajr_after_sunrise,
             "action_taken": "none",
             "fix": "Investigate — likely a Mawaqit data bug for this masjid",
         })
@@ -619,26 +616,115 @@ def write_csv(rows: list[dict], out_path: Path) -> None:
         writer.writerows(rows)
 
 
-def regenerate_index(mosques_dir: Path) -> int:
+def rebuild_from_cache(slug: str, data_dir: Path) -> dict:
     """
-    Rebuild data/mosques/index.json by bundling every masjid config in the
-    directory. Mirrors the `jq -s '.' $(ls *.json | sort)` step in the
-    GitHub Actions workflows so local runs stay in sync without a deploy.
-    Returns the number of masjids written.
+    Re-run the per-masjid pipeline using the cached raw blob at
+    data/raw/{slug}.json instead of hitting mawaqit.net. Used by the triage
+    CLI after the maintainer acknowledges an issue, and any time quality
+    rules change and existing masjids need re-evaluating offline.
+
+    Raises FileNotFoundError if the raw cache is missing (run the bulk
+    fetcher first), or ValueError if the config isn't a mawaqit masjid.
     """
-    index_path = mosques_dir / "index.json"
-    configs = []
-    for path in sorted(mosques_dir.glob("*.json")):
-        if path.name == "index.json":
-            continue
-        try:
-            with open(path, encoding="utf-8") as f:
-                configs.append(json.load(f))
-        except Exception as e:
-            print(f"  Skipping {path.name} in index ({e})")
-    with open(index_path, "w", encoding="utf-8") as f:
-        json.dump(configs, f, indent=2, ensure_ascii=False)
-    return len(configs)
+    raw_path = data_dir / "raw" / f"{slug}.json"
+    config_path = data_dir / "mosques" / f"{slug}.json"
+    if not raw_path.exists():
+        raise FileNotFoundError(
+            f"No cached raw data at {raw_path} — run a fresh fetch first"
+        )
+    existing = load_existing_config(config_path)
+    provider = existing.get("provider") or {}
+    if provider.get("type") != "mawaqit":
+        raise ValueError(f"{slug} is not a mawaqit-provider masjid")
+    mawaqit_path = (provider.get("ref") or {}).get("path")
+    if not mawaqit_path:
+        raise ValueError(f"{slug} config missing provider.ref.path")
+
+    with open(raw_path, encoding="utf-8") as f:
+        data = json.load(f)
+
+    year = detect_year(data)
+    rows = normalise(data, year)
+    acknowledged = existing.get("acknowledged_issues") or []
+    quality = quality_check(rows, data, acknowledged=acknowledged)
+    config = build_config(data, slug, mawaqit_path, quality, existing)
+
+    write_csv(rows, data_dir / f"{slug}.csv")
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
+    return quality
+
+
+def fetch_one(
+    mawaqit_path: str,
+    slug: str,
+    data_dir: Path,
+    verbose: bool = True,
+) -> dict:
+    """
+    Run the full per-masjid pipeline: fetch confData, normalise, quality-check,
+    write CSV + config + raw blob. Returns a summary dict the caller can use
+    to build a batch report.
+
+    Does NOT regenerate index.json — the caller decides when to do that
+    (the bulk fetcher does it once at the end; the single-masjid CLI does it
+    immediately).
+    """
+    csv_path = data_dir / f"{slug}.csv"
+    config_path = data_dir / "mosques" / f"{slug}.json"
+    raw_path = data_dir / "raw" / f"{slug}.json"
+    existing = load_existing_config(config_path)
+
+    if verbose:
+        print(f"Fetching {mawaqit_path}...")
+    data = fetch_confdata(mawaqit_path)
+    year = detect_year(data)
+    if verbose:
+        print(f"Loaded {data.get('name')} — {year}")
+
+    raw_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(raw_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+
+    rows = normalise(data, year)
+    if verbose:
+        print(f"Normalised {len(rows)} days")
+
+    acknowledged = existing.get("acknowledged_issues") or []
+    quality = quality_check(rows, data, acknowledged=acknowledged)
+    if verbose:
+        print(f"\nQuality: {quality['status']}")
+        for w in quality["warnings"]:
+            print(f"  WARNING: {w}")
+        if acknowledged:
+            print(f"  Acknowledged: {', '.join(acknowledged)}")
+
+    config = build_config(data, slug, mawaqit_path, quality, existing)
+
+    write_csv(rows, csv_path)
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(config, f, indent=2, ensure_ascii=False)
+
+    if verbose:
+        print(f"\nWrote {raw_path}")
+        print(f"Wrote {csv_path}")
+        print(f"Wrote {config_path}")
+        print(f"Address: {config['address']} ({config['address_source']})")
+        today_row = next((r for r in rows if r["date"] == date.today().isoformat()), rows[0])
+        print(f"\nToday's row: {today_row}")
+
+    return {
+        "slug": slug,
+        "mawaqit_path": mawaqit_path,
+        "display_name": config.get("display_name"),
+        "city": config.get("city"),
+        "status": quality["status"],
+        "row_count": quality["row_count"],
+        "config_path": str(config_path),
+    }
 
 
 def main():
@@ -646,64 +732,16 @@ def main():
     parser.add_argument("path", help="Mawaqit URL path, e.g. amanah-masjid-birmingham-b11-1jb-united-kingdom")
     parser.add_argument("--slug", help="Short slug for filenames (default: derived from path)")
     parser.add_argument("--data-dir", default="data", help="Base data directory (default: data)")
-    parser.add_argument(
-        "--keep-raw",
-        action="store_true",
-        help="Don't blank unreliable values (debug mode — shows what Mawaqit actually returned)",
-    )
     args = parser.parse_args()
 
     slug = args.slug or args.path.split("-")[0]
     data_dir = Path(args.data_dir)
-    blank_unreliable = not args.keep_raw
 
-    csv_path = data_dir / f"{slug}.csv"
-    config_path = data_dir / "mosques" / f"{slug}.json"
-    raw_path = data_dir / "raw" / f"{slug}.json"
-    existing = load_existing_config(config_path)
+    fetch_one(args.path, slug, data_dir, verbose=True)
 
-    print(f"Fetching {args.path}...")
-    data = fetch_confdata(args.path)
-    year = detect_year(data)
-    print(f"Loaded {data.get('name')} — {year}")
-
-    # Save the raw confData blob for debugging and future field extraction
-    raw_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(raw_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-
-    rows = normalise(data, year)
-    print(f"Normalised {len(rows)} days")
-
-    acknowledged = existing.get("acknowledged_issues") or []
-    quality = quality_check(
-        rows, data,
-        blank_unreliable=blank_unreliable,
-        acknowledged=acknowledged,
-    )
-    print(f"\nQuality: {quality['status']}")
-    for w in quality["warnings"]:
-        print(f"  WARNING: {w}")
-    if acknowledged:
-        print(f"  Acknowledged: {', '.join(acknowledged)}")
-
-    config = build_config(data, slug, args.path, quality, existing)
-
-    write_csv(rows, csv_path)
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(config_path, "w", encoding="utf-8") as f:
-        json.dump(config, f, indent=2, ensure_ascii=False)
-
-    print(f"\nWrote {raw_path}")
-    print(f"Wrote {csv_path}")
-    print(f"Wrote {config_path}")
-    print(f"Address: {config['address']} ({config['address_source']})")
-
-    count = regenerate_index(config_path.parent)
-    print(f"Wrote {config_path.parent / 'index.json'} ({count} masjids)")
-
-    today_row = next((r for r in rows if r["date"] == date.today().isoformat()), rows[0])
-    print(f"\nToday's row: {today_row}")
+    mosques_dir = data_dir / "mosques"
+    count = regenerate_index(mosques_dir)
+    print(f"Wrote {mosques_dir / 'index.json'} ({count} masjids)")
 
 
 if __name__ == "__main__":
