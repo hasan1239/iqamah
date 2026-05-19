@@ -1,0 +1,34 @@
+{
+  "slug": "barry_masjid_wales_uk",
+  "display_name": "Barry Masjid",
+  "city": "Wales Uk",
+  "latitude": 51.410158204696,
+  "longitude": -3.253100762106,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/eecc7cf3-39ef-4f0b-a415-36d3bb454285/mosque/1eedf04f-a05b-6954-b075-06acfcd1c88a.png",
+  "address": "Hillary Rise, Cadoxton, Barry, CF63 3HZ",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Barry Masjid & Islamic Centre, 332 Holton Road, Barry, Vale of Glamorgan, Wales, UK, CF63 4HY",
+  "timezone": "Europe/London",
+  "jummah_times": "13:45",
+  "csv": "barry_masjid_wales_uk.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "barrymasjid-wales-uk"
+    },
+    "source_url": "https://mawaqit.net/en/m/barrymasjid-wales-uk"
+  },
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

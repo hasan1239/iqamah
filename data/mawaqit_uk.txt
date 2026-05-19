@@ -179,3 +179,24 @@ tawfiq-masjid-and-centre-bristol-bs5-9tg-united-kingdom  tawfiq_masjid_and_centr
 markaz-muaadh-bin-jabal-slough-sl1-2sa-united-kingdom  markaz_mu_aadh_bin_jabal
 masjid-ibrahim-slough-sl1-3ag-united-kingdom  masjid_ibrahim
 masjid-al-jannah-slough-sl2-5ah-united-kingdom  masjid_al_jannah
+# Metro sweep: cardiff — 2026-05-19
+# Metro area: cardiff
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 17 new entries
+cardiffmosque  noor_el_islam_masjid
+south-wales-cardiff  south_wales_islamic_centre
+masjid-uthman-riverside-islamic-school-cardiff-cf11-6as-united-kingdom  masjid_uthman_riverside_islamic_school
+dar-us-salam-cardiff-cf11-6dx-united-kingdom  dar_us_salam
+jalalia-mosque-cardiff-cf11-6er-united-kingdom  jalalia_masjid
+masjid-at-tawheed-cardiff-cf11-6jw-united-kingdom-1  masjid_at_tawheed
+rabbaniah-islamic-cultural-centre-cardiff-cf11-6qp-united-kingdom  rabbaniah_islamic_cultural_centre
+masjid-abubakr-cardiff-cf11-7af-united-kingdom  masjid_abubakr
+bilal-mosque-cardiff-cf11-9ea-united-kingdom-1  jamia_masjid_bilal_cf11
+al-ikhlas-centre-cardiff-cf24-1nh-united-kingdom  al_ikhlas_centre
+masjid-umar-cardiff-cf24-3px-united-kingdom  masjid_umar
+shah-jalal-mosque-cardiff-cf24-4nj-united-kingdom  shah_jalal_mosque
+madni-masjid-cardiff-cf24-4se-united-kingdom  madni_masjid
+danescourt-masjid-cardiff-cf5-2rl-united-kingdom  danescourt_masjid
+fairwater-iqra-masjid-cardiff-cf5-3na-united-kingdom  fairwater_canolfan_iqra
+al-falah-centre-cardiff  al_falah_masjid
+barrymasjid-wales-uk  barry_masjid_wales_uk
