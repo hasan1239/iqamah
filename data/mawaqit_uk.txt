@@ -2,25 +2,51 @@
 # Generated from data/mawaqit_candidates_birmingham.tsv
 # Comment out lines (with #) to skip; add a 2nd column to override the short slug
 
-adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1
-al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom
-amanah-masjid-birmingham-b11-1jb-united-kingdom
-brayatee-mosque-birmingham-b18-7pw-united-kingdom
-emaan-community-centre-birmingham-b6-5uh-united-kingdom
-faizan-e-madina-stechford
-huda-birmingham
-mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom
-marwa-masjid-birmingham-b12-9lb-united-kingdom
-masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom
-masjid-al-huda-birmingham-b109jf-united-kingdom
-masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom
-masjid-zamunta-birmingham-b192ss-united-kingdom
-msh-birmingham
-quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom
-sbmca-birmingham-b30-1qd-united-kingdom
-south-birmingham-central-masjid-birmingham-b139ls-united-kingdom
-stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom
-sultan-bahu-centre-birmingham-b8-2ls-united-kingdom
-zawia-mosque-birmingham-b5-7ph-united-kingdom
-zaytuna-masjid-birmingham-b32-1pj-united-kingdom
+adam-mosque-dawah-academy-birmingham-b12-8np-united-kingdom-1  adam_mosque_dawah_academy
+al-falah-community-support-centre-birmingham-b12-9qu-united-kingdom  al_falah_community_support_centre
+amanah-masjid-birmingham-b11-1jb-united-kingdom  amanah_masjid
+brayatee-mosque-birmingham-b18-7pw-united-kingdom  brayatee_mosque
+emaan-community-centre-birmingham-b6-5uh-united-kingdom  emaan_community_centre
+faizan-e-madina-stechford  faizan_e_madina_stechford
+huda-birmingham  huda_masjid
+mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom  mahmudsabir_al_furqan_masjid
+marwa-masjid-birmingham-b12-9lb-united-kingdom  marwa_masjid
+masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom  masjid_abdul_raheem
+masjid-al-huda-birmingham-b109jf-united-kingdom  al_huda_masjid
+masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom  masjid_usman_ar_rahmantrust
+masjid-zamunta-birmingham-b192ss-united-kingdom  masjid_zumunta
+msh-birmingham  msh
+quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom  quba_aston
+sbmca-birmingham-b30-1qd-united-kingdom  bournville_masjid_community_centre
+south-birmingham-central-masjid-birmingham-b139ls-united-kingdom  south_birmingham_central_masjid
+stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom  stoney_lane_islamic_community_centre
+sultan-bahu-centre-birmingham-b8-2ls-united-kingdom  sultan_bahu_centre
+zawia-mosque-birmingham-b5-7ph-united-kingdom  zawia_mosque
+zaytuna-masjid-birmingham-b32-1pj-united-kingdom  zaytuna_masjid
 # triage-deleted: zia-ul-quran-jamia-mosque-birmingham-b8-1er-united-kingdom
+
+# Birmingham metro additions (sweep run 2026-05-19)
+gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom  gambian_islamic_community_centre
+yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom  yca
+jamia-masjid-bilal-wolverhampton-wv6-0ru-united-kingdom  jamia_masjid_bilal
+# Metro sweep: west midlands — 2026-05-19
+# Metro area: west midlands
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 5 new entries
+najashi-islamic-centre-erdington-b23-6sn-united-kingdom  najashi_islamic_centre
+masjid-al-warith-halesowen
+old-hill-masjid-cradley-heath-b64-6je-united-kingdom  old_hill_masjid
+tamworth-community-hub-tamworth-b77-1dl-united-kingdom  tamworth_masjid
+faizan-e-islam-coventry-cv6-5nj-united-kingdom  faizan_e_islam
+
+# TSV harvest 2026-05-19 — out-of-metro candidates parked
+# Found via fuzzy word matches during initial West Midlands sweep.
+# Uncomment the slug (remove "# parked: " prefix) to fetch via bulk.
+# parked: makki-masjid-burton-on-trent-burton-on-trent-de14-2qj-united-kingdom  # Makki Masjid (DE14 2QJ)
+# parked: parker-street-mosque-burton-on-trent-de14-2rd-united-kingdom  # Eton Mosque & Education Centre Burton (DE14 2QX)
+# parked: bow-west-organisation-london-e3-5da-united-kingdom  # Bow West Organisation (E3 5DA)
+# parked: beckton-muslim-centre-warwall-e6-6wg-london  # Beckton Muslim Centre (E6 6WG)
+# parked: jmah-halifax-west-yorkshire-hx1-4et-united-kingdom  # JMAH Halifax (HX1 4ET)
+# parked: luton-islamic-centre-luton-lu1-1he-united-kingdom  # Luton Islamic Centre (LU1 1HE)
+# parked: valide-sultan-mosque-london-n16-9ex-united-kingdom  # Valide Sultan Mosque (N16 9EX)
+# parked: hedon-mosque-islamic-london-united-kingdom  # Hendon Mosque & Islamic Centre (NW9 7EL)

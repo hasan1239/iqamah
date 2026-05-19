@@ -1,41 +1,41 @@
 {
-  "slug": "huda",
-  "display_name": "Huda Masjid",
+  "slug": "zaytuna_masjid",
+  "display_name": "Zaytuna Masjid",
   "city": "",
-  "latitude": 52.4916923,
-  "longitude": -1.9056951,
+  "latitude": 52.454499126901,
+  "longitude": -1.9996726512909,
   "country_code": "GB",
-  "website": "http://hudacentre.com",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/1881cf42-a4b8-4b00-9445-da16aa0bc313/mosque/1eea8ddb-3c74-6eba-a6ef-066ed47a7584.png",
-  "address": "Unett Street, Jewellery Quarter, Birmingham, B19 3BP",
+  "website": "https://legacy.abrahamicfoundation.org.uk/services/masjid/zaytuna-masjid/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/2c9cc925-0fac-47d2-a5aa-678a8bcc873f/mosque/1effb8a7-a637-6d5a-93db-0644aa376131.png",
+  "address": "Quinton Road West, Quinton, Birmingham, B32 1PJ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "HUDA MASJID & COMMUNITY CENTRE",
+  "association": "Zaytuna Masjid",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "huda.csv",
+  "jummah_times": "13:30, 14:30",
+  "csv": "zaytuna_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "huda-birmingham"
+      "path": "zaytuna-masjid-birmingham-b32-1pj-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/huda-birmingham"
+    "source_url": "https://mawaqit.net/en/m/zaytuna-masjid-birmingham-b32-1pj-united-kingdom"
   },
   "quality": {
     "status": "warnings",
     "checked_at": "2026-05-19",
     "row_count": 365,
     "warnings": [
-      "Isha clamped to Maghrib on 74 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
+      "Isha clamped to Maghrib on 75 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
     ],
     "issues": [
       {
         "type": "isha_clamped",
         "severity": "medium",
-        "count": 74,
+        "count": 75,
         "first_date": "2026-05-18",
         "last_date": "2026-07-31",
         "affected_dates": [
@@ -110,6 +110,7 @@
           "2026-07-25",
           "2026-07-26",
           "2026-07-27",
+          "2026-07-28",
           "2026-07-29",
           "2026-07-30",
           "2026-07-31"

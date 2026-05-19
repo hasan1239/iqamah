@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_usman",
-  "display_name": "Masjid Usman Ar Rahmantrust",
-  "city": "Birmingham",
-  "latitude": 52.5242061,
-  "longitude": -1.8589892,
+  "slug": "old_hill_masjid",
+  "display_name": "Old Hill Masjid",
+  "city": "",
+  "latitude": 52.4746976,
+  "longitude": -2.0667783,
   "country_code": "GB",
-  "website": "https://www.masjidusmanahlesunnahwaljamat.org/",
-  "logo": "",
-  "address": "Slade Road, Stockland Green, Birmingham, B23 7JG",
+  "website": "http://oldhillmasjid.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/0370c722-1da3-4f4b-9183-ec36b2e80394/mosque/1eea8dab-f2ca-612c-aebc-066ed47a7584.png",
+  "address": "Halesowen Road, Cradley Heath and Old Hill, Sandwell, B64 6JE",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": null,
+  "association": "BICS",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "masjid_usman.csv",
+  "jummah_times": "14:00",
+  "csv": "old_hill_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
+      "path": "old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/old-hill-masjid-cradley-heath-b64-6je-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -1,27 +1,27 @@
 {
-  "slug": "mahmudsabir",
-  "display_name": "Mahmudsabir (Al Furqan) Masjid",
+  "slug": "yca",
+  "display_name": "YCA Cultural Centre Masjid",
   "city": "",
-  "latitude": 52.4486208,
-  "longitude": -1.8480156,
+  "latitude": 52.526134120312,
+  "longitude": -2.0071096538212,
   "country_code": "GB",
-  "website": "https://www.facebook.com/people/MahmudSabir-Al-Furqan-Masjid/100077918033245/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c2f433e9-720b-47da-a3c8-7573dec66b82/mosque/1ef9a2bd-c2c2-67e6-8171-0671c73660c5.png",
-  "address": "Reddings Lane, Hall Green North, Birmingham, B11 3BZ",
+  "website": "https://www.yca-sandwell.org.uk/cultural-centre/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/22f1c67e-2980-4828-bbf0-3a460f527014/mosque/1efebcfc-bcbb-6268-8c1a-06ef9144e88f.png",
+  "address": "Tildasley Street, West Bromwich Central, Sandwell, B70 9SJ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": null,
+  "association": "YCA Cultural Centre Masjid",
   "timezone": "Europe/London",
-  "jummah_times": "13:35, 14:15",
-  "csv": "mahmudsabir.csv",
+  "jummah_times": "13:30, 14:30",
+  "csv": "yca.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
+      "path": "yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -1,27 +1,27 @@
 {
-  "slug": "msh",
-  "display_name": "Muslim Students House Masjid",
-  "city": "Birmingham",
-  "latitude": 52.457245026083,
-  "longitude": -1.885866522789,
+  "slug": "najashi_islamic_centre",
+  "display_name": "Najashi Islamic Centre",
+  "city": "",
+  "latitude": 52.5222499,
+  "longitude": -1.8423857,
   "country_code": "GB",
-  "website": "https://www.mshuk.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-  "address": "A435, Moseley, Birmingham, B12 9BX",
+  "website": "https://najashiislamiccentre.org/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/32dfc192-ad01-4408-886c-75630e0a2738/mosque/1ef16f02-a370-6290-83a6-060437b03c07.jpg",
+  "address": "262 High Street, Erdington, Birmingham, B23 6SN",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Muslim Students House Masjid and community centre",
+  "association": "NAJASHI ISLAMIC CENTRE",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "msh.csv",
+  "jummah_times": "13:30",
+  "csv": "najashi_islamic_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "msh-birmingham"
+      "path": "najashi-islamic-centre-erdington-b23-6sn-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    "source_url": "https://mawaqit.net/en/m/najashi-islamic-centre-erdington-b23-6sn-united-kingdom"
   },
   "quality": {
     "status": "warnings",

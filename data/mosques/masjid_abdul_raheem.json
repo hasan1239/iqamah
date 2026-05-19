@@ -1,27 +1,27 @@
 {
-  "slug": "msh",
-  "display_name": "Muslim Students House Masjid",
+  "slug": "masjid_abdul_raheem",
+  "display_name": "Masjid Abdul Raheem",
   "city": "Birmingham",
-  "latitude": 52.457245026083,
-  "longitude": -1.885866522789,
+  "latitude": 52.49118,
+  "longitude": -1.8124484,
   "country_code": "GB",
-  "website": "https://www.mshuk.org",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-  "address": "A435, Moseley, Birmingham, B12 9BX",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/14b75dc2-1bb6-44db-9bc4-3edf62e8835c/mosque/1eeb183d-c6ff-61ba-bf88-06acfcd1c88a.jpeg",
+  "address": "54 Stechford Road, Hodge Hill, Birmingham, B34 6BG",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Muslim Students House Masjid and community centre",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:15",
-  "csv": "msh.csv",
+  "jummah_times": "",
+  "csv": "masjid_abdul_raheem.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "msh-birmingham"
+      "path": "masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    "source_url": "https://mawaqit.net/en/m/masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
   },
   "quality": {
     "status": "warnings",

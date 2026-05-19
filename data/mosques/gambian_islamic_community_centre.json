@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_zamunta",
-  "display_name": "Masjid Zumunta",
-  "city": "Birmingham",
-  "latitude": 52.497555402566,
-  "longitude": -1.8958451511032,
+  "slug": "gambian_islamic_community_centre",
+  "display_name": "Gambian Islamic Community Centre",
+  "city": "Smethwick",
+  "latitude": 52.490133466215,
+  "longitude": -1.9581493735313,
   "country_code": "GB",
-  "website": "https://www.facebook.com/zumuntacommunity/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/19f6cd95-a644-4ae9-849d-ae8658308dc9/mosque/1eea8e93-695b-62c2-9bae-066ed47a7584.png",
-  "address": "High Street, Newtown, Birmingham, B19 2SS",
+  "website": "http://www.gambianmasjid.com",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/a0660659-09c1-411a-9160-31b513a8e659/mosque/1eecabc0-44d8-62b4-b523-06acfcd1c88a.png",
+  "address": "Windmill Lane, Soho and Victoria, Sandwell, B66 3EU",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Zumunta community centre",
+  "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "13:45",
-  "csv": "masjid_zamunta.csv",
+  "jummah_times": "13:30",
+  "csv": "gambian_islamic_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-zamunta-birmingham-b192ss-united-kingdom"
+      "path": "gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-zamunta-birmingham-b192ss-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom"
   },
   "quality": {
     "status": "warnings",

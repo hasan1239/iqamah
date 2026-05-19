@@ -1,5 +1,5 @@
 {
-  "slug": "emaan",
+  "slug": "emaan_community_centre",
   "display_name": "Emaan Community Centre",
   "city": "",
   "latitude": 52.504105164844,
@@ -15,7 +15,7 @@
   "association": "EMAAN COMMUNITY CENTRE",
   "timezone": "Europe/London",
   "jummah_times": "13:30",
-  "csv": "emaan.csv",
+  "csv": "emaan_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
