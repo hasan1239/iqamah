@@ -1,0 +1,43 @@
+{
+  "slug": "elland_masjid",
+  "display_name": "Elland Masjid",
+  "city": "Elland",
+  "latitude": 53.6827273,
+  "longitude": -1.8383437,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ad098ee-b484-439c-ab91-84524df65d53/mosque/1eea8e61-9499-66dc-9d0f-066ed47a7584.png",
+  "address": "Elizabeth Street, Elland, Calderdale, HX5 0JH",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Elland Masjid Association",
+  "timezone": "Europe/London",
+  "jummah_times": "14:00",
+  "csv": "elland_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "elland-masjid-elland-hx5-0jh-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/elland-masjid-elland-hx5-0jh-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
