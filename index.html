@@ -915,8 +915,68 @@
        MASJIDS VIEW
        ============================================ */
     .masjids-view { padding-bottom: 40px; }
-    .masjids-header { margin-bottom: 16px; }
+    .masjids-header { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .masjids-header h1 { font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
+    .masjids-back-btn {
+      display: none; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      color: var(--gold); cursor: pointer; padding: 0;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .masjids-back-btn:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
+    .masjids-back-btn:active { transform: scale(0.96); }
+    .masjids-back-btn svg { width: 18px; height: 18px; }
+    .masjids-view[data-mode="city-detail"] .masjids-back-btn { display: inline-flex; }
+
+    /* City-list mode (mobile): hide search bar, show city grid */
+    .masjid-city-grid { display: none; }
+    .masjids-cities-actions { display: none; }
+    .masjids-view[data-mode="cities"] .masjids-search-bar { display: none; }
+    .masjids-view[data-mode="cities"] .masjid-grid { display: none; }
+    .masjids-view[data-mode="cities"] .masjid-city-grid {
+      display: flex; flex-direction: column; gap: 10px; margin-top: 4px;
+    }
+    .masjids-view[data-mode="cities"] .masjids-cities-actions {
+      display: flex; margin-bottom: 12px;
+    }
+    .masjid-city-card {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 18px; background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 14px; backdrop-filter: blur(12px);
+      color: inherit; cursor: pointer; text-align: left; width: 100%;
+      font-family: inherit; transition: all 0.2s ease;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+    .masjid-city-card:hover { border-color: var(--gold-tint-40); }
+    .masjid-city-card:active { background: var(--card-active-bg); transform: scale(0.98); }
+    .masjid-city-card-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .masjid-city-name {
+      font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+    }
+    .masjid-city-count {
+      font-size: 0.72rem; color: var(--text-muted); font-weight: 500;
+    }
+    .masjid-city-chevron {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+    }
+    .masjid-city-chevron svg { width: 16px; height: 16px; }
+    .masjids-nearby-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 16px; border-radius: 999px;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
+      color: var(--gold); font-family: inherit; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s ease;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+    .masjids-nearby-pill:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
+    .masjids-nearby-pill:active { transform: scale(0.97); }
+    .masjids-nearby-pill svg { width: 16px; height: 16px; }
+
     .masjids-search-bar {
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
       padding: 6px 6px 6px 14px; background: var(--card-bg); border: 1px solid var(--card-border);
@@ -1881,6 +1941,13 @@
       .desktop-masjid-list .masjids-header { display: flex; align-items: center; gap: 12px; }
       .desktop-masjid-list .masjids-title { font-size: 0; }
       .desktop-masjid-list .masjids-title::after { content: 'All Masjids'; font-size: 1.5rem; font-family: inherit; }
+
+      /* Force list view on desktop — never show city grouping */
+      .masjids-view .masjid-city-grid,
+      .masjids-view .masjids-cities-actions,
+      .masjids-view .masjids-back-btn { display: none !important; }
+      .masjids-view .masjids-search-bar { display: flex !important; }
+      .masjids-view .masjid-grid { display: grid !important; }
     }
     /* ============================================
        Eid Times Page
