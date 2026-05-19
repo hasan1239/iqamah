@@ -1,0 +1,43 @@
+{
+  "slug": "jamia_masjid_usman_ghani",
+  "display_name": "Jamia Masjid Usman Ghani",
+  "city": "Brierfield",
+  "latitude": 53.824337009457,
+  "longitude": -2.2315934966555,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Stanley Street, Brierfield West & Reedley, Pendle, BB9 5AW",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": null,
+  "timezone": "UTC",
+  "jummah_times": "14:00",
+  "csv": "jamia_masjid_usman_ghani.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
