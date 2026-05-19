@@ -84,3 +84,19 @@ muslim-youth-foundation-manchester-m4-1dy-united-kingdom  muslim_youth_foundatio
 masjid-e-iqbal-manchester-m71sn-united-kingdom  masjid_e_iqbal
 al-sunnah-mosque-manchester-manchester-m8-9pb-united-kingdom  al_sunnah_mosque_manchester
 # triage-deleted: ashton-jame-mosque-ashton-under-lyne-ol6-7dd-united-kingdom  ashton_jam_e_mosque
+# Metro sweep: bradford — 2026-05-19
+# Metro area: bradford
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 12 new entries
+miec  masjid_ibraheem_education_centre
+faizan-e-madina-bradford-bd3-9le-united-kingdom  faizan_e_madina
+jamiyat-tablighul-islam-bradford-bd4-7hx-united-kingdom  jamiyat_tablighul_islam
+jamiyat-tabligh-ul-islam-bradford-bd5-7te-united-kingdom  jamia_masjid_tabligh_ul_islam_ryan_st
+faizan-e-makkah-bradford-bd9-5ab-united-kingdom-1  faizan_e_makkah
+markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom  markazi_jamia_masjid_ghausia
+faizan-e-madina-huddersfield-huddersfield-hd1-5nd-united-kingdom  faizan_e_madinah_huddersfield
+makki-masjid-halifax  makki_masjid
+faizan-e-madina-halifax-hx1-4jx-united-kingdom  faizan_e_madina_hx1
+jamia-masjid-madni-halifax-hx1-5le-united-kingdom  jamia_masjid_madni
+elland-masjid-elland-hx5-0jh-united-kingdom  elland_masjid
+masjid-ar-rashideen-batley-wf17-8lt-united-kingdom  masjid_ar_rashideen

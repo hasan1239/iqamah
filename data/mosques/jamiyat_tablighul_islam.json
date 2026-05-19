@@ -1,0 +1,43 @@
+{
+  "slug": "jamiyat_tablighul_islam",
+  "display_name": "Jamiyat Tablighul Islam",
+  "city": "",
+  "latitude": 53.7825494,
+  "longitude": -1.7355987,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Coventry Street, Bowling, Bradford, BD4 7HX",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Jamiyat Tablighul Islam",
+  "timezone": "Europe/London",
+  "jummah_times": "14:00, 15:00",
+  "csv": "jamiyat_tablighul_islam.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "jamiyat-tablighul-islam-bradford-bd4-7hx-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/jamiyat-tablighul-islam-bradford-bd4-7hx-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
