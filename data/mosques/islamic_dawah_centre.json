@@ -1,0 +1,43 @@
+{
+  "slug": "islamic_dawah_centre",
+  "display_name": "Islamic Dawah Centre",
+  "city": "",
+  "latitude": 51.5454724,
+  "longitude": 0.0496465,
+  "country_code": "GB",
+  "website": "https://idcuk.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/8c658b95-d857-4a3c-8b7f-56932d0f7d71/mosque/1f0e4916-2515-68b8-9949-0a58a9feac02.png",
+  "address": "406 High Street North, Plashet, Newham, E12 6RH",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Islamic Dawah Centre - ISLAMIA ALLAIPUPANI MAIYAM",
+  "timezone": "Europe/London",
+  "jummah_times": "12:30",
+  "csv": "islamic_dawah_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "islamic-dawah-centre-islamia-london-e12-6rh-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/islamic-dawah-centre-islamia-london-e12-6rh-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

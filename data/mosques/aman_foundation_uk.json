@@ -1,0 +1,43 @@
+{
+  "slug": "aman_foundation_uk",
+  "display_name": "Aman Foundation Uk",
+  "city": "London",
+  "latitude": 51.494869815242,
+  "longitude": -0.20621285099564,
+  "country_code": "GB",
+  "website": "http://www.amanfoundationuk.com",
+  "logo": "",
+  "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Aman Foundation UK",
+  "timezone": "Europe/London",
+  "jummah_times": "13:15",
+  "csv": "aman_foundation_uk.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "iaman-foundation-uk-london-w14-8xp-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/iaman-foundation-uk-london-w14-8xp-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

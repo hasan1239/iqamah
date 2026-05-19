@@ -100,3 +100,56 @@ faizan-e-madina-halifax-hx1-4jx-united-kingdom  faizan_e_madina_hx1
 jamia-masjid-madni-halifax-hx1-5le-united-kingdom  jamia_masjid_madni
 elland-masjid-elland-hx5-0jh-united-kingdom  elland_masjid
 masjid-ar-rashideen-batley-wf17-8lt-united-kingdom  masjid_ar_rashideen
+# Metro sweep: greater london — 2026-05-19
+# Metro area: greater london
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 49 new entries
+# triage-deleted: makkah-masjid-mitcham-mitcham-cr4-3hd-united-kingdom  makkah_masjid
+islamic-dawah-centre-islamia-london-e12-6rh-united-kingdom  islamic_dawah_centre
+aberfeldy-masjid-london-e14-0nu-united-kingdom  aberfeldy_masjid
+talimul-quran-uk-london-e15-1ja-united-kingdom  talimul_quran_uk
+stratford-islamic-association-london-e15-1na-united-kingdom-1  stratford_islamic_association
+globe-town-mosque-london-e2-0rn-united-kingdom  globe_town_mosque
+leopold-community-centre-london-e3-united-kingdom  leopold_community_centre
+bow-masjid-london-e3-5el-united-kingdom  bow_muslim_community_centre
+plashet-grove-masjid-london-e6-1bx-united-kingdom  plashet_grove_masjid
+masjidramadan  masjid_ramadan
+al-bayaan-academy-london-ec1v-7dt-united-kingdom  al_bayaan_academy
+taiba-welfare-foundation-greater-london-ha8-7lg-united-kingdom  taiba_welfare_foundation
+islamic-cultural-centre-london-united-kingdom  islamic_cultural_centre_wembley
+alfalah-london  masjid_alfalah
+rmcc-ilford-ig2-6pe-united-kingdom  redbridge_muslim_community_centre
+darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom  darul_ummah_redbridge
+masjid-ansar-london-ig3-8td-united-kingdom  masjid_ansar
+al-nehar-mosque-london-n1-9dn-united-kingdom  al_nehar_mosque
+edmonton-mosque  eic_al_masjid
+masjid-yusuf-london-n19-4eb-united-kingdom  masjid_yusuf
+muslim-welfare-house-london-n4-2da-united-kingdom  muslim_welfare_house
+muradiye-camii-london-united-kingdom  muradiye_camii
+finsbury-park-mosque-london-n4-2qh-united-kingdom  finsbury_park_mosque
+al-risaalah-mosque-london-n7-0lp-united-kingdom  al_risaalah_mosque
+holloway-road-mosque-london-n7-8dd-united-kingdom  holloway_road_mosque
+dar-ul-quran-london-london-nw1-1hw-united-kingdom  darul_quran_london_masjid
+al-rahman-mosque-education-centre-london-nw1-1nw-united-kingdom  al_rahman_mosque_education_centre
+# triage-deleted: iqraa-foundation-masjid-london-nw10-4ae-united-kingdom  iqraa_foundation_masjid
+brent-cultural-centre-masjid-anuur-london-nw10-4sp-united-kingdom  brent_cultural_centre
+park-royal-community-centre-london-nw10-6hf-united-kingdom  park_royal_community_centre
+al-salam-islamic-centre-london-nw10-7pb-united-kingdom  al_salam_islamic_centre
+hillside-mosque-london-nw10-8li-united-kingdom  hillside_islamic_cultural_centre
+tawakal-masjid-london-nw10-8se-united-kingdom  tawakal_masjid
+afghan-islamic-cultural-centre-london  afghan_islamic_cultural_centre
+muzani-community-islamic-centre-london  muzani_community_islamic_centre
+madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom  madina_islamic_centre_cricklewood
+the-mosque-islamic-centre-of-brent-london-nw2-6ds-united-kingdom  the_mosque_islamic_centre_of_brent
+ibn-abbas-islamic-centre-london-nw5-4ez-united-kingdom  ibn_abbas_islamic_centre
+blackbird-hill-muslim-community-centre-london-nw9-8rs-united-kingdom  blackbird_hill_muslim_community_centre
+darul-ummah-hornchurch-london-rm12-5sa-united-kingdom  darul_ummah_hornchurch
+taleem-mosque-and-community-centre-grays-rm17-6qa-united-kingdom  taleem_mosque_community_centre
+graysmosque  grays_park_masjid
+# triage-deleted: deptford-islamic-centre-london-se8-5jr-united-kingdom  deptford_islamic_centre
+chelsea-muslim-community-hub-london-sw100ds-united-kingdom  chelsea_muslim_community_hub
+wimbledon-masjid-london-sw19-8ds-united-kingdom  wimbledon_masjid
+iaman-foundation-uk-london-w14-8xp-united-kingdom  aman_foundation_uk
+kings-cross-mosque-islamic-cultural-london-wc1h-8du-united-kingdom  kings_cross_mosque_islamic_cultural
+nhc-mosque-london-wc2n-5bx-united-kingdom  nhc_mosque
+jesus-the-son-of-mary-community-centre-watford-united-kingdom  jsmcc
