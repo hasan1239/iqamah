@@ -967,6 +967,49 @@
     "pending_update": false
   },
   {
+    "slug": "elland_masjid",
+    "display_name": "Elland Masjid",
+    "city": "Elland",
+    "latitude": 53.6827273,
+    "longitude": -1.8383437,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ad098ee-b484-439c-ab91-84524df65d53/mosque/1eea8e61-9499-66dc-9d0f-066ed47a7584.png",
+    "address": "Elizabeth Street, Elland, Calderdale, HX5 0JH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Elland Masjid Association",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "elland_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "elland-masjid-elland-hx5-0jh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/elland-masjid-elland-hx5-0jh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "emaan_community_centre",
     "display_name": "Emaan Community Centre",
     "city": "",
@@ -1053,6 +1096,168 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "faizan_e_madina",
+    "display_name": "Faizan-e-Madina",
+    "city": "Bradford",
+    "latitude": 53.7941299,
+    "longitude": -1.7331154,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Maudsley Street, Barkerend, Bradford, BD3 9LE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawateislami",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "faizan_e_madina.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-madina-bradford-bd3-9le-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-bradford-bd3-9le-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 61,
+          "first_date": "2026-06-01",
+          "last_date": "2026-07-31",
+          "affected_dates": [
+            "2026-06-01",
+            "2026-06-02",
+            "2026-06-03",
+            "2026-06-04",
+            "2026-06-05",
+            "2026-06-06",
+            "2026-06-07",
+            "2026-06-08",
+            "2026-06-09",
+            "2026-06-10",
+            "2026-06-11",
+            "2026-06-12",
+            "2026-06-13",
+            "2026-06-14",
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19",
+            "2026-06-20",
+            "2026-06-21",
+            "2026-06-22",
+            "2026-06-23",
+            "2026-06-24",
+            "2026-06-25",
+            "2026-06-26",
+            "2026-06-27",
+            "2026-06-28",
+            "2026-06-29",
+            "2026-06-30",
+            "2026-07-01",
+            "2026-07-02",
+            "2026-07-03",
+            "2026-07-04",
+            "2026-07-05",
+            "2026-07-06",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-09",
+            "2026-07-10",
+            "2026-07-11",
+            "2026-07-12",
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-15",
+            "2026-07-16",
+            "2026-07-17",
+            "2026-07-18",
+            "2026-07-19",
+            "2026-07-20",
+            "2026-07-21",
+            "2026-07-22",
+            "2026-07-23",
+            "2026-07-24",
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28",
+            "2026-07-29",
+            "2026-07-30",
+            "2026-07-31"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
+    "slug": "faizan_e_madina_hx1",
+    "display_name": "Faizan E Madina",
+    "city": "Halifax",
+    "latitude": 53.7224783,
+    "longitude": -1.8812652,
+    "country_code": "GB",
+    "website": "https://www.dawateislami.net/",
+    "logo": "",
+    "address": "Gibbet Street, Park, Calderdale, HX1 4JX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat E Islami UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "faizan_e_madina_hx1.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-madina-halifax-hx1-4jx-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-halifax-hx1-4jx-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "faizan_e_madina_stechford",
     "display_name": "Faizan E Madina Stechford",
     "city": "",
@@ -1076,6 +1281,129 @@
         "path": "faizan-e-madina-stechford"
       },
       "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "faizan_e_madinah_huddersfield",
+    "display_name": "Faizan-e-Madinah Huddersfield",
+    "city": "",
+    "latitude": 53.6511932,
+    "longitude": -1.7929918,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/mosque/1ef7c1da-c24b-6c74-985d-0affcb0701ab.png",
+    "address": "New North Road, Greenhead, Kirklees, HD1 5ND",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat-e-Islami UK Ltd",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "faizan_e_madinah_huddersfield.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-madina-huddersfield-huddersfield-hd1-5nd-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-huddersfield-huddersfield-hd1-5nd-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 22 days (2026-04-01 to 2026-04-22). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 22,
+          "first_date": "2026-04-01",
+          "last_date": "2026-04-22",
+          "affected_dates": [
+            "2026-04-01",
+            "2026-04-02",
+            "2026-04-03",
+            "2026-04-04",
+            "2026-04-05",
+            "2026-04-06",
+            "2026-04-07",
+            "2026-04-08",
+            "2026-04-09",
+            "2026-04-10",
+            "2026-04-11",
+            "2026-04-12",
+            "2026-04-13",
+            "2026-04-14",
+            "2026-04-15",
+            "2026-04-16",
+            "2026-04-17",
+            "2026-04-18",
+            "2026-04-19",
+            "2026-04-20",
+            "2026-04-21",
+            "2026-04-22"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
+    "slug": "faizan_e_makkah",
+    "display_name": "Faizan-e-Makkah",
+    "city": "Bradford",
+    "latitude": 53.807151482163,
+    "longitude": -1.7815124988556,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/fb1b298c-7ebe-49c3-a87a-3e9d10d031af/mosque/1f118a70-a870-6584-818a-0a58a9feac02.png",
+    "address": "Lilycroft Walk, Toller, Bradford, BD9 5AB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat-e-Islami",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "faizan_e_makkah.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-makkah-bradford-bd9-5ab-united-kingdom-1"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-makkah-bradford-bd9-5ab-united-kingdom-1"
     },
     "quality": {
       "status": "warnings",
@@ -1421,6 +1749,135 @@
     ]
   },
   {
+    "slug": "jamia_masjid_madni",
+    "display_name": "Jamia Masjid Madni",
+    "city": "Halifax",
+    "latitude": 53.7232985,
+    "longitude": -1.8721692,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Gibbet Street, Park, Calderdale, HX1 5LE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Jamia Masjid Madni",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "jamia_masjid_madni.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamia-masjid-madni-halifax-hx1-5le-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamia-masjid-madni-halifax-hx1-5le-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jamia_masjid_tabligh_ul_islam_ryan_st",
+    "display_name": "Jamia Masjid Tabligh-Ul-Islam Ryan St",
+    "city": "",
+    "latitude": 53.776818955797,
+    "longitude": -1.7589738356216,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1a366163-93ab-41f9-88d9-688a89e35242/mosque/1eedc31b-b4ec-6c4e-a397-0a7eba2dd6b3.webp",
+    "address": "Baxandall Street, Little Horton, Bradford, BD5 7TE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Jamiyat Tabligh Ul Islam",
+    "timezone": "Europe/London",
+    "jummah_times": "02:00",
+    "csv": "jamia_masjid_tabligh_ul_islam_ryan_st.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamiyat-tabligh-ul-islam-bradford-bd5-7te-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamiyat-tabligh-ul-islam-bradford-bd5-7te-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jamiyat_tablighul_islam",
+    "display_name": "Jamiyat Tablighul Islam",
+    "city": "",
+    "latitude": 53.7825494,
+    "longitude": -1.7355987,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Coventry Street, Bowling, Bradford, BD4 7HX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Jamiyat Tablighul Islam",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00, 15:00",
+    "csv": "jamiyat_tablighul_islam.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jamiyat-tablighul-islam-bradford-bd4-7hx-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jamiyat-tablighul-islam-bradford-bd4-7hx-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Kings Heath Masjid",
     "slug": "kingsheath",
     "csv": "kingsheath.csv",
@@ -1543,6 +2000,92 @@
         "path": "mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "makki_masjid",
+    "display_name": "Makki Masjid",
+    "city": "Halifax",
+    "latitude": 53.718834,
+    "longitude": -1.878147,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e0f3a4eb-1f7b-4a73-b4bd-4b4a2dd8605c/mosque/1eea8dfd-5e96-6b2a-9588-066ed47a7584.png",
+    "address": "Hermon Avenue, King Cross, Calderdale, HX1 3XN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "makki_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "makki-masjid-halifax"
+      },
+      "source_url": "https://mawaqit.net/en/m/makki-masjid-halifax"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "markazi_jamia_masjid_ghausia",
+    "display_name": "Markazi Jamia Masjid Ghausia",
+    "city": "",
+    "latitude": 53.6372984,
+    "longitude": -1.7918438,
+    "country_code": "GB",
+    "website": "http://MasjidGhausia.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/99c104f9-f595-46f4-84be-deeadaf9e2fe/mosque/1eea8ec9-1303-6eac-a23c-066ed47a7584.png",
+    "address": "St Stephens Road, Newsome, Kirklees, HD1 3RT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Markazi Jamia Masjid Ghausia",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30, 13:30",
+    "csv": "markazi_jamia_masjid_ghausia.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -1909,6 +2452,144 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_ar_rashideen",
+    "display_name": "Masjid Ar-Rashideen",
+    "city": "Batley",
+    "latitude": 53.7197933,
+    "longitude": -1.6445806,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/d7638790-70c4-4683-960e-daa4fe6aa96d/mosque/1f10c562-2a3b-6700-942e-0a88a743f02b.jpg",
+    "address": "Ings Road, Batley West, Kirklees, WF17 8LT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Carlinghow Islamic Trust",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15, 15:40",
+    "csv": "masjid_ar_rashideen.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-ar-rashideen-batley-wf17-8lt-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-ar-rashideen-batley-wf17-8lt-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 80,
+          "first_date": "2026-05-10",
+          "last_date": "2026-07-28",
+          "affected_dates": [
+            "2026-05-10",
+            "2026-05-11",
+            "2026-05-12",
+            "2026-05-13",
+            "2026-05-14",
+            "2026-05-15",
+            "2026-05-16",
+            "2026-05-17",
+            "2026-05-18",
+            "2026-05-19",
+            "2026-05-20",
+            "2026-05-21",
+            "2026-05-22",
+            "2026-05-23",
+            "2026-05-24",
+            "2026-05-25",
+            "2026-05-26",
+            "2026-05-27",
+            "2026-05-28",
+            "2026-05-29",
+            "2026-05-30",
+            "2026-05-31",
+            "2026-06-01",
+            "2026-06-02",
+            "2026-06-03",
+            "2026-06-04",
+            "2026-06-05",
+            "2026-06-06",
+            "2026-06-07",
+            "2026-06-08",
+            "2026-06-09",
+            "2026-06-10",
+            "2026-06-11",
+            "2026-06-12",
+            "2026-06-13",
+            "2026-06-14",
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19",
+            "2026-06-20",
+            "2026-06-21",
+            "2026-06-22",
+            "2026-06-23",
+            "2026-06-24",
+            "2026-06-25",
+            "2026-06-26",
+            "2026-06-27",
+            "2026-06-28",
+            "2026-06-29",
+            "2026-06-30",
+            "2026-07-01",
+            "2026-07-02",
+            "2026-07-03",
+            "2026-07-04",
+            "2026-07-05",
+            "2026-07-06",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-09",
+            "2026-07-10",
+            "2026-07-11",
+            "2026-07-12",
+            "2026-07-13",
+            "2026-07-14",
+            "2026-07-15",
+            "2026-07-16",
+            "2026-07-17",
+            "2026-07-18",
+            "2026-07-19",
+            "2026-07-20",
+            "2026-07-21",
+            "2026-07-22",
+            "2026-07-23",
+            "2026-07-24",
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "slug": "masjid_bilal",
     "display_name": "Masjid Bilal",
     "city": "Glasgow",
@@ -2035,6 +2716,49 @@
         "path": "masjid-e-iqbal-manchester-m71sn-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/masjid-e-iqbal-manchester-m71sn-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_ibraheem_education_centre",
+    "display_name": "Masjid Ibraheem & Education Centre",
+    "city": "",
+    "latitude": 53.7966076,
+    "longitude": -1.7105742,
+    "country_code": "GB",
+    "website": "http://miec.co.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/d30c0ea4-2950-4428-b75b-340deaba2412/mosque/1eea8def-c118-66b2-a369-066ed47a7584.png",
+    "address": "Lower Rushton Road, Bradford Moor, Bradford, BD3 8PU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Masjid Ibraheem & Education Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "masjid_ibraheem_education_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "miec"
+      },
+      "source_url": "https://mawaqit.net/en/m/miec"
     },
     "quality": {
       "status": "warnings",
