@@ -1,0 +1,34 @@
+{
+  "slug": "bmacc",
+  "display_name": "Bmacc",
+  "city": "Glasgow",
+  "latitude": 55.9124023,
+  "longitude": -4.3205414,
+  "country_code": "GB",
+  "website": "https://www.bmacc.org/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/mosque/1efb9a41-73e2-6a04-bcac-069dbb1b261f.jpg",
+  "address": "1 Speirs Road, Glasgow, G61 2LX",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "BMACC | Bearsden Muslim Association Community Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 16:00",
+  "csv": "bmacc.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "17345"
+    },
+    "source_url": "https://mawaqit.net/en/m/17345"
+  },
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}
