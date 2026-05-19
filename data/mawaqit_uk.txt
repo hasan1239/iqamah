@@ -72,3 +72,15 @@ al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom  al_furqan_m
 masjid-salahudin-glasgow-g40-3sa-united-kingdom  masjid_bilal
 woodfarm-education-centre-wec-g46-7hf-glasgow-united-kingdom  woodfarm_education_centre_wec
 bishopbriggs-islamic-community-centre-bishopbriggs-g64-1ng-united-kingdom  bishopbriggs_islamic_community_centre
+# Metro sweep: greater manchester — 2026-05-19
+# Metro area: greater manchester
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 8 new entries
+azhar-academy-bolton-bolton-bl1-4pg-united-kingdom  azhar_academy_bolton
+masjid-e-hidayah-manchester-m16-9dd-united-kingdom  masjid_e_hidayah
+nimrah-masjid-manchester-m19-3aq-united-kingdom  nimrah_masjid
+madina-masjid-levenshulme-manchester-m19-3dj-united-kingdom  madina_masjid
+muslim-youth-foundation-manchester-m4-1dy-united-kingdom  muslim_youth_foundation
+masjid-e-iqbal-manchester-m71sn-united-kingdom  masjid_e_iqbal
+al-sunnah-mosque-manchester-manchester-m8-9pb-united-kingdom  al_sunnah_mosque_manchester
+ashton-jame-mosque-ashton-under-lyne-ol6-7dd-united-kingdom  ashton_jam_e_mosque
