@@ -71,7 +71,10 @@ def fetch_confdata(mawaqit_path: str) -> dict:
     with urllib.request.urlopen(req) as resp:
         html = resp.read().decode("utf-8")
 
-    m = re.search(r"var confData = (\{.*?\});", html, re.DOTALL)
+    # Mawaqit has two page templates. Old (/m/{path}) uses `var confData = {...}`,
+    # newer template (redirected to /en/{path}) uses `let confData = {...}`.
+    # Match either by making the keyword optional.
+    m = re.search(r"\b(?:var|let|const)?\s*confData\s*=\s*(\{.*?\});", html, re.DOTALL)
     if not m:
         raise RuntimeError(f"confData not found at {url} — page format may have changed")
     return json.loads(m.group(1))

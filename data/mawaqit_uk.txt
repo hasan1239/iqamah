@@ -50,3 +50,25 @@ faizan-e-islam-coventry-cv6-5nj-united-kingdom  faizan_e_islam
 # parked: luton-islamic-centre-luton-lu1-1he-united-kingdom  # Luton Islamic Centre (LU1 1HE)
 # parked: valide-sultan-mosque-london-n16-9ex-united-kingdom  # Valide Sultan Mosque (N16 9EX)
 # parked: hedon-mosque-islamic-london-united-kingdom  # Hendon Mosque & Islamic Centre (NW9 7EL)
+# Metro sweep: leicester — 2026-05-19
+# Metro area: leicester
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 6 new entries
+markaz-quba-islamic-centre-leicester-le2-0nq-united-kingdom  markaz_quba_islamic_centre
+majid-adam-a-s-leicester-le2-5qf-united-kingdom  masjid_adam_a_s
+al-marifah-academy-leicester-le5-1gz-united-kingdom  al_ma_rifah_academy
+taybah-educational-centre-leicester-le5-4hj-united-kingdom  taybah_educational_centre
+masjid-aisha-leicester-le5-5an-united-kingdom  masjid_aisha
+masjid-muadh-ibn-jabal-leicester-le5-6tb-united-kingdom  masjid_mu_adh_ibn_jabal
+# Metro sweep: glasgow — 2026-05-19
+# Metro area: glasgow
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 8 new entries
+17345  bmacc
+dawatul-islam-glasgow-glasgow-g12-8ll-united-kingdom  dawatul_islam
+31937  al_rahmah_centre
+glasgow-mena-trust-glasgow-g4-0bz-united-kingdom  mena_trust
+al-furqan-mosque-19-carrington-street-glasgow-g4-9aj-united-kingdom  al_furqan_mosque
+masjid-salahudin-glasgow-g40-3sa-united-kingdom  masjid_bilal
+woodfarm-education-centre-wec-g46-7hf-glasgow-united-kingdom  woodfarm_education_centre_wec
+bishopbriggs-islamic-community-centre-bishopbriggs-g64-1ng-united-kingdom  bishopbriggs_islamic_community_centre

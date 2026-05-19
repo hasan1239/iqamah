@@ -1,0 +1,43 @@
+{
+  "slug": "al_rahmah_centre",
+  "display_name": "Al Rahmah Centre",
+  "city": "Glasgow",
+  "latitude": 55.87512357545,
+  "longitude": -4.2680544460327,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/5bb580db-d0ee-41fd-a602-5ac9738a72cf/mosque/1f120035-517f-6280-ae4e-0e370a26ffeb.jpg",
+  "address": "Grovepark Place, Woodside, Glasgow, G20 7NG",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "مــركــز الرحمة يـرحــب بـكـم",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 14:30",
+  "csv": "al_rahmah_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "31937"
+    },
+    "source_url": "https://mawaqit.net/en/m/31937"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
