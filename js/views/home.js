@@ -337,7 +337,9 @@ async function loadMasjids() {
       fetch('/data/season.json').catch(() => null),
     ]);
     if (!masjidRes.ok) return;
-    cachedConfigs = (await masjidRes.json()).filter(c => !c.test_masjid);
+    cachedConfigs = (await masjidRes.json()).filter(c =>
+      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+    );
     if (seasonRes && seasonRes.ok) {
       try { seasonConfig = await seasonRes.json(); } catch {}
     }
@@ -425,13 +427,19 @@ function findBestMasjid() {
   try {
     const cached = JSON.parse(localStorage.getItem('iqamah-cached-location'));
     if (cached && cached.lat && cached.lon) {
-      const withCoords = approved.filter(c => c.lat != null && c.lon != null);
+      const coordOf = c => ({
+        lat: c.lat != null ? c.lat : c.latitude,
+        lon: c.lon != null ? c.lon : c.longitude,
+      });
+      const withCoords = approved
+        .map(c => ({ c, ...coordOf(c) }))
+        .filter(x => x.lat != null && x.lon != null);
       if (withCoords.length > 0) {
         withCoords.sort((a, b) =>
           haversineDistance(cached.lat, cached.lon, a.lat, a.lon) -
           haversineDistance(cached.lat, cached.lon, b.lat, b.lon)
         );
-        return withCoords[0];
+        return withCoords[0].c;
       }
     }
   } catch {}
@@ -680,9 +688,13 @@ function renderRecentlyViewed() {
           } else if (config.address) {
             subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
           }
-          return `<a href="/${config.slug}" class="masjid-card" data-link>
+          const thumbContent = config.logo
+            ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
+            : MOSQUE_SVG;
+          const cityAttr = config.city ? ` data-city="${config.city}"` : '';
+          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr}>
             <div class="masjid-card-top">
-              <div class="masjid-card-thumb">${MOSQUE_SVG}</div>
+              <div class="masjid-card-thumb${config.logo ? ' has-logo' : ''}">${thumbContent}</div>
               <div class="masjid-card-info">
                 <div class="masjid-name">${config.display_name}</div>
                 ${subHtml}

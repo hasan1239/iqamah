@@ -49,9 +49,13 @@ export async function render(container) {
     if (!res.ok) return;
     const configs = await res.json();
 
-    // Filter: non-empty eid_salah, exclude test masjids
+    // Filter: non-empty eid_salah, exclude test masjids + quality-flagged ones
     const withEid = configs
-      .filter(c => !c.test_masjid && c.eid_salah && c.eid_salah.trim())
+      .filter(c =>
+        !c.test_masjid &&
+        !(c.quality && c.quality.status === 'needs_review') &&
+        c.eid_salah && c.eid_salah.trim()
+      )
       .map(c => ({ config: c, parsed: parseEidTimes(c.eid_salah) }))
       .sort((a, b) => a.parsed.earliest - b.parsed.earliest);
 

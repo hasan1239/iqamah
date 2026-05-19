@@ -65,7 +65,7 @@
       "source_url": "https://mawaqit.net/en/m/amanah-masjid-birmingham-b11-1jb-united-kingdom"
     },
     "quality": {
-      "status": "needs_review",
+      "status": "warnings",
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
@@ -79,8 +79,9 @@
           "count": 75,
           "first_date": "2026-05-17",
           "last_date": "2026-07-31",
-          "action_taken": "esha and esha_jamaat blanked",
-          "fix": "Verify masjid's summer Isha policy and either accept the combine or add an override"
+          "action_taken": "kept as-is (combine acknowledged)",
+          "fix": "Verify masjid's summer Isha policy and either accept the combine or add an override",
+          "acknowledged": true
         },
         {
           "type": "sehri_unconfigured",
@@ -90,6 +91,9 @@
         }
       ]
     },
+    "acknowledged_issues": [
+      "isha_clamped"
+    ],
     "month": "April 2026",
     "islamic_month": "Shawwal - Dhul Qadah 1447",
     "eid_salah": "",
