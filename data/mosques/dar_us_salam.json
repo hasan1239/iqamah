@@ -1,0 +1,43 @@
+{
+  "slug": "dar_us_salam",
+  "display_name": "Dar Us-Salam",
+  "city": "",
+  "latitude": 51.478871700102,
+  "longitude": -3.1961933474659,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "26 Wells Street, Riverside, Cardiff, CF11 6DX",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": null,
+  "timezone": "Europe/London",
+  "jummah_times": "13:30",
+  "csv": "dar_us_salam.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "dar-us-salam-cardiff-cf11-6dx-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/dar-us-salam-cardiff-cf11-6dx-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

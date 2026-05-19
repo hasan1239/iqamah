@@ -1,0 +1,89 @@
+{
+  "slug": "al_ikhlas_centre",
+  "display_name": "Al-Ikhlas Centre",
+  "city": "Cardiff",
+  "latitude": 51.4880917,
+  "longitude": -3.1548601,
+  "country_code": "GB",
+  "website": "http://Www.alikhlas.org",
+  "logo": "",
+  "address": "Cecil Street, Adamsdown, Cardiff, CF24 1NH",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Al-Ikhlas Culture and Education Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "al_ikhlas_centre.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "al-ikhlas-centre-cardiff-cf24-1nh-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/al-ikhlas-centre-cardiff-cf24-1nh-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+      "Fajr jamaat is at or after sunrise on 31 days (2026-08-01 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      },
+      {
+        "type": "fajr_after_sunrise",
+        "severity": "high",
+        "count": 31,
+        "first_date": "2026-08-01",
+        "last_date": "2026-08-31",
+        "affected_dates": [
+          "2026-08-01",
+          "2026-08-02",
+          "2026-08-03",
+          "2026-08-04",
+          "2026-08-05",
+          "2026-08-06",
+          "2026-08-07",
+          "2026-08-08",
+          "2026-08-09",
+          "2026-08-10",
+          "2026-08-11",
+          "2026-08-12",
+          "2026-08-13",
+          "2026-08-14",
+          "2026-08-15",
+          "2026-08-16",
+          "2026-08-17",
+          "2026-08-18",
+          "2026-08-19",
+          "2026-08-20",
+          "2026-08-21",
+          "2026-08-22",
+          "2026-08-23",
+          "2026-08-24",
+          "2026-08-25",
+          "2026-08-26",
+          "2026-08-27",
+          "2026-08-28",
+          "2026-08-29",
+          "2026-08-30",
+          "2026-08-31"
+        ],
+        "action_taken": "none",
+        "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+        "acknowledged": true
+      }
+    ]
+  },
+  "acknowledged_issues": [
+    "fajr_after_sunrise"
+  ]
+}
