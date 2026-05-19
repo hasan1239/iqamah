@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_abdul",
-  "display_name": "Masjid Abdul Raheem",
-  "city": "Birmingham",
-  "latitude": 52.49118,
-  "longitude": -1.8124484,
+  "slug": "mahmudsabir_al_furqan_masjid",
+  "display_name": "Mahmudsabir (Al Furqan) Masjid",
+  "city": "",
+  "latitude": 52.4486208,
+  "longitude": -1.8480156,
   "country_code": "GB",
-  "website": "",
-  "logo": "",
-  "address": "54 Stechford Road, Hodge Hill, Birmingham, B34 6BG",
+  "website": "https://www.facebook.com/people/MahmudSabir-Al-Furqan-Masjid/100077918033245/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c2f433e9-720b-47da-a3c8-7573dec66b82/mosque/1ef9a2bd-c2c2-67e6-8171-0671c73660c5.png",
+  "address": "Reddings Lane, Hall Green North, Birmingham, B11 3BZ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
   "association": null,
   "timezone": "Europe/London",
-  "jummah_times": "",
-  "csv": "masjid_abdul.csv",
+  "jummah_times": "13:35, 14:15",
+  "csv": "mahmudsabir_al_furqan_masjid.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
+      "path": "mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-abdul-raheem-birmingham-b34-6bg-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/mahmudsabir-al-furqan-masjid-birmingham-b11-3bz-united-kingdom"
   },
   "quality": {
     "status": "warnings",

@@ -1,27 +1,27 @@
 {
-  "slug": "yca",
-  "display_name": "YCA Cultural Centre Masjid",
-  "city": "",
-  "latitude": 52.526134120312,
-  "longitude": -2.0071096538212,
+  "slug": "stoney_lane_islamic_community_centre",
+  "display_name": "Stoney Lane Islamic Community Centre",
+  "city": "Birmingham",
+  "latitude": 52.4545049,
+  "longitude": -1.8732774,
   "country_code": "GB",
-  "website": "https://www.yca-sandwell.org.uk/cultural-centre/",
-  "logo": "https://cdn.mawaqit.net/images/backend/mosque/22f1c67e-2980-4828-bbf0-3a460f527014/mosque/1efebcfc-bcbb-6268-8c1a-06ef9144e88f.png",
-  "address": "Tildasley Street, West Bromwich Central, Sandwell, B70 9SJ",
+  "website": "",
+  "logo": "",
+  "address": "Wilton Road, Sparkhill, Birmingham, B12 8AJ",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "YCA Cultural Centre Masjid",
+  "association": "Stoney Lane Islamic Community Centre",
   "timezone": "Europe/London",
-  "jummah_times": "13:30, 14:30",
-  "csv": "yca.csv",
+  "jummah_times": "13:45",
+  "csv": "stoney_lane_islamic_community_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+      "path": "stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/stoney-lane-islamic-community-centre-birmingham-b128aj-united-kingdom"
   },
   "quality": {
     "status": "warnings",

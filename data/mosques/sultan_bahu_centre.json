@@ -1,27 +1,27 @@
 {
-  "slug": "emaan",
-  "display_name": "Emaan Community Centre",
-  "city": "",
-  "latitude": 52.504105164844,
-  "longitude": -1.8792553894927,
+  "slug": "sultan_bahu_centre",
+  "display_name": "Sultan Bahu Centre",
+  "city": "Birmingham",
+  "latitude": 52.492097727352,
+  "longitude": -1.8231934455078,
   "country_code": "GB",
-  "website": "",
-  "logo": "",
-  "address": "Sycamore Road, Nechells, Birmingham, B6 5UH",
+  "website": "https://sultanbahucentre.org.uk/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/68f2b9de-61ed-4ffa-bd87-ecd7aed405a6/mosque/1f0c9cc8-d8e3-61e8-925f-0a58a9feac02.jpeg",
+  "address": "17-22 Emerald Court, Ward End, Birmingham, B8 2LS",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "EMAAN COMMUNITY CENTRE",
+  "association": "Sultan Bahu Centre",
   "timezone": "Europe/London",
-  "jummah_times": "13:30",
-  "csv": "emaan.csv",
+  "jummah_times": "13:00",
+  "csv": "sultan_bahu_centre.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "emaan-community-centre-birmingham-b6-5uh-united-kingdom"
+      "path": "sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/emaan-community-centre-birmingham-b6-5uh-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/sultan-bahu-centre-birmingham-b8-2ls-united-kingdom"
   },
   "quality": {
     "status": "warnings",
