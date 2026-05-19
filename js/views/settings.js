@@ -151,6 +151,18 @@ export function render(container) {
           <div class="settings-item-left">
             <span class="settings-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M3 21h18"/><path d="M5 21V10l7-5 7 5v11"/><path d="M9 21v-6h6v6"/>
+              </svg>
+            </span>
+            <span class="settings-label">Masjids</span>
+          </div>
+          <span class="settings-value" id="settingsMasjidCount">...</span>
+        </div>
+
+        <div class="settings-item">
+          <div class="settings-item-left">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
               </svg>
             </span>
@@ -178,6 +190,15 @@ export function render(container) {
   fetch('/version.json').then(r => r.json()).then(d => {
     const el = document.getElementById('settingsVersion');
     if (el) el.textContent = 'v' + d.version;
+  }).catch(() => {});
+
+  // Load masjid count
+  fetch('/data/mosques/index.json').then(r => r.json()).then(configs => {
+    const visible = configs.filter(c =>
+      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+    );
+    const el = document.getElementById('settingsMasjidCount');
+    if (el) el.textContent = visible.length.toString();
   }).catch(() => {});
 
   // Load pinned masjid display name
