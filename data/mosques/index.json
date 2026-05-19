@@ -40,21 +40,62 @@
     "approved": true
   },
   {
-    "display_name": "Amanah Masjid",
     "slug": "amanah",
-    "csv": "amanah.csv",
+    "display_name": "Amanah Masjid",
+    "city": "Birmingham",
+    "latitude": 52.4670705,
+    "longitude": -1.8761104,
+    "country_code": "GB",
+    "website": "https://amanahmasjid.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a2ace75f-fbca-4c86-b94e-8944f7529867/mosque/1eea8e00-dacd-6132-b6f4-066ed47a7584.png",
     "address": "29-33 Henley St, Birmingham, B11 1JB",
+    "address_source": "manual",
     "phone": "0121 772 7370",
+    "email": "",
+    "notes": "Email: amanahmasjid@muathtrust.org. Jum'a Speech (Khutba) Starts at 1.30pm. No separate Maghrib Jama'at column present.",
+    "association": "The Muath Trust",
+    "timezone": "Europe/London",
+    "jummah_times": "Jum'a Speech (Khutba) Starts at 1:30pm",
+    "csv": "amanah.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "amanah-masjid-birmingham-b11-1jb-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/amanah-masjid-birmingham-b11-1jb-united-kingdom"
+    },
+    "quality": {
+      "status": "needs_review",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "Isha clamped to Maghrib on 75 days (2026-05-17 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "isha_clamped",
+          "severity": "high",
+          "count": 75,
+          "first_date": "2026-05-17",
+          "last_date": "2026-07-31",
+          "action_taken": "esha and esha_jamaat blanked",
+          "fix": "Verify masjid's summer Isha policy and either accept the combine or add an override"
+        },
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
     "month": "April 2026",
     "islamic_month": "Shawwal - Dhul Qadah 1447",
-    "jummah_times": "Jum'a Speech (Khutba) Starts at 1:30pm",
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "",
     "is_stale": false,
-    "notes": "Email: amanahmasjid@muathtrust.org. Jum'a Speech (Khutba) Starts at 1.30pm. No separate Maghrib Jama'at column present.",
-    "lat": 52.4670705,
-    "lon": -1.8761104,
     "source_image": "sources/amanah.jpg",
     "approved": true
   },
@@ -339,6 +380,48 @@
     "source_image": "sources/quba.jpg",
     "approved": true,
     "pending_update": false
+  },
+  {
+    "slug": "quba_aston",
+    "display_name": "Quba Islamic Centre",
+    "city": "Birmingham",
+    "latitude": 52.492565,
+    "longitude": -1.8757116,
+    "country_code": "GB",
+    "website": "https://qubaic.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/08f12a45-41d4-4210-81c2-53dbeb328417/mosque/1f146315-89b8-6f76-a35e-0a58a9feac02.png",
+    "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "QUBA Islamic & Cultural Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15, 14:15",
+    "csv": "quba_aston.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/quba-islamic-cultural-centre-birmingham-b7-4ny-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    }
   },
   {
     "display_name": "Masjid Sheikh Rauf Barzenji",
