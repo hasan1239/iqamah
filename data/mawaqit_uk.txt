@@ -54,7 +54,7 @@ faizan-e-islam-coventry-cv6-5nj-united-kingdom  faizan_e_islam
 # Metro area: leicester
 # Bbox filter: 1 boundary/ies (Nominatim)
 # 6 new entries
-markaz-quba-islamic-centre-leicester-le2-0nq-united-kingdom  markaz_quba_islamic_centre
+# triage-deleted: markaz-quba-islamic-centre-leicester-le2-0nq-united-kingdom  markaz_quba_islamic_centre
 majid-adam-a-s-leicester-le2-5qf-united-kingdom  masjid_adam_a_s
 al-marifah-academy-leicester-le5-1gz-united-kingdom  al_ma_rifah_academy
 taybah-educational-centre-leicester-le5-4hj-united-kingdom  taybah_educational_centre
@@ -83,4 +83,4 @@ madina-masjid-levenshulme-manchester-m19-3dj-united-kingdom  madina_masjid
 muslim-youth-foundation-manchester-m4-1dy-united-kingdom  muslim_youth_foundation
 masjid-e-iqbal-manchester-m71sn-united-kingdom  masjid_e_iqbal
 al-sunnah-mosque-manchester-manchester-m8-9pb-united-kingdom  al_sunnah_mosque_manchester
-ashton-jame-mosque-ashton-under-lyne-ol6-7dd-united-kingdom  ashton_jam_e_mosque
+# triage-deleted: ashton-jame-mosque-ashton-under-lyne-ol6-7dd-united-kingdom  ashton_jam_e_mosque

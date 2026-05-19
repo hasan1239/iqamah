@@ -24,7 +24,7 @@
     "source_url": "https://mawaqit.net/en/m/taybah-educational-centre-leicester-le5-4hj-united-kingdom"
   },
   "quality": {
-    "status": "needs_review",
+    "status": "warnings",
     "checked_at": "2026-05-19",
     "row_count": 365,
     "warnings": [
@@ -55,9 +55,12 @@
           "2026-05-23"
         ],
         "action_taken": "none",
-        "fix": "Investigate — likely a Mawaqit data bug for this masjid"
+        "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+        "acknowledged": true
       }
     ]
   },
-  "acknowledged_issues": []
+  "acknowledged_issues": [
+    "fajr_after_sunrise"
+  ]
 }
