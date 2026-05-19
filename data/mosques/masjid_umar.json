@@ -1,0 +1,43 @@
+{
+  "slug": "masjid_umar",
+  "display_name": "Masjid Umar",
+  "city": "Cardiff",
+  "latitude": 51.4924146,
+  "longitude": -3.1618779,
+  "country_code": "GB",
+  "website": "https://masjidumar.uk/",
+  "logo": "",
+  "address": "68-70 Connaught Road, Plasnewydd, Cardiff, CF24 3PX",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Masjid Umar",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "masjid_umar.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "masjid-umar-cardiff-cf24-3px-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/masjid-umar-cardiff-cf24-3px-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

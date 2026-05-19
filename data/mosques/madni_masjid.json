@@ -1,0 +1,43 @@
+{
+  "slug": "madni_masjid",
+  "display_name": "Madni Masjid",
+  "city": "",
+  "latitude": 51.495828,
+  "longitude": -3.1717169,
+  "country_code": "GB",
+  "website": "http://MadniCardiff.co.uk",
+  "logo": "",
+  "address": "Dalcross Street, Plasnewydd, Cardiff, CF24 4SE",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": null,
+  "timezone": "Europe/London",
+  "jummah_times": "13:35",
+  "csv": "madni_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "madni-masjid-cardiff-cf24-4se-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/madni-masjid-cardiff-cf24-4se-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
