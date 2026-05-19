@@ -212,3 +212,12 @@ masjid-millata-ibrahim-nottinghjam-ng7-7hx-united-kingdom  masjid_millat_ibrahim
 muslim-cultural-centre-wollaton-nottingham-ng8-1nb-united-kingdom  muslim_cultural_centre_wollaton
 masjid-ali-nottingham-ng8-3lh-united-kingdom  masjid_ali
 masjid-ibrhim-nottingham-ng8-5gb-united-kingdom  masjid_ibrahim_aspley_lane
+# Metro sweep: lancashire — 2026-05-20
+# Metro area: lancashire
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 5 new entries
+alberr-blackburn-bb1-2hu-united-kingdom  alberr
+faizane-madina-burnley-burnley-bb10-1xa-united-kingdom  faizan_e_madina_burnley
+jamia-masjid-usman-ghani-brierfield-bb95aw-united-kingdom  jamia_masjid_usman_ghani
+jamia-masjid-sultania-brierfield-bb9-5le-united-kingdom  jamia_masjid_sultania
+city-mosque-preston-preston-pr11yq-united-kingdom  city_mosque
