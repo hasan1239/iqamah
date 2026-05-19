@@ -1,0 +1,43 @@
+{
+  "slug": "masjid_at_tawheed",
+  "display_name": "Masjid at Tawheed",
+  "city": "Cardiff",
+  "latitude": 51.4703452,
+  "longitude": -3.1854521,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/34792373-46b0-419f-b5c7-1f6ce7768cdb/mosque/1eea8ec4-0420-6124-8581-066ed47a7584.png",
+  "address": "Penarth Road, Grangetown, Cardiff, CF11 6JW",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Masjid At Tawheed",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30",
+  "csv": "masjid_at_tawheed.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "masjid-at-tawheed-cardiff-cf11-6jw-united-kingdom-1"
+    },
+    "source_url": "https://mawaqit.net/en/m/masjid-at-tawheed-cardiff-cf11-6jw-united-kingdom-1"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
