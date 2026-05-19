@@ -200,3 +200,15 @@ danescourt-masjid-cardiff-cf5-2rl-united-kingdom  danescourt_masjid
 fairwater-iqra-masjid-cardiff-cf5-3na-united-kingdom  fairwater_canolfan_iqra
 al-falah-centre-cardiff  al_falah_masjid
 barrymasjid-wales-uk  barry_masjid_wales_uk
+# Metro sweep: nottingham — 2026-05-19
+# Metro area: nottingham
+# Bbox filter: 1 boundary/ies (Nominatim)
+# 8 new entries
+# triage-deleted: five-ways-centre-masjid-al-quba-nottingham-ng53hu-united-kingdom  five_ways_centre_masjid_al_quba
+masjid-e-bilaal-nottingham-ng7-2et-united-kingdom  masjid_e_bilaal
+baitul-jabbar-mosque-hyson-green-ng7-6bg-united-kingdom  masjid_baitul_jabbar
+madni-masjid-nottingham-ng7-6hx-united-kingdom  madni_masjid_ng7
+masjid-millata-ibrahim-nottinghjam-ng7-7hx-united-kingdom  masjid_millat_ibrahim
+muslim-cultural-centre-wollaton-nottingham-ng8-1nb-united-kingdom  muslim_cultural_centre_wollaton
+masjid-ali-nottingham-ng8-3lh-united-kingdom  masjid_ali
+masjid-ibrhim-nottingham-ng8-5gb-united-kingdom  masjid_ibrahim_aspley_lane
