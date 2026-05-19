@@ -1,27 +1,27 @@
 {
-  "slug": "masjid_bilal",
-  "display_name": "Masjid Bilal",
-  "city": "Glasgow",
-  "latitude": 55.849514,
-  "longitude": -4.2187175,
+  "slug": "azhar_academy_bolton",
+  "display_name": "Azhar Academy Bolton",
+  "city": "",
+  "latitude": 53.5814843,
+  "longitude": -2.4600135,
   "country_code": "GB",
-  "website": "",
-  "logo": "",
-  "address": "Avenue Street, Calton, Glasgow City, G40 3SA",
+  "website": "http://www.azharacademybolton.org/index.php",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/1c5dfe11-92a2-4736-9441-a4b18fead64d/mosque/1efa1b20-36b8-6c60-8f2f-0671c73660c5.png",
+  "address": "Devonshire Road, Heaton, Bolton, BL1 4PG",
   "address_source": "geocoded",
   "phone": "",
   "email": "",
   "notes": "",
-  "association": "Glasgow sudanese community centre",
+  "association": null,
   "timezone": "Europe/London",
   "jummah_times": "13:30",
-  "csv": "masjid_bilal.csv",
+  "csv": "azhar_academy_bolton.csv",
   "provider": {
     "type": "mawaqit",
     "ref": {
-      "path": "masjid-salahudin-glasgow-g40-3sa-united-kingdom"
+      "path": "azhar-academy-bolton-bolton-bl1-4pg-united-kingdom"
     },
-    "source_url": "https://mawaqit.net/en/m/masjid-salahudin-glasgow-g40-3sa-united-kingdom"
+    "source_url": "https://mawaqit.net/en/m/azhar-academy-bolton-bolton-bl1-4pg-united-kingdom"
   },
   "quality": {
     "status": "warnings",
@@ -29,7 +29,7 @@
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Fajr jamaat is at or after sunrise on 2 days (2026-04-08 to 2026-04-09). Indicates a data error — Fajr jamaat must always be before sunrise."
+      "Fajr jamaat is at or after sunrise on 1 days (2026-03-25 to 2026-03-25). Indicates a data error — Fajr jamaat must always be before sunrise."
     ],
     "issues": [
       {
@@ -41,12 +41,11 @@
       {
         "type": "fajr_after_sunrise",
         "severity": "high",
-        "count": 2,
-        "first_date": "2026-04-08",
-        "last_date": "2026-04-09",
+        "count": 1,
+        "first_date": "2026-03-25",
+        "last_date": "2026-03-25",
         "affected_dates": [
-          "2026-04-08",
-          "2026-04-09"
+          "2026-03-25"
         ],
         "action_taken": "none",
         "fix": "Investigate — likely a Mawaqit data bug for this masjid",

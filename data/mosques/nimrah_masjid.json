@@ -1,0 +1,43 @@
+{
+  "slug": "nimrah_masjid",
+  "display_name": "Nimrah Masjid",
+  "city": "",
+  "latitude": 53.448545769337,
+  "longitude": -2.1925530330257,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "7 Park Grove, Levenshulme, Manchester, M19 3AQ",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Nimrah Education & Community Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 14:30",
+  "csv": "nimrah_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "nimrah-masjid-manchester-m19-3aq-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/nimrah-masjid-manchester-m19-3aq-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
