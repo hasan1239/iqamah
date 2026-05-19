@@ -24,3 +24,8 @@ sultan-bahu-centre-birmingham-b8-2ls-united-kingdom
 zawia-mosque-birmingham-b5-7ph-united-kingdom
 zaytuna-masjid-birmingham-b32-1pj-united-kingdom
 # triage-deleted: zia-ul-quran-jamia-mosque-birmingham-b8-1er-united-kingdom
+
+# Birmingham metro additions (sweep run 2026-05-19)
+gambian-islamic-community-centre-smethwick-b66-3eu-united-kingdom
+yca-cultural-centre-west-bromwich-b70-9sj-united-kingdom
+jamia-masjid-bilal-wolverhampton-wv6-0ru-united-kingdom
