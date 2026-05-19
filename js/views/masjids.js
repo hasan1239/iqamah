@@ -12,6 +12,14 @@ let longPressTimer = null;
 let toastTimer = null;
 let viewContainer = null;
 let longPressCleanup = null;
+let selectedCity = null;
+let resizeListener = null;
+let lastIsMobile = null;
+
+const MOBILE_BREAKPOINT = 768;
+const STREET_SUFFIX_RE = /\b(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl|Court|Ct|Park|Square|Sq|Crescent|Hill|Terrace|Gardens?|Mews|Grove|Walk|Row)\b\.?$/i;
+const POSTCODE_RE = /\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/i;
+const OTHER_CITY = 'Other';
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -22,6 +30,44 @@ function getCityPostcode(address) {
   const parts = before.split(',').map(s => s.trim()).filter(Boolean);
   const city = parts.length > 0 ? parts[parts.length - 1] : '';
   return city ? `${city}, ${postcode}` : postcode;
+}
+
+function normaliseCity(city) {
+  if (!city) return OTHER_CITY;
+  let c = city.replace(/\s+/g, ' ').trim();
+  c = c.replace(/\b(City|Borough|District)\b$/i, '').trim();
+  c = c.replace(/,$/, '').trim();
+  if (!c) return OTHER_CITY;
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+function deriveCity(config) {
+  if (config.city && config.city.trim()) return normaliseCity(config.city.trim());
+  const addr = (config.address || '').trim();
+  if (!addr) return OTHER_CITY;
+  const withoutPC = addr.replace(POSTCODE_RE, '').replace(/[,\.\s]+$/, '').trim();
+  if (!withoutPC) return OTHER_CITY;
+  const parts = withoutPC.split(',').map(s => s.trim()).filter(Boolean);
+  let candidate = parts.length ? parts[parts.length - 1] : withoutPC;
+  candidate = candidate.replace(/\bUK\b\.?/i, '').replace(/\bGreater\b/i, '').trim();
+  if (!candidate) return OTHER_CITY;
+  if (parts.length <= 1 || STREET_SUFFIX_RE.test(candidate)) {
+    const words = candidate.split(/\s+/).filter(Boolean);
+    const last = words[words.length - 1];
+    if (!last || /^(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl)\.?$/i.test(last)) {
+      return OTHER_CITY;
+    }
+    return normaliseCity(last);
+  }
+  return normaliseCity(candidate);
+}
+
+function isMobile() {
+  return window.innerWidth < MOBILE_BREAKPOINT;
+}
+
+function isCityListMode() {
+  return isMobile() && !selectedCity && !locationActive;
 }
 
 // SVG icons
@@ -36,15 +82,19 @@ let loadGeneration = 0;
 let masjidsLoadPromise = null;
 let hasTimesMap = {}; // slug -> true/false, populated after CSV check
 
+const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
+
 export function render(container) {
   viewContainer = container;
+  selectedCity = null;
   container.innerHTML = `
-    <div class="masjids-view">
+    <div class="masjids-view" data-mode="${isCityListMode() ? 'cities' : 'list'}">
       <header class="masjids-header">
-        <h1 class="masjids-title">Masjids</h1>
+        <button class="masjids-back-btn" id="masjidsBackBtn" aria-label="Back to cities">${BACK_SVG}</button>
+        <h1 class="masjids-title" id="masjidsTitle">Masjids</h1>
       </header>
 
-      <div class="masjids-search-bar">
+      <div class="masjids-search-bar" id="masjidsSearchBar">
         <span class="masjids-search-icon">${SEARCH_SVG}</span>
         <input type="text" id="masjidSearch" class="masjids-search-input" placeholder="Search masjids..." autocomplete="off">
         <button class="location-btn" id="masjidsLocationBtn">
@@ -56,11 +106,22 @@ export function render(container) {
         </button>
       </div>
 
+      <div class="masjids-cities-actions" id="masjidsCitiesActions">
+        <button class="masjids-nearby-pill" id="masjidsNearbyPill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>Find masjids near me</span>
+        </button>
+      </div>
+
       ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
         <span>Tip: Long press a masjid to set it as My Masjid</span>
         <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
       </div>` : ''}
 
+      <div class="masjid-city-grid" id="masjidsCityGrid"></div>
       <div class="masjid-grid" id="masjidsGrid"></div>
 
       <div class="cta-section">
@@ -75,13 +136,84 @@ export function render(container) {
   // Show skeleton immediately
   const grid = viewContainer.querySelector('#masjidsGrid');
   grid.innerHTML = buildSkeletonCards(6);
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  cityGrid.innerHTML = buildCitySkeletons(6);
 
+  lastIsMobile = isMobile();
   masjidsLoadPromise = loadMasjids();
   setupSearch();
   setupLocationBtn();
   setupGridClicks();
   setupLongPress();
   setupPinHint();
+  setupCityNav();
+  setupNearbyPill();
+  setupResizeListener();
+  updateHeaderState();
+}
+
+function buildCitySkeletons(count) {
+  let html = '';
+  const widths = [80, 110, 70, 95, 85, 100];
+  for (let i = 0; i < count; i++) {
+    const w = widths[i % widths.length];
+    html += `<div class="masjid-city-card" style="pointer-events:none">
+      <div class="masjid-city-card-info">
+        <div class="skeleton-bone" style="width:${w}px;height:14px;margin-bottom:6px"></div>
+        <div class="skeleton-bone" style="width:60px;height:9px"></div>
+      </div>
+      <div class="skeleton-bone" style="width:24px;height:24px;border-radius:8px"></div>
+    </div>`;
+  }
+  return html;
+}
+
+function setupResizeListener() {
+  resizeListener = () => {
+    const nowMobile = isMobile();
+    if (nowMobile !== lastIsMobile) {
+      lastIsMobile = nowMobile;
+      updateHeaderState();
+      renderCards();
+    }
+  };
+  window.addEventListener('resize', resizeListener);
+}
+
+function setupCityNav() {
+  const backBtn = viewContainer && viewContainer.querySelector('#masjidsBackBtn');
+  if (!backBtn) return;
+  backBtn.addEventListener('click', () => {
+    selectedCity = null;
+    searchQuery = '';
+    const input = viewContainer.querySelector('#masjidSearch');
+    if (input) input.value = '';
+    updateHeaderState();
+    renderCards();
+  });
+}
+
+function setupNearbyPill() {
+  const pill = viewContainer && viewContainer.querySelector('#masjidsNearbyPill');
+  if (!pill) return;
+  pill.addEventListener('click', () => {
+    const locBtn = viewContainer.querySelector('#masjidsLocationBtn');
+    if (locBtn) locBtn.click();
+  });
+}
+
+function updateHeaderState() {
+  if (!viewContainer) return;
+  const view = viewContainer.querySelector('.masjids-view');
+  const title = viewContainer.querySelector('#masjidsTitle');
+  if (!view || !title) return;
+  if (isCityListMode()) {
+    view.setAttribute('data-mode', 'cities');
+    title.textContent = 'Masjids';
+  } else {
+    view.setAttribute('data-mode', selectedCity ? 'city-detail' : 'list');
+    title.textContent = selectedCity || 'Masjids';
+  }
 }
 
 function buildSkeletonCards(count) {
@@ -125,12 +257,62 @@ async function loadMasjids() {
 }
 
 export function renderCards() {
-  const grid = (viewContainer && viewContainer.querySelector('#masjidsGrid')) || document.getElementById('masjidsGrid');
+  if (!viewContainer) return;
+  updateHeaderState();
+
+  if (isCityListMode()) {
+    renderCityGrid();
+    return;
+  }
+  renderMasjidGrid();
+}
+
+function renderCityGrid() {
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  if (!cityGrid) return;
+
+  const counts = {};
+  cachedConfigs.forEach(config => {
+    const city = deriveCity(config);
+    counts[city] = (counts[city] || 0) + 1;
+  });
+
+  const cities = Object.keys(counts).sort((a, b) => {
+    if (a === OTHER_CITY) return 1;
+    if (b === OTHER_CITY) return -1;
+    return a.localeCompare(b, undefined, { sensitivity: 'base' });
+  });
+
+  if (cities.length === 0) {
+    cityGrid.innerHTML = `<div class="masjids-empty">No masjids found</div>`;
+    return;
+  }
+
+  cityGrid.innerHTML = cities.map(city => {
+    const n = counts[city];
+    const safeCity = city.replace(/"/g, '&quot;');
+    return `<button type="button" class="masjid-city-card" data-city="${safeCity}">
+      <div class="masjid-city-card-info">
+        <div class="masjid-city-name">${city}</div>
+        <div class="masjid-city-count">${n} masjid${n === 1 ? '' : 's'}</div>
+      </div>
+      <div class="masjid-city-chevron">${CHEVRON_SVG}</div>
+    </button>`;
+  }).join('');
+}
+
+function renderMasjidGrid() {
+  const grid = viewContainer.querySelector('#masjidsGrid');
   if (!grid) return;
 
   const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
 
   let filtered = cachedConfigs.slice();
+
+  // City filter (mobile city-detail mode only)
+  if (selectedCity && isMobile() && !locationActive) {
+    filtered = filtered.filter(c => deriveCity(c) === selectedCity);
+  }
 
   // Apply search filter
   if (searchQuery) {
@@ -351,6 +533,21 @@ function setupSearch() {
 
 function setupGridClicks() {
   document.addEventListener('click', handlePinClick, true);
+  if (!viewContainer) return;
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  if (cityGrid) cityGrid.addEventListener('click', handleCityCardClick);
+}
+
+function handleCityCardClick(e) {
+  const card = e.target.closest('.masjid-city-card[data-city]');
+  if (!card) return;
+  selectedCity = card.dataset.city;
+  searchQuery = '';
+  const input = viewContainer && viewContainer.querySelector('#masjidSearch');
+  if (input) input.value = '';
+  updateHeaderState();
+  renderCards();
+  if (viewContainer) viewContainer.scrollIntoView({ behavior: 'instant', block: 'start' });
 }
 
 function handlePinClick(e) {
@@ -471,6 +668,7 @@ function setupLocationBtn() {
       distanceMap = {};
       btn.classList.remove('active');
       textEl.textContent = 'Nearby';
+      updateHeaderState();
       renderCards();
       return;
     }
@@ -503,8 +701,10 @@ function setupLocationBtn() {
       });
 
       locationActive = true;
+      selectedCity = null;
       btn.classList.add('active');
       textEl.textContent = 'Nearby';
+      updateHeaderState();
       renderCards();
     } catch (err) {
       btn.classList.remove('loading');
@@ -525,10 +725,12 @@ export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
+  if (resizeListener) { window.removeEventListener('resize', resizeListener); resizeListener = null; }
   document.removeEventListener('click', handlePinClick, true);
   locationActive = false;
   userLocation = null;
   distanceMap = {};
   searchQuery = '';
+  selectedCity = null;
   viewContainer = null;
 }
