@@ -1,0 +1,43 @@
+{
+  "slug": "aberfeldy_masjid",
+  "display_name": "Aberfeldy Masjid",
+  "city": "",
+  "latitude": 51.513403605854,
+  "longitude": -0.0050411694557373,
+  "country_code": "GB",
+  "website": "",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/4a5c4e68-c484-418a-b85f-78205baf30e8/mosque/1eea8e84-2481-66c4-9e58-066ed47a7584.png",
+  "address": "Lansbury Gardens, Lansbury, Tower Hamlets, E14 0NU",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Aberfeldy Islamic Cultural Centre (AICC)",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 14:00, 14:30",
+  "csv": "aberfeldy_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "aberfeldy-masjid-london-e14-0nu-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/aberfeldy-masjid-london-e14-0nu-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
