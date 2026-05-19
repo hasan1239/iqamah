@@ -1,4 +1,4 @@
-const APP_VERSION = '2.4.18'; // Must match version.json
+const APP_VERSION = '2.4.19'; // Must match version.json
 const OFFLINE_CACHE = `iqamah-offline-v${APP_VERSION}`;
 
 // Install: cache index.html as offline fallback, then skip waiting
