@@ -1,0 +1,43 @@
+{
+  "slug": "eic_al_masjid",
+  "display_name": "Eic Al Masjid",
+  "city": "",
+  "latitude": 51.6138471,
+  "longitude": -0.062842,
+  "country_code": "GB",
+  "website": "http://www.eicalmasjid.org.uk",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/c587b585-5f2b-48b7-a519-5e94ce085b10/mosque/1eea8e31-2beb-6174-a22f-066ed47a7584.png",
+  "address": "Raynham Road, Edmonton, Greater London, N18 2US",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Eic Al Masjid",
+  "timezone": "Europe/London",
+  "jummah_times": "13:15, 14:15",
+  "csv": "eic_al_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "edmonton-mosque"
+    },
+    "source_url": "https://mawaqit.net/en/m/edmonton-mosque"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

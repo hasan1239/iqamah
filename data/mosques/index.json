@@ -1,5 +1,48 @@
 [
   {
+    "slug": "aberfeldy_masjid",
+    "display_name": "Aberfeldy Masjid",
+    "city": "",
+    "latitude": 51.513403605854,
+    "longitude": -0.0050411694557373,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/4a5c4e68-c484-418a-b85f-78205baf30e8/mosque/1eea8e84-2481-66c4-9e58-066ed47a7584.png",
+    "address": "Lansbury Gardens, Lansbury, Tower Hamlets, E14 0NU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Aberfeldy Islamic Cultural Centre (AICC)",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00, 14:30",
+    "csv": "aberfeldy_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "aberfeldy-masjid-london-e14-0nu-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/aberfeldy-masjid-london-e14-0nu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "adam_mosque_dawah_academy",
     "display_name": "Adam Mosque & Dawah Academy",
     "city": "Birmingham",
@@ -43,6 +86,65 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "afghan_islamic_cultural_centre",
+    "display_name": "Afghan Islamic Cultural Centre",
+    "city": "",
+    "latitude": 51.548229874959,
+    "longitude": -0.24792194366455,
+    "country_code": "GB",
+    "website": "https://aiccmosque.org.uk/",
+    "logo": "",
+    "address": "Church Road, Harlesden, Greater London, NW10 9NP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:45, 14:15",
+    "csv": "afghan_islamic_cultural_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "afghan-islamic-cultural-centre-london"
+      },
+      "source_url": "https://mawaqit.net/en/m/afghan-islamic-cultural-centre-london"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-04-16 to 2026-04-16). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 1,
+          "first_date": "2026-04-16",
+          "last_date": "2026-04-16",
+          "affected_dates": [
+            "2026-04-16"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "display_name": "Masjid Aisha",
     "slug": "aisha",
     "csv": "aisha.csv",
@@ -61,6 +163,69 @@
     "jummah_times": "1:30pm",
     "approved": true,
     "pending_update": false
+  },
+  {
+    "slug": "al_bayaan_academy",
+    "display_name": "Al-Bayaan Academy",
+    "city": "London",
+    "latitude": 51.526,
+    "longitude": -0.1,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/albayaanacademy",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ec327ee-a3cc-4f42-a192-82b2809ee420/mosque/1f152e39-e263-6794-9a4a-0a58a9feac02.png",
+    "address": "Goswell Road, Bunhill, Islington, EC1V 7DT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Bayaan Academy - IslingtonJamah.co.uk",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "al_bayaan_academy.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-bayaan-academy-london-ec1v-7dt-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-bayaan-academy-london-ec1v-7dt-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-02-22 to 2026-02-26). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 5,
+          "first_date": "2026-02-22",
+          "last_date": "2026-02-26",
+          "affected_dates": [
+            "2026-02-22",
+            "2026-02-23",
+            "2026-02-24",
+            "2026-02-25",
+            "2026-02-26"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
   },
   {
     "slug": "al_falah_community_support_centre",
@@ -235,6 +400,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "al_nehar_mosque",
+    "display_name": "Al-Nehar Mosque",
+    "city": "",
+    "latitude": 51.5326935,
+    "longitude": -0.1195728,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/al-neharmosque",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/f96b87eb-5a30-4746-a369-81bd2a1999d7/mosque/1f0fe15f-8a76-6396-8ac9-0a58a9feac02.png",
+    "address": "70 Caledonian Road, Caledonian, Islington, N1 9DN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Nehar Mosque - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00",
+    "csv": "al_nehar_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-nehar-mosque-london-n1-9dn-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-nehar-mosque-london-n1-9dn-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "al_rahmah_centre",
     "display_name": "Al Rahmah Centre",
     "city": "Glasgow",
@@ -258,6 +466,135 @@
         "path": "31937"
       },
       "source_url": "https://mawaqit.net/en/m/31937"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_rahman_mosque_education_centre",
+    "display_name": "Al-Rahman Mosque & Education Centre",
+    "city": "",
+    "latitude": 51.5351079,
+    "longitude": -0.1348751,
+    "country_code": "GB",
+    "website": "http://www.alrahmanmosque.org",
+    "logo": "",
+    "address": "Godwin Court, Somers Town, Camden, NW1 1NW",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Rahman Mosque and Education Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:20, 14:00, 14:30",
+    "csv": "al_rahman_mosque_education_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-rahman-mosque-education-centre-london-nw1-1nw-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-rahman-mosque-education-centre-london-nw1-1nw-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_risaalah_mosque",
+    "display_name": "Al-Risaalah Mosque",
+    "city": "",
+    "latitude": 51.5575979,
+    "longitude": -0.1202918,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/al-risaalah",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/2f8535f2-a62e-44e1-82e2-4881af27bde2/mosque/1f0fe13f-e9c6-6d34-9da6-06442f0951bf.png",
+    "address": "91-93 Parkhurst Road, Tufnell Park, Islington, N7 0LP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Risaalah Mosque - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30, 13:30",
+    "csv": "al_risaalah_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-risaalah-mosque-london-n7-0lp-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-risaalah-mosque-london-n7-0lp-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_salam_islamic_centre",
+    "display_name": "Al Salam Islamic Centre",
+    "city": "",
+    "latitude": 51.5332415,
+    "longitude": -0.2752457,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Abbey Road, North Acton, Ealing, NW10 7PB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "al_salam_islamic_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "al-salam-islamic-centre-london-nw10-7pb-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/al-salam-islamic-centre-london-nw10-7pb-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -339,6 +676,49 @@
     "source_image": "sources/aman.jpg",
     "pending_update": false,
     "approved": true
+  },
+  {
+    "slug": "aman_foundation_uk",
+    "display_name": "Aman Foundation Uk",
+    "city": "London",
+    "latitude": 51.494869815242,
+    "longitude": -0.20621285099564,
+    "country_code": "GB",
+    "website": "http://www.amanfoundationuk.com",
+    "logo": "",
+    "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Aman Foundation UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "aman_foundation_uk.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "iaman-foundation-uk-london-w14-8xp-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/iaman-foundation-uk-london-w14-8xp-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "amanah_masjid",
@@ -603,6 +983,89 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "blackbird_hill_muslim_community_centre",
+    "display_name": "Blackbird Hill Muslim Community Centre",
+    "city": "",
+    "latitude": 51.5647837,
+    "longitude": -0.2626144,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/fb6e4dcf-2f19-40c2-a4d1-1d148e26a6aa/mosque/1ef299af-9241-63e2-be8b-0abc556dbbf3.jpg",
+    "address": "Blackbird Hill, Welsh Harp, Brent, NW9 8RS",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00",
+    "csv": "blackbird_hill_muslim_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "blackbird-hill-muslim-community-centre-london-nw9-8rs-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/blackbird-hill-muslim-community-centre-london-nw9-8rs-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 25 days (2026-04-03 to 2026-04-27). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 25,
+          "first_date": "2026-04-03",
+          "last_date": "2026-04-27",
+          "affected_dates": [
+            "2026-04-03",
+            "2026-04-04",
+            "2026-04-05",
+            "2026-04-06",
+            "2026-04-07",
+            "2026-04-08",
+            "2026-04-09",
+            "2026-04-10",
+            "2026-04-11",
+            "2026-04-12",
+            "2026-04-13",
+            "2026-04-14",
+            "2026-04-15",
+            "2026-04-16",
+            "2026-04-17",
+            "2026-04-18",
+            "2026-04-19",
+            "2026-04-20",
+            "2026-04-21",
+            "2026-04-22",
+            "2026-04-23",
+            "2026-04-24",
+            "2026-04-25",
+            "2026-04-26",
+            "2026-04-27"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "slug": "bmacc",
     "display_name": "Bmacc",
     "city": "Glasgow",
@@ -770,6 +1233,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "bow_muslim_community_centre",
+    "display_name": "Bow Muslim Community Centre",
+    "city": "",
+    "latitude": 51.5325259,
+    "longitude": -0.0317094,
+    "country_code": "GB",
+    "website": "http://www.bowmosque.co.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/a53755e8-a53c-4f57-84fc-97fb0a8df169/mosque/1ef4ecbc-44ec-6896-b30f-0eccd22c0f01.png",
+    "address": "Centurion Lane, Bow, Tower Hamlets, E3 5EL",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Bow Muslim Community Centre (BMCC)",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:10",
+    "csv": "bow_muslim_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "bow-masjid-london-e3-5el-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/bow-masjid-london-e3-5el-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "brayatee_mosque",
     "display_name": "Brayatee Mosque",
     "city": "Birmingham",
@@ -885,6 +1391,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "brent_cultural_centre",
+    "display_name": "Brent Cultural Centre",
+    "city": "",
+    "latitude": 51.5357542,
+    "longitude": -0.2443074,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/c33afa41-3129-44b4-bfd4-3093994cd397/mosque/1eea8eda-a6db-6056-b2bb-066ed47a7584.png",
+    "address": "128 High Street Harlesden, Harlesden, Brent, NW10 4SP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Brent Cultural Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15, 14:15",
+    "csv": "brent_cultural_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "brent-cultural-centre-masjid-anuur-london-nw10-4sp-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/brent-cultural-centre-masjid-anuur-london-nw10-4sp-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Birmingham Central Mosque",
     "slug": "central",
     "csv": "central.csv",
@@ -902,6 +1451,178 @@
     "source_image": "sources/central.jpg",
     "lat": 52.4646458,
     "lon": -1.8905789
+  },
+  {
+    "slug": "chelsea_muslim_community_hub",
+    "display_name": "Chelsea Muslim Community Hub",
+    "city": "",
+    "latitude": 51.481081030825,
+    "longitude": -0.17885868465577,
+    "country_code": "GB",
+    "website": "https://www.chelseamuslims.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/9a36bb11-7085-4c13-b3f4-1704af7ae0cc/mosque/1eea8e8e-6b65-6428-8a6f-066ed47a7584.png",
+    "address": "Blantyre Street, Chelsea Riverside, Kensington and Chelsea, SW10 0DS",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Chelsea Muslim Community Hub",
+    "timezone": "Europe/London",
+    "jummah_times": "13:20",
+    "csv": "chelsea_muslim_community_hub.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "chelsea-muslim-community-hub-london-sw100ds-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/chelsea-muslim-community-hub-london-sw100ds-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_quran_london_masjid",
+    "display_name": "Darul Quran London Masjid",
+    "city": "London",
+    "latitude": 51.532212609059,
+    "longitude": -0.12978146795223,
+    "country_code": "GB",
+    "website": "https://www.darulquranlondon.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/f2194685-ac92-4e54-b88d-7fa5b78d4f00/mosque/1eea8e47-c03d-6a8c-8427-066ed47a7584.png",
+    "address": "Purchese Street, Somers Town, Camden, NW1 1HW",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Darul Quran London Masjid",
+    "timezone": "UTC",
+    "jummah_times": "13:30",
+    "csv": "darul_quran_london_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "dar-ul-quran-london-london-nw1-1hw-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/dar-ul-quran-london-london-nw1-1hw-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_ummah_hornchurch",
+    "display_name": "Darul Ummah Hornchurch",
+    "city": "",
+    "latitude": 51.5453391,
+    "longitude": 0.2031487,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Maybank Avenue, Hacton, Havering, RM12 5SA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "darul_ummah_hornchurch.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_ummah_redbridge",
+    "display_name": "Darul Ummah Redbridge",
+    "city": "",
+    "latitude": 51.5778716,
+    "longitude": 0.0640834,
+    "country_code": "GB",
+    "website": "http://www.duredbridge.org",
+    "logo": "",
+    "address": "Woodford Avenue, Barkingside, Redbridge, IG2 6UH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Darul Ummah Redbridge",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:20",
+    "csv": "darul_ummah_redbridge.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "dawatul_islam",
@@ -965,6 +1686,49 @@
     "lat": 51.5173982,
     "lon": -0.0653616,
     "pending_update": false
+  },
+  {
+    "slug": "eic_al_masjid",
+    "display_name": "Eic Al Masjid",
+    "city": "",
+    "latitude": 51.6138471,
+    "longitude": -0.062842,
+    "country_code": "GB",
+    "website": "http://www.eicalmasjid.org.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/c587b585-5f2b-48b7-a519-5e94ce085b10/mosque/1eea8e31-2beb-6174-a22f-066ed47a7584.png",
+    "address": "Raynham Road, Edmonton, Greater London, N18 2US",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Eic Al Masjid",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15, 14:15",
+    "csv": "eic_al_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "edmonton-mosque"
+      },
+      "source_url": "https://mawaqit.net/en/m/edmonton-mosque"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "elland_masjid",
@@ -1460,6 +2224,49 @@
     "source_image": "sources/falaah.jpg"
   },
   {
+    "slug": "finsbury_park_mosque",
+    "display_name": "Finsbury Park Mosque",
+    "city": "",
+    "latitude": 51.5635867,
+    "longitude": -0.1056592,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/finsburyparkmosque",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/eadb45ba-adf0-41bf-87bc-a30129772779/mosque/1f0fe113-2ef4-6104-a16f-0a58a9feac02.png",
+    "address": "7-11 Saint Thomas's Road, Finsbury Park, Islington, N4 2QH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Finsbury Park Mosque - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "finsbury_park_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "finsbury-park-mosque-london-n4-2qh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/finsbury-park-mosque-london-n4-2qh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "gambian_islamic_community_centre",
     "display_name": "Gambian Islamic Community Centre",
     "city": "Smethwick",
@@ -1522,6 +2329,92 @@
     "approved": true
   },
   {
+    "slug": "globe_town_mosque",
+    "display_name": "Globe Town Mosque",
+    "city": "",
+    "latitude": 51.528686725348,
+    "longitude": -0.048320695106505,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Roman Road, Bethnal Green, Tower Hamlets, E2 0RN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00",
+    "csv": "globe_town_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "globe-town-mosque-london-e2-0rn-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/globe-town-mosque-london-e2-0rn-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "grays_park_masjid",
+    "display_name": "Grays Park Masjid",
+    "city": "",
+    "latitude": 51.478262488977,
+    "longitude": 0.32914727926254,
+    "country_code": "GB",
+    "website": "https://graysparkmasjid.co.uk/",
+    "logo": "",
+    "address": "Parkway Centre Park Road, Little Thurrock, Grays, RM17 6RB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Thurrock Islamic Education & Cultural Association",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "grays_park_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "graysmosque"
+      },
+      "source_url": "https://mawaqit.net/en/m/graysmosque"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid Hamza",
     "slug": "hamza",
     "csv": "hamza.csv",
@@ -1539,6 +2432,92 @@
     "source_image": "sources/hamza.png",
     "lat": 52.4493645,
     "lon": -1.8828855
+  },
+  {
+    "slug": "hillside_islamic_cultural_centre",
+    "display_name": "Hillside Islamic Cultural Centre",
+    "city": "",
+    "latitude": 51.5425993,
+    "longitude": -0.26837,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Hillside, Twyford, Greater London, NW10 8LI",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:20, 14:00",
+    "csv": "hillside_islamic_cultural_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "hillside-mosque-london-nw10-8li-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/hillside-mosque-london-nw10-8li-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "holloway_road_mosque",
+    "display_name": "Holloway Road Mosque",
+    "city": "",
+    "latitude": 51.5510081,
+    "longitude": -0.1096989,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "152 Holloway Road, Arsenal, Islington, N7 8DD",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Holloway Road Mosque - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "13:10, 13:50, 14:30",
+    "csv": "holloway_road_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "holloway-road-mosque-london-n7-8dd-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/holloway-road-mosque-london-n7-8dd-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "huda_masjid",
@@ -1659,6 +2638,135 @@
           "action_taken": "none (UI flags affected days for users)",
           "fix": "Verify masjid's summer Isha policy if you believe these days should differ from Maghrib"
         },
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "ibn_abbas_islamic_centre",
+    "display_name": "Ibn Abbas Islamic Centre",
+    "city": "London",
+    "latitude": 51.5487677,
+    "longitude": -0.153457,
+    "country_code": "GB",
+    "website": "https://www.iicentre.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e8d289d2-c57a-4713-b1ff-ac9735edab99/mosque/1eff4964-9ff8-6816-9510-06ef9144e88f.jpg",
+    "address": "Queen's Crescent, Haverstock, Camden, NW5 4EZ",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Ibn Abbas Islamic Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "ibn_abbas_islamic_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "ibn-abbas-islamic-centre-london-nw5-4ez-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/ibn-abbas-islamic-centre-london-nw5-4ez-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "islamic_cultural_centre_wembley",
+    "display_name": "Islamic Cultural Centre (Wembley)",
+    "city": "",
+    "latitude": 51.547045084432,
+    "longitude": -0.2745966883606,
+    "country_code": "GB",
+    "website": "http://www.iccwembley.co.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/61de0c11-b432-4403-b2b5-3ae79fe4dfff/mosque/1f12b7d9-ec89-6756-82df-0a58a9feac02.jpg",
+    "address": "Harrow Road, Twyford, Greater London, HA9 6DG",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Mr Mustafa Jabbar Butt",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00, 13:30",
+    "csv": "islamic_cultural_centre_wembley.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "islamic-cultural-centre-london-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/islamic-cultural-centre-london-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "islamic_dawah_centre",
+    "display_name": "Islamic Dawah Centre",
+    "city": "",
+    "latitude": 51.5454724,
+    "longitude": 0.0496465,
+    "country_code": "GB",
+    "website": "https://idcuk.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/8c658b95-d857-4a3c-8b7f-56932d0f7d71/mosque/1f0e4916-2515-68b8-9949-0a58a9feac02.png",
+    "address": "406 High Street North, Plashet, Newham, E12 6RH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Islamic Dawah Centre - ISLAMIA ALLAIPUPANI MAIYAM",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30",
+    "csv": "islamic_dawah_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "islamic-dawah-centre-islamia-london-e12-6rh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/islamic-dawah-centre-islamia-london-e12-6rh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
         {
           "type": "sehri_unconfigured",
           "severity": "medium",
@@ -1878,6 +2986,92 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "jsmcc",
+    "display_name": "Jsmcc",
+    "city": "Watford",
+    "latitude": 51.6441442,
+    "longitude": -0.3609989,
+    "country_code": "GB",
+    "website": "Https://jsmcc.org/",
+    "logo": "",
+    "address": "154 High Street, Bushey, Hertsmere, WD23 3DH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Jesus the son of Mary community centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "jsmcc.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "jesus-the-son-of-mary-community-centre-watford-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/jesus-the-son-of-mary-community-centre-watford-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "kings_cross_mosque_islamic_cultural",
+    "display_name": "Kings Cross Mosque & Islamic Cultural",
+    "city": "",
+    "latitude": 51.5283828,
+    "longitude": -0.119813,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/kingscrossmosque",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/af45fe38-949f-4a71-afdd-44096df8195e/mosque/1f0fe155-efcd-6960-98c4-0a58a9feac02.png",
+    "address": "Gray's Inn Road, King's Cross, Camden, WC1H 8DU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Kings Cross Mosque & Islamic Cultural Centre - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:20",
+    "csv": "kings_cross_mosque_islamic_cultural.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "kings-cross-mosque-islamic-cultural-london-wc1h-8du-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/kings-cross-mosque-islamic-cultural-london-wc1h-8du-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Kings Heath Masjid",
     "slug": "kingsheath",
     "csv": "kingsheath.csv",
@@ -1897,6 +3091,49 @@
     "lon": -1.8967673
   },
   {
+    "slug": "leopold_community_centre",
+    "display_name": "Leopold Community Centre",
+    "city": "",
+    "latitude": 51.5182815,
+    "longitude": -0.025962,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "62 St Paul's Way, Limehouse, Greater London, E3 4AL",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Leopold Community Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "leopold_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "leopold-community-centre-london-e3-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/leopold-community-centre-london-e3-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Madani Masjid",
     "slug": "madani",
     "csv": "madani.csv",
@@ -1914,6 +3151,49 @@
     "source_image": "sources/madani.png",
     "lat": 52.6278525,
     "lon": -1.0987708
+  },
+  {
+    "slug": "madina_islamic_centre_cricklewood",
+    "display_name": "Madina Islamic Centre, Cricklewood",
+    "city": "",
+    "latitude": 51.563016135495,
+    "longitude": -0.19873586137695,
+    "country_code": "GB",
+    "website": "https://madinaislamiccentre.org/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/69c8105c-ee41-4c85-9b03-6f1e68dc974f/mosque/1f030b06-c54a-6e36-990b-0a17f0e78aa5.png",
+    "address": "Cricklewood Lane, Childs Hill, Barnet, NW2 2QH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Madina Islamic Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00, 13:45, 14:15",
+    "csv": "madina_islamic_centre_cricklewood.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "madina_masjid",
@@ -2452,6 +3732,92 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_alfalah",
+    "display_name": "Masjid Alfalah",
+    "city": "",
+    "latitude": 51.5638231,
+    "longitude": 0.0573474,
+    "country_code": "GB",
+    "website": "http://masjid-alfalah.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/df9ca896-4473-4fa3-af6d-15244e5cc50e/mosque/1eea8dcd-ff72-64fc-a748-066ed47a7584.png",
+    "address": "Kensington Gardens, Gants Hill, Greater London, IG1 3EN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "North Ilford Islamic Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:10",
+    "csv": "masjid_alfalah.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "alfalah-london"
+      },
+      "source_url": "https://mawaqit.net/en/m/alfalah-london"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_ansar",
+    "display_name": "Masjid Ansar",
+    "city": "",
+    "latitude": 51.566845643747,
+    "longitude": 0.10928634061741,
+    "country_code": "GB",
+    "website": "https://masjidansar.com/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/c747c857-0f98-478c-86c5-e046901c1988/mosque/1f104188-0d73-6a9a-b546-0aa822ef798f.png",
+    "address": "Eastwood Road, Seven Kings, Redbridge, IG3 8TD",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Al-Ansar Islamic Education centre",
+    "timezone": "Europe/London",
+    "jummah_times": "12:35",
+    "csv": "masjid_ansar.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-ansar-london-ig3-8td-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-ansar-london-ig3-8td-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_ar_rashideen",
     "display_name": "Masjid Ar-Rashideen",
     "city": "Batley",
@@ -2822,6 +4188,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_ramadan",
+    "display_name": "Masjid Ramadan",
+    "city": "London",
+    "latitude": 51.5509809,
+    "longitude": -0.0740086,
+    "country_code": "GB",
+    "website": "http://www.ukturkishislamictrust.co.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/10e9ceb4-c07f-46aa-a0e9-b19045d980e7/mosque/1eea8de5-df94-6c08-b42e-066ed47a7584.png",
+    "address": "Shacklewell Lane, Shacklewell, Greater London, E8 2BY",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Uk Turkish Islamic Trust",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "masjid_ramadan.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjidramadan"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjidramadan"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_usman_ar_rahmantrust",
     "display_name": "Masjid Usman Ar Rahmantrust",
     "city": "Birmingham",
@@ -2845,6 +4254,49 @@
         "path": "masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/masjid-usman-arrehman-trust-birminghan-b23-7jg-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_yusuf",
+    "display_name": "Masjid Yusuf",
+    "city": "London",
+    "latitude": 51.5659172,
+    "longitude": -0.1207514,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/masjidyusuf",
+    "logo": "",
+    "address": "Hornsey Road, Tollington, Islington, N19 4EB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Masjid Yusuf - islingtonjamah@gmail.com",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "masjid_yusuf.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-yusuf-london-n19-4eb-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-yusuf-london-n19-4eb-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -2994,6 +4446,92 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "muradiye_camii",
+    "display_name": "Muradiye Camii",
+    "city": "London",
+    "latitude": 51.5527189,
+    "longitude": -0.0866006,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/b5d6569d-22f9-4cb9-9eee-04667627b037/mosque/1eef0ae3-4b19-6dba-a50b-0e21237a51f7.png",
+    "address": "16 Green Lanes, Highbury, Greater London, N16 9ND",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "muradiye_camii.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "muradiye-camii-london-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/muradiye-camii-london-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "muslim_welfare_house",
+    "display_name": "Muslim Welfare House",
+    "city": "",
+    "latitude": 51.5635681,
+    "longitude": -0.1071701,
+    "country_code": "GB",
+    "website": "https://www.islingtonjamah.co.uk/muslimwelfarehouse",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/44dfa98e-a742-4686-97cd-b4f858fa9a7c/mosque/1f0fe12e-65b1-68c0-91c3-06442f0951bf.jpg",
+    "address": "233 Seven Sisters Road, Finsbury Park, Islington, N4 2DA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Muslim Welfare House - IslingtonJamah.co.uk",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30",
+    "csv": "muslim_welfare_house.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "muslim-welfare-house-london-n4-2da-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/muslim-welfare-house-london-n4-2da-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "muslim_youth_foundation",
     "display_name": "Muslim Youth Foundation",
     "city": "Manchester",
@@ -3066,6 +4604,118 @@
     ]
   },
   {
+    "slug": "muzani_community_islamic_centre",
+    "display_name": "Muzani Community & Islamic Centre",
+    "city": "London",
+    "latitude": 51.5478216,
+    "longitude": -0.2486256,
+    "country_code": "GB",
+    "website": "https://www.muzani.co.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/17b26f92-26ff-47a0-82bf-00dc1c938bf3/mosque/1eea8ded-df72-6baa-b99b-066ed47a7584.png",
+    "address": "Church Road, Harlesden, Greater London, NW10 9NP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Muzani Community Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "muzani_community_islamic_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "muzani-community-islamic-centre-london"
+      },
+      "source_url": "https://mawaqit.net/en/m/muzani-community-islamic-centre-london"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 54,
+          "first_date": "2026-05-22",
+          "last_date": "2026-07-14",
+          "affected_dates": [
+            "2026-05-22",
+            "2026-05-23",
+            "2026-05-24",
+            "2026-05-25",
+            "2026-05-26",
+            "2026-05-27",
+            "2026-05-28",
+            "2026-05-29",
+            "2026-05-30",
+            "2026-05-31",
+            "2026-06-01",
+            "2026-06-02",
+            "2026-06-03",
+            "2026-06-04",
+            "2026-06-05",
+            "2026-06-06",
+            "2026-06-07",
+            "2026-06-08",
+            "2026-06-09",
+            "2026-06-10",
+            "2026-06-11",
+            "2026-06-12",
+            "2026-06-13",
+            "2026-06-14",
+            "2026-06-15",
+            "2026-06-16",
+            "2026-06-17",
+            "2026-06-18",
+            "2026-06-19",
+            "2026-06-20",
+            "2026-06-21",
+            "2026-06-22",
+            "2026-06-23",
+            "2026-06-24",
+            "2026-06-25",
+            "2026-06-26",
+            "2026-06-27",
+            "2026-06-28",
+            "2026-06-29",
+            "2026-06-30",
+            "2026-07-01",
+            "2026-07-02",
+            "2026-07-03",
+            "2026-07-04",
+            "2026-07-05",
+            "2026-07-06",
+            "2026-07-07",
+            "2026-07-08",
+            "2026-07-09",
+            "2026-07-10",
+            "2026-07-11",
+            "2026-07-12",
+            "2026-07-13",
+            "2026-07-14"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "slug": "najashi_islamic_centre",
     "display_name": "Najashi Islamic Centre",
     "city": "",
@@ -3126,6 +4776,49 @@
     "source_image": "sources/naqeebul.jpg",
     "lat": 52.4924826,
     "lon": -1.8582255
+  },
+  {
+    "slug": "nhc_mosque",
+    "display_name": "Nhc Mosque",
+    "city": "",
+    "latitude": 51.5066931,
+    "longitude": -0.1253432,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/dbdf05d3-49c3-4396-b4d1-7616d6d7019f/mosque/1eff77ac-ba2b-6474-98a6-0e4fa23cf9cb.jpeg",
+    "address": "9 Northumberland Avenue, St James's, Westminster, WC2N 5BX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "NHC",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "nhc_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "nhc-mosque-london-wc2n-5bx-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/nhc-mosque-london-wc2n-5bx-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "nimrah_masjid",
@@ -3249,6 +4942,92 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "park_royal_community_centre",
+    "display_name": "Park Royal Community Centre",
+    "city": "London",
+    "latitude": 51.5277567,
+    "longitude": -0.2643845,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/ed7a2408-d338-4b10-a3c2-033c76b58ecb/mosque/1eeff508-f8fe-6f06-943b-0e8f4a8ce035.jpg",
+    "address": "41-43 Standard Road, North Acton, Ealing, NW10 6HF",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "PR Community Centre Ltd",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "park_royal_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "park-royal-community-centre-london-nw10-6hf-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/park-royal-community-centre-london-nw10-6hf-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "plashet_grove_masjid",
+    "display_name": "Plashet Grove Masjid",
+    "city": "",
+    "latitude": 51.5385537,
+    "longitude": 0.0425807,
+    "country_code": "GB",
+    "website": "https://plashetgrovemasjid.org/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/ef4309bc-b7a8-4427-9817-42c21ac2817e/mosque/1f10a4a6-5696-6f0c-a0ef-0a58a9feac02.png",
+    "address": "Plashet Grove, Plashet, Newham, E6 1BX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Markaz Ud Dawat Wal Irshad",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "plashet_grove_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "plashet-grove-masjid-london-e6-1bx-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/plashet-grove-masjid-london-e6-1bx-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid Quba Trust",
     "slug": "quba",
     "csv": "quba.csv",
@@ -3329,6 +5108,93 @@
     "source_image": "sources/raufbarzenji.jpg",
     "lat": 53.4608698,
     "lon": -2.2513595
+  },
+  {
+    "slug": "redbridge_muslim_community_centre",
+    "display_name": "Redbridge Muslim Community Centre",
+    "city": "",
+    "latitude": 51.573051752109,
+    "longitude": 0.084335676444312,
+    "country_code": "GB",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/mosque/1eebd19e-ef3f-6272-acb3-06acfcd1c88a.jpg",
+    "address": "Eastern Avenue, Newbury Park, Redbridge, IG2 6PE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Install the Mawaqit application on your phone and choose the Redbridge Muslim Community Center to set up this live timetable.",
+    "timezone": "Europe/London",
+    "jummah_times": "13:20, 14:10",
+    "csv": "redbridge_muslim_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "rmcc-ilford-ig2-6pe-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/rmcc-ilford-ig2-6pe-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 29,
+          "first_date": "2026-09-02",
+          "last_date": "2026-09-30",
+          "affected_dates": [
+            "2026-09-02",
+            "2026-09-03",
+            "2026-09-04",
+            "2026-09-05",
+            "2026-09-06",
+            "2026-09-07",
+            "2026-09-08",
+            "2026-09-09",
+            "2026-09-10",
+            "2026-09-11",
+            "2026-09-12",
+            "2026-09-13",
+            "2026-09-14",
+            "2026-09-15",
+            "2026-09-16",
+            "2026-09-17",
+            "2026-09-18",
+            "2026-09-19",
+            "2026-09-20",
+            "2026-09-21",
+            "2026-09-22",
+            "2026-09-23",
+            "2026-09-24",
+            "2026-09-25",
+            "2026-09-26",
+            "2026-09-27",
+            "2026-09-28",
+            "2026-09-29",
+            "2026-09-30"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
   },
   {
     "display_name": "Jami Masjid",
@@ -3436,6 +5302,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "stratford_islamic_association",
+    "display_name": "Stratford Islamic Association",
+    "city": "",
+    "latitude": 51.549180971004,
+    "longitude": 0.0016710960972199,
+    "country_code": "GB",
+    "website": "https://stratfordislamicassociation.com",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/25df1ebf-201d-4fc3-98d5-90dd0af122ed/mosque/1f1459e2-55d3-6b98-afa0-0a58a9feac02.png",
+    "address": "3 Brydges Road, Maryland, Newham, E15 1NA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Stratford Islamic Association",
+    "timezone": "Europe/London",
+    "jummah_times": "13:20",
+    "csv": "stratford_islamic_association.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "stratford-islamic-association-london-e15-1na-united-kingdom-1"
+      },
+      "source_url": "https://mawaqit.net/en/m/stratford-islamic-association-london-e15-1na-united-kingdom-1"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "sultan_bahu_centre",
     "display_name": "Sultan Bahu Centre",
     "city": "Birmingham",
@@ -3479,6 +5388,135 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "taiba_welfare_foundation",
+    "display_name": "Taiba Welfare Foundation",
+    "city": "",
+    "latitude": 51.614489626778,
+    "longitude": -0.27675272215957,
+    "country_code": "GB",
+    "website": "https://taibafoundation.org/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/8aaade48-958b-4633-b789-3a721e6fce78/mosque/1ef1f048-4c20-6d74-b569-0ecb5e3f0f5f.jpeg",
+    "address": "Rectory Lane, Edgware, Barnet, HA8 7LG",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Taiba Welfare Foundation",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15, 14:00",
+    "csv": "taiba_welfare_foundation.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "taiba-welfare-foundation-greater-london-ha8-7lg-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/taiba-welfare-foundation-greater-london-ha8-7lg-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "taleem_mosque_community_centre",
+    "display_name": "Taleem Mosque & Community Centre",
+    "city": "",
+    "latitude": 51.477864894959,
+    "longitude": 0.32483368186331,
+    "country_code": "GB",
+    "website": "http://www.taleemmosque.com",
+    "logo": "",
+    "address": "21-23 Clarence Road, Grays Riverside, Thurrock, RM17 6QA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Taleem Mosque & Community Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30, 13:30",
+    "csv": "taleem_mosque_community_centre.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "taleem-mosque-and-community-centre-grays-rm17-6qa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/taleem-mosque-and-community-centre-grays-rm17-6qa-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "talimul_quran_uk",
+    "display_name": "Talimul Quran Uk",
+    "city": "",
+    "latitude": 51.546903,
+    "longitude": 0.0060327,
+    "country_code": "GB",
+    "website": "http://talimulquranuk.com",
+    "logo": "",
+    "address": "59 Leytonstone Road, Maryland, Newham, E15 1JA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Talimul Quran UK",
+    "timezone": "UTC",
+    "jummah_times": "13:30, 14:15",
+    "csv": "talimul_quran_uk.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "talimul-quran-uk-london-e15-1ja-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/talimul-quran-uk-london-e15-1ja-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "tamworth_masjid",
     "display_name": "Tamworth Masjid",
     "city": "",
@@ -3502,6 +5540,49 @@
         "path": "tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
       },
       "source_url": "https://mawaqit.net/en/m/tamworth-community-hub-tamworth-b77-1dl-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "tawakal_masjid",
+    "display_name": "Tawakal Masjid",
+    "city": "London",
+    "latitude": 51.5377133,
+    "longitude": -0.2495035,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Craven Park Road, Harlesden, Brent, NW10 8SE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "tawakal_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "tawakal-masjid-london-nw10-8se-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/tawakal-masjid-london-nw10-8se-united-kingdom"
     },
     "quality": {
       "status": "warnings",
@@ -3605,6 +5686,49 @@
     "notes": "Test masjid for development only."
   },
   {
+    "slug": "the_mosque_islamic_centre_of_brent",
+    "display_name": "The Mosque & Islamic Centre of Brent",
+    "city": "London",
+    "latitude": 51.5557341,
+    "longitude": -0.216654,
+    "country_code": "GB",
+    "website": "https://micb.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7e60536c-cf81-4b7b-bccb-3093aec77bfe/mosque/1f101e7d-8c24-69e4-a7a7-0a58a9feac02.png",
+    "address": "33A Howard Road, Cricklewood, Brent, NW2 6DS",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "The Mosque & Islamic Centre of Brent",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "the_mosque_islamic_centre_of_brent.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "the-mosque-islamic-centre-of-brent-london-nw2-6ds-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/the-mosque-islamic-centre-of-brent-london-nw2-6ds-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid E Vali",
     "slug": "vali",
     "csv": "vali.csv",
@@ -3621,6 +5745,49 @@
     "lat": 53.7516084,
     "lon": -2.5086968,
     "source_image": "sources/vali.jpg"
+  },
+  {
+    "slug": "wimbledon_masjid",
+    "display_name": "Wimbledon Masjid",
+    "city": "",
+    "latitude": 51.4359221,
+    "longitude": -0.1969466,
+    "country_code": "GB",
+    "website": "http://www.wimbledonmosque.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e7ddc5f7-ba13-414c-8878-6df345793ada/mosque/1eff7354-5936-606c-8879-06ef9144e88f.png",
+    "address": "Durnsford Road, Wimbledon Park, Merton, SW19 8DS",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "wimbledon_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "wimbledon-masjid-london-sw19-8ds-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/wimbledon-masjid-london-sw19-8ds-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "woodfarm_education_centre_wec",

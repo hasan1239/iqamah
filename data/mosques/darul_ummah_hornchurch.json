@@ -1,0 +1,43 @@
+{
+  "slug": "darul_ummah_hornchurch",
+  "display_name": "Darul Ummah Hornchurch",
+  "city": "",
+  "latitude": 51.5453391,
+  "longitude": 0.2031487,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Maybank Avenue, Hacton, Havering, RM12 5SA",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": null,
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "darul_ummah_hornchurch.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

@@ -1,0 +1,43 @@
+{
+  "slug": "madina_islamic_centre_cricklewood",
+  "display_name": "Madina Islamic Centre, Cricklewood",
+  "city": "",
+  "latitude": 51.563016135495,
+  "longitude": -0.19873586137695,
+  "country_code": "GB",
+  "website": "https://madinaislamiccentre.org/",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/69c8105c-ee41-4c85-9b03-6f1e68dc974f/mosque/1f030b06-c54a-6e36-990b-0a17f0e78aa5.png",
+  "address": "Cricklewood Lane, Childs Hill, Barnet, NW2 2QH",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Madina Islamic Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00, 13:45, 14:15",
+  "csv": "madina_islamic_centre_cricklewood.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
