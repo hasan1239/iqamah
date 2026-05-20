@@ -1,0 +1,44 @@
+{
+  "slug": "masjidus_sunna_an_nabawiyyah",
+  "display_name": "Masjidus Sunna An Nabawiyyah",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "125 Mansfield Rd, Aston, Birmingham undefined, Aston, Birmingham, B66DA",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "masjidus_sunna_an_nabawiyyah.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "075fe2ba-8537-43b4-9327-13ed91932eae",
+      "masjid_id": 22028
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/075fe2ba-8537-43b4-9327-13ed91932eae"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "jamia_masjid_haroonia_nisbat_e_rasooli",
+  "display_name": "JAMIA MASJID HAROONIA NISBAT-E-RASOOLI",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "766 ALUM ROCK ROAD, Glebe Farm & Tile Cross, Birmingham, B8 3PP",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30, 12:16",
+  "csv": "jamia_masjid_haroonia_nisbat_e_rasooli.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "a4cbbbf7-6ecf-4126-8b30-878125d566a9",
+      "masjid_id": 24963
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/a4cbbbf7-6ecf-4126-8b30-878125d566a9"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

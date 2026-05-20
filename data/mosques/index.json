@@ -43,6 +43,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "ad_duha_institute",
+    "display_name": "Ad-Duha Institute",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "1164 Stratford Road undefined, Hall Green North, Birmingham, B28 8AF",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "ad_duha_institute.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "60fe0a65-de8d-447f-8ffd-05e6c4e3b683",
+        "masjid_id": 22673
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/60fe0a65-de8d-447f-8ffd-05e6c4e3b683"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "adam_mosque_dawah_academy",
     "display_name": "Adam Mosque & Dawah Academy",
     "city": "Birmingham",
@@ -400,6 +444,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "al_hafidhoon",
+    "display_name": "Al Hafidhoon",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "128-130 Ladypool Road, Sparkbrook & Balsall Heath East, Birmingham, B12 8JA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "al_hafidhoon.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "46f6cfd3-fab8-4482-adfe-d654b830202f",
+        "masjid_id": 20749
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/46f6cfd3-fab8-4482-adfe-d654b830202f"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "al_huda_masjid",
     "display_name": "Al-Huda Masjid",
     "city": "",
@@ -569,6 +657,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "al_madani_centre_academy_and_majid",
+    "display_name": "Al Madani Centre Academy and Majid",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "194-202 Sparkhill, Sparkhill, Birmingham, B11 3LG",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "al_madani_centre_academy_and_majid.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "628b0d3e-b615-462a-bde9-841dbd7ee432",
+        "masjid_id": 22665
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/628b0d3e-b615-462a-bde9-841dbd7ee432"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -1123,6 +1255,60 @@
     "approved": true
   },
   {
+    "slug": "an_noor_masjid_community_centre",
+    "display_name": "An-Noor Masjid & Community Centre",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "45-49 Blake Lane, Bordesley Green, Bordesley Green, Birmingham, B9 5QT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30",
+    "csv": "an_noor_masjid_community_centre.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "41cf67e4-150a-4268-b5b3-a4b8c1a32366",
+        "masjid_id": 25198
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/41cf67e4-150a-4268-b5b3-a4b8c1a32366"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+        "Isha equals Maghrib on 30 days (2026-06-01 to 2026-06-30) — typical UK-summer combine."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        },
+        {
+          "type": "isha_clamped",
+          "severity": "medium",
+          "count": 30,
+          "first_date": "2026-06-01",
+          "last_date": "2026-06-30",
+          "action_taken": "none (UI flags affected days for users)",
+          "fix": "Verify the masjid's summer Isha policy if these should differ from Maghrib"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid An Noor",
     "slug": "annoor",
     "csv": "annoor.csv",
@@ -1231,6 +1417,50 @@
       "row_count": 365,
       "warnings": [],
       "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "bilal",
+    "display_name": "Bilal",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "School, Acocks Green, Birmingham, B288je",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "bilal.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "a82d0574-d7d6-42d6-8bca-92254037f654",
+        "masjid_id": 23728
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/a82d0574-d7d6-42d6-8bca-92254037f654"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
     },
     "acknowledged_issues": []
   },
@@ -1748,6 +1978,50 @@
     "lon": -1.8905789
   },
   {
+    "slug": "central_jamia_mosque_zia_ul_quran",
+    "display_name": "Central Jamia Mosque Zia-ul Quran",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "233 St. Saviours Road, Alum Rock, Alum Rock, Birmingham, B8 1EP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00, 14:45",
+    "csv": "central_jamia_mosque_zia_ul_quran.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "b051266d-151d-45b2-9cbb-e2040107626a",
+        "masjid_id": 20191
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/b051266d-151d-45b2-9cbb-e2040107626a"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "chelsea_muslim_community_hub",
     "display_name": "Chelsea Muslim Community Hub",
     "city": "",
@@ -2241,6 +2515,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "esa_ibn_maryam",
+    "display_name": "Esa Ibn Maryam",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "14 Etwall Rd undefined, Hall Green South, Birmingham, B28 0LE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "esa_ibn_maryam.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "c28d3efc-1647-40b6-b0d1-6475ef2c4472",
+        "masjid_id": 20792
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/c28d3efc-1647-40b6-b0d1-6475ef2c4472"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "fairwater_canolfan_iqra",
     "display_name": "Fairwater Canolfan Iqra",
     "city": "Cardiff",
@@ -2526,6 +2844,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "faizan_e_madina_masjid_sandwell",
+    "display_name": "Faizan-E-Madina Masjid Sandwell",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Taylors Lane, Smethwick, Smethwick, Sandwell, B67 6RR",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 12:30",
+    "csv": "faizan_e_madina_masjid_sandwell.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "35a4ee7a-6716-42df-b58e-1c04d8bdfc96",
+        "masjid_id": 24600
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/35a4ee7a-6716-42df-b58e-1c04d8bdfc96"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -2839,6 +3201,50 @@
     "approved": true
   },
   {
+    "slug": "ghamkol_sharif_mosque",
+    "display_name": "Ghamkol Sharif Mosque",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "150 Golden Hillock Road, Small Heath, Birmingham, Small Heath, Birmingham, B10 0DX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "ghamkol_sharif_mosque.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "13ffbf41-ed61-4216-a16b-c69a8caf9023",
+        "masjid_id": 24415
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/13ffbf41-ed61-4216-a16b-c69a8caf9023"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "globe_town_mosque",
     "display_name": "Globe Town Mosque",
     "city": "",
@@ -2925,6 +3331,94 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "green_lane_masjid_community_centre",
+    "display_name": "Green Lane Masjid & Community Centre",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "20 Green Lane, Small Heath, Birmingham, Bordesley Green, Birmingham, B9 5DB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30",
+    "csv": "green_lane_masjid_community_centre.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "f2a9ea59-4cd0-4ba2-bdf2-564c4459ac0d",
+        "masjid_id": 20252
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/f2a9ea59-4cd0-4ba2-bdf2-564c4459ac0d"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "hall_green_mosque",
+    "display_name": "Hall Green Mosque",
+    "city": "",
+    "latitude": 52.42,
+    "longitude": -1.84,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "1 Wycome Rd, Hall Green, Hall Green North, Birmingham, B28 9EL",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "14:15, 13:30",
+    "csv": "hall_green_mosque.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "4491a0a0-ecc4-4297-b411-f39d9b9043fc",
+        "masjid_id": 24495
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/4491a0a0-ecc4-4297-b411-f39d9b9043fc"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Masjid Hamza",
     "slug": "hamza",
     "csv": "hamza.csv",
@@ -2942,6 +3436,50 @@
     "source_image": "sources/hamza.png",
     "lat": 52.4493645,
     "lon": -1.8828855
+  },
+  {
+    "slug": "hazrat_sultan_bahu_trust",
+    "display_name": "Hazrat Sultan Bahu Trust",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "17-21 Ombersley Rd, Birmingham, Sparkbrook & Balsall Heath East, Birmingham, B12 8UR",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "hazrat_sultan_bahu_trust.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "38674efa-be6a-4907-a0a4-515a4347e615",
+        "masjid_id": 24058
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/38674efa-be6a-4907-a0a4-515a4347e615"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "hillside_islamic_cultural_centre",
@@ -3246,7 +3784,7 @@
   },
   {
     "slug": "islamic_cultural_centre_wembley",
-    "display_name": "Islamic Cultural Centre (Wembley)",
+    "display_name": "Islamic Cultural Centre",
     "city": "",
     "latitude": 51.547045084432,
     "longitude": -0.2745966883606,
@@ -3274,7 +3812,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 â sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3368,6 +3906,94 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jam_e_masjid_qiblah_hadhrat_sahib_gulhar_shareef_birmingham",
+    "display_name": "Jam-E-Masjid Qiblah Hadhrat Sahib Gulhar Shareef Birmingham",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "232, 234 Slade Rd undefined, Stockland Green, Birmingham, B23 7RH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "12:45",
+    "csv": "jam_e_masjid_qiblah_hadhrat_sahib_gulhar_shareef_birmingham.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "6fbaeb3a-0eab-4186-800c-3cdf6fb984de",
+        "masjid_id": 22169
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/6fbaeb3a-0eab-4186-800c-3cdf6fb984de"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jamatia_islamic_centre",
+    "display_name": "Jamatia Islamic Centre",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "179-183 Woodlands Rd, Sparkhill, Birmingham, B11 4ER",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "jamatia_islamic_centre.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "65b04391-3815-4d20-a7dd-53b75050bcd3",
+        "masjid_id": 24393
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/65b04391-3815-4d20-a7dd-53b75050bcd3"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -3496,6 +4122,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "jamia_masjid_haroonia_nisbat_e_rasooli",
+    "display_name": "JAMIA MASJID HAROONIA NISBAT-E-RASOOLI",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "766 ALUM ROCK ROAD, Glebe Farm & Tile Cross, Birmingham, B8 3PP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 12:16",
+    "csv": "jamia_masjid_haroonia_nisbat_e_rasooli.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "a4cbbbf7-6ecf-4126-8b30-878125d566a9",
+        "masjid_id": 24963
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/a4cbbbf7-6ecf-4126-8b30-878125d566a9"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "jamia_masjid_madni",
     "display_name": "Jamia Masjid Madni",
     "city": "Halifax",
@@ -3533,6 +4203,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "jamia_masjid_minhaj_ul_quran",
+    "display_name": "Jamia Masjid Minhaj-ul-Quran",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "14 Naseby Road, Alum Rock, Birmingham, B8 3HE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "jamia_masjid_minhaj_ul_quran.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "ecf5f5a2-8b5a-4fcf-93dd-c243549b6d94",
+        "masjid_id": 20366
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/ecf5f5a2-8b5a-4fcf-93dd-c243549b6d94"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -3859,6 +4573,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "lozells_central_mosque",
+    "display_name": "Lozells central mosque",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "213-221 lozells road, Lozells, Birmingham, B19 1rj",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "lozells_central_mosque.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "70a6fa4f-e15c-44f8-9624-3fe3a2e3a129",
+        "masjid_id": 22314
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/70a6fa4f-e15c-44f8-9624-3fe3a2e3a129"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "display_name": "Madani Masjid",
     "slug": "madani",
     "csv": "madani.csv",
@@ -4001,6 +4759,108 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "madina_mosque_and_all_muslim_welfare_society",
+    "display_name": "Madina Mosque and All Muslim Welfare Society",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "7 Park Ave, Soho & Jewellery Quarter, Birmingham, B18 5ND",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "madina_mosque_and_all_muslim_welfare_society.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "118a97c1-a621-4067-99d1-ce4cea6a1cf0",
+        "masjid_id": 20580
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/118a97c1-a621-4067-99d1-ce4cea6a1cf0"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+        "Auto-corrected 8 obvious AM/PM (±12h) time errors (e.g. zohr 01:11→13:11 on 2026-06-23)."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        },
+        {
+          "type": "time_corrected",
+          "severity": "medium",
+          "count": 8,
+          "action_taken": "Shifted each value by ±12h into its valid window",
+          "corrections": [
+            {
+              "date": "2026-06-23",
+              "field": "zohr",
+              "old": "01:11",
+              "new": "13:11"
+            },
+            {
+              "date": "2026-06-24",
+              "field": "zohr",
+              "old": "01:11",
+              "new": "13:11"
+            },
+            {
+              "date": "2026-06-25",
+              "field": "zohr",
+              "old": "01:11",
+              "new": "13:11"
+            },
+            {
+              "date": "2026-06-26",
+              "field": "zohr",
+              "old": "01:11",
+              "new": "13:11"
+            },
+            {
+              "date": "2026-06-27",
+              "field": "zohr",
+              "old": "01:11",
+              "new": "13:11"
+            },
+            {
+              "date": "2026-06-28",
+              "field": "zohr",
+              "old": "01:12",
+              "new": "13:12"
+            },
+            {
+              "date": "2026-06-29",
+              "field": "zohr",
+              "old": "01:12",
+              "new": "13:12"
+            },
+            {
+              "date": "2026-06-30",
+              "field": "zohr",
+              "old": "01:12",
+              "new": "13:12"
+            }
+          ],
+          "fix": "None needed; verify upstream if you want the masjid to fix their config"
         }
       ]
     },
@@ -4174,6 +5034,77 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "majid_darul_elm",
+    "display_name": "Majid Darul Elm",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "115 Soho Hill undefined, Soho & Jewellery Quarter, Birmingham, B19 1AY",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "majid_darul_elm.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "4261dac1-11f8-41c6-99dd-a0e636468d97",
+        "masjid_id": 22621
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/4261dac1-11f8-41c6-99dd-a0e636468d97"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+        "Isha equals Maghrib on 30 days (2026-06-01 to 2026-06-30) — typical UK-summer combine."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        },
+        {
+          "type": "isha_clamped",
+          "severity": "medium",
+          "count": 30,
+          "first_date": "2026-06-01",
+          "last_date": "2026-06-30",
+          "action_taken": "none (UI flags affected days for users)",
+          "fix": "Verify the masjid's summer Isha policy if these should differ from Maghrib"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "display_name": "Makki Masjid & Education Centre",
+    "slug": "makki",
+    "csv": "makki.csv",
+    "address": "",
+    "phone": "01204 846470",
+    "month": "May 2026",
+    "islamic_month": "Zil Qa'dah & Zil Hajj 1447AH",
+    "jummah_times": "",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "460-45000",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Sehri Ends 10 Minutes Before Fajr Beginning Time. Ishraq is 15 Minutes After Sunrise. Zawaal is 10 Minutes Before Zohar Beginning Time. Hijri Date is Subject To Moon Sighting. It Is Forbidden To Perform Salat at Zawaal, From Sunrise to 15 Minutes Afterwards and 10 Minutes Before Magrib. Please Do Not Phone The Masjid At Jamaat Times. Makki Masjid Receiver N0: 460-45000. The Magrib Jamaat column shows times that change periodically; these are the Magrib Azan/start times used as Maghrib Iftari. Th",
+    "source_image": "sources/makki.jpg"
+  },
+  {
     "slug": "makki_masjid",
     "display_name": "Makki Masjid",
     "city": "Halifax",
@@ -4211,6 +5142,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "makki_masjid_and_iqra_academy",
+    "display_name": "Makki Masjid and Iqra Academy",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "75 Stafford Rd undefined, Handsworth, Birmingham, B21 9DU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "makki_masjid_and_iqra_academy.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "8fc63d4b-46d7-4c84-a502-7902a3c6b1f6",
+        "masjid_id": 21956
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/8fc63d4b-46d7-4c84-a502-7902a3c6b1f6"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -4452,6 +5427,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_abu_bakar",
+    "display_name": "Masjid abu bakar",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "713 yardley wood rd, Billesley, Birmingham, B130pt",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "12:45, 13:30",
+    "csv": "masjid_abu_bakar.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "cf7b037e-7e1c-4e74-8088-a72cd78e91bb",
+        "masjid_id": 25946
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/cf7b037e-7e1c-4e74-8088-a72cd78e91bb"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_abu_bakr",
     "display_name": "Masjid Abu Bakr",
     "city": "",
@@ -4489,6 +5508,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_abu_bakr_billesley",
+    "display_name": "Masjid Abu Bakr Billesley",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "713 Yardley wood road, billesley, B13 OPT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "masjid_abu_bakr_billesley.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "e85e3bdd-f170-41ff-b5ec-bb8947d41e82",
+        "masjid_id": 24392
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/e85e3bdd-f170-41ff-b5ec-bb8947d41e82"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -5339,6 +6402,50 @@
     ]
   },
   {
+    "slug": "masjid_darul_elm",
+    "display_name": "Masjid Darul Elm",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "115 Soho Hill undefined, Soho & Jewellery Quarter, Birmingham, B19 1AY",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:55",
+    "csv": "masjid_darul_elm.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "dd4b3531-7258-40a0-b08f-47e9343993f7",
+        "masjid_id": 22529
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/dd4b3531-7258-40a0-b08f-47e9343993f7"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_e_bilaal",
     "display_name": "Masjid E Bilaal",
     "city": "Nottingham",
@@ -5746,6 +6853,112 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_sulaymn_bin_dawd",
+    "display_name": "Masjid Sulaymān Bin Dawūd",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "196 York Road undefined, Tyseley & Hay Mills, Birmingham, B28 8LE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "masjid_sulaymn_bin_dawd.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "33fd9db9-7a6e-421a-8d6e-093793a576e4",
+        "masjid_id": 21113
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/33fd9db9-7a6e-421a-8d6e-093793a576e4"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_taqwa",
+    "display_name": "Masjid Taqwa",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "147 Kyrwicks Lane, Sparkbrook & Balsall Heath East, Birmingham, B11 1SS",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:35",
+    "csv": "masjid_taqwa.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "6a006d00-d0c7-493b-875a-0c18eb59729c",
+        "masjid_id": 21000
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/6a006d00-d0c7-493b-875a-0c18eb59729c"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+        "Fajr jamaat after sunrise on 3 days (2026-03-28 to 2026-09-08)."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 3,
+          "first_date": "2026-03-28",
+          "last_date": "2026-09-08",
+          "affected_dates": [
+            "2026-03-28",
+            "2026-03-29",
+            "2026-09-08"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a My-Masjid config error for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
+  },
+  {
     "slug": "masjid_umar",
     "display_name": "Masjid Umar",
     "city": "Cardiff",
@@ -5936,6 +7149,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_zia_ul_eiman",
+    "display_name": "Masjid zia ul eiman",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "299 REDDINGS LANE TYSELEY BIRMINGHAM, Hall Green North, Birmingham, B11 3DD",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "masjid_zia_ul_eiman.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "94d8b064-6a2e-4be4-abd6-fba06d405755",
+        "masjid_id": 24365
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/94d8b064-6a2e-4be4-abd6-fba06d405755"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "masjid_zumunta",
     "display_name": "Masjid Zumunta",
     "city": "Birmingham",
@@ -5979,6 +7236,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjidus_sunna_an_nabawiyyah",
+    "display_name": "Masjidus Sunna An Nabawiyyah",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "125 Mansfield Rd, Aston, Birmingham undefined, Aston, Birmingham, B66DA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "masjidus_sunna_an_nabawiyyah.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "075fe2ba-8537-43b4-9327-13ed91932eae",
+        "masjid_id": 22028
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/075fe2ba-8537-43b4-9327-13ed91932eae"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "mena_trust",
     "display_name": "Mena Trust",
     "city": "Glasgow",
@@ -6016,6 +7317,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "mohammadi_masjid_alum_rock",
+    "display_name": "Mohammadi Masjid Alum Rock",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "24-36 Hartopp Road, Alum Rock, Birmingham, B8 1TE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:50",
+    "csv": "mohammadi_masjid_alum_rock.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c",
+        "masjid_id": 24422
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -6733,6 +8078,50 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "paigham_e_islam_trust",
+    "display_name": "PAIGHAM E ISLAM TRUST",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "423 Stratford Road, Sparkbrook & Balsall Heath East, Birmingham, B11 4LB",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "paigham_e_islam_trust.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "a405a601-e18e-4178-bf3d-d652841abb2d",
+        "masjid_id": 25496
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/a405a601-e18e-4178-bf3d-d652841abb2d"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "park_royal_community_centre",
     "display_name": "Park Royal Community Centre",
     "city": "London",
@@ -7068,6 +8457,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "runaky_masjid",
+    "display_name": "Runaky masjid",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "wood burn road smathwick, Soho and Victoria, Sandwell, b66 2pu",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "runaky_masjid.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "40dbfe21-3578-47d2-8aa4-3a67aeda6b15",
+        "masjid_id": 23252
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/40dbfe21-3578-47d2-8aa4-3a67aeda6b15"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -7928,6 +9361,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "the_salafi_masjid",
+    "display_name": "The Salafi Masjid",
+    "city": "",
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "The Salafi Masjid, Wright Street, Small Heath, Small Heath, Birmingham, B10 9SP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "the_salafi_masjid.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "6eea30ae-a07a-40d0-91f0-dbcca50a821f",
+        "masjid_id": 24407
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/6eea30ae-a07a-40d0-91f0-dbcca50a821f"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },

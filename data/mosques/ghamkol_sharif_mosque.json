@@ -1,0 +1,44 @@
+{
+  "slug": "ghamkol_sharif_mosque",
+  "display_name": "Ghamkol Sharif Mosque",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "150 Golden Hillock Road, Small Heath, Birmingham, Small Heath, Birmingham, B10 0DX",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:30",
+  "csv": "ghamkol_sharif_mosque.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "13ffbf41-ed61-4216-a16b-c69a8caf9023",
+      "masjid_id": 24415
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/13ffbf41-ed61-4216-a16b-c69a8caf9023"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
