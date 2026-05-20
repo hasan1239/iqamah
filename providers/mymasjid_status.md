@@ -1,6 +1,6 @@
 # My-Masjid (time.my-masjid.com) — GREEN LIGHT, build planned
 
-**Status (2026-05-20):** Spiked, then **BUILT** (`providers/mymasjid/{fetch,discover,bulk}.py`). Verified end-to-end on East London Mosque: DST exact-match vs MasjidBox, full year (365 days), CSV schema byte-identical to Mawaqit, AM/PM auto-correction working. Best provider since Mawaqit. **Not yet onboarded** — discovery sweep + curated first batch is the next operational step. This doc = findings + build plan + decisions.
+**Status (2026-05-20):** Built and trialled, then **FROZEN — do not expand.** The Birmingham trial exposed poor data quality: of 29 onboarded, ~45% were placeholder defaults and several had jama'at times *later* than reality (Green Lane 75min — a missed-jama'at risk). Pulled the batch down to the **2 masjids independently verified against MasjidBox (Ad-Duha Institute, Bilal)**. The provider code + quality gates remain; **don't run further city batches** — per-masjid manual verification burden isn't worth the yield, and the good masjids are usually on MasjidBox/eSalaat (their primary platforms) with better data. UK expansion should go via MasjidBox iCal instead. The detail below is retained for context.
 
 > Not to be confused with: **myMasjid** (mymasjid.com / api.mymasjid.com) — a separate WordPress "managed masjid websites" company. And **MyLocalMasjid** (mylocalmasjid.com) — see `mylocalmasjid_status.md`. This provider is specifically **time.my-masjid.com** (the timetable display SaaS, app "My Masjid Community", control panel at controlpanel.my-masjid.com).
 
