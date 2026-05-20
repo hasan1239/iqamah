@@ -53,9 +53,13 @@ const POSTCODE_AREA_TO_CITY = {
   BS: 'Bristol',
   S: 'Sheffield',
   SL: 'Slough',
-  BL: 'Bolton',
   BB: 'Blackburn',
   PR: 'Preston',
+  // Greater Manchester (Bolton, Oldham, Stockport, Wigan) → Manchester
+  BL: 'Manchester', OL: 'Manchester', SK: 'Manchester', WN: 'Manchester',
+  // West Midlands metropolitan county (Dudley, Walsall) → Birmingham.
+  // Wolverhampton (WV) and Coventry (CV) kept separate — chartered cities.
+  DY: 'Birmingham', WS: 'Birmingham',
 };
 
 // Final fallback: scan for these tokens in address / display name when no
