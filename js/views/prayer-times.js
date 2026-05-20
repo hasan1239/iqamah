@@ -51,6 +51,7 @@ const PROVIDER_LABELS = {
   mawaqit: 'Mawaqit',
   esalaat: 'eSalaat',
   mymasjid: 'MyMasjid',
+  masjidbox: 'MasjidBox',
   image: 'Community upload',
   manual: 'Entered by maintainer',
 };
@@ -742,9 +743,10 @@ function renderTodayView(target) {
     </div>
   `;
 
-  // Expiring soon banner
+  // Expiring soon banner — skip for today_only masjids (e.g. MasjidBox), whose
+  // CSV is always just today+tomorrow by design, so it's never "expiring".
   const lastRow = csvData[csvData.length - 1];
-  if (lastRow) {
+  if (lastRow && !(config && config.today_only)) {
     const lastDate = parseDate(lastRow['Date']);
     const daysLeft = Math.ceil((lastDate - new Date()) / (1000 * 60 * 60 * 24));
     if (daysLeft >= 0 && daysLeft <= 5) {
