@@ -1,0 +1,102 @@
+{
+  "slug": "madina_mosque_and_all_muslim_welfare_society",
+  "display_name": "Madina Mosque and All Muslim Welfare Society",
+  "city": "",
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "7 Park Ave, Soho & Jewellery Quarter, Birmingham, B18 5ND",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "14:00",
+  "csv": "madina_mosque_and_all_muslim_welfare_society.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "118a97c1-a621-4067-99d1-ce4cea6a1cf0",
+      "masjid_id": 20580
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/118a97c1-a621-4067-99d1-ce4cea6a1cf0"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+      "Auto-corrected 8 obvious AM/PM (±12h) time errors (e.g. zohr 01:11→13:11 on 2026-06-23)."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      },
+      {
+        "type": "time_corrected",
+        "severity": "medium",
+        "count": 8,
+        "action_taken": "Shifted each value by ±12h into its valid window",
+        "corrections": [
+          {
+            "date": "2026-06-23",
+            "field": "zohr",
+            "old": "01:11",
+            "new": "13:11"
+          },
+          {
+            "date": "2026-06-24",
+            "field": "zohr",
+            "old": "01:11",
+            "new": "13:11"
+          },
+          {
+            "date": "2026-06-25",
+            "field": "zohr",
+            "old": "01:11",
+            "new": "13:11"
+          },
+          {
+            "date": "2026-06-26",
+            "field": "zohr",
+            "old": "01:11",
+            "new": "13:11"
+          },
+          {
+            "date": "2026-06-27",
+            "field": "zohr",
+            "old": "01:11",
+            "new": "13:11"
+          },
+          {
+            "date": "2026-06-28",
+            "field": "zohr",
+            "old": "01:12",
+            "new": "13:12"
+          },
+          {
+            "date": "2026-06-29",
+            "field": "zohr",
+            "old": "01:12",
+            "new": "13:12"
+          },
+          {
+            "date": "2026-06-30",
+            "field": "zohr",
+            "old": "01:12",
+            "new": "13:12"
+          }
+        ],
+        "fix": "None needed; verify upstream if you want the masjid to fix their config"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

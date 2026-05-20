@@ -9,7 +9,32 @@ share the central index.json.
 Anything cross-provider lives in this module.
 """
 import json
+import urllib.request
 from pathlib import Path
+
+
+def lookup_uk_postcode(postcode: str) -> dict | None:
+    """
+    Look up a UK postcode via Postcodes.io. Returns the `result` dict
+    (admin_ward, admin_district, region, ...) or None on failure.
+
+    Shared across providers (cross-provider util lives here, not in a
+    provider sub-package). Postcodes.io is free, no API key, no rate limit.
+    """
+    if not postcode:
+        return None
+    try:
+        normalised = postcode.replace(" ", "").upper()
+        url = f"https://api.postcodes.io/postcodes/{normalised}"
+        req = urllib.request.Request(url, headers={"User-Agent": "iqamah.co.uk"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            payload = json.loads(resp.read())
+        if payload.get("status") == 200:
+            return payload.get("result")
+        return None
+    except Exception as e:
+        print(f"  Postcode lookup failed: {e}")
+        return None
 
 
 def regenerate_index(mosques_dir: Path) -> int:

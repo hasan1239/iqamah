@@ -1,0 +1,44 @@
+{
+  "slug": "ad_duha_institute",
+  "display_name": "Ad-Duha Institute",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "1164 Stratford Road undefined, Hall Green North, Birmingham, B28 8AF",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "ad_duha_institute.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "60fe0a65-de8d-447f-8ffd-05e6c4e3b683",
+      "masjid_id": 22673
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/60fe0a65-de8d-447f-8ffd-05e6c4e3b683"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

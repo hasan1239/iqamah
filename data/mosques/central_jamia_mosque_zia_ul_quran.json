@@ -1,0 +1,44 @@
+{
+  "slug": "central_jamia_mosque_zia_ul_quran",
+  "display_name": "Central Jamia Mosque Zia-ul Quran",
+  "city": "",
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "233 St. Saviours Road, Alum Rock, Alum Rock, Birmingham, B8 1EP",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "14:00, 14:45",
+  "csv": "central_jamia_mosque_zia_ul_quran.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "b051266d-151d-45b2-9cbb-e2040107626a",
+      "masjid_id": 20191
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/b051266d-151d-45b2-9cbb-e2040107626a"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

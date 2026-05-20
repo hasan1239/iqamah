@@ -1,0 +1,44 @@
+{
+  "slug": "mohammadi_masjid_alum_rock",
+  "display_name": "Mohammadi Masjid Alum Rock",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "24-36 Hartopp Road, Alum Rock, Birmingham, B8 1TE",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:50",
+  "csv": "mohammadi_masjid_alum_rock.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c",
+      "masjid_id": 24422
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

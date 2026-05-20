@@ -1,0 +1,44 @@
+{
+  "slug": "green_lane_masjid_community_centre",
+  "display_name": "Green Lane Masjid & Community Centre",
+  "city": "",
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "20 Green Lane, Small Heath, Birmingham, Bordesley Green, Birmingham, B9 5DB",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "12:30",
+  "csv": "green_lane_masjid_community_centre.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "f2a9ea59-4cd0-4ba2-bdf2-564c4459ac0d",
+      "masjid_id": 20252
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/f2a9ea59-4cd0-4ba2-bdf2-564c4459ac0d"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
