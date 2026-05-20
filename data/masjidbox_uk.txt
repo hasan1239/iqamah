@@ -1,0 +1,17 @@
+# MasjidBox curated list — <masjidbox-slug>  [<local-slug>]
+# Daily-accumulating (today_only). Fetched each morning by the workflow.
+# Birmingham test batch. Birmingham Central Mosque (centralmosque) skipped — already have `central`.
+green-lane-masjid-1666108368685  green_lane
+mohammadi-masjid-alum-rock  mohammadi_masjid_alum_rock
+sparkbrook-masjid  ukim_sparkbrook
+east-birmingham-central-masjid  east_birmingham_central_masjid
+aston-university-prayer-room  aston_university_prayer_room
+jmic  jami_mosque_birmingham
+# zia-ul-ummah-centre  zia_ul_ummah_centre   # 404 — slug dead/changed on MasjidBox
+ukim-alum-rock-islamic-centre  ukim_alum_rock
+birmingham-jame-masjid  birmingham_anjuman_e_islam
+at-taqwa-centre-birmingham  at_taqwa_centre_birmingham
+gulhar-shareef-birmingham  gulhar_shareef
+masjid-ibn-salah  masjid_ibn_salah
+lozells-central-mosque-1720027911987  lozells_central_mosque
+hall-green-mosque-and-muslim-association  hall_green_mosque

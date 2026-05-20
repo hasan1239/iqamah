@@ -1,0 +1,34 @@
+{
+  "slug": "east_birmingham_central_masjid",
+  "display_name": "East Birmingham Central Masjid",
+  "city": "Birmingham",
+  "latitude": 52.489127,
+  "longitude": -1.792356,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Farmcote Road, Birmingham B33 9LU, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "east_birmingham_central_masjid.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "east-birmingham-central-masjid"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/east-birmingham-central-masjid"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

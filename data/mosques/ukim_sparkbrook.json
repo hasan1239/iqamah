@@ -1,0 +1,34 @@
+{
+  "slug": "ukim_sparkbrook",
+  "display_name": "UKIM Sparkbrook Islamic Centre & Masjid",
+  "city": "Birmingham",
+  "latitude": 52.462836,
+  "longitude": -1.863938,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "179-187 Anderton Road, Sparkbrook, Birmingham, B11 1ND, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "ukim_sparkbrook.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "sparkbrook-masjid"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/sparkbrook-masjid"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

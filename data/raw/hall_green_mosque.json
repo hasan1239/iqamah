@@ -1,0 +1,81 @@
+{
+  "name": "Hall Green Mosque and Muslim Association",
+  "address": "1 Wycome Road, Hall Green, Birmingham B28 9EN, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 150
+  },
+  "athany": {
+    "qrcode": "https://cdn.mbxsrc.com/core/QEKV1XM8/kuhh8GhOu.svg",
+    "showIqamah": true,
+    "slug": "hall-green-mosque-and-muslim-association",
+    "theme": "#4A90E2"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-20T00:00:00+01:00",
+      "fajr": "2026-05-20T01:04:00+01:00",
+      "sunrise": "2026-05-20T05:04:00+01:00",
+      "dhuhr": "2026-05-20T13:04:00+01:00",
+      "asr": "2026-05-20T17:21:00+01:00",
+      "maghrib": "2026-05-20T21:04:00+01:00",
+      "isha": "2026-05-21T00:27:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-20",
+        "day": "الأربعاء",
+        "dayOfMonth": 3,
+        "formatted": "الأربعاء 3 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-20T01:14:00+01:00",
+        "dhuhr": "2026-05-20T13:14:00+01:00",
+        "asr": "2026-05-20T17:31:00+01:00",
+        "maghrib": "2026-05-20T21:09:00+01:00",
+        "isha": "2026-05-21T00:37:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-20T00:49:00+01:00",
+        "iftar": "2026-05-20T21:04:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T01:04:00+01:00",
+      "sunrise": "2026-05-21T05:03:00+01:00",
+      "dhuhr": "2026-05-21T13:04:00+01:00",
+      "asr": "2026-05-21T17:21:00+01:00",
+      "maghrib": "2026-05-21T21:06:00+01:00",
+      "isha": "2026-05-22T00:36:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 4,
+        "formatted": "الخميس 4 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T01:14:00+01:00",
+        "dhuhr": "2026-05-21T13:14:00+01:00",
+        "asr": "2026-05-21T17:31:00+01:00",
+        "maghrib": "2026-05-21T21:11:00+01:00",
+        "isha": "2026-05-22T00:46:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T00:49:00+01:00",
+        "iftar": "2026-05-21T21:06:00+01:00"
+      }
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2026-02-20T00:00:05.769Z"
+}

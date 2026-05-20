@@ -1,0 +1,36 @@
+{
+  "slug": "ukim_alum_rock",
+  "display_name": "UKIM Alum Rock Islamic Centre",
+  "city": "Birmingham",
+  "latitude": 52.486867,
+  "longitude": -1.842747,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "2-8 Ludlow Rd, Birmingham B8 3BY, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "ukim_alum_rock.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "ukim-alum-rock-islamic-centre"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/ukim-alum-rock-islamic-centre"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": [],
+  "hidden": true,
+  "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat 23:34 — not the masjid's real times."
+}
