@@ -338,7 +338,7 @@ async function loadMasjids() {
     ]);
     if (!masjidRes.ok) return;
     cachedConfigs = (await masjidRes.json()).filter(c =>
-      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+      !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     if (seasonRes && seasonRes.ok) {
       try { seasonConfig = await seasonRes.json(); } catch {}

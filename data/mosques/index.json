@@ -704,7 +704,9 @@
         }
       ]
     },
-    "acknowledged_issues": []
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "My-Masjid Fajr & Asr ~15min LATER than the masjid's real (MasjidBox) times. Re-source from MasjidBox."
   },
   {
     "slug": "al_mutawa_mosque",
@@ -1306,7 +1308,9 @@
         }
       ]
     },
-    "acknowledged_issues": []
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "My-Masjid Asr ~15min LATER than the masjid's real (MasjidBox) times. Re-source from MasjidBox."
   },
   {
     "display_name": "Masjid An Noor",
@@ -3380,7 +3384,9 @@
         }
       ]
     },
-    "acknowledged_issues": []
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "My-Masjid Asr ~75min / Fajr ~50min LATER than the masjid's real (MasjidBox) times — risk of missed jama'at. Re-source from MasjidBox."
   },
   {
     "slug": "hall_green_mosque",

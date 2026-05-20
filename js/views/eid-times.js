@@ -53,6 +53,7 @@ export async function render(container) {
     const withEid = configs
       .filter(c =>
         !c.test_masjid &&
+        !c.hidden &&
         !(c.quality && c.quality.status === 'needs_review') &&
         c.eid_salah && c.eid_salah.trim()
       )

@@ -40,5 +40,7 @@
       }
     ]
   },
-  "acknowledged_issues": []
+  "acknowledged_issues": [],
+  "hidden": true,
+  "hidden_reason": "My-Masjid Asr ~75min / Fajr ~50min LATER than the masjid's real (MasjidBox) times — risk of missed jama'at. Re-source from MasjidBox."
 }
