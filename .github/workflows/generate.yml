@@ -118,6 +118,15 @@ jobs:
             echo "No data/masjidbox_uk.txt — skipping MasjidBox refresh"
           fi
 
+      - name: Refresh Masjidal (AthanPlus) prayer times
+        run: |
+          # Scrapes the AthanPlus widget (~7 days) into each masjid's CSV. Non-fatal.
+          if [ -f data/masjidal_uk.txt ]; then
+            python -m providers.masjidal.bulk || echo "⚠️ Masjidal fetch had errors (continuing)"
+          else
+            echo "No data/masjidal_uk.txt — skipping Masjidal refresh"
+          fi
+
       - name: Determine date, mosque, and template
         id: params
         run: |
