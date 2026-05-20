@@ -53,6 +53,7 @@ const PROVIDER_LABELS = {
   mymasjid: 'MyMasjid',
   masjidbox: 'MasjidBox',
   londonprayertimes: 'LondonPrayerTimes',
+  masjidal: 'Masjidal',
   image: 'Community upload',
   manual: 'Entered by maintainer',
 };
