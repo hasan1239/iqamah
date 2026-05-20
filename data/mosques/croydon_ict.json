@@ -1,0 +1,35 @@
+{
+  "slug": "croydon_ict",
+  "display_name": "Croydon Islamic Community Trust",
+  "city": "Croydon",
+  "latitude": 51.379681,
+  "longitude": -0.104549,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "89 London Road, Croydon, CR0 2RF",
+  "address_source": "manual",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "croydon_ict.csv",
+  "provider": {
+    "type": "londonprayertimes",
+    "ref": {
+      "city": "london"
+    },
+    "source_url": "https://www.londonprayertimes.com/"
+  },
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "London Unified Prayer Timetable — shared across all London masjids that follow it."
+    ],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}
