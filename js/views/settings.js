@@ -195,7 +195,7 @@ export function render(container) {
   // Load masjid count
   fetch('/data/mosques/index.json').then(r => r.json()).then(configs => {
     const visible = configs.filter(c =>
-      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+      !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     const el = document.getElementById('settingsMasjidCount');
     if (el) el.textContent = visible.length.toString();
