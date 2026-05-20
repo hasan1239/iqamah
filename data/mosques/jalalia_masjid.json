@@ -1,0 +1,43 @@
+{
+  "slug": "jalalia_masjid",
+  "display_name": "Jalalia Masjid",
+  "city": "",
+  "latitude": 51.4782353,
+  "longitude": -3.1904134,
+  "country_code": "GB",
+  "website": "https://jalaliamosque.org.uk/",
+  "logo": "",
+  "address": "Machen Place, Riverside, Cardiff, CF11 6ER",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Jalalia Mosque and Islamic Education Centre",
+  "timezone": "Europe/London",
+  "jummah_times": "13:45",
+  "csv": "jalalia_masjid.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "jalalia-mosque-cardiff-cf11-6er-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/jalalia-mosque-cardiff-cf11-6er-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-19",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

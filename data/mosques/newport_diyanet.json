@@ -1,0 +1,43 @@
+{
+  "slug": "newport_diyanet",
+  "display_name": "Newport Diyanet",
+  "city": "",
+  "latitude": 51.5728119,
+  "longitude": -2.9904984,
+  "country_code": "GB",
+  "website": "http://www.newportdiyanet.org",
+  "logo": "https://cdn.mawaqit.net/images/backend/mosque/f3094657-582a-481a-baf4-7bc480614fc8/mosque/1eed10a0-98be-6f96-bb1e-0ede686d7942.png",
+  "address": "48 Alexandra Road, Pillgwenlly, Newport, NP20 2JE",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "Newport Diyanet E C C",
+  "timezone": "Europe/London",
+  "jummah_times": "13:20",
+  "csv": "newport_diyanet.csv",
+  "provider": {
+    "type": "mawaqit",
+    "ref": {
+      "path": "newport-diyanet-newport-np20-2je-united-kingdom"
+    },
+    "source_url": "https://mawaqit.net/en/m/newport-diyanet-newport-np20-2je-united-kingdom"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+        "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}
