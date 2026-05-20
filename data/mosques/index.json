@@ -3784,7 +3784,7 @@
   },
   {
     "slug": "islamic_cultural_centre_wembley",
-    "display_name": "Islamic Cultural Centre (Wembley)",
+    "display_name": "Islamic Cultural Centre",
     "city": "",
     "latitude": 51.547045084432,
     "longitude": -0.2745966883606,
@@ -3812,7 +3812,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 â sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5099,7 +5099,7 @@
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "460-45000",
-    "approved": false,
+    "approved": true,
     "is_stale": false,
     "notes": "Sehri Ends 10 Minutes Before Fajr Beginning Time. Ishraq is 15 Minutes After Sunrise. Zawaal is 10 Minutes Before Zohar Beginning Time. Hijri Date is Subject To Moon Sighting. It Is Forbidden To Perform Salat at Zawaal, From Sunrise to 15 Minutes Afterwards and 10 Minutes Before Magrib. Please Do Not Phone The Masjid At Jamaat Times. Makki Masjid Receiver N0: 460-45000. The Magrib Jamaat column shows times that change periodically; these are the Magrib Azan/start times used as Maghrib Iftari. Th",
     "source_image": "sources/makki.jpg"
