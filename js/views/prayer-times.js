@@ -482,6 +482,8 @@ function applyNextPrayerHighlight(todayRow) {
 function renderContent(container) {
   const target = container || document.getElementById('pt-content');
   if (!target) return;
+  // today_only masjids never show the month view (no toggle, and guard direct/bfcache routes)
+  if (config && config.today_only) currentView = 'today';
   if (currentView === 'today') renderTodayView(target);
   else renderMonthlyView(target);
 }
@@ -1033,6 +1035,9 @@ function setupMonthModeToggle(container) {
 // --- Helpers ---
 
 function renderToggle(activeView) {
+  // today_only masjids (e.g. MasjidBox daily-accumulating) have no useful month
+  // view — only today/tomorrow exist — so hide the toggle entirely.
+  if (config && config.today_only) return '';
   return `<div class="view-toggle">
     <div class="toggle-container">
       <div class="toggle-slider${activeView === 'monthly' ? ' monthly' : ''}" id="toggleSlider"></div>

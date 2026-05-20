@@ -26,7 +26,7 @@ import traceback
 from collections import Counter
 from pathlib import Path
 
-from providers import regenerate_index
+from providers import regenerate_index, check_start_outliers
 from providers.mymasjid.fetch import fetch_one, fetch_timings
 from providers.mymasjid.discover import slugify, dedup_key
 
@@ -36,107 +36,6 @@ if hasattr(sys.stdout, "reconfigure"):
 
 DEFAULT_LIST = "data/mymasjid_uk.txt"
 FETCH_DELAY_S = 1.5
-
-# Per-prayer tolerance (minutes) for the start-time outlier check. Dhuhr (solar
-# noon) and Maghrib (sunset) barely vary between masjids in the same area, so a
-# tight bound flags miscalculation reliably. Fajr/Isha vary by twilight-angle
-# choice and Asr by madhab (Shafi'i vs Hanafi ~60-70min apart), so they get
-# looser bounds. Asr is one-sided: only LATER-than-peers is flagged (an early
-# Shafi'i Asr is legitimate and the safe direction anyway).
-START_TOLERANCE = {"zohr": 15, "maghrib_iftari": 15, "fajr_start": 40, "esha": 40}
-ASR_LATE_TOLERANCE = 45
-
-
-def _to_min(t: str):
-    if not t or ":" not in t:
-        return None
-    try:
-        h, m = t.split(":")[:2]
-        return int(h) * 60 + int(m)
-    except ValueError:
-        return None
-
-
-def _postcode_area(address: str) -> str | None:
-    """Leading letters of a UK postcode (e.g. 'B8 3PP' -> 'B'). Groups masjids
-    by city/region — astronomical times match closely within an area."""
-    m = re.search(r"\b([A-Z]{1,2})\d{1,2}[A-Z]?\s*\d[A-Z]{2}\b", (address or "").upper())
-    return m.group(1) if m else None
-
-
-def check_start_outliers(data_dir: Path, slugs_to_check: list[str], ref_date: str) -> list[str]:
-    """
-    Compare each checked masjid's astronomical START times against other masjids
-    in the same postcode area (across the WHOLE catalogue, for a good median).
-    Start times can't legitimately differ much within an area, so an outlier
-    means a miscalculated timetable (wrong location/angle/madhab, or a DST bug)
-    — the failure mode behind Green Lane (Fajr +61min). Returns warning strings;
-    these are candidates for a manual MasjidBox cross-check, not auto-hidden.
-    """
-    import csv as _csv
-    median_field = ["fajr_start", "zohr", "asr", "maghrib_iftari", "esha"]
-    by_area: dict[str, list] = {}   # trustworthy masjids only (reference medians)
-    starts: dict[str, dict] = {}
-    area_of: dict[str, str] = {}
-    for cfg_path in (data_dir / "mosques").glob("*.json"):
-        if cfg_path.name == "index.json":
-            continue
-        try:
-            cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-        except Exception:
-            continue
-        slug = cfg.get("slug") or cfg_path.stem
-        area = _postcode_area(cfg.get("address", ""))
-        csv_path = data_dir / f"{slug}.csv"
-        if not area or not csv_path.exists():
-            continue
-        try:
-            row = next((r for r in _csv.DictReader(csv_path.open(encoding="utf-8"))
-                        if r["date"] == ref_date), None)
-        except Exception:
-            row = None
-        if not row:
-            continue
-        starts[slug] = {f: _to_min(row.get(f, "")) for f in median_field}
-        area_of[slug] = area
-        # Only TRUSTWORTHY masjids seed the reference medians — placeholder/hidden
-        # masjids carry fake times that would poison the comparison.
-        status = (cfg.get("quality") or {}).get("status")
-        if status != "needs_review" and not cfg.get("hidden"):
-            by_area.setdefault(area, []).append(slug)
-    trustworthy = {s for slugs in by_area.values() for s in slugs}
-
-    import statistics
-    warnings = []
-    for slug in slugs_to_check:
-        # Only check VISIBLE masjids — already-hidden/needs_review ones are out
-        # of public view, so an outlier there isn't a live risk.
-        if slug not in starts or slug not in trustworthy:
-            continue
-        area = area_of[slug]
-        peers = [s for s in by_area.get(area, []) if s != slug]
-        if len(peers) < 2:
-            continue  # not enough trustworthy local reference points
-        flags = []
-        for f, tol in START_TOLERANCE.items():
-            v = starts[slug][f]
-            peer_vals = [starts[s][f] for s in peers if starts[s][f] is not None]
-            if v is None or not peer_vals:
-                continue
-            med = statistics.median(peer_vals)
-            if abs(v - med) > tol:
-                flags.append(f"{f.split('_')[0]} {v // 60:02d}:{v % 60:02d} vs area median {int(med) // 60:02d}:{int(med) % 60:02d}")
-        # Asr: one-sided (later than peers only)
-        v = starts[slug]["asr"]
-        peer_vals = [starts[s]["asr"] for s in peers if starts[s]["asr"] is not None]
-        if v is not None and peer_vals:
-            med = statistics.median(peer_vals)
-            if v - med > ASR_LATE_TOLERANCE:
-                flags.append(f"asr {v // 60:02d}:{v % 60:02d} is {v - int(med)}min LATER than area median")
-        if flags:
-            warnings.append(f"{slug}: " + "; ".join(flags))
-    return warnings
-
 
 def parse_list_file(path: Path) -> list[tuple[str, str | None]]:
     entries = []

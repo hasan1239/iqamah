@@ -1,0 +1,36 @@
+{
+  "slug": "hall_green_mosque",
+  "display_name": "Hall Green Mosque and Muslim Association",
+  "city": "Birmingham",
+  "latitude": 52.426952,
+  "longitude": -1.83887,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "1 Wycome Road, Hall Green, Birmingham B28 9EN, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "hall_green_mosque.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "hall-green-mosque-and-muslim-association"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/hall-green-mosque-and-muslim-association"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": [],
+  "hidden": true,
+  "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:37) — not the masjid's real times."
+}

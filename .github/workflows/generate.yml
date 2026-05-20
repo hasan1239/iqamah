@@ -104,6 +104,16 @@ jobs:
           pip install playwright Pillow
           playwright install --with-deps chromium
 
+      - name: Refresh MasjidBox prayer times
+        run: |
+          # Daily-accumulating MasjidBox masjids: upsert today/tomorrow into each
+          # masjid's CSV. Uses only stdlib, so no extra deps. Non-fatal on errors.
+          if [ -f data/masjidbox_uk.txt ]; then
+            python -m providers.masjidbox.bulk || echo "⚠️ MasjidBox fetch had errors (continuing)"
+          else
+            echo "No data/masjidbox_uk.txt — skipping MasjidBox refresh"
+          fi
+
       - name: Determine date, mosque, and template
         id: params
         run: |
@@ -165,7 +175,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/ latest/ data/mosques/
+          git add output/ latest/ data/mosques/ data/*.csv data/raw/
           git commit -m "🌙 Lockscreen for ${{ steps.params.outputs.date }}" || echo "No changes to commit"
           git pull --rebase
           git push

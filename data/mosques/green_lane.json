@@ -1,0 +1,34 @@
+{
+  "slug": "green_lane",
+  "display_name": "Green Lane Masjid",
+  "city": "Birmingham",
+  "latitude": 52.473245,
+  "longitude": -1.862729,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Green Lane, Small Heath, Birmingham B9 5DB, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "green_lane.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "green-lane-masjid-1666108368685"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/green-lane-masjid-1666108368685"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

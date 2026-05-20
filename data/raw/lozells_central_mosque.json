@@ -1,0 +1,89 @@
+{
+  "name": "Lozells Central Mosque",
+  "address": "213-217 Lozells Road, Lozells, Birmingham, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "ampm": false,
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 150
+  },
+  "athany": {
+    "closed": false,
+    "qrcode": "https://cdn.mbxsrc.com/core/YIDCJOQ0/wNkZEkk4Y.svg",
+    "showIqamah": true,
+    "slug": "lozells-central-mosque-1720027911987",
+    "theme": "#f44336"
+  },
+  "applications": {
+    "name": "Lozells Central Mosque",
+    "icon": "https://cdn.mbxsrc.com/applications/66a1493ac9c318001ab91825/vqRWUImBo.png",
+    "android": "https://play.google.com/store/apps/details?id=com.masjidbox.alozellscentralmosque66a1493ac9c318001ab91825",
+    "theme": "#4a90e2"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-20T00:00:00+01:00",
+      "fajr": "2026-05-20T04:15:00+01:00",
+      "sunrise": "2026-05-20T05:04:00+01:00",
+      "dhuhr": "2026-05-20T13:45:00+01:00",
+      "asr": "2026-05-20T18:45:00+01:00",
+      "maghrib": "2026-05-20T21:08:00+01:00",
+      "isha": "2026-05-20T22:30:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-20",
+        "day": "الأربعاء",
+        "dayOfMonth": 2,
+        "formatted": "الأربعاء 2 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-20T04:30:00+01:00",
+        "dhuhr": "2026-05-20T14:00:00+01:00",
+        "asr": "2026-05-20T19:00:00+01:00",
+        "maghrib": "2026-05-20T21:09:00+01:00",
+        "isha": "2026-05-20T22:45:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-20T04:00:00+01:00",
+        "iftar": "2026-05-20T21:08:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T04:15:00+01:00",
+      "sunrise": "2026-05-21T05:03:00+01:00",
+      "dhuhr": "2026-05-21T13:45:00+01:00",
+      "asr": "2026-05-21T18:45:00+01:00",
+      "maghrib": "2026-05-21T21:09:00+01:00",
+      "isha": "2026-05-21T22:30:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 3,
+        "formatted": "الخميس 3 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T04:30:00+01:00",
+        "dhuhr": "2026-05-21T14:00:00+01:00",
+        "asr": "2026-05-21T19:00:00+01:00",
+        "maghrib": "2026-05-21T21:10:00+01:00",
+        "isha": "2026-05-21T22:45:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T04:00:00+01:00",
+        "iftar": "2026-05-21T21:09:00+01:00"
+      }
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2026-05-01T08:33:37.925Z"
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "mohammadi_masjid_alum_rock",
+  "display_name": "Mohammadi Masjid Alum Rock",
+  "city": "",
+  "latitude": null,
+  "longitude": null,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Hartopp Road, Alum Rock, Birmingham, UK",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "mohammadi_masjid_alum_rock.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "mohammadi-masjid-alum-rock"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/mohammadi-masjid-alum-rock"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}
