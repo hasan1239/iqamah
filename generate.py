@@ -7,6 +7,7 @@ Generates a 1080x2400 phone lockscreen PNG with daily prayer times.
 import csv
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -46,6 +47,39 @@ STANDARD_COLUMNS = {
 YEAR = 2026
 HIJRI_YEAR = 1447
 
+# Provider scripts (Mawaqit/My-Masjid) write snake_case headers; the original
+# image-extraction CSVs use title-case. Normalise snake_case → title-case on
+# load so the rest of the pipeline (which assumes STANDARD_COLUMNS) just works.
+# Mirrors HEADER_ALIASES in js/utils/csv.js.
+HEADER_ALIASES = {
+    "date": "Date", "day": "Day", "islamic_day": "Islamic Day",
+    "sehri_ends": "Sehri Ends", "fajr_start": "Fajr Start",
+    "sunrise": "Sunrise", "zawal": "Zawal", "zohr": "Zohr", "asr": "Asr",
+    "esha": "Esha", "fajr_jamaat": "Fajr Jama'at", "zohar_jamaat": "Zohar Jama'at",
+    "asr_jamaat": "Asr Jama'at", "maghrib_iftari": "Maghrib Iftari",
+    "maghrib_jamaat": "Maghrib Jama'at", "esha_jamaat": "Esha Jama'at",
+}
+
+
+def to_12h(time_str: str) -> str:
+    """Convert a 24h time to bare 12h (no AM/PM), matching the lockscreen style.
+
+    Provider CSVs store 24h ("06:26", "13:46"); the original CSVs already store
+    bare 12h ("5:24", "1:00"). This is idempotent on the latter — values at or
+    below 12 are returned unchanged (minus any leading zero).
+    """
+    s = (time_str or "").strip()
+    m = re.match(r"^(\d{1,2}):(\d{2})$", s)
+    if not m:
+        return s
+    hours = int(m.group(1))
+    minutes = m.group(2)
+    if hours == 0:
+        return f"12:{minutes}"
+    if hours <= 12:
+        return f"{hours}:{minutes}"
+    return f"{hours - 12}:{minutes}"
+
 
 def load_mosques(data_dir: str) -> dict:
     """Load all mosque configs from data/mosques/*.json."""
@@ -71,14 +105,27 @@ def load_mosques(data_dir: str) -> dict:
 
 
 def parse_csv_date(date_str: str) -> date:
-    """Parse '18 Feb' style date strings into a date object."""
-    return datetime.strptime(f"{date_str.strip()} {YEAR}", "%d %b %Y").date()
+    """Parse a CSV date into a date object.
+
+    Handles both the provider ISO format ("2026-05-20") and the legacy
+    image-extraction format ("18 Feb", assumed to be YEAR). Mirrors parseDate
+    in js/utils/csv.js.
+    """
+    s = date_str.strip()
+    iso = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", s)
+    if iso:
+        return date(int(iso.group(1)), int(iso.group(2)), int(iso.group(3)))
+    return datetime.strptime(f"{s} {YEAR}", "%d %b %Y").date()
 
 
 def load_timetable(csv_path: str) -> list[dict]:
-    """Load CSV rows into a list of dicts."""
+    """Load CSV rows into a list of dicts, normalising snake_case headers."""
     with open(csv_path, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+        rows = list(csv.DictReader(f))
+    return [
+        {HEADER_ALIASES.get(k, k): v for k, v in row.items()}
+        for row in rows
+    ]
 
 
 def find_row_for_date(rows: list[dict], target: date, date_col: str) -> dict | None:
@@ -98,12 +145,14 @@ def extract_times(row: dict, mosque_config: dict) -> dict:
             continue
         if col_name is None:
             # Quba has no Zohar Jama'at column — fixed at 1:00
-            times[key] = "1:00"
+            raw = "1:00"
         elif col_name not in row:
             # Column not in CSV (e.g. older CSVs without Maghrib Jama'at)
-            times[key] = ""
+            raw = ""
         else:
-            times[key] = row[col_name].strip()
+            raw = row[col_name].strip()
+        # Provider CSVs are 24h; normalise to bare 12h (no-op on 12h values).
+        times[key] = to_12h(raw)
     return times
 
 
@@ -112,21 +161,28 @@ def format_date_line(row: dict, mosque_config: dict) -> tuple[str, str]:
     cols = mosque_config["columns"]
     day_name = row[cols["day"]].strip()
     date_str = row[cols["date"]].strip()
-    hijri_raw = row[cols["hijri"]].strip()
+    hijri_raw = row.get(cols["hijri"], "").strip()
 
     day_map = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
     full_day = day_map.get(day_name, day_name)
 
-    english_date = f"{full_day} {date_str} {YEAR}"
+    # Render a consistent "Wednesday 20 May 2026" regardless of whether the CSV
+    # stored the date as "20 May" (legacy) or "2026-05-20" (provider/ISO).
+    date_obj = parse_csv_date(date_str)
+    english_date = f"{full_day} {date_obj.day} {date_obj.strftime('%b')} {YEAR}"
 
-    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447")
+    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447").
+    # Provider CSVs leave this blank — show nothing rather than a broken
+    # "Ramadan" line (matches the website, which renders blank).
     month_abbrev_map = {"Ram": "Ramadan", "Shaw": "Shawwal", "Sha": "Sha'ban"}
     parts = hijri_raw.split()
     if len(parts) == 2 and parts[1] in month_abbrev_map:
         islamic_date = f"{parts[0]} {month_abbrev_map[parts[1]]} {HIJRI_YEAR}"
-    else:
+    elif hijri_raw:
         islamic_date = f"{hijri_raw} Ramadan {HIJRI_YEAR}"
+    else:
+        islamic_date = ""
 
     return english_date, islamic_date
 
