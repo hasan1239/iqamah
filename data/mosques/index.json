@@ -29,7 +29,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -72,7 +72,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -115,8 +115,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-04-16 to 2026-04-16). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-04-16 to 2026-04-16). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -135,7 +135,7 @@
             "2026-04-16"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -174,7 +174,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -217,8 +217,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-02-22 to 2026-02-26). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-02-22 to 2026-02-26). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -241,7 +241,7 @@
             "2026-02-26"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -280,7 +280,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -323,7 +323,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -366,7 +366,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -393,7 +393,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ³ÃÂ¬ÃÂ¯ ÃÂ§ÃÂÃÂÃÂ±ÃÂÃÂ§ÃÂ",
+    "association": "ÃÂÃÂÃÂÃÂ³ÃÂÃÂ¬ÃÂÃÂ¯ ÃÂÃÂ§ÃÂÃÂÃÂÃÂÃÂÃÂ±ÃÂÃÂÃÂÃÂ§ÃÂÃÂ",
     "timezone": "Europe/London",
     "jummah_times": "13:50, 14:30",
     "csv": "al_furqan_mosque.csv",
@@ -409,7 +409,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -452,7 +452,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -495,8 +495,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 31 days (2026-08-01 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 31 days (2026-08-01 to 2026-08-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -545,7 +545,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -584,7 +584,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -627,7 +627,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -670,7 +670,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -697,7 +697,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂÃÂÃÂ±ÃÂÃÂÃÂÃÂ² ÃÂ§ÃÂÃÂ±ÃÂ­ÃÂÃÂ© ÃÂÃÂÃÂ±ÃÂ­ÃÂÃÂÃÂ¨ ÃÂ¨ÃÂÃÂÃÂÃÂ",
+    "association": "ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ±ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ² ÃÂÃÂ§ÃÂÃÂÃÂÃÂ±ÃÂÃÂ­ÃÂÃÂÃÂÃÂ© ÃÂÃÂÃÂÃÂÃÂÃÂ±ÃÂÃÂ­ÃÂÃÂÃÂÃÂÃÂÃÂ¨ ÃÂÃÂ¨ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:30",
     "csv": "al_rahmah_centre.csv",
@@ -713,7 +713,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -756,7 +756,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -799,7 +799,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -842,7 +842,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -885,7 +885,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -929,7 +929,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 75 days (2026-05-17 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1069,7 +1069,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1112,8 +1112,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-25 to 2026-03-25). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-25 to 2026-03-25). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -1132,7 +1132,7 @@
             "2026-03-25"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -1185,7 +1185,7 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
     "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
-    "sadaqatul_fitr": "ÃÂ£5 per person",
+    "sadaqatul_fitr": "ÃÂÃÂ£5 per person",
     "radio_frequency": "",
     "approved": true,
     "is_stale": false,
@@ -1224,7 +1224,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1267,8 +1267,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 25 days (2026-04-03 to 2026-04-27). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 25 days (2026-04-03 to 2026-04-27). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -1311,7 +1311,7 @@
             "2026-04-27"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -1385,7 +1385,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 78 days (2026-05-17 to 2026-08-07). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1517,7 +1517,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1561,7 +1561,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 60 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1675,7 +1675,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1718,7 +1718,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1761,7 +1761,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1804,7 +1804,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1847,7 +1847,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1890,7 +1890,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1933,7 +1933,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1976,7 +1976,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2003,7 +2003,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ³ÃÂ¬ÃÂ¯ ÃÂ¯ÃÂ¹ÃÂÃÂ© ÃÂ§ÃÂÃÂ§ÃÂ³ÃÂÃÂ§ÃÂ",
+    "association": "ÃÂÃÂÃÂÃÂ³ÃÂÃÂ¬ÃÂÃÂ¯ ÃÂÃÂ¯ÃÂÃÂ¹ÃÂÃÂÃÂÃÂ© ÃÂÃÂ§ÃÂÃÂÃÂÃÂ§ÃÂÃÂ³ÃÂÃÂÃÂÃÂ§ÃÂÃÂ",
     "timezone": "Europe/London",
     "jummah_times": "13:45",
     "csv": "dawatul_islam.csv",
@@ -2019,7 +2019,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2082,7 +2082,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2125,7 +2125,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2168,7 +2168,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2211,7 +2211,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2254,7 +2254,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2297,8 +2297,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -2377,7 +2377,7 @@
             "2026-07-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -2416,7 +2416,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2459,7 +2459,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2502,8 +2502,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 22 days (2026-04-01 to 2026-04-22). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 22 days (2026-04-01 to 2026-04-22). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -2543,7 +2543,7 @@
             "2026-04-22"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -2582,7 +2582,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2625,7 +2625,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2668,7 +2668,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2711,7 +2711,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2754,7 +2754,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2797,7 +2797,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2859,7 +2859,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2902,7 +2902,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2946,7 +2946,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 74 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3074,7 +3074,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3117,7 +3117,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3132,7 +3132,7 @@
   },
   {
     "slug": "islamic_cultural_centre_wembley",
-    "display_name": "Islamic Cultural Centre (Wembley)",
+    "display_name": "Islamic Cultural Centre",
     "city": "",
     "latitude": 51.547045084432,
     "longitude": -0.2745966883606,
@@ -3160,7 +3160,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3203,7 +3203,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3246,7 +3246,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3271,10 +3271,10 @@
     "islamic_month": "1447 Dhu al-Qadah / Dhu al-Hijjah",
     "jummah_times": "2:00pm",
     "eid_salah": "6:30am & 8:00am",
-    "sadaqatul_fitr": "ÃÂ£7 per person",
+    "sadaqatul_fitr": "ÃÂÃÂ£7 per person",
     "radio_frequency": "454.1500",
     "is_stale": false,
-    "notes": "Zohar and Jumma Jamat at 2:00pm. Eid Al Adha Salah at 6:30am & 8:00am. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to serve as both the Maghrib Azan time and Jama'at time combined into one column Ã¢ÂÂ no separate Maghrib Jama'at column exists. Masjid Frequency: 454.1500.",
+    "notes": "Zohar and Jumma Jamat at 2:00pm. Eid Al Adha Salah at 6:30am & 8:00am. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to serve as both the Maghrib Azan time and Jama'at time combined into one column ÃÂ¢ÃÂÃÂ no separate Maghrib Jama'at column exists. Masjid Frequency: 454.1500.",
     "source_image": "sources/jame.jpg",
     "approved": true,
     "pending_update": false
@@ -3309,8 +3309,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-27 to 2026-03-27). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-27 to 2026-03-27). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -3329,7 +3329,7 @@
             "2026-03-27"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -3368,7 +3368,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3411,7 +3411,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3454,7 +3454,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3497,7 +3497,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3540,7 +3540,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3563,11 +3563,11 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "Jumu'ah Jamat 1:05",
     "eid_salah": "1st Jamat 8:00am, 2nd Jamat 10:00am",
-    "sadaqatul_fitr": "ÃÂ£7",
+    "sadaqatul_fitr": "ÃÂÃÂ£7",
     "radio_frequency": "453.5625 Mhz",
     "approved": true,
     "is_stale": false,
-    "notes": "Late night Taraweeh will take place (Sun-Thu) 12:15am / (Fri-Sat) 1:15am. Annual Community Iftar will take place on Mon 9th March 2026, programme will start after Asr salah. Ramadan Appeal: ÃÂ£150K remaining to complete the Masjid Extension works.",
+    "notes": "Late night Taraweeh will take place (Sun-Thu) 12:15am / (Fri-Sat) 1:15am. Annual Community Iftar will take place on Mon 9th March 2026, programme will start after Asr salah. Ramadan Appeal: ÃÂÃÂ£150K remaining to complete the Masjid Extension works.",
     "source_image": "sources/smethwick.jpg",
     "lat": 52.5007274,
     "lon": -1.9661248
@@ -3602,7 +3602,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3645,7 +3645,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3688,7 +3688,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3715,7 +3715,7 @@
     "radio_frequency": "454.3500",
     "approved": true,
     "is_stale": false,
-    "notes": "English Taleem after Maghrib on Monday, Tuesday and Thursday. Tafseer for sisters (English): Monday 1:20pm-1:50pm. Zuhr Jama'ah on Fridays (3, 10, 17, 24) shows 'SEE BELOW' Ã¢ÂÂ Jumu'ah times apply instead.",
+    "notes": "English Taleem after Maghrib on Monday, Tuesday and Thursday. Tafseer for sisters (English): Monday 1:20pm-1:50pm. Zuhr Jama'ah on Fridays (3, 10, 17, 24) shows 'SEE BELOW' ÃÂ¢ÃÂÃÂ Jumu'ah times apply instead.",
     "source_image": "sources/kingsheath.jpg",
     "lat": 52.4359412,
     "lon": -1.8967673
@@ -3750,7 +3750,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3773,11 +3773,11 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "Jumu'ah Lecture: 12:00pm, Jumu'ah Adhan: 12:17-12:24pm, Jumu'ah Khutbah: 12:25-12:30pm, Gate 4 Opens",
     "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah at 9:00am",
-    "sadaqatul_fitr": "ÃÂ£5.00 per head",
+    "sadaqatul_fitr": "ÃÂÃÂ£5.00 per head",
     "radio_frequency": "459.800",
     "approved": true,
     "is_stale": false,
-    "notes": "No Salat is permitted during the 10 minutes before Zawal time. Timetable subject to sighting of the new moon. Listen LIVE on: emasjidlive.co.uk/listen/madanimasjid and https://www.youtube.com/@MCCSoundBytes/streams. Download timetable from madani.school. Sadaqatul Fitr must be paid before the Eid Salah. The timetable has no separate fajr_start, zohr, or maghrib_jamaat columns Ã¢ÂÂ the Dawn/Subh Sadiq/Suhoor Ends column is a single combined column mapped to sehri_ends.",
+    "notes": "No Salat is permitted during the 10 minutes before Zawal time. Timetable subject to sighting of the new moon. Listen LIVE on: emasjidlive.co.uk/listen/madanimasjid and https://www.youtube.com/@MCCSoundBytes/streams. Download timetable from madani.school. Sadaqatul Fitr must be paid before the Eid Salah. The timetable has no separate fajr_start, zohr, or maghrib_jamaat columns ÃÂ¢ÃÂÃÂ the Dawn/Subh Sadiq/Suhoor Ends column is a single combined column mapped to sehri_ends.",
     "source_image": "sources/madani.png",
     "lat": 52.6278525,
     "lon": -1.0987708
@@ -3812,7 +3812,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3855,7 +3855,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3898,7 +3898,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3921,10 +3921,10 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "",
     "eid_salah": "1st Eid Salaah: 8:00am, 2nd Eid Salaah: 9:15am",
-    "sadaqatul_fitr": "ÃÂ£7 per person (adult & child)",
+    "sadaqatul_fitr": "ÃÂÃÂ£7 per person (adult & child)",
     "radio_frequency": "459.5750",
     "is_stale": false,
-    "notes": "Taraweeh Jamaat times vary Ã¢ÂÂ see timetable. There will be a second Taraweeh Jamaat at 12:30am. To protect your fast, please stop eating 5 minutes before Sehri End time. Maghrib/Iftar column is labelled 'Maghrib Iftar' under Jama'at Times Ã¢ÂÂ this is the Iftar time. No separate Maghrib Jama'at column exists.",
+    "notes": "Taraweeh Jamaat times vary ÃÂ¢ÃÂÃÂ see timetable. There will be a second Taraweeh Jamaat at 12:30am. To protect your fast, please stop eating 5 minutes before Sehri End time. Maghrib/Iftar column is labelled 'Maghrib Iftar' under Jama'at Times ÃÂ¢ÃÂÃÂ this is the Iftar time. No separate Maghrib Jama'at column exists.",
     "source_image": "sources/madinatul.jpg",
     "lat": 52.5059662,
     "lon": -1.896682
@@ -3959,7 +3959,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4002,8 +4002,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4026,7 +4026,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4065,7 +4065,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4108,7 +4108,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4168,7 +4168,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4211,7 +4211,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4254,8 +4254,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-10-26 to 2026-10-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-10-26 to 2026-10-30). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4278,7 +4278,7 @@
             "2026-10-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4317,7 +4317,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4360,7 +4360,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4403,7 +4403,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4446,7 +4446,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4489,7 +4489,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4514,7 +4514,7 @@
     "month": "May 2026",
     "islamic_month": "Dhul Qa'dah / Dhul-Hijjah 1447",
     "eid_salah": "9:00am (one jama'at only)",
-    "sadaqatul_fitr": "ÃÂÃÂ£5.00 per person",
+    "sadaqatul_fitr": "ÃÂÃÂÃÂÃÂ£5.00 per person",
     "radio_frequency": "460.375",
     "is_stale": false,
     "source_image": "sources/aisha.jpg",
@@ -4552,8 +4552,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 23 days (2026-04-01 to 2026-04-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 23 days (2026-04-01 to 2026-04-30). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4594,7 +4594,7 @@
             "2026-04-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4611,12 +4611,12 @@
     "lon": -1.8997,
     "phone": "0121 630 1325",
     "csv": "falaah.csv",
-    "notes": "Zuhr Jamaat 12:40pm. Jumu'ah at 12:30pm & 1:40pm. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight. Fidya/Kaffarah ÃÂ£1.50 per fast. Pay Fitrana by 25th Ramadan. 100% of all Zakat funds will be distributed to the needy. Bank: Lloyds Bank, S/C: 30-93-09, A/C: 01195888. Taraweeh recitation of Surah/Ayah listed per night. Pay Your Zakat.",
+    "notes": "Zuhr Jamaat 12:40pm. Jumu'ah at 12:30pm & 1:40pm. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight. Fidya/Kaffarah ÃÂÃÂ£1.50 per fast. Pay Fitrana by 25th Ramadan. 100% of all Zakat funds will be distributed to the needy. Bank: Lloyds Bank, S/C: 30-93-09, A/C: 01195888. Taraweeh recitation of Surah/Ayah listed per night. Pay Your Zakat.",
     "month": "February-March 2026",
     "islamic_month": "Ramadan 1447",
     "jummah_times": "12:30pm & 1:40pm",
     "eid_salah": "7:30am & 9:00am",
-    "sadaqatul_fitr": "ÃÂ£6 per person (min)",
+    "sadaqatul_fitr": "ÃÂÃÂ£6 per person (min)",
     "is_stale": false,
     "source_image": "sources/falaah.jpg"
   },
@@ -4650,7 +4650,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4710,8 +4710,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4734,7 +4734,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4773,8 +4773,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4842,7 +4842,7 @@
             "2026-12-12"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4882,7 +4882,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 61 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4975,13 +4975,13 @@
     "phone": "",
     "month": "February-March 2026",
     "islamic_month": "Ramadan 1447",
-    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
+    "jummah_times": "BayÃÂÃÂn: 12:15pm, AzÃÂÃÂn: 12:50pm",
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "454.300 MHZ",
     "approved": true,
     "is_stale": false,
-    "notes": "It is advisable to stop eating and drinking at least 5 minutes before Sub'h SÃÂdiq. SalÃÂt should not be performed during the 10 minutes before ZawÃÂl. Programmes in the Masjid during RamadhÃÂn: Dars e Qur'ÃÂn (Urdu/English) - see notice board for details; Short Lesson on HadÃÂ«th (English) after Fajr. Programmes via the receiver only: Urdu after Zuhr, English after Maghrib.",
+    "notes": "It is advisable to stop eating and drinking at least 5 minutes before Sub'h SÃÂÃÂdiq. SalÃÂÃÂt should not be performed during the 10 minutes before ZawÃÂÃÂl. Programmes in the Masjid during RamadhÃÂÃÂn: Dars e Qur'ÃÂÃÂn (Urdu/English) - see notice board for details; Short Lesson on HadÃÂÃÂ«th (English) after Fajr. Programmes via the receiver only: Urdu after Zuhr, English after Maghrib.",
     "source_image": "sources/annoor.png",
     "lat": 52.6342653,
     "lon": -1.1101507
@@ -5016,7 +5016,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5059,8 +5059,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5158,7 +5158,7 @@
             "2026-07-28"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5197,7 +5197,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5240,8 +5240,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5264,7 +5264,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5303,8 +5303,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 2 days (2026-04-08 to 2026-04-09). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 2 days (2026-04-08 to 2026-04-09). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5324,7 +5324,7 @@
             "2026-04-09"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5343,7 +5343,7 @@
     "islamic_month": "Dhul Qa'dah / Dhul Hijjah 1447 AH",
     "jummah_times": "Jumu'ah Jamat @ 2:00pm",
     "eid_salah": "Eid salah 9:30am. Bayaan 30 mins before",
-    "sadaqatul_fitr": "ÃÂ£6.50 per person",
+    "sadaqatul_fitr": "ÃÂÃÂ£6.50 per person",
     "radio_frequency": "447-6250",
     "is_stale": false,
     "notes": "Dhuhr Jamat @ 1:45pm - Jumu'ah Jamat @ 2:00pm. Listen to Live broadcast of Adhaan and Talks from Masjid on 447-6250. Jamat times may be changed according to circumstances. The 'Azan & Jamat' column under Maghrib appears to be a combined Azan and Jama'at time (a few minutes after Sunset).",
@@ -5383,7 +5383,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5426,7 +5426,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5469,7 +5469,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5492,7 +5492,7 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "",
     "eid_salah": "",
-    "sadaqatul_fitr": "ÃÂ£5 per person",
+    "sadaqatul_fitr": "ÃÂÃÂ£5 per person",
     "radio_frequency": "454.700",
     "is_stale": false,
     "notes": "Maghrib Jamat will commence six minutes after Iftar time. For Brothers: Daily after Taraweeh Salaah. For Sisters: Saturday's 1:45pm Urdu Lecture, Sunday's 1:45pm English Lecture.",
@@ -5530,7 +5530,7 @@
     "islamic_month": "Thul-Qaidah - Hijjah 1447",
     "jummah_times": "1st Jumu'ah: 1:30pm, 2nd Jumu'ah: 4:10pm",
     "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-    "sadaqatul_fitr": "Minimum ÃÂÃÂ£6.00 for adults & children",
+    "sadaqatul_fitr": "Minimum ÃÂÃÂÃÂÃÂ£6.00 for adults & children",
     "radio_frequency": "453.7000",
     "is_stale": false,
     "notes": "Zuhr Jama'at: 2:00pm on Saturdays and Sundays (as shown in table). Jamaat times are subject to change, please refer to Masjid notice board for changes. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Darse-Quraan will take place in Urdu.",
@@ -5586,7 +5586,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5629,7 +5629,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5672,8 +5672,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5696,7 +5696,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5719,7 +5719,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "Masjid Millat Ibrahim  ÃÂÃÂ²ÃÂ¯ÃÂÃÂÃÂªÃÂ ÃÂÃÂÃÂ© ÃÂ§ÃÂ¨ÃÂ±ÃÂ§ÃÂÃÂÃÂ",
+    "association": "Masjid Millat Ibrahim  ÃÂÃÂÃÂÃÂ²ÃÂÃÂ¯ÃÂÃÂÃÂÃÂÃÂÃÂªÃÂÃÂ ÃÂÃÂÃÂÃÂÃÂÃÂ© ÃÂÃÂ§ÃÂÃÂ¨ÃÂÃÂ±ÃÂÃÂ§ÃÂÃÂÃÂÃÂÃÂÃÂ",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
     "csv": "masjid_millat_ibrahim.csv",
@@ -5735,7 +5735,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5778,7 +5778,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5805,7 +5805,7 @@
     "radio_frequency": "",
     "approved": true,
     "is_stale": false,
-    "notes": "Jumu'ah Bayaan starts at 1:00pm, Khutbah at 1:30pm. The timetable header column is labelled 'FAJR & SEHRI' for the pre-dawn column. Sunset column exists separately from Maghrib & Iftari column ÃÂ¢ÃÂÃÂ Sunset values ignored. No Maghrib Jama'at column present.",
+    "notes": "Jumu'ah Bayaan starts at 1:00pm, Khutbah at 1:30pm. The timetable header column is labelled 'FAJR & SEHRI' for the pre-dawn column. Sunset column exists separately from Maghrib & Iftari column ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Sunset values ignored. No Maghrib Jama'at column present.",
     "source_image": "sources/naqeebul.jpg",
     "lat": 52.4924826,
     "lon": -1.8582255
@@ -5823,7 +5823,7 @@
     "islamic_month": "Dhul Qa'dah-Dhul Hijjah 1447",
     "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
     "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-    "sadaqatul_fitr": "ÃÂ£4.50",
+    "sadaqatul_fitr": "ÃÂÃÂ£4.50",
     "radio_frequency": "454.3500",
     "is_stale": false,
     "source_image": "sources/quba.jpg",
@@ -5860,7 +5860,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5887,7 +5887,7 @@
     "radio_frequency": "",
     "approved": false,
     "is_stale": false,
-    "notes": "Isha prayer will be joined with Maghrib. The timetable is from Mawlawi Kurdish Cultural Centre. On Fridays, Dhuhr Jamat is 1:00 (first khutba) and 2:00 (second khutba). The 'Isha Starts' column appears to be Isha Jama'at times based on context (labelled ÃÂ®ÃÂÃÂÃÂªÃÂÃÂ§ÃÂ Isha with only one sub-column 'Starts'). Asr Jamat column shows fixed values per period.",
+    "notes": "Isha prayer will be joined with Maghrib. The timetable is from Mawlawi Kurdish Cultural Centre. On Fridays, Dhuhr Jamat is 1:00 (first khutba) and 2:00 (second khutba). The 'Isha Starts' column appears to be Isha Jama'at times based on context (labelled ÃÂÃÂ®ÃÂÃÂÃÂÃÂÃÂÃÂªÃÂÃÂÃÂÃÂ§ÃÂÃÂ Isha with only one sub-column 'Starts'). Asr Jamat column shows fixed values per period.",
     "source_image": "sources/raufbarzenji.jpg",
     "lat": 53.4608698,
     "lon": -2.2513595
@@ -5922,7 +5922,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5965,7 +5965,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6008,8 +6008,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 3 days (2026-03-29 to 2026-03-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 3 days (2026-03-29 to 2026-03-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -6030,7 +6030,7 @@
             "2026-03-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -6069,7 +6069,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6112,7 +6112,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6139,7 +6139,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ±ÃÂÃÂ² ÃÂÃÂÃÂ ÃÂ§ÃÂÃÂªÃÂ¹ÃÂÃÂÃÂÃÂ",
+    "association": "ÃÂÃÂÃÂÃÂ±ÃÂÃÂÃÂÃÂ² ÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂÃÂ§ÃÂÃÂÃÂÃÂªÃÂÃÂ¹ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
     "csv": "mena_trust.csv",
@@ -6155,7 +6155,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6198,7 +6198,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6241,7 +6241,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6284,7 +6284,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6327,7 +6327,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6371,8 +6371,8 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 1 days (2026-07-31 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-07-31 to 2026-07-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-07-31 to 2026-07-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -6403,7 +6403,7 @@
             "2026-07-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -6442,8 +6442,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -6515,7 +6515,7 @@
             "2026-07-14"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -6554,7 +6554,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6597,7 +6597,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6640,7 +6640,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6683,7 +6683,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6726,7 +6726,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6769,7 +6769,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6812,7 +6812,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6855,7 +6855,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6898,7 +6898,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6941,7 +6941,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6984,7 +6984,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7027,8 +7027,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7075,7 +7075,7 @@
             "2026-09-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7114,7 +7114,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7157,7 +7157,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7200,7 +7200,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7243,8 +7243,8 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 12 days (2026-09-21 to 2026-10-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 12 days (2026-09-21 to 2026-10-31). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7274,7 +7274,7 @@
             "2026-10-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7313,7 +7313,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7356,7 +7356,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7399,7 +7399,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7442,7 +7442,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7485,7 +7485,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7528,7 +7528,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7571,7 +7571,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7614,7 +7614,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7657,7 +7657,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7700,7 +7700,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7743,7 +7743,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7786,7 +7786,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7829,7 +7829,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7872,8 +7872,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 8 days (2026-04-03 to 2026-05-23). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 8 days (2026-04-03 to 2026-05-23). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7899,7 +7899,7 @@
             "2026-05-23"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7918,7 +7918,7 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "1:00pm & 1:30pm",
     "eid_salah": "7:30am & 9:00am",
-    "sadaqatul_fitr": "ÃÂ£5.00",
+    "sadaqatul_fitr": "ÃÂÃÂ£5.00",
     "radio_frequency": "",
     "approved": true,
     "test_masjid": true,
@@ -7955,7 +7955,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7998,7 +7998,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8041,7 +8041,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8084,8 +8084,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-28 to 2026-03-28). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-28 to 2026-03-28). Indicates a data error ÃÂ¢ÃÂÃÂ Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -8104,7 +8104,7 @@
             "2026-03-28"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate ÃÂ¢ÃÂÃÂ likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -8143,7 +8143,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8187,7 +8187,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 56 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8298,7 +8298,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 75 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
