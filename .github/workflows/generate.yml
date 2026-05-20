@@ -108,8 +108,12 @@ jobs:
         run: |
           # Daily-accumulating MasjidBox masjids: upsert today/tomorrow into each
           # masjid's CSV. Uses only stdlib, so no extra deps. Non-fatal on errors.
+          # Each call returns 2 days, so we fetch half the list per day (shard by
+          # day-of-year parity) — every masjid is still refreshed every other day
+          # with no gaps, and the daily API footprint is halved.
           if [ -f data/masjidbox_uk.txt ]; then
-            python -m providers.masjidbox.bulk || echo "⚠️ MasjidBox fetch had errors (continuing)"
+            SHARD=$(( 10#$(date -u +%j) % 2 ))
+            python -m providers.masjidbox.bulk --of 2 --shard "$SHARD" || echo "⚠️ MasjidBox fetch had errors (continuing)"
           else
             echo "No data/masjidbox_uk.txt — skipping MasjidBox refresh"
           fi

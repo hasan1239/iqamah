@@ -17,6 +17,7 @@ Usage (run from repo root):
     python -m providers.masjidbox.bulk --dry-run
 """
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -82,6 +83,11 @@ def main():
     p.add_argument("--data-dir", default="data")
     p.add_argument("--limit", type=int, default=0)
     p.add_argument("--only", default="", help="Comma-separated MasjidBox slugs to include")
+    p.add_argument("--of", type=int, default=1,
+                   help="Split the list into N shards (fetch only --shard's portion). "
+                        "Each call returns 2 days, so --of 2 (every-other-day) has no gaps; "
+                        "don't go above 2.")
+    p.add_argument("--shard", type=int, default=0, help="Which shard (0..of-1) to fetch this run")
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--delay", type=float, default=FETCH_DELAY_S)
     args = p.parse_args()
@@ -95,6 +101,14 @@ def main():
     if args.only:
         wanted = {s.strip() for s in args.only.split(",") if s.strip()}
         entries = [e for e in entries if e[0] in wanted]
+    if args.of > 1:
+        # Stable hash-shard by MasjidBox slug, so a masjid's shard doesn't change
+        # when the list is edited. Spreads the daily API load across days.
+        def _shard(mb_slug):
+            return int(hashlib.md5(mb_slug.encode()).hexdigest(), 16) % args.of
+        total = len(entries)
+        entries = [e for e in entries if _shard(e[0]) == args.shard]
+        print(f"Shard {args.shard}/{args.of}: {len(entries)} of {total} masjids this run")
 
     data_dir = Path(args.data_dir)
     mosques_dir = data_dir / "mosques"
