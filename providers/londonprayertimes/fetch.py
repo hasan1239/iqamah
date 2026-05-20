@@ -2,9 +2,15 @@
 providers/londonprayertimes/fetch.py — London Unified Prayer Timetable.
 
 Fetches the full year from londonprayertimes.com (12 month calls) and writes it
-to a masjid's CSV. The timetable is the same for every London masjid that
-follows it (it's a single unified calendar, based on East London Mosque), so all
-such masjids get identical times — which is what they actually use.
+to a masjid's CSV. Based on East London Mosque.
+
+⚠️ ONLY SAFE FOR EAST LONDON MOSQUE. The London Unified timetable is a START-time
+standard, NOT a jamaat standard. Other "followers" (e.g. London Central Mosque,
+Croydon ICT) adopt the unified start times but set their OWN iqamah — verified
+their Asr jamaat is ~17:27-17:30, not the unified 18:45, so applying the unified
+jamaat to them is ~75min late (people miss the congregation). Only ELM genuinely
+uses the unified jamaat (the timetable is derived from it). Do NOT onboard other
+masjids here without confirming their actual jamaat matches.
 
 Fetched per-year, not daily (the calendar is fixed for the year). Re-run when a
 new year's data is needed.
