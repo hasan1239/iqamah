@@ -189,38 +189,59 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
     return html
 
 
-def render_to_png(html_content: str, output_path: str, script_dir: Path):
-    """Render HTML to a 1080x2400 PNG using Playwright + Pillow."""
-    tmp_dir = tempfile.gettempdir()
-    tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
-    tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
+class LockscreenRenderer:
+    """Reusable Playwright browser/page for rendering many lockscreens.
 
-    # Copy logos to temp directory so relative paths work
-    for logo_name in ["iqamah-icon.svg", "iqamah-icon-transparent.png"]:
-        logo_src = script_dir / logo_name
-        if logo_src.exists():
-            shutil.copy2(logo_src, os.path.join(tmp_dir, logo_name))
+    Launching Chromium and copying the logos is expensive, so do it once and
+    reuse the same page across every render rather than per image.
+    """
 
-    Path(tmp_html).write_text(html_content, encoding="utf-8")
+    def __init__(self, script_dir: Path):
+        self.script_dir = script_dir
+        tmp_dir = tempfile.gettempdir()
+        self.tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
+        self.tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
+        self._tmp_dir = tmp_dir
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page(
+    def __enter__(self):
+        # Copy logos to temp directory once so relative paths resolve
+        for logo_name in ["iqamah-icon.svg", "iqamah-icon-transparent.png"]:
+            logo_src = self.script_dir / logo_name
+            if logo_src.exists():
+                shutil.copy2(logo_src, os.path.join(self._tmp_dir, logo_name))
+
+        self._pw = sync_playwright().start()
+        self.browser = self._pw.chromium.launch()
+        self.page = self.browser.new_page(
             viewport={"width": 390, "height": 844},
             device_scale_factor=3,
         )
-        page.goto(Path(tmp_html).as_uri())
-        page.wait_for_timeout(2000)
-        page.screenshot(path=tmp_screenshot, full_page=False)
-        browser.close()
+        return self
 
-    img = Image.open(tmp_screenshot)
-    img_resized = img.resize((1080, 2400), Image.LANCZOS)
-    img_resized.save(output_path, dpi=(300, 300))
-    print(f"  ✅ Saved: {output_path}")
+    def __exit__(self, *exc):
+        self.page.close()
+        self.browser.close()
+        self._pw.stop()
+
+    def render(self, html_content: str, output_path: str):
+        """Render one HTML string to a 1080x2400 PNG using the shared page."""
+        Path(self.tmp_html).write_text(html_content, encoding="utf-8")
+
+        page = self.page
+        page.goto(Path(self.tmp_html).as_uri())
+        # Wait for web fonts to actually finish loading rather than a fixed
+        # sleep — document.fonts.ready is a promise Playwright auto-awaits.
+        page.evaluate("document.fonts.ready")
+        page.wait_for_timeout(100)  # brief settle for the final paint
+        page.screenshot(path=self.tmp_screenshot, full_page=False)
+
+        img = Image.open(self.tmp_screenshot)
+        img_resized = img.resize((1080, 2400), Image.LANCZOS)
+        img_resized.save(output_path, dpi=(300, 300))
+        print(f"  ✅ Saved: {output_path}")
 
 
-def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, script_dir: Path, suffix: str = ""):
+def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, renderer: "LockscreenRenderer", suffix: str = ""):
     """Full pipeline: CSV → HTML → PNG for one mosque and date."""
     config = mosques[mosque_key]
     csv_path = os.path.join(data_dir, config["csv"])
@@ -241,7 +262,7 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
     output_path = os.path.join(output_dir, filename)
 
     os.makedirs(output_dir, exist_ok=True)
-    render_to_png(html, output_path, script_dir)
+    renderer.render(html, output_path)
 
     latest_name = f"ramadan_lockscreen_{config['slug']}{suffix}_latest.png"
     return output_path, latest_name
@@ -327,27 +348,29 @@ def main():
     print()
 
     generated = []
-    for key in mosque_keys:
-        if key not in mosques:
-            print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
-            continue
-        print(f"  📐 {mosques[key]['display_name']}...")
-        result = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, script_dir)
-        if result:
-            generated.append(result)
-
-    # Generate light variant if a matching _light template exists
-    light_template_path = script_dir / "templates" / f"lockscreen_{template_version}_light.html"
-    if light_template_path.exists():
-        print()
-        print(f"🌤️  Generating light variants...")
+    # Launch one browser for the whole run and reuse it across every render.
+    with LockscreenRenderer(script_dir) as renderer:
         for key in mosque_keys:
             if key not in mosques:
+                print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
                 continue
-            print(f"  📐 {mosques[key]['display_name']} (light)...")
-            result = generate_lockscreen(key, target_date, output_dir, str(light_template_path), str(data_dir), mosques, script_dir, suffix="_light")
+            print(f"  📐 {mosques[key]['display_name']}...")
+            result = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, renderer)
             if result:
                 generated.append(result)
+
+        # Generate light variant if a matching _light template exists
+        light_template_path = script_dir / "templates" / f"lockscreen_{template_version}_light.html"
+        if light_template_path.exists():
+            print()
+            print(f"🌤️  Generating light variants...")
+            for key in mosque_keys:
+                if key not in mosques:
+                    continue
+                print(f"  📐 {mosques[key]['display_name']} (light)...")
+                result = generate_lockscreen(key, target_date, output_dir, str(light_template_path), str(data_dir), mosques, renderer, suffix="_light")
+                if result:
+                    generated.append(result)
 
     print()
     if generated:
