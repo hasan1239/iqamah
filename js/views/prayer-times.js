@@ -52,6 +52,7 @@ const PROVIDER_LABELS = {
   esalaat: 'eSalaat',
   mymasjid: 'MyMasjid',
   masjidbox: 'MasjidBox',
+  londonprayertimes: 'LondonPrayerTimes',
   image: 'Community upload',
   manual: 'Entered by maintainer',
 };
@@ -69,7 +70,7 @@ function renderSourceTag(cfg) {
   const provider = cfg && cfg.provider;
   if (!provider || !provider.type) return '';
   const label = PROVIDER_LABELS[provider.type] || provider.type;
-  const isExternal = provider.type === 'mawaqit' || provider.type === 'esalaat';
+  const isExternal = provider.type === 'mawaqit' || provider.type === 'esalaat' || provider.type === 'londonprayertimes';
   const providerHtml = isExternal && provider.source_url
     ? `<a href="${provider.source_url}" target="_blank" rel="noopener" class="source-link">${label}</a>`
     : label;
