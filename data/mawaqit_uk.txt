@@ -237,3 +237,6 @@ newport-central-jame-masjid-newport-np20-4dx-united-kingdom  newport_central_jam
 swansea-mosque-swansea-sa1-4dg-united-kingdom-1  swansea_mosque
 sketty-mosque-and-community-centre-sketty-swansea-sa2-9as-united-kingdom  sketty_mosque_community_centre
 al-mutawa-mosque-swansea-sa5-9lh-united-kingdom  al_mutawa_mosque
+
+# Leeds (sweep 2026-05-20 — only new Mawaqit masjid in the area)
+leeds-grand-mosque-leeds-ls6-1sn-united-kingdom  leeds_grand_mosque
