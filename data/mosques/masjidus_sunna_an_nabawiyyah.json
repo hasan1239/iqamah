@@ -25,11 +25,12 @@
     "source_url": "https://time.my-masjid.com/timingsInfoScreen/075fe2ba-8537-43b4-9327-13ed91932eae"
   },
   "quality": {
-    "status": "warnings",
+    "status": "needs_review",
     "checked_at": "2026-05-20",
     "row_count": 365,
     "warnings": [
-      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+      "92% of the year repeats a single Fajr+Maghrib pairing — these are astronomical times that shift daily, so this masjid's My-Masjid timetable is mostly placeholder/unconfigured."
     ],
     "issues": [
       {
@@ -37,6 +38,13 @@
         "severity": "medium",
         "action_taken": "sehri_ends = fajr_start",
         "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      },
+      {
+        "type": "placeholder_times",
+        "severity": "high",
+        "dominant_fraction": 0.92,
+        "action_taken": "none (masjid hidden until real times are sourced)",
+        "fix": "Masjid hasn't configured real times in My-Masjid; source from another provider (e.g. eSalaat) or skip"
       }
     ]
   },
