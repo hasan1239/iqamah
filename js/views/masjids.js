@@ -163,7 +163,6 @@ let hasTimesMap = {}; // slug -> true/false, populated after CSV check
 const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 
 export function render(container) {
-  viewContainer = container;
   selectedCity = null;
   container.innerHTML = `
     <div class="masjids-view" data-mode="${isCityListMode() ? 'cities' : 'list'}">
@@ -210,6 +209,12 @@ export function render(container) {
       <div class="pin-toast" id="masjidsPinToast"></div>
     </div>
   `;
+
+  // Hold a reference to .masjids-view itself (not the outer container).
+  // The router moves children out of the transition wrapper after the slide
+  // animation, so the outer container goes empty — but .masjids-view itself
+  // is the moved node, so this reference survives.
+  viewContainer = container.querySelector('.masjids-view');
 
   // Show skeleton immediately
   const grid = viewContainer.querySelector('#masjidsGrid');
@@ -282,14 +287,13 @@ function setupNearbyPill() {
 
 function updateHeaderState() {
   if (!viewContainer) return;
-  const view = viewContainer.querySelector('.masjids-view');
   const title = viewContainer.querySelector('#masjidsTitle');
-  if (!view || !title) return;
+  if (!title) return;
   if (isCityListMode()) {
-    view.setAttribute('data-mode', 'cities');
+    viewContainer.setAttribute('data-mode', 'cities');
     title.textContent = 'Masjids';
   } else {
-    view.setAttribute('data-mode', selectedCity ? 'city-detail' : 'list');
+    viewContainer.setAttribute('data-mode', selectedCity ? 'city-detail' : 'list');
     title.textContent = selectedCity || 'Masjids';
   }
 }
@@ -641,7 +645,7 @@ function handlePinClick(e) {
 }
 
 function setupLongPress() {
-  const view = (viewContainer && viewContainer.querySelector('.masjids-view')) || document.querySelector('.masjids-view');
+  const view = viewContainer || document.querySelector('.masjids-view');
   if (!view) return;
 
   let pressTarget = null;
