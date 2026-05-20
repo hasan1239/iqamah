@@ -343,7 +343,7 @@ async function loadMasjids() {
     const res = await fetch('/data/mosques/index.json');
     if (!res.ok) return;
     cachedConfigs = (await res.json()).filter(c =>
-      !c.test_masjid && !(c.quality && c.quality.status === 'needs_review')
+      !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     renderCards();
   } catch (error) {

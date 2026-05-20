@@ -50,6 +50,7 @@ function ft(timeStr, isAM, skipSuffix) {
 const PROVIDER_LABELS = {
   mawaqit: 'Mawaqit',
   esalaat: 'eSalaat',
+  mymasjid: 'MyMasjid',
   image: 'Community upload',
   manual: 'Entered by maintainer',
 };

@@ -34,6 +34,7 @@ import csv
 import json
 import urllib.parse
 import urllib.request
+from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -332,6 +333,42 @@ def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
             "fix": "Reach out to masjid, or skip this masjid",
         })
 
+    # Placeholder / unconfigured times. My-Masjid serves a static default
+    # (e.g. fajr 05:00, maghrib 18:00) for masjids that registered but never
+    # configured real times — sometimes with just a month or two filled in.
+    # Fajr start and Maghrib are astronomical: they shift a minute or two every
+    # day, so a single value covering a large share of the year means the
+    # timetable is mostly fake. (A fixed *jama'at* is fine — we check the
+    # astronomical START fields, which can never legitimately repeat.)
+    def _mode_fraction(field: str) -> float:
+        vals = [r[field] for r in rows if r[field]]
+        if not vals:
+            return 0.0
+        return Counter(vals).most_common(1)[0][1] / len(vals)
+
+    # Require BOTH Fajr start and Maghrib to be dominated by one value: the
+    # placeholder rows are static as a whole (fajr 05:00 + maghrib 18:00
+    # together), so both fields share the same high mode fraction. A masjid
+    # that merely uses a fixed *Fajr* in winter (real data) trips only one
+    # field, so we don't flag it — its Maghrib still shifts daily.
+    fajr_frac = _mode_fraction("fajr_start")
+    mag_frac = _mode_fraction("maghrib_iftari")
+    placeholder_frac = min(fajr_frac, mag_frac)
+    if placeholder_frac > 0.20:
+        pct = round(placeholder_frac * 100)
+        warnings.append(
+            f"{pct}% of the year repeats a single Fajr+Maghrib pairing — these are "
+            "astronomical times that shift daily, so this masjid's My-Masjid "
+            "timetable is mostly placeholder/unconfigured."
+        )
+        issues.append({
+            "type": "placeholder_times", "severity": "high",
+            "dominant_fraction": round(placeholder_frac, 2),
+            "action_taken": "none (masjid hidden until real times are sourced)",
+            "fix": "Masjid hasn't configured real times in My-Masjid; source from "
+                   "another provider (e.g. eSalaat) or skip",
+        })
+
     # Record any auto-corrections made by repair_glitches (visible, medium —
     # these are confidently-fixed AM/PM typos, masjid stays public).
     corrections = corrections or []
@@ -461,14 +498,21 @@ def prefer_existing(existing_value, new_value):
     return existing_value
 
 
+def _clean_field(v) -> str:
+    """My-Masjid sometimes returns the literal strings 'undefined'/'null' for an
+    unset house/street/zipCode. Treat those as empty."""
+    s = (v or "").strip()
+    return "" if s.lower() in ("undefined", "null") else s
+
+
 def build_address(details: dict) -> tuple[str, str]:
     """
     Build an address from My-Masjid's structured fields (house/street/zipCode),
     enriching city/ward from Postcodes.io. Returns (address, source).
     """
-    house = (details.get("house") or "").strip()
-    street = (details.get("street") or "").strip()
-    postcode = (details.get("zipCode") or "").strip()
+    house = _clean_field(details.get("house"))
+    street = _clean_field(details.get("street"))
+    postcode = _clean_field(details.get("zipCode"))
 
     street_part = " ".join(p for p in [house, street] if p).strip()
     city = ward = None
