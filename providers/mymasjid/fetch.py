@@ -461,14 +461,21 @@ def prefer_existing(existing_value, new_value):
     return existing_value
 
 
+def _clean_field(v) -> str:
+    """My-Masjid sometimes returns the literal strings 'undefined'/'null' for an
+    unset house/street/zipCode. Treat those as empty."""
+    s = (v or "").strip()
+    return "" if s.lower() in ("undefined", "null") else s
+
+
 def build_address(details: dict) -> tuple[str, str]:
     """
     Build an address from My-Masjid's structured fields (house/street/zipCode),
     enriching city/ward from Postcodes.io. Returns (address, source).
     """
-    house = (details.get("house") or "").strip()
-    street = (details.get("street") or "").strip()
-    postcode = (details.get("zipCode") or "").strip()
+    house = _clean_field(details.get("house"))
+    street = _clean_field(details.get("street"))
+    postcode = _clean_field(details.get("zipCode"))
 
     street_part = " ".join(p for p in [house, street] if p).strip()
     city = ward = None
