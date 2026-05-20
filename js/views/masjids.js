@@ -271,6 +271,19 @@ function setupCityNav() {
     searchQuery = '';
     const input = viewContainer.querySelector('#masjidSearch');
     if (input) input.value = '';
+    // Reset Nearby too — going back returns the user to the clean cities list,
+    // which doesn't use distance sort.
+    if (locationActive) {
+      locationActive = false;
+      userLocation = null;
+      distanceMap = {};
+      const locBtn = viewContainer.querySelector('#masjidsLocationBtn');
+      if (locBtn) {
+        locBtn.classList.remove('active');
+        const txt = locBtn.querySelector('.location-btn-text');
+        if (txt) txt.textContent = 'Nearby';
+      }
+    }
     updateHeaderState();
     renderCards();
   });
@@ -783,7 +796,6 @@ function setupLocationBtn() {
       });
 
       locationActive = true;
-      selectedCity = null;
       btn.classList.add('active');
       textEl.textContent = 'Nearby';
       updateHeaderState();
