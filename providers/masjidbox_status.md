@@ -1,10 +1,18 @@
-# MasjidBox provider — PARKED
+# MasjidBox provider — BUILT (daily-accumulating)
 
-**Status (2026-05-20):** Investigation complete. Provider build deferred — waiting on outreach to MasjidBox-using masjid admins for an iCal sample URL.
+**Status (2026-05-20):** BUILT and onboarded. The 2-day-window limitation was turned into a daily-accumulation design instead of waiting on iCal — see `providers/masjidbox/`. The original parked investigation is kept below for context.
 
-## Why parked
+**How it works now:** `providers/masjidbox/{fetch,bulk}.py` run daily (via `generate.yml`), upserting today+tomorrow into each masjid's CSV by date. Masjids are flagged `today_only` so the frontend hides the month view. No admin opt-in needed — works for any MasjidBox masjid we can find a slug for (discovery is via Google `site:masjidbox.com/prayer-times`, curated into `data/masjidbox_uk.txt`). Self-healing: re-fetched daily, so always current.
 
-The widget API works but only returns a 2-day window (yesterday + today). Anything wider triggers a Cloudflare 503. Without a full-year data source, every MasjidBox masjid we onboard would have a broken month view for ~30 days while data accumulates day-by-day — a UX downgrade vs Mawaqit masjids that are usable instantly.
+**Quality gates:** the shared start-time outlier check (`providers/__init__.py:check_start_outliers`) flags miscalculated/unconfigured masjids. MasjidBox has its own placeholder problem (~30% in the Birmingham batch were unconfigured: high-angle calc + flat +10 iqamah → Isha after midnight) — these get hidden. `suppress_times` config blanks individual bad cells (e.g. an extreme Fajr start) so a masjid stays usable instead of fully hidden when only a cell is wrong but the jamaat is real.
+
+**Birmingham batch:** 13 onboarded, 4 hidden (unconfigured), 9 visible — several recovering masjids that were placeholder junk on My-Masjid (Green Lane, Mohammadi, etc.) now with correct live data. **iCal is no longer needed for breadth** (daily-fetch works without admin involvement); it would only add full-year data for the month view, which we've decided to hide anyway.
+
+**Scale caution:** at ~60-100 UK masjids the daily burst is detectable and against MasjidBox's stated "no public API" — send them a courtesy email before scaling big (see "Ethics" below).
+
+## (Historical) Why it was parked
+
+The widget API works but only returns a 2-day window (yesterday + today). Anything wider triggers a Cloudflare 503. Without a full-year data source, every MasjidBox masjid we onboard would have a broken month view for ~30 days while data accumulates day-by-day — a UX downgrade vs Mawaqit masjids that are usable instantly. (Resolved by hiding the month view for these masjids.)
 
 The official alternative is **iCal subscription links** (MasjidBox calls these "shareable public iCalendar links"). Format is undocumented — we need to see one real example before we can design against it. Each masjid admin generates their own from their dashboard.
 
