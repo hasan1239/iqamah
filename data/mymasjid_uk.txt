@@ -37,7 +37,8 @@ dd4b3531-7258-40a0-b08f-47e9343993f7  masjid_darul_elm
 # 43e071f0-4a1f-4282-b765-96ce3dd756f6  masjid_naqeebul_islam
 33fd9db9-7a6e-421a-8d6e-093793a576e4  masjid_sulaymn_bin_dawd
 6a006d00-d0c7-493b-875a-0c18eb59729c  masjid_taqwa
-cf7b037e-7e1c-4e74-8088-a72cd78e91bb  masjid_abu_bakar
+# DUP of masjid_abu_bakr_billesley (same masjid, 713 Yardley Wood Road) — removed
+# cf7b037e-7e1c-4e74-8088-a72cd78e91bb  masjid_abu_bakar
 94d8b064-6a2e-4be4-abd6-fba06d405755  masjid_zia_ul_eiman
 075fe2ba-8537-43b4-9327-13ed91932eae  masjidus_sunna_an_nabawiyyah
 0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c  mohammadi_masjid_alum_rock
