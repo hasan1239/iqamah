@@ -7043,7 +7043,7 @@
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "",
-    "approved": false,
+    "approved": true,
     "is_stale": false,
     "notes": "Isha prayer will be joined with Maghrib. The timetable is from Mawlawi Kurdish Cultural Centre. On Fridays, Dhuhr Jamat is 1:00 (first khutba) and 2:00 (second khutba). The 'Isha Starts' column appears to be Isha Jama'at times based on context (labelled خەوتنان Isha with only one sub-column 'Starts'). Asr Jamat column shows fixed values per period.",
     "source_image": "sources/raufbarzenji.jpg",
