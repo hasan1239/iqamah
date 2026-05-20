@@ -404,8 +404,9 @@ function renderMasjidGrid() {
 
   let filtered = cachedConfigs.slice();
 
-  // City filter (mobile city-detail mode only)
-  if (selectedCity && isMobile() && !locationActive) {
+  // City filter — keep filtering when Nearby is on inside a city so distance
+  // sort applies only to that city's masjids.
+  if (selectedCity && isMobile()) {
     filtered = filtered.filter(c => deriveCity(c) === selectedCity);
   }
 
