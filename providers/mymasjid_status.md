@@ -54,10 +54,26 @@ No apikey, CORS-open, on their own domain. Found by grepping the Angular client 
 
 **Iqamah times are REAL admin config, not calculated offsets.** Tell: zuhr iqamah is a fixed seasonal clock time — 12:30 (Apr–Aug), 12:45 (Sep–Mar) — a human-set schedule, not "start + constant". And iqamah differs slightly from MasjidBox (fajr 5 min, maghrib 8 min), confirming each masjid configures per-platform = genuinely independent data. Quality is comparable to Mawaqit (which is also "what the masjid configured in the platform").
 
-**Coverage: ~538 UK published masjids.** A vowel + term sweep of `GetPublicFilteredMasjid` pulled 2,462 unique of the ~2,234 directory (i.e. effectively complete). Of 538 UK:
+**Coverage: ~538 UK published masjids — but heavily discounted by placeholder data (see ⚠ below).** A vowel + term sweep of `GetPublicFilteredMasjid` pulled 2,462 unique of the ~2,234 directory (i.e. effectively complete). Of 538 UK:
 - 48 overlap with our existing 169 (confirms legit masjids)
-- **~490 potentially new** (pre-geo-dedup; even halved, ~3–4× our catalogue)
+- **~490 *nominally* new** — but ~45% of the Birmingham batch turned out to be placeholder/unconfigured, so realistic usable net-new is likely **~200–250**, not 490.
 - Spread: London 60, **Blackburn 42, Bradford 41**, Birmingham 39, Leicester 25, Manchester 18, Bolton, Glasgow, Luton, Nelson, Burnley — strong northern mill-town coverage where Mawaqit is thin.
+
+## ⚠ Placeholder-data caveat (discovered onboarding the Birmingham batch)
+
+Many masjids **register on My-Masjid but never configure real times** — the API
+then serves a static default (`fajr 05:00, dhuhr 13:00, asr 15:00, maghrib 18:00,
+isha 19:30`) for most of the year, sometimes with one or two months filled in.
+This data is internally consistent (ordered, jamaats in-window) so it passed the
+early checks — but it's fake. **13 of 29 in the Birmingham batch (~45%) were
+placeholder-dominated** and are now hidden.
+
+`quality_check` has a `placeholder_times` check: `needs_review` when a single
+value dominates **both** the Fajr-start and Maghrib columns >20% of the year
+(both are astronomical → can't legitimately repeat; requiring *both* avoids
+false-flagging masjids that merely fix Fajr in winter, e.g. masjid_taqwa).
+Masjid Abu Bakr (Billesley) is one of these — its real times live on eSalaat,
+not re-sourced (eSalaat only publishes the current month, updated inconsistently).
 
 ## Gotchas (must handle in the build)
 
