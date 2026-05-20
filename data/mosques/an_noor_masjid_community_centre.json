@@ -1,0 +1,54 @@
+{
+  "slug": "an_noor_masjid_community_centre",
+  "display_name": "An-Noor Masjid & Community Centre",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "45-49 Blake Lane, Bordesley Green, Bordesley Green, Birmingham, B9 5QT",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "12:30",
+  "csv": "an_noor_masjid_community_centre.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "41cf67e4-150a-4268-b5b3-a4b8c1a32366",
+      "masjid_id": 25198
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/41cf67e4-150a-4268-b5b3-a4b8c1a32366"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+      "Isha equals Maghrib on 30 days (2026-06-01 to 2026-06-30) — typical UK-summer combine."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      },
+      {
+        "type": "isha_clamped",
+        "severity": "medium",
+        "count": 30,
+        "first_date": "2026-06-01",
+        "last_date": "2026-06-30",
+        "action_taken": "none (UI flags affected days for users)",
+        "fix": "Verify the masjid's summer Isha policy if these should differ from Maghrib"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

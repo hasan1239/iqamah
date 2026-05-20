@@ -199,9 +199,17 @@ IQAMA_PAIRS = [
     ("asr", "asr_jamaat"), ("maghrib_iftari", "maghrib_jamaat"),
     ("esha", "esha_jamaat"),
 ]
-# Valid iqamah window relative to its prayer start (minutes). Generous upper
-# bound so genuinely-late winter Isha jama'ats (start + ~75min) aren't flagged.
+# Window used ONLY to trigger the ±12h auto-correct (repair_glitches): a value
+# outside this is a candidate for an AM/PM typo fix.
 IQAMA_LO, IQAMA_HI = -10, 180
+
+# Loose sanity window for flagging genuinely-broken (non-Fajr) jama'at times as
+# needs_review. Wide enough to permit legitimate patterns we verified in real
+# data — Jummah held before the calculated Dhuhr start (up to ~75min early),
+# fixed jama'ats that drift before their start, and late-summer gaps — while
+# still catching gross errors (e.g. a 5am Dhuhr jamaat that ±12h can't fix).
+# Fajr is exempt: its real constraint is "before sunrise", checked separately.
+JAMAAT_LO, JAMAAT_HI = -180, 240
 
 
 def _pm_fix(value_min: int, lo: int, hi: int) -> int | None:
@@ -293,14 +301,16 @@ def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
         "fix": "Set the masjid's actual Suhoor cutoff manually if needed",
     })
 
-    # fajr jamaat after sunrise
+    # Fajr jamaat strictly after sunrise. Equality is allowed: My-Masjid clamps
+    # the fajr jamaat down to sunrise in deep summer, so jamaat == sunrise is a
+    # display artifact, not a masjid setting Fajr congregation past its window.
     fajr_after_sunrise = [
         r["date"] for r in rows
-        if r["fajr_jamaat"] and r["sunrise"] and r["fajr_jamaat"] >= r["sunrise"]
+        if r["fajr_jamaat"] and r["sunrise"] and r["fajr_jamaat"] > r["sunrise"]
     ]
     if fajr_after_sunrise:
         warnings.append(
-            f"Fajr jamaat at or after sunrise on {len(fajr_after_sunrise)} days "
+            f"Fajr jamaat after sunrise on {len(fajr_after_sunrise)} days "
             f"({fajr_after_sunrise[0]} to {fajr_after_sunrise[-1]})."
         )
         issues.append({
@@ -339,24 +349,54 @@ def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
             "fix": "None needed; verify upstream if you want the masjid to fix their config",
         })
 
-    # Residual glitches: ordering still broken, or an iqamah still outside its
-    # window AFTER repair, or an unparseable time. These we can't confidently
-    # fix → flag high → needs_review (don't show suspect times to users).
+    # Isha clamped to Maghrib (UK summer — no true Isha twilight). Real, common;
+    # record as medium/visible like the Mawaqit provider rather than hiding.
+    isha_clamped = [
+        r["date"] for r in rows
+        if parse_hhmm(r["maghrib_iftari"]) is not None
+        and parse_hhmm(r["maghrib_iftari"]) == parse_hhmm(r["esha"])
+    ]
+    if isha_clamped:
+        warnings.append(
+            f"Isha equals Maghrib on {len(isha_clamped)} days "
+            f"({isha_clamped[0]} to {isha_clamped[-1]}) — typical UK-summer combine."
+        )
+        issues.append({
+            "type": "isha_clamped", "severity": "medium",
+            "count": len(isha_clamped),
+            "first_date": isha_clamped[0], "last_date": isha_clamped[-1],
+            "action_taken": "none (UI flags affected days for users)",
+            "fix": "Verify the masjid's summer Isha policy if these should differ from Maghrib",
+        })
+
+    # Residual glitches (HIGH → needs_review). After repair, we only hide a
+    # masjid for things we genuinely can't trust:
+    #   - an unparseable start time
+    #   - broken start-time ordering (allowing the Maghrib==Isha clamp)
+    #   - a non-Fajr jama'at grossly outside its prayer (beyond JAMAAT_LO/HI),
+    #     which a ±12h fix couldn't resolve
+    # Jummah-before-Dhuhr-start and late-summer Fajr gaps are NOT flagged —
+    # they're legitimate (verified against real timetables).
     glitch_dates = []
     for r in rows:
         vals = [parse_hhmm(r[f]) for f in PRAYER_ORDER]
         if any(v is None for v in vals):
             glitch_dates.append(r["date"]); continue
-        if any(vals[i] >= vals[i + 1] for i in range(len(vals) - 1)):
+        # strict order, but allow Maghrib == Isha (clamp). vals indices:
+        # 0 fajr,1 sunrise,2 zohr,3 asr,4 maghrib,5 isha
+        ordered = (vals[0] < vals[1] < vals[2] < vals[3] < vals[4]) and (vals[4] <= vals[5])
+        if not ordered:
             glitch_dates.append(r["date"]); continue
-        bad_iqama = False
+        bad = False
         for start_f, iq_f in IQAMA_PAIRS:
+            if start_f == "fajr_start":
+                continue  # Fajr handled by fajr_after_sunrise
             st, iq = parse_hhmm(r[start_f]), parse_hhmm(r[iq_f])
             if st is None or iq is None:
                 continue
-            if not (IQAMA_LO <= (iq - st) <= IQAMA_HI):
-                bad_iqama = True; break
-        if bad_iqama:
+            if not (JAMAAT_LO <= (iq - st) <= JAMAAT_HI):
+                bad = True; break
+        if bad:
             glitch_dates.append(r["date"])
 
     if glitch_dates:

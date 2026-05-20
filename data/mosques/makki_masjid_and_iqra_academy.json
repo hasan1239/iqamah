@@ -1,0 +1,44 @@
+{
+  "slug": "makki_masjid_and_iqra_academy",
+  "display_name": "Makki Masjid and Iqra Academy",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "75 Stafford Rd undefined, Handsworth, Birmingham, B21 9DU",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "14:00",
+  "csv": "makki_masjid_and_iqra_academy.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "8fc63d4b-46d7-4c84-a502-7902a3c6b1f6",
+      "masjid_id": 21956
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/8fc63d4b-46d7-4c84-a502-7902a3c6b1f6"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

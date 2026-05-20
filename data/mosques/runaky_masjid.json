@@ -1,0 +1,44 @@
+{
+  "slug": "runaky_masjid",
+  "display_name": "Runaky masjid",
+  "city": "",
+  "latitude": 54.0,
+  "longitude": -2.0,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "wood burn road smathwick, Soho and Victoria, Sandwell, b66 2pu",
+  "address_source": "geocoded",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "association": "",
+  "timezone": "Europe/London",
+  "jummah_times": "13:00",
+  "csv": "runaky_masjid.csv",
+  "provider": {
+    "type": "mymasjid",
+    "ref": {
+      "guidId": "40dbfe21-3578-47d2-8aa4-3a67aeda6b15",
+      "masjid_id": 23252
+    },
+    "source_url": "https://time.my-masjid.com/timingsInfoScreen/40dbfe21-3578-47d2-8aa4-3a67aeda6b15"
+  },
+  "quality": {
+    "status": "warnings",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+    ],
+    "issues": [
+      {
+        "type": "sehri_unconfigured",
+        "severity": "medium",
+        "action_taken": "sehri_ends = fajr_start",
+        "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      }
+    ]
+  },
+  "acknowledged_issues": []
+}

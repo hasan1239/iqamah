@@ -1,0 +1,50 @@
+# My-Masjid (time.my-masjid.com) curated list — guidId [slug]
+# First batch: Birmingham (new-only). Commented lines are likely duplicates of existing masjids.
+
+60fe0a65-de8d-447f-8ffd-05e6c4e3b683  ad_duha_institute
+46f6cfd3-fab8-4482-adfe-d654b830202f  al_hafidhoon
+628b0d3e-b615-462a-bde9-841dbd7ee432  al_madani_centre_academy_and_majid
+# DUP(postcode B109JF = existing "al_huda_masjid"): Al-Huda Community Centre
+# 69e8a1a2-b23b-42d9-aa43-6e4376b03b5a  al_huda_community_centre
+41cf67e4-150a-4268-b5b3-a4b8c1a32366  an_noor_masjid_community_centre
+a82d0574-d7d6-42d6-8bca-92254037f654  bilal
+b051266d-151d-45b2-9cbb-e2040107626a  central_jamia_mosque_zia_ul_quran
+c28d3efc-1647-40b6-b0d1-6475ef2c4472  esa_ibn_maryam
+35a4ee7a-6716-42df-b58e-1c04d8bdfc96  faizan_e_madina_masjid_sandwell
+# DUP(postcode B338TN = existing "faizan_e_madina_stechford"): Faizane Medina Stechford
+# 98242696-f1c0-4fff-9297-83572361a3b7  faizane_medina_stechford
+13ffbf41-ed61-4216-a16b-c69a8caf9023  ghamkol_sharif_mosque
+f2a9ea59-4cd0-4ba2-bdf2-564c4459ac0d  green_lane_masjid_community_centre
+4491a0a0-ecc4-4297-b411-f39d9b9043fc  hall_green_mosque
+38674efa-be6a-4907-a0a4-515a4347e615  hazrat_sultan_bahu_trust
+a4cbbbf7-6ecf-4126-8b30-878125d566a9  jamia_masjid_haroonia_nisbat_e_rasooli
+6fbaeb3a-0eab-4186-800c-3cdf6fb984de  jam_e_masjid_qiblah_hadhrat_sahib_gulhar_shareef_birmingham
+65b04391-3815-4d20-a7dd-53b75050bcd3  jamatia_islamic_centre
+ecf5f5a2-8b5a-4fcf-93dd-c243549b6d94  jamia_masjid_minhaj_ul_quran
+70a6fa4f-e15c-44f8-9624-3fe3a2e3a129  lozells_central_mosque
+118a97c1-a621-4067-99d1-ce4cea6a1cf0  madina_mosque_and_all_muslim_welfare_society
+# DUP(postcode B66NA = existing "madinatul"): Madinatul Uloom Jami Masjid
+# 86e98b7c-4ba4-4322-9655-585f1d362988  madinatul_uloom_jami_masjid
+# DUP(postcode B113BZ = existing "mahmudsabir_al_furqan_masjid"): Mahmud Sabir-Al Furqan
+# 3734a51e-f310-4b85-8150-2dc094f375b2  mahmud_sabir_al_furqan
+4261dac1-11f8-41c6-99dd-a0e636468d97  majid_darul_elm
+8fc63d4b-46d7-4c84-a502-7902a3c6b1f6  makki_masjid_and_iqra_academy
+e85e3bdd-f170-41ff-b5ec-bb8947d41e82  masjid_abu_bakr_billesley
+dd4b3531-7258-40a0-b08f-47e9343993f7  masjid_darul_elm
+# DUP(name): Masjid Hamza
+# 8432ae68-9737-4310-9b5a-741b3266d4a4  masjid_hamza
+# DUP(name): Masjid Naqeebul Islam
+# 43e071f0-4a1f-4282-b765-96ce3dd756f6  masjid_naqeebul_islam
+33fd9db9-7a6e-421a-8d6e-093793a576e4  masjid_sulaymn_bin_dawd
+6a006d00-d0c7-493b-875a-0c18eb59729c  masjid_taqwa
+cf7b037e-7e1c-4e74-8088-a72cd78e91bb  masjid_abu_bakar
+94d8b064-6a2e-4be4-abd6-fba06d405755  masjid_zia_ul_eiman
+075fe2ba-8537-43b4-9327-13ed91932eae  masjidus_sunna_an_nabawiyyah
+0b09f8bf-9bc7-4dc8-bc4c-a88cc752ab4c  mohammadi_masjid_alum_rock
+# DUP(name): Najashi Islamic Centre
+# 388dd77a-810f-4a07-8fb3-bced113075a0  najashi_islamic_centre
+a405a601-e18e-4178-bf3d-d652841abb2d  paigham_e_islam_trust
+40dbfe21-3578-47d2-8aa4-3a67aeda6b15  runaky_masjid
+# DUP(name): SULTAN BAHU CENTRE 
+# 77b77fde-2fc9-4cc3-a03b-80d9dd6b3926  sultan_bahu_centre
+6eea30ae-a07a-40d0-91f0-dbcca50a821f  the_salafi_masjid
