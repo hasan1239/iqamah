@@ -45,6 +45,17 @@ const POSTCODE_AREA_TO_CITY = {
   WV: 'Wolverhampton',
   HX: 'Halifax',
   HD: 'Huddersfield',
+  EH: 'Edinburgh',
+  CF: 'Cardiff',
+  NP: 'Newport',
+  SA: 'Swansea',
+  NG: 'Nottingham',
+  BS: 'Bristol',
+  S: 'Sheffield',
+  SL: 'Slough',
+  BL: 'Bolton',
+  BB: 'Blackburn',
+  PR: 'Preston',
 };
 
 // Final fallback: scan for these tokens in address / display name when no
@@ -70,6 +81,7 @@ function getCityPostcode(address) {
 function normaliseCity(city) {
   if (!city) return OTHER_CITY;
   let c = city.replace(/\s+/g, ' ').trim();
+  c = c.replace(/^City of\s+/i, '');
   c = c.replace(/\b(City|Borough|District)\b$/i, '').trim();
   c = c.replace(/,$/, '').trim();
   if (!c) return OTHER_CITY;
