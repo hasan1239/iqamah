@@ -27,10 +27,11 @@ ecf5f5a2-8b5a-4fcf-93dd-c243549b6d94  jamia_masjid_minhaj_ul_quran
 # 86e98b7c-4ba4-4322-9655-585f1d362988  madinatul_uloom_jami_masjid
 # DUP(postcode B113BZ = existing "mahmudsabir_al_furqan_masjid"): Mahmud Sabir-Al Furqan
 # 3734a51e-f310-4b85-8150-2dc094f375b2  mahmud_sabir_al_furqan
-4261dac1-11f8-41c6-99dd-a0e636468d97  majid_darul_elm
+4261dac1-11f8-41c6-99dd-a0e636468d97  masjid_darul_elm
 8fc63d4b-46d7-4c84-a502-7902a3c6b1f6  makki_masjid_and_iqra_academy
 e85e3bdd-f170-41ff-b5ec-bb8947d41e82  masjid_abu_bakr_billesley
-dd4b3531-7258-40a0-b08f-47e9343993f7  masjid_darul_elm
+# DUP of masjid_darul_elm (4261dac1, same masjid 115 Soho Hill) — removed (stale times)
+# dd4b3531-7258-40a0-b08f-47e9343993f7  masjid_darul_elm
 # DUP(name): Masjid Hamza
 # 8432ae68-9737-4310-9b5a-741b3266d4a4  masjid_hamza
 # DUP(name): Masjid Naqeebul Islam

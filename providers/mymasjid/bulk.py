@@ -27,7 +27,7 @@ from pathlib import Path
 
 from providers import regenerate_index
 from providers.mymasjid.fetch import fetch_one, fetch_timings
-from providers.mymasjid.discover import slugify
+from providers.mymasjid.discover import slugify, dedup_key
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -137,6 +137,8 @@ def main():
 
     successes, failures = [], []
     status_counter = Counter()
+    seen_keys: dict[str, str] = {}  # house+postcode -> first slug, for dup warnings
+    dup_warnings = []
 
     for i, (guid, slug) in enumerate(resolved, start=1):
         if slug is None:
@@ -157,6 +159,19 @@ def main():
             successes.append(summary)
             status_counter[summary["status"]] += 1
             print(f"  ✓ {summary['display_name']}  ({summary['status']}, {summary['row_count']} days)")
+            # Intra-batch duplicate safety net: two list entries that resolve to
+            # the same physical masjid (same house number + postcode).
+            try:
+                cfg = json.loads((data_dir / "mosques" / f"{slug}.json").read_text(encoding="utf-8"))
+                key = dedup_key(cfg.get("display_name", ""), cfg.get("address", ""))
+                if key and key in seen_keys:
+                    msg = f"{slug} looks like a duplicate of {seen_keys[key]} (same address)"
+                    dup_warnings.append(msg)
+                    print(f"  ⚠ DUPLICATE: {msg} — keep only one")
+                elif key:
+                    seen_keys[key] = slug
+            except Exception:
+                pass
         except Exception as e:
             print(f"  ✗ FAILED: {e}")
             traceback.print_exc()
@@ -188,6 +203,11 @@ def main():
         print(f"  ✗ {len(failures)} failed:")
         for f in failures:
             print(f"      - {f['slug']:28s}  {f['error']}")
+
+    if dup_warnings:
+        print(f"\n  ⚠ {len(dup_warnings)} suspected duplicate(s) — delete one of each:")
+        for w in dup_warnings:
+            print(f"      - {w}")
 
     if any(s["status"] == "needs_review" for s in successes):
         print("\nMasjids with status=needs_review are hidden from the public list.")
