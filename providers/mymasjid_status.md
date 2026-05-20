@@ -1,6 +1,6 @@
 # My-Masjid (time.my-masjid.com) — GREEN LIGHT, build planned
 
-**Status (2026-05-20):** Spiked thoroughly. **Recommended build.** Best provider since Mawaqit: clean no-auth API, full-year real iqamah + verified-accurate starts, ~490 net-new UK masjids, enumerable directory. This doc is the findings + the build plan for `providers/mymasjid/`.
+**Status (2026-05-20):** Spiked, then **BUILT** (`providers/mymasjid/{fetch,discover,bulk}.py`). Verified end-to-end on East London Mosque: DST exact-match vs MasjidBox, full year (365 days), CSV schema byte-identical to Mawaqit, AM/PM auto-correction working. Best provider since Mawaqit. **Not yet onboarded** — discovery sweep + curated first batch is the next operational step. This doc = findings + build plan + decisions.
 
 > Not to be confused with: **myMasjid** (mymasjid.com / api.mymasjid.com) — a separate WordPress "managed masjid websites" company. And **MyLocalMasjid** (mylocalmasjid.com) — see `mylocalmasjid_status.md`. This provider is specifically **time.my-masjid.com** (the timetable display SaaS, app "My Masjid Community", control panel at controlpanel.my-masjid.com).
 
@@ -62,7 +62,7 @@ No apikey, CORS-open, on their own domain. Found by grepping the Angular client 
 ## Gotchas (must handle in the build)
 
 1. **DST.** Times are stored in **base/GMT (winter) form**; the consumer adds +1hr during British Summer Time. Verified: ELM May (BST) needed +1hr to match MasjidBox. The build must apply UK DST (last Sun Mar → last Sun Oct = +1hr) per-row when `isDstOn` is true. Get this wrong and every summer time is an hour early. Mirror the app's logic — confirm how `isDstOn` interacts (likely: if true, app shifts during DST window).
-2. **Data glitches.** Some masjids have AM/PM or entry errors in their config — observed a zuhr iqamah of `01:00` and a zuhr start of `23:57` in the year series. Need sanity checks (time monotonicity within a day; prayer in plausible window) and either auto-fix obvious PM errors or flag `needs_review`.
+2. **Data glitches.** Some masjids have AM/PM or entry errors in their config — observed a zuhr iqamah of `01:00` (East London Mosque, 60 winter days) and a zuhr start of `23:57` in the year series. Policy (implemented): **auto-correct only the high-confidence ±12h AM/PM typos**, then flag whatever's left. See "Glitch policy" below.
 3. **`isTimingsUploaded: false` is ambiguous** — every sampled masjid had it false yet all had full 366-day data. Do NOT treat false as "no data". It likely distinguishes CSV-upload vs in-app entry.
 4. **Jummah.** `jumahSalahIqamahTimings` is separate from the daily series. On Fridays, map Jummah iqamah into `zohar_jamaat` (mirroring how the Mawaqit provider handles `jumuaAsDuhr`). Respect `jummahTimeEqualsZuhrTime`.
 5. **No imsak/sehri.** My-Masjid has no Suhoor field → `sehri_ends` = `fajr_start` (record `sehri_unconfigured`, same as Mawaqit).
@@ -108,7 +108,7 @@ providers/mymasjid/
 1. `GET GetMasjidTimings?GuidId={guid}` → save raw to `data/raw/{slug}.json`
 2. `apply_dst()` per row (UK DST window, gated on `isDstOn`)
 3. `normalise()` → 16-field rows (mapping table above), Jummah into Friday zohar_jamaat
-4. `quality_check()` — reuse Mawaqit's `fajr_after_sunrise`, `iqamas_unconfigured`, `sehri_unconfigured`, plus NEW `time_glitch` check (per-day monotonicity / implausible times → high severity, action: flag) and a DST-sanity check
+4. `repair_glitches()` then `quality_check()` — repair corrects high-confidence ±12h AM/PM typos in place (logged as `time_corrected`, medium, visible); quality_check reuses Mawaqit's `fajr_after_sunrise`/`iqamas_unconfigured`/`sehri_unconfigured` and flags any residual unfixable `time_glitch` (high → needs_review)
 5. `build_config()` — same shape as Mawaqit. `provider: {type:"mymasjid", ref:{guidId, masjid_id, name}, source_url:"https://time.my-masjid.com/timingsInfoScreen/{guid}"}`. Preserve user-editable fields on re-fetch (copy Mawaqit's preserve logic verbatim).
 6. Geocode address: My-Masjid gives `house/street/zipCode/lat/long` directly in `masjidDetails` — richer than Mawaqit, may not even need Nominatim. Prefer their address; fall back to the shared geocoder.
 7. Write CSV + config + raw. Do NOT regenerate index (caller does).
@@ -128,7 +128,7 @@ providers/mymasjid/
 
 ### Open decisions for Hasan
 - **DST source of truth:** compute UK DST ourselves (simple: last Sun Mar–last Sun Oct) vs trust a per-masjid setting. Recommend compute ourselves + assert it matches a known masjid on each run.
-- **Glitch policy:** auto-correct obvious PM errors (e.g. iqamah earlier than start by ~12h) vs always flag `needs_review`. Recommend flag, don't auto-edit (matches our "don't destructively edit provider values" rule).
+- **Glitch policy (DECIDED — auto-correct certain, flag the rest):** This is a deliberate, narrow exception to the "providers don't destructively edit CSV values" rule. `repair_glitches()` corrects a value **only** when a single ±12h shift lands it cleanly into its valid window (start ordering for starts; `[start-10, start+180]` for iqamahs) — i.e. unambiguous AM/PM typos like Dhuhr iqamah `01:00`→`13:00`. Every correction is logged in the config's `quality.issues` as a `time_corrected` entry (`{date, field, old, new}`), severity medium, masjid stays **visible**. Anything a 12h shift can't resolve is left untouched and flagged `time_glitch` (high) → `needs_review`. Verified on East London Mosque: 60 `01:00`→`13:00` corrections, status `warnings` (visible), full audit trail kept.
 - **Onboarding scale:** 490 is a lot. Suggest a first batch of ~30–50 (the big northern towns where Mawaqit is thin) to validate the pipeline before a full sweep.
 
 ## Ethics / sourcing
