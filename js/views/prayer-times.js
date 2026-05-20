@@ -654,6 +654,16 @@ function renderTodayView(target) {
     ? "This masjid combines Isha with Maghrib during summer. Check the masjid directly if unsure."
     : '';
 
+  // Fajr jama'at after sunrise — flag the specific day (a few masjids set a
+  // fixed Fajr jama'at that overshoots sunrise on boundary/summer days).
+  const toMin = (t) => { const m = (t || '').match(/^(\d{1,2}):(\d{2})/); return m ? (+m[1] * 60 + +m[2]) : null; };
+  const fajrJamMin = toMin(todayRow["Fajr Jama'at"]);
+  const sunriseMin = toMin(todayRow['Sunrise']);
+  const fajrAfterSunrise = fajrJamMin !== null && sunriseMin !== null && fajrJamMin > sunriseMin;
+  const fajrAfterSunriseNote = fajrAfterSunrise
+    ? "Fajr jama'at is listed after sunrise today — please confirm with the masjid."
+    : '';
+
   // Build sunrise/zawal split row (inserted after Fajr in the table)
   const hasSunrise = !!todayRow['Sunrise'];
   const hasZawal = !!todayRow['Zawal'];
@@ -667,8 +677,8 @@ function renderTodayView(target) {
 
   const prayerRowsHtml = prayerRows.map(p => {
     const isEsha = p.name === 'Esha';
-    const noteForRow = isEsha ? eshaCombineNote : '';
-    const showAsterisk = isEsha && !!eshaCombineNote;
+    const noteForRow = isEsha ? eshaCombineNote : (p.name === 'Fajr' ? fajrAfterSunriseNote : '');
+    const showAsterisk = !!noteForRow;
     const nameHtml = showAsterisk
       ? `${p.name}<sup class="esha-note" title="${noteForRow}">*</sup>`
       : p.name;
@@ -685,6 +695,10 @@ function renderTodayView(target) {
 
   const eshaFootnoteHtml = eshaCombineNote
     ? `<div class="esha-combined-note">* Isha may be combined with Maghrib at this masjid during summer. Check the masjid directly if unsure.</div>`
+    : '';
+
+  const fajrFootnoteHtml = fajrAfterSunriseNote
+    ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today — please confirm with the masjid.</div>`
     : '';
 
   target.innerHTML = `
@@ -714,6 +728,7 @@ function renderTodayView(target) {
         </div>
       </div>
       ${eshaFootnoteHtml}
+      ${fajrFootnoteHtml}
 
       ${renderInfoSection()}
 

@@ -128,7 +128,14 @@ providers/mymasjid/
 
 ### Open decisions for Hasan
 - **DST source of truth:** compute UK DST ourselves (simple: last Sun Mar–last Sun Oct) vs trust a per-masjid setting. Recommend compute ourselves + assert it matches a known masjid on each run.
-- **Glitch policy (DECIDED — auto-correct certain, flag the rest):** This is a deliberate, narrow exception to the "providers don't destructively edit CSV values" rule. `repair_glitches()` corrects a value **only** when a single ±12h shift lands it cleanly into its valid window (start ordering for starts; `[start-10, start+180]` for iqamahs) — i.e. unambiguous AM/PM typos like Dhuhr iqamah `01:00`→`13:00`. Every correction is logged in the config's `quality.issues` as a `time_corrected` entry (`{date, field, old, new}`), severity medium, masjid stays **visible**. Anything a 12h shift can't resolve is left untouched and flagged `time_glitch` (high) → `needs_review`. Verified on East London Mosque: 60 `01:00`→`13:00` corrections, status `warnings` (visible), full audit trail kept.
+- **Glitch policy (DECIDED + calibrated against the Birmingham batch):**
+  - **Auto-correct (`repair_glitches`)** — a deliberate, narrow exception to the "providers don't destructively edit CSV values" rule. Corrects a value **only** when a single ±12h shift lands it cleanly into its window (start ordering; `[start-10, start+180]` for iqamahs) — unambiguous AM/PM typos like Dhuhr iqamah `01:00`→`13:00`. Logged as `time_corrected` (`{date, field, old, new}`), medium, masjid stays **visible**. Verified on East London Mosque: 60 `01:00`→`13:00` fixes, full audit trail.
+  - **needs_review (HIGH) only for things we genuinely can't trust:** unparseable start times, broken start-ordering (allowing the Maghrib==Isha clamp), `fajr_after_sunrise`, and non-Fajr jama'ats grossly outside `[start-180, start+240]` that ±12h couldn't fix.
+  - **NOT flagged (verified-legitimate patterns that initially over-flagged):**
+    - **Jummah before Dhuhr start** — on Fridays the Jummah time fills the Dhuhr-jamaat slot; it legitimately precedes the *calculated* Dhuhr start (e.g. Green Lane Jummah 12:30 vs Dhuhr start 12:45–13:45). Confirmed against real data: all such days were Fridays.
+    - **Isha clamped to Maghrib** (UK summer) — recorded as `isha_clamped` medium/visible, like the Mawaqit provider.
+    - **Late-summer Fajr** — Fajr is exempt from the jama'at window; its real constraint is `fajr_jamaat < sunrise`.
+  - **Birmingham first batch (31 masjids) result:** before calibration 15 visible / 16 needs_review; after, **29 visible / 2 needs_review** (both genuine `fajr_after_sunrise` — a fixed Fajr jamaat coinciding with/after sunrise in deep summer / at the spring DST transition).
 - **Onboarding scale:** 490 is a lot. Suggest a first batch of ~30–50 (the big northern towns where Mawaqit is thin) to validate the pipeline before a full sweep.
 
 ## Ethics / sourcing
