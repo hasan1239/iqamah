@@ -1,6 +1,6 @@
 {
   "slug": "islamic_cultural_centre_wembley",
-  "display_name": "Islamic Cultural Centre (Wembley)",
+  "display_name": "Islamic Cultural Centre",
   "city": "",
   "latitude": 51.547045084432,
   "longitude": -0.2745966883606,
@@ -28,7 +28,7 @@
     "checked_at": "2026-05-19",
     "row_count": 365,
     "warnings": [
-      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      "imsakNbMinBeforeFajr is 0 â sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
     ],
     "issues": [
       {
