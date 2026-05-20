@@ -1,0 +1,35 @@
+{
+  "slug": "london_central_mosque",
+  "display_name": "London Central Mosque",
+  "city": "Westminster",
+  "latitude": 51.528817,
+  "longitude": -0.165083,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "146 Park Road, London, NW8 7RG",
+  "address_source": "manual",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "london_central_mosque.csv",
+  "provider": {
+    "type": "londonprayertimes",
+    "ref": {
+      "city": "london"
+    },
+    "source_url": "https://www.londonprayertimes.com/"
+  },
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 365,
+    "warnings": [
+      "London Unified Prayer Timetable — shared across all London masjids that follow it."
+    ],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}
