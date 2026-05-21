@@ -14,9 +14,11 @@ const FIRED_KEY = 'iqamah-notif-fired';
 const NOTIF_ICON = '/iqamah-icon.png';            // large icon — navy/gold brand mark
 const NOTIF_BADGE = '/iqamah-icon-transparent.png'; // status-bar badge (Android masks to white)
 // Action buttons (Android / installed PWA only — iOS ignores them gracefully).
+// "Prayed" marks the salah done for today so its remaining jama'at/end
+// reminders are suppressed (see handleSwMessage + the prayed-guard below).
 const NOTIF_ACTIONS = [
   { action: 'view', title: 'View times' },
-  { action: 'dismiss', title: 'Dismiss' },
+  { action: 'prayed', title: 'Prayed' },
 ];
 
 // Default state on first enable: all starts on at-time, jama'at/ends-soon off,
@@ -156,6 +158,30 @@ function alreadyFired(id) {
   return fired.includes(id);
 }
 
+// --- Prayed-guard: prayers the user marked done today (via the "Prayed"
+// notification action). Their remaining jama'at/end reminders are suppressed. ---
+
+const PRAYED_KEY = 'iqamah-notif-prayed';
+
+function loadPrayed() {
+  try {
+    const all = JSON.parse(localStorage.getItem(PRAYED_KEY) || '{}');
+    const k = todayKey();
+    return all[k] || [];
+  } catch { return []; }
+}
+
+function markPrayed(prayer) {
+  const k = todayKey();
+  const list = loadPrayed();
+  if (!list.includes(prayer)) list.push(prayer);
+  localStorage.setItem(PRAYED_KEY, JSON.stringify({ [k]: list })); // prune to today
+}
+
+function isPrayed(prayer) {
+  return loadPrayed().includes(prayer);
+}
+
 // --- Foreground scheduler ---
 
 let timers = [];
@@ -179,7 +205,7 @@ async function fireNotification(reminder, masjidName, slug) {
       tag: `${todayKey()}:${id}`,
       icon: NOTIF_ICON,
       badge: NOTIF_BADGE,
-      data: { url: slug ? `/${slug}` : '/' },
+      data: { url: slug ? `/${slug}` : '/', prayer: reminder.prayer },
       actions: NOTIF_ACTIONS,
     });
     markFired(id);
@@ -229,6 +255,8 @@ export async function rescheduleNotifications() {
     const id = `${r.kind}:${r.prayer}`;
     if (delay < -60000) continue;          // more than a minute past — skip
     if (alreadyFired(id)) continue;
+    // Suppress jama'at/end once the salah has been marked prayed today.
+    if ((r.kind === 'jamaat' || r.kind === 'end') && isPrayed(r.prayer)) continue;
     if (delay <= 0) { fireNotification(r, masjidName, slug); continue; }
     if (delay > 26 * 60 * 60 * 1000) continue; // safety cap
     timers.push(setTimeout(() => fireNotification(r, masjidName, slug), delay));
@@ -252,7 +280,7 @@ export async function sendTestNotification(masjidName) {
     const reg = await navigator.serviceWorker.ready;
     await reg.showNotification(title, {
       body, tag: 'iqamah-test', icon: NOTIF_ICON, badge: NOTIF_BADGE,
-      data: { url: slug ? `/${slug}` : '/' },
+      data: { url: slug ? `/${slug}` : '/', prayer: sample.prayer },
       actions: NOTIF_ACTIONS,
     });
     return true;
@@ -265,6 +293,16 @@ export function initNotifications() {
   initialised = true;
   window.addEventListener('iqamah-notif-prefs-changed', () => rescheduleNotifications());
   window.addEventListener('iqamah-pin-changed', () => rescheduleNotifications());
+  // The SW relays a "Prayed" notification-action tap; record it and reschedule
+  // so the salah's remaining jama'at/end reminders are dropped.
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'iqamah-prayed' && e.data.prayer) {
+        markPrayed(e.data.prayer);
+        rescheduleNotifications();
+      }
+    });
+  }
   // Rebuild when the app regains focus (it may have been backgrounded for hours).
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') rescheduleNotifications();
