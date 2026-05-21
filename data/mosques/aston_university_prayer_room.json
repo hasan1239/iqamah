@@ -1,0 +1,35 @@
+{
+  "slug": "aston_university_prayer_room",
+  "display_name": "Aston University Prayer Room",
+  "city": "Birmingham",
+  "latitude": 52.484294,
+  "longitude": -1.889009,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "8 Coleshill Street, Birmingham, B4 7BX",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "aston_university_prayer_room.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "aston-university-prayer-room"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/aston-university-prayer-room"
+  },
+  "today_only": true,
+  "suppress_times": [],
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-21",
+    "row_count": 3,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

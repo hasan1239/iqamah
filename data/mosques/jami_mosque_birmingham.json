@@ -1,0 +1,34 @@
+{
+  "slug": "jami_mosque_birmingham",
+  "display_name": "Jami Mosque and Islamic Centre Birmingham",
+  "city": "",
+  "latitude": null,
+  "longitude": null,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "jami_mosque_birmingham.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "jmic"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/jmic"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

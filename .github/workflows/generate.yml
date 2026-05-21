@@ -104,6 +104,29 @@ jobs:
           pip install playwright Pillow
           playwright install --with-deps chromium
 
+      - name: Refresh MasjidBox prayer times
+        run: |
+          # Daily-accumulating MasjidBox masjids: upsert today/tomorrow into each
+          # masjid's CSV. Uses only stdlib, so no extra deps. Non-fatal on errors.
+          # Each call returns 2 days, so we fetch half the list per day (shard by
+          # day-of-year parity) — every masjid is still refreshed every other day
+          # with no gaps, and the daily API footprint is halved.
+          if [ -f data/masjidbox_uk.txt ]; then
+            SHARD=$(( 10#$(date -u +%j) % 2 ))
+            python -m providers.masjidbox.bulk --of 2 --shard "$SHARD" || echo "⚠️ MasjidBox fetch had errors (continuing)"
+          else
+            echo "No data/masjidbox_uk.txt — skipping MasjidBox refresh"
+          fi
+
+      - name: Refresh Masjidal (AthanPlus) prayer times
+        run: |
+          # Scrapes the AthanPlus widget (~7 days) into each masjid's CSV. Non-fatal.
+          if [ -f data/masjidal_uk.txt ]; then
+            python -m providers.masjidal.bulk || echo "⚠️ Masjidal fetch had errors (continuing)"
+          else
+            echo "No data/masjidal_uk.txt — skipping Masjidal refresh"
+          fi
+
       - name: Determine date, mosque, and template
         id: params
         run: |
@@ -165,7 +188,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/ latest/ data/mosques/
+          git add output/ latest/ data/mosques/ data/*.csv data/raw/
           git commit -m "🌙 Lockscreen for ${{ steps.params.outputs.date }}" || echo "No changes to commit"
           git pull --rebase
           git push

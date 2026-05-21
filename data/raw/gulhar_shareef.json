@@ -1,0 +1,91 @@
+{
+  "name": "Gulhar Shareef Birmingham",
+  "address": "232 Slade Road, Erdington, Birmingham, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 150
+  },
+  "athany": {
+    "closed": false,
+    "highlight": "athan",
+    "qrcode": "https://cdn.mbxsrc.com/core/IU8OP9P5/a1QSnqXF0.svg",
+    "showIqamah": true,
+    "slug": "gulhar-shareef-birmingham",
+    "theme": "#4a90e2"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T03:08:00+01:00",
+      "sunrise": "2026-05-21T05:03:00+01:00",
+      "dhuhr": "2026-05-21T13:09:00+01:00",
+      "asr": "2026-05-21T18:32:00+01:00",
+      "maghrib": "2026-05-21T21:09:00+01:00",
+      "isha": "2026-05-21T22:45:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 4,
+        "formatted": "الخميس 4 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T04:30:00+01:00",
+        "dhuhr": "2026-05-21T13:30:00+01:00",
+        "asr": "2026-05-21T19:00:00+01:00",
+        "maghrib": "2026-05-21T21:09:00+01:00",
+        "isha": "2026-05-21T23:00:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T02:53:00+01:00",
+        "iftar": "2026-05-21T21:09:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-22T00:00:00+01:00",
+      "fajr": "2026-05-22T03:06:00+01:00",
+      "sunrise": "2026-05-22T05:02:00+01:00",
+      "dhuhr": "2026-05-22T13:09:00+01:00",
+      "asr": "2026-05-22T18:33:00+01:00",
+      "maghrib": "2026-05-22T21:11:00+01:00",
+      "isha": "2026-05-22T22:45:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-22",
+        "day": "الجمعة",
+        "dayOfMonth": 5,
+        "formatted": "الجمعة 5 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-22T04:15:00+01:00",
+        "dhuhr": "2026-05-22T13:30:00+01:00",
+        "asr": "2026-05-22T19:00:00+01:00",
+        "maghrib": "2026-05-22T21:11:00+01:00",
+        "isha": "2026-05-22T23:00:00+01:00",
+        "jumuah": [
+          "2026-05-22T13:30:00+01:00",
+          "2026-05-22T14:30:00+01:00"
+        ]
+      },
+      "special": {
+        "imsak": "2026-05-22T02:51:00+01:00",
+        "iftar": "2026-05-22T21:11:00+01:00"
+      },
+      "jumuah": [
+        "2026-05-22T13:30:00+01:00",
+        "2026-05-22T14:30:00+01:00"
+      ]
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2026-05-01T02:04:12.645Z"
+}

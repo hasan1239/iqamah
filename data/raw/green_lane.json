@@ -1,0 +1,89 @@
+{
+  "name": "Green Lane Masjid",
+  "address": "Green Lane, Small Heath, Birmingham B9 5DB, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "ampm": true,
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 0
+  },
+  "athany": {
+    "qrcode": "https://cdn.mbxsrc.com/core/W0WNVPXM/Gj1OlOw7C.svg",
+    "showIqamah": true,
+    "slug": "green-lane-masjid-1666108368685",
+    "theme": "#4A90E2"
+  },
+  "applications": {
+    "name": "Green Lane Masjid ",
+    "icon": "https://cdn.mbxsrc.com/applications/64c113cd6fb7a603f6f929ea/p3FwPjQPE.png",
+    "ios": "https://apps.apple.com/gb/app/green-lane-masjid/id6476164590",
+    "android": "https://play.google.com/store/apps/details?id=com.masjidbox.agreenlanemasjid64c113cd6fb7a603f6f929ea",
+    "theme": "#041b41"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-20T00:00:00+01:00",
+      "fajr": "2026-05-20T03:12:00+01:00",
+      "sunrise": "2026-05-20T05:05:00+01:00",
+      "dhuhr": "2026-05-20T13:09:00+01:00",
+      "asr": "2026-05-20T17:19:00+01:00",
+      "maghrib": "2026-05-20T21:05:00+01:00",
+      "isha": "2026-05-20T22:25:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-20",
+        "day": "الأربعاء",
+        "dayOfMonth": 3,
+        "formatted": "الأربعاء 3 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-20T03:40:00+01:00",
+        "dhuhr": "2026-05-20T13:45:00+01:00",
+        "asr": "2026-05-20T18:00:00+01:00",
+        "maghrib": "2026-05-20T21:05:00+01:00",
+        "isha": "2026-05-20T22:40:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-20T02:57:00+01:00",
+        "iftar": "2026-05-20T21:05:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T03:10:00+01:00",
+      "sunrise": "2026-05-21T05:04:00+01:00",
+      "dhuhr": "2026-05-21T13:09:00+01:00",
+      "asr": "2026-05-21T17:21:00+01:00",
+      "maghrib": "2026-05-21T21:07:00+01:00",
+      "isha": "2026-05-21T22:27:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 4,
+        "formatted": "الخميس 4 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T03:40:00+01:00",
+        "dhuhr": "2026-05-21T13:45:00+01:00",
+        "asr": "2026-05-21T18:00:00+01:00",
+        "maghrib": "2026-05-21T21:07:00+01:00",
+        "isha": "2026-05-21T22:40:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T02:55:00+01:00",
+        "iftar": "2026-05-21T21:07:00+01:00"
+      }
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2026-04-30T16:56:28.282Z"
+}

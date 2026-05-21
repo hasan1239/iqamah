@@ -1,0 +1,36 @@
+{
+  "slug": "lozells_central_mosque",
+  "display_name": "Lozells Central Mosque",
+  "city": "",
+  "latitude": null,
+  "longitude": null,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "213-217 Lozells Road, Lozells, Birmingham, B19 1RJ",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "lozells_central_mosque.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "lozells-central-mosque-1720027911987"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/lozells-central-mosque-1720027911987"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": [],
+  "hidden": true,
+  "hidden_reason": "Unconfigured MasjidBox: flat +15 iqamah on every prayer + Dhuhr start 13:45 (36min off) — not the masjid's real config."
+}

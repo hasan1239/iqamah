@@ -1,0 +1,38 @@
+{
+  "slug": "birmingham_anjuman_e_islam",
+  "display_name": "Birmingham Anjuman E-Islam Masjid Trust",
+  "city": "",
+  "latitude": null,
+  "longitude": null,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Trinity Road, Birchfield, Birmingham, B6 6AG",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "birmingham_anjuman_e_islam.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "birmingham-jame-masjid"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/birmingham-jame-masjid"
+  },
+  "today_only": true,
+  "suppress_times": [
+    "fajr_start",
+    "sehri_ends"
+  ],
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

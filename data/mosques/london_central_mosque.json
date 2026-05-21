@@ -1,0 +1,35 @@
+{
+  "slug": "london_central_mosque",
+  "display_name": "London Central Mosque",
+  "city": "Westminster",
+  "latitude": 51.528817,
+  "longitude": -0.165083,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "146 Park Road, London, NW8 7RG",
+  "address_source": "manual",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "london_central_mosque.csv",
+  "provider": {
+    "type": "masjidal",
+    "ref": {
+      "masjid_id": "QKMqqaKB"
+    },
+    "source_url": "https://timing.athanplus.com/masjid/widgets/embed?masjid_id=QKMqqaKB"
+  },
+  "today_only": true,
+  "suppress_times": [],
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-21",
+    "row_count": 7,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

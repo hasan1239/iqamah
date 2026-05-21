@@ -51,7 +51,10 @@ const PROVIDER_LABELS = {
   mawaqit: 'Mawaqit',
   esalaat: 'eSalaat',
   mymasjid: 'MyMasjid',
-  image: 'Community upload',
+  masjidbox: 'MasjidBox',
+  londonprayertimes: 'LondonPrayerTimes',
+  masjidal: 'Masjidal',
+  image: 'Timetable',
   manual: 'Entered by maintainer',
 };
 
@@ -66,11 +69,25 @@ function renderMasjidLogo(cfg) {
 
 function renderSourceTag(cfg) {
   const provider = cfg && cfg.provider;
-  if (!provider || !provider.type) return '';
-  const label = PROVIDER_LABELS[provider.type] || provider.type;
-  const isExternal = provider.type === 'mawaqit' || provider.type === 'esalaat';
-  const providerHtml = isExternal && provider.source_url
-    ? `<a href="${provider.source_url}" target="_blank" rel="noopener" class="source-link">${label}</a>`
+  const ptype = provider && provider.type;
+
+  // A user-uploaded timetable is the "image" source — also covers legacy
+  // configs that only carry a source_image with no provider block.
+  const isTimetable = ptype === 'image' || (!ptype && cfg && cfg.source_image);
+  const type = isTimetable ? 'image' : ptype;
+  if (!type) return '';
+
+  const label = PROVIDER_LABELS[type] || type;
+
+  // External providers link to their site; uploaded timetables link to the image.
+  let sourceUrl = null;
+  if (isTimetable) {
+    sourceUrl = (provider && provider.source_url) || (cfg.source_image ? `/data/${cfg.source_image}` : null);
+  } else if (provider.source_url && (type === 'mawaqit' || type === 'esalaat' || type === 'londonprayertimes')) {
+    sourceUrl = provider.source_url;
+  }
+  const providerHtml = sourceUrl
+    ? `<a href="${sourceUrl}" target="_blank" rel="noopener" class="source-link">${label}</a>`
     : label;
 
   let dateHtml = '';
@@ -482,6 +499,8 @@ function applyNextPrayerHighlight(todayRow) {
 function renderContent(container) {
   const target = container || document.getElementById('pt-content');
   if (!target) return;
+  // today_only masjids never show the month view (no toggle, and guard direct/bfcache routes)
+  if (config && config.today_only) currentView = 'today';
   if (currentView === 'today') renderTodayView(target);
   else renderMonthlyView(target);
 }
@@ -740,9 +759,10 @@ function renderTodayView(target) {
     </div>
   `;
 
-  // Expiring soon banner
+  // Expiring soon banner — skip for today_only masjids (e.g. MasjidBox), whose
+  // CSV is always just today+tomorrow by design, so it's never "expiring".
   const lastRow = csvData[csvData.length - 1];
-  if (lastRow) {
+  if (lastRow && !(config && config.today_only)) {
     const lastDate = parseDate(lastRow['Date']);
     const daysLeft = Math.ceil((lastDate - new Date()) / (1000 * 60 * 60 * 24));
     if (daysLeft >= 0 && daysLeft <= 5) {
@@ -1033,6 +1053,9 @@ function setupMonthModeToggle(container) {
 // --- Helpers ---
 
 function renderToggle(activeView) {
+  // today_only masjids (e.g. MasjidBox daily-accumulating) have no useful month
+  // view — only today/tomorrow exist — so hide the toggle entirely.
+  if (config && config.today_only) return '';
   return `<div class="view-toggle">
     <div class="toggle-container">
       <div class="toggle-slider${activeView === 'monthly' ? ' monthly' : ''}" id="toggleSlider"></div>

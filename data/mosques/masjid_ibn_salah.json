@@ -1,0 +1,36 @@
+{
+  "slug": "masjid_ibn_salah",
+  "display_name": "Masjid Ibn Salah",
+  "city": "Birmingham",
+  "latitude": 52.456597,
+  "longitude": -1.864546,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "Warwick Road, Birmingham, B11 4QU",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "masjid_ibn_salah.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "masjid-ibn-salah"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/masjid-ibn-salah"
+  },
+  "today_only": true,
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-20",
+    "row_count": 2,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": [],
+  "hidden": true,
+  "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:38) — not the masjid's real times."
+}

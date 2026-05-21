@@ -1,0 +1,89 @@
+{
+  "name": "East Birmingham Central Masjid",
+  "address": "Farmcote Road, Birmingham B33 9LU, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "ampm": false,
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 150
+  },
+  "athany": {
+    "closed": false,
+    "qrcode": "https://cdn.mbxsrc.com/core/FO5M1HL9/3a3vLR_cC.svg",
+    "showIqamah": true,
+    "slug": "east-birmingham-central-masjid",
+    "theme": "#8b572a"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T03:55:00+01:00",
+      "sunrise": "2026-05-21T05:03:00+01:00",
+      "dhuhr": "2026-05-21T13:04:00+01:00",
+      "asr": "2026-05-21T18:32:00+01:00",
+      "maghrib": "2026-05-21T21:06:00+01:00",
+      "isha": "2026-05-21T22:14:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 4,
+        "formatted": "الخميس 4 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T04:05:00+01:00",
+        "dhuhr": "2026-05-21T13:33:00+01:00",
+        "asr": "2026-05-21T18:42:00+01:00",
+        "maghrib": "2026-05-21T21:06:00+01:00",
+        "isha": "2026-05-21T22:24:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T03:40:00+01:00",
+        "iftar": "2026-05-21T21:06:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-22T00:00:00+01:00",
+      "fajr": "2026-05-22T03:54:00+01:00",
+      "sunrise": "2026-05-22T05:01:00+01:00",
+      "dhuhr": "2026-05-22T13:04:00+01:00",
+      "asr": "2026-05-22T18:33:00+01:00",
+      "maghrib": "2026-05-22T21:07:00+01:00",
+      "isha": "2026-05-22T22:15:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-22",
+        "day": "الجمعة",
+        "dayOfMonth": 5,
+        "formatted": "الجمعة 5 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-22T04:04:00+01:00",
+        "dhuhr": "2026-05-22T13:33:00+01:00",
+        "asr": "2026-05-22T18:43:00+01:00",
+        "maghrib": "2026-05-22T21:07:00+01:00",
+        "isha": "2026-05-22T22:25:00+01:00",
+        "jumuah": [
+          "2026-05-22T13:33:00+01:00"
+        ]
+      },
+      "special": {
+        "imsak": "2026-05-22T03:39:00+01:00",
+        "iftar": "2026-05-22T21:07:00+01:00"
+      },
+      "jumuah": [
+        "2026-05-22T13:04:00+01:00"
+      ]
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2026-04-15T00:17:08.784Z"
+}
