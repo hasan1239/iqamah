@@ -740,6 +740,9 @@ function handleCityCardClick(e) {
 async function focusCityOnMap(city) {
   // Switch to map mode (mounts the map lazily) then frame that city's masjids.
   setMode('map');
+  // Scroll back to the top so the map fills the viewport instead of opening
+  // mid-scroll where the tapped card was.
+  window.scrollTo({ top: 0, behavior: 'auto' });
   if (mapReadyPromise) await mapReadyPromise;
   const points = cachedConfigs
     .filter(c => deriveCity(c) === city)
