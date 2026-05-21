@@ -195,7 +195,7 @@
     "lat": 52.5233,
     "lon": -1.9279,
     "notes": "Jumu'ah Salaah is at 1:30pm. No Salah to be performed 10 minutes before Zohr Start time. Programmes: Mon: Dars of Quran after Maghrib; Sun: Inspirations after Zohr; Thu: Durood prog after Maghrib; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Programme for Women after Zohr. Jama'at times are subject to change, therefore you are requested to check at the masjid.",
-    "address": "The Grange Birmingham. B20 1BH",
+    "address": "The Grange, Handsworth Wood, Birmingham, B20 1BH",
     "phone": "0121 554 0200 / 07791 965 736",
     "month": "May 2026",
     "islamic_month": "Dhul Qa'dah / Dhul-Hijjah 1447",
@@ -966,7 +966,7 @@
     "display_name": "Masjid-E-Aman",
     "slug": "aman",
     "csv": "aman.csv",
-    "address": "232 Witton Road, Aston, Birmingham B6 6LB",
+    "address": "232 Witton Road, Aston, Birmingham, B6 6LB",
     "phone": "0121 523 4265 / 07980463270",
     "month": "May 2026",
     "islamic_month": "Dhul Qa'dah / Dhul Hijjah 1447 AH",
@@ -1034,7 +1034,7 @@
     "country_code": "GB",
     "website": "https://amanahmasjid.org",
     "logo": "https://cdn.mawaqit.net/images/backend/mosque/a2ace75f-fbca-4c86-b94e-8944f7529867/mosque/1eea8e00-dacd-6132-b6f4-066ed47a7584.png",
-    "address": "29-33 Henley St, Birmingham, B11 1JB",
+    "address": "29-33 Henley Street, Birmingham, B11 1JB",
     "address_source": "manual",
     "phone": "0121 772 7370",
     "email": "",
@@ -1186,6 +1186,75 @@
     "lon": -1.1101507
   },
   {
+    "slug": "aston_university_prayer_room",
+    "display_name": "Aston University Prayer Room",
+    "city": "Birmingham",
+    "latitude": 52.484294,
+    "longitude": -1.889009,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "8 Coleshill Street, Birmingham, B4 7BX",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "aston_university_prayer_room.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "aston-university-prayer-room"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/aston-university-prayer-room"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 3,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "at_taqwa_centre_birmingham",
+    "display_name": "At-Taqwa Centre (Birmingham)",
+    "city": "Birmingham",
+    "latitude": 52.501994,
+    "longitude": -1.920107,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Villa Road, Handsworth, Birmingham, B19 1BH",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "at_taqwa_centre_birmingham.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "at-taqwa-centre-birmingham"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/at-taqwa-centre-birmingham"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "azhar_academy_bolton",
     "display_name": "Azhar Academy Bolton",
     "city": "",
@@ -1287,7 +1356,7 @@
     "country_code": "GB",
     "website": "",
     "logo": "",
-    "address": "School, Acocks Green, Birmingham, B288je",
+    "address": "School Road, Acocks Green, Birmingham, B28 8JE",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
@@ -1319,6 +1388,44 @@
           "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "birmingham_anjuman_e_islam",
+    "display_name": "Birmingham Anjuman E-Islam Masjid Trust",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Trinity Road, Birchfield, Birmingham, B6 6AG",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "birmingham_anjuman_e_islam.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "birmingham-jame-masjid"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/birmingham-jame-masjid"
+    },
+    "today_only": true,
+    "suppress_times": [
+      "fajr_start",
+      "sehri_ends"
+    ],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
     },
     "acknowledged_issues": []
   },
@@ -2180,24 +2287,78 @@
     "acknowledged_issues": []
   },
   {
-    "display_name": "East London Mosque",
+    "slug": "east_birmingham_central_masjid",
+    "display_name": "East Birmingham Central Masjid",
+    "city": "Birmingham",
+    "latitude": 52.489127,
+    "longitude": -1.792356,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Farmcote Road, Birmingham, B33 9LU",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "east_birmingham_central_masjid.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "east-birmingham-central-masjid"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/east-birmingham-central-masjid"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 3,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "eastlondon",
-    "csv": "eastlondon.csv",
-    "address": "82-92 Whitechapel Road",
+    "display_name": "East London Mosque",
+    "city": "London",
+    "latitude": 51.5173982,
+    "longitude": -0.0653616,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "82-92 Whitechapel Road, Whitechapel, London, E1 1JQ",
+    "address_source": "manual",
     "phone": "02076503000",
-    "month": "May 2026",
-    "islamic_month": "",
+    "email": "",
+    "notes": "Asr begins: 2 Mithl is the time according to Hanafi opinion; 1 Mithl is the time according to other scholars' opinion. Khutbah (sermon) on Friday begins about 30 minutes before the Jama'ah. Based on the London Unified Prayer Timetable.",
+    "timezone": "Europe/London",
     "jummah_times": "Khutbah begins about 30 minutes before the Jama'ah",
+    "csv": "eastlondon.csv",
+    "provider": {
+      "type": "londonprayertimes",
+      "ref": {
+        "city": "london"
+      },
+      "source_url": "https://www.londonprayertimes.com/"
+    },
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "London Unified Prayer Timetable — shared across all London masjids that follow it."
+      ],
+      "issues": []
+    },
+    "acknowledged_issues": [],
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Asr begins: 2 Mithl is the time according to Hanafi opinion; 1 Mithl is the time according to other scholars' opinion. Khutbah (sermon) on Friday begins about 30 minutes before the Jama'ah. Based on the London Unified Prayer Timetable.",
-    "source_image": "sources/eastlondon.jpg",
-    "lat": 51.5173982,
-    "lon": -0.0653616,
-    "pending_update": false
+    "approved": true
   },
   {
     "slug": "eic_al_masjid",
@@ -2807,7 +2968,7 @@
   {
     "display_name": "Masjid Al Falaah",
     "slug": "falaah",
-    "address": "32 Trinity Rd, Handsworth, Birmingham B6 6AL",
+    "address": "32 Trinity Road, Handsworth, Birmingham, B6 6AL",
     "lat": 52.5084,
     "lon": -1.8997,
     "phone": "0121 630 1325",
@@ -2911,7 +3072,7 @@
     "display_name": "Great Barr Muslim Foundation",
     "slug": "gbmf",
     "csv": "gbmf.csv",
-    "address": "394 Walsall Road, B42 2LX",
+    "address": "394 Walsall Road, Great Barr, Birmingham, B42 2LX",
     "phone": "0121 250 4981",
     "month": "May 2026",
     "islamic_month": "Dhul-Qa'dah - Dhul-Hijjah 1447AH",
@@ -3013,6 +3174,111 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "green_lane",
+    "display_name": "Green Lane Masjid",
+    "city": "Birmingham",
+    "latitude": 52.473245,
+    "longitude": -1.862729,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Green Lane, Small Heath, Birmingham, B9 5DB",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "green_lane.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "green-lane-masjid-1666108368685"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/green-lane-masjid-1666108368685"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "gulhar_shareef",
+    "display_name": "Gulhar Shareef Birmingham",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "232 Slade Road, Erdington, Birmingham, B23 7RH",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "gulhar_shareef.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "gulhar-shareef-birmingham"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/gulhar-shareef-birmingham"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 3,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "hall_green_mosque",
+    "display_name": "Hall Green Mosque and Muslim Association",
+    "city": "Birmingham",
+    "latitude": 52.426952,
+    "longitude": -1.83887,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "1 Wycome Road, Hall Green, Birmingham, B28 9EN",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "hall_green_mosque.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "hall-green-mosque-and-muslim-association"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/hall-green-mosque-and-muslim-association"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:37) — not the masjid's real times."
+  },
+  {
     "display_name": "Masjid Hamza",
     "slug": "hamza",
     "csv": "hamza.csv",
@@ -3040,7 +3306,7 @@
     "country_code": "GB",
     "website": "",
     "logo": "",
-    "address": "Hillside, Twyford, Greater London, NW10 8LI",
+    "address": "Hillside, Twyford, Greater London, NW10 8LL",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
@@ -3465,7 +3731,7 @@
     "display_name": "Jam-E-Masjid",
     "slug": "jame",
     "csv": "jame.csv",
-    "address": "Trinity Road, Aston, Birmingham B6 6AG",
+    "address": "Trinity Road, Aston, Birmingham, B6 6AG",
     "lat": 52.5084,
     "lon": -1.902,
     "phone": "0121 554 9157",
@@ -3480,6 +3746,40 @@
     "source_image": "sources/jame.jpg",
     "approved": true,
     "pending_update": false
+  },
+  {
+    "slug": "jami_mosque_birmingham",
+    "display_name": "Jami Mosque and Islamic Centre Birmingham",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "jami_mosque_birmingham.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "jmic"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/jmic"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "jamia_masjid_bilal",
@@ -3904,6 +4204,49 @@
     "lon": -1.8967673
   },
   {
+    "slug": "leeds_grand_mosque",
+    "display_name": "Leeds Grand Mosque",
+    "city": "Leeds",
+    "latitude": 53.8065442,
+    "longitude": -1.5679982,
+    "country_code": "GB",
+    "website": "https://www.leedsgrandmosque.com",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e30e4cde-6f48-430d-9b0f-59127a4d2303/mosque/1f0e1101-6d4e-6bea-aa44-0a58a9feac02.png",
+    "address": "9 Woodsley Road, Little London & Woodhouse, Leeds, LS6 1SN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "leeds_grand_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "leeds-grand-mosque-leeds-ls6-1sn-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/leeds-grand-mosque-leeds-ls6-1sn-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "leopold_community_centre",
     "display_name": "Leopold Community Centre",
     "city": "",
@@ -3945,6 +4288,77 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "slug": "london_central_mosque",
+    "display_name": "London Central Mosque",
+    "city": "Westminster",
+    "latitude": 51.528817,
+    "longitude": -0.165083,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "146 Park Road, London, NW8 7RG",
+    "address_source": "manual",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "london_central_mosque.csv",
+    "provider": {
+      "type": "masjidal",
+      "ref": {
+        "masjid_id": "QKMqqaKB"
+      },
+      "source_url": "https://timing.athanplus.com/masjid/widgets/embed?masjid_id=QKMqqaKB"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 7,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "lozells_central_mosque",
+    "display_name": "Lozells Central Mosque",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "213-217 Lozells Road, Lozells, Birmingham, B19 1RJ",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "lozells_central_mosque.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "lozells-central-mosque-1720027911987"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/lozells-central-mosque-1720027911987"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "Unconfigured MasjidBox: flat +15 iqamah on every prayer + Dhuhr start 13:45 (36min off) — not the masjid's real config."
   },
   {
     "display_name": "Madani Masjid",
@@ -4098,7 +4512,7 @@
     "display_name": "Madinatul Uloom Masjid",
     "slug": "madinatul",
     "csv": "madinatul.csv",
-    "address": "115 Fentham Road, Aston, Birmingham B6 6NA",
+    "address": "115 Fentham Road, Aston, Birmingham, B6 6NA",
     "phone": "07944 267 205",
     "month": "February-March 2026",
     "islamic_month": "Ramadan 1447",
@@ -5575,6 +5989,42 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "masjid_ibn_salah",
+    "display_name": "Masjid Ibn Salah",
+    "city": "Birmingham",
+    "latitude": 52.456597,
+    "longitude": -1.864546,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Warwick Road, Birmingham, B11 4QU",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "masjid_ibn_salah.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "masjid-ibn-salah"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/masjid-ibn-salah"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:38) — not the masjid's real times."
+  },
+  {
     "slug": "masjid_ibraheem_education_centre",
     "display_name": "Masjid Ibraheem & Education Centre",
     "city": "",
@@ -6129,6 +6579,41 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "mohammadi_masjid_alum_rock",
+    "display_name": "Mohammadi Masjid Alum Rock",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "24-36 Hartopp Road, Alum Rock, Birmingham, B8 1TE",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "mohammadi_masjid_alum_rock.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "mohammadi-masjid-alum-rock"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/mohammadi-masjid-alum-rock"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 3,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "msh",
     "display_name": "Muslim Students House Masjid",
     "city": "Birmingham",
@@ -6137,7 +6622,7 @@
     "country_code": "GB",
     "website": "https://www.mshuk.org",
     "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-    "address": "A435, Moseley, Birmingham, B12 9BX",
+    "address": "Moseley Road, Moseley, Birmingham, B12 9BX",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
@@ -6531,7 +7016,7 @@
     "display_name": "Masjid Naqeebul Islam",
     "slug": "naqeebul",
     "csv": "naqeebul.csv",
-    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD, UK",
+    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD",
     "phone": "",
     "month": "April 2026",
     "islamic_month": "Shawwaal - Dhul Qa'dah 1447",
@@ -6783,7 +7268,7 @@
     "display_name": "Masjid Al Falah",
     "slug": "northilford",
     "csv": "northilford.csv",
-    "address": "97 Kensington Gardens, Ilford, Essex IG1 3EN",
+    "address": "97 Kensington Gardens, Ilford, Essex, IG1 3EN",
     "phone": "",
     "month": "April 2026",
     "islamic_month": "Shaw'waal / Dhul Qa'dah 1447 AH",
@@ -7302,7 +7787,7 @@
     "country_code": "GB",
     "website": "https://shahjalalmosquebristol.co.uk/",
     "logo": "",
-    "address": "Redding Road, Eastville, Bristol, City of, BS5 6PE",
+    "address": "Redding Road, Eastville, Bristol, BS5 6PE",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
@@ -7880,7 +8365,7 @@
     "country_code": "GB",
     "website": "http://www.tawfiqmasjid.co.uk/",
     "logo": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/mosque/1f041bd1-4839-64ce-ae8b-06bf79de48f3.png",
-    "address": "Aiken Street, Lawrence Hill, Bristol, City of, BS5 9TG",
+    "address": "Aiken Street, Lawrence Hill, Bristol, BS5 9TG",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
@@ -8037,6 +8522,77 @@
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
         }
       ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "ukim_alum_rock",
+    "display_name": "UKIM Alum Rock Islamic Centre",
+    "city": "Birmingham",
+    "latitude": 52.486867,
+    "longitude": -1.842747,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "2-8 Ludlow Road, Birmingham, B8 3BY",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "ukim_alum_rock.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "ukim-alum-rock-islamic-centre"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/ukim-alum-rock-islamic-centre"
+    },
+    "today_only": true,
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-20",
+      "row_count": 2,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": [],
+    "hidden": true,
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat 23:34 — not the masjid's real times."
+  },
+  {
+    "slug": "ukim_sparkbrook",
+    "display_name": "UKIM Sparkbrook Islamic Centre & Masjid",
+    "city": "Birmingham",
+    "latitude": 52.462836,
+    "longitude": -1.863938,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "179-187 Anderton Road, Sparkbrook, Birmingham, B11 1ND",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "ukim_sparkbrook.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "sparkbrook-masjid"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/sparkbrook-masjid"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-05-21",
+      "row_count": 3,
+      "warnings": [],
+      "issues": []
     },
     "acknowledged_issues": []
   },

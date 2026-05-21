@@ -1,0 +1,4 @@
+# Masjidal / AthanPlus curated list — <athanplus-masjid-id>  <local-slug>
+# Daily-accumulating (today_only). Scraped from the AthanPlus widget each morning.
+# masjid_id is in the embed URL on the masjid's own website.
+QKMqqaKB  london_central_mosque

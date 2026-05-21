@@ -1,0 +1,35 @@
+{
+  "slug": "gulhar_shareef",
+  "display_name": "Gulhar Shareef Birmingham",
+  "city": "",
+  "latitude": null,
+  "longitude": null,
+  "country_code": "GB",
+  "website": "",
+  "logo": "",
+  "address": "232 Slade Road, Erdington, Birmingham, B23 7RH",
+  "address_source": "masjidbox",
+  "phone": "",
+  "email": "",
+  "notes": "",
+  "timezone": "Europe/London",
+  "jummah_times": "",
+  "csv": "gulhar_shareef.csv",
+  "provider": {
+    "type": "masjidbox",
+    "ref": {
+      "slug": "gulhar-shareef-birmingham"
+    },
+    "source_url": "https://masjidbox.com/prayer-times/gulhar-shareef-birmingham"
+  },
+  "today_only": true,
+  "suppress_times": [],
+  "quality": {
+    "status": "ok",
+    "checked_at": "2026-05-21",
+    "row_count": 3,
+    "warnings": [],
+    "issues": []
+  },
+  "acknowledged_issues": []
+}

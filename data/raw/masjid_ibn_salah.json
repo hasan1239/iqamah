@@ -1,0 +1,81 @@
+{
+  "name": "Masjid Ibn Salah ",
+  "address": "Warwick Road, Birmingham B11 4QU, UK",
+  "country": "GB",
+  "verified": true,
+  "settings": {
+    "language": "en",
+    "timezone": "Europe/London",
+    "azan": 150
+  },
+  "athany": {
+    "qrcode": "https://cdn.mbxsrc.com/core/U8VTALO5/s6rvoqTAd.svg",
+    "showIqamah": true,
+    "slug": "masjid-ibn-salah",
+    "theme": "#4A90E2"
+  },
+  "timetable": [
+    {
+      "date": "2026-05-20T00:00:00+01:00",
+      "fajr": "2026-05-20T01:04:00+01:00",
+      "sunrise": "2026-05-20T05:04:00+01:00",
+      "dhuhr": "2026-05-20T13:04:00+01:00",
+      "asr": "2026-05-20T17:21:00+01:00",
+      "maghrib": "2026-05-20T21:05:00+01:00",
+      "isha": "2026-05-21T00:28:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-20",
+        "day": "الأربعاء",
+        "dayOfMonth": 3,
+        "formatted": "الأربعاء 3 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-20T01:14:00+01:00",
+        "dhuhr": "2026-05-20T13:14:00+01:00",
+        "asr": "2026-05-20T17:31:00+01:00",
+        "maghrib": "2026-05-20T21:10:00+01:00",
+        "isha": "2026-05-21T00:38:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-20T00:49:00+01:00",
+        "iftar": "2026-05-20T21:05:00+01:00"
+      }
+    },
+    {
+      "date": "2026-05-21T00:00:00+01:00",
+      "fajr": "2026-05-21T01:05:00+01:00",
+      "sunrise": "2026-05-21T05:03:00+01:00",
+      "dhuhr": "2026-05-21T13:04:00+01:00",
+      "asr": "2026-05-21T17:22:00+01:00",
+      "maghrib": "2026-05-21T21:06:00+01:00",
+      "isha": "2026-05-22T00:38:00+01:00",
+      "hijri": {
+        "gregorian": "2026-05-21",
+        "day": "الخميس",
+        "dayOfMonth": 4,
+        "formatted": "الخميس 4 ذو الحجّة 1447",
+        "month": "ذو الحجّة",
+        "monthISO": "Dhul Hijjah",
+        "monthOfYear": 12,
+        "year": 1447
+      },
+      "iqamah": {
+        "fajr": "2026-05-21T01:15:00+01:00",
+        "dhuhr": "2026-05-21T13:14:00+01:00",
+        "asr": "2026-05-21T17:32:00+01:00",
+        "maghrib": "2026-05-21T21:11:00+01:00",
+        "isha": "2026-05-22T00:48:00+01:00"
+      },
+      "special": {
+        "imsak": "2026-05-21T00:50:00+01:00",
+        "iftar": "2026-05-21T21:06:00+01:00"
+      }
+    }
+  ],
+  "isStale": false,
+  "settingLastUpdated": "2025-07-03T00:00:07.846Z"
+}

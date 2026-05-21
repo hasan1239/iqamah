@@ -7,6 +7,7 @@ Generates a 1080x2400 phone lockscreen PNG with daily prayer times.
 import csv
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -46,6 +47,39 @@ STANDARD_COLUMNS = {
 YEAR = 2026
 HIJRI_YEAR = 1447
 
+# Provider scripts (Mawaqit/My-Masjid) write snake_case headers; the original
+# image-extraction CSVs use title-case. Normalise snake_case → title-case on
+# load so the rest of the pipeline (which assumes STANDARD_COLUMNS) just works.
+# Mirrors HEADER_ALIASES in js/utils/csv.js.
+HEADER_ALIASES = {
+    "date": "Date", "day": "Day", "islamic_day": "Islamic Day",
+    "sehri_ends": "Sehri Ends", "fajr_start": "Fajr Start",
+    "sunrise": "Sunrise", "zawal": "Zawal", "zohr": "Zohr", "asr": "Asr",
+    "esha": "Esha", "fajr_jamaat": "Fajr Jama'at", "zohar_jamaat": "Zohar Jama'at",
+    "asr_jamaat": "Asr Jama'at", "maghrib_iftari": "Maghrib Iftari",
+    "maghrib_jamaat": "Maghrib Jama'at", "esha_jamaat": "Esha Jama'at",
+}
+
+
+def to_12h(time_str: str) -> str:
+    """Convert a 24h time to bare 12h (no AM/PM), matching the lockscreen style.
+
+    Provider CSVs store 24h ("06:26", "13:46"); the original CSVs already store
+    bare 12h ("5:24", "1:00"). This is idempotent on the latter — values at or
+    below 12 are returned unchanged (minus any leading zero).
+    """
+    s = (time_str or "").strip()
+    m = re.match(r"^(\d{1,2}):(\d{2})$", s)
+    if not m:
+        return s
+    hours = int(m.group(1))
+    minutes = m.group(2)
+    if hours == 0:
+        return f"12:{minutes}"
+    if hours <= 12:
+        return f"{hours}:{minutes}"
+    return f"{hours - 12}:{minutes}"
+
 
 def load_mosques(data_dir: str) -> dict:
     """Load all mosque configs from data/mosques/*.json."""
@@ -71,14 +105,27 @@ def load_mosques(data_dir: str) -> dict:
 
 
 def parse_csv_date(date_str: str) -> date:
-    """Parse '18 Feb' style date strings into a date object."""
-    return datetime.strptime(f"{date_str.strip()} {YEAR}", "%d %b %Y").date()
+    """Parse a CSV date into a date object.
+
+    Handles both the provider ISO format ("2026-05-20") and the legacy
+    image-extraction format ("18 Feb", assumed to be YEAR). Mirrors parseDate
+    in js/utils/csv.js.
+    """
+    s = date_str.strip()
+    iso = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", s)
+    if iso:
+        return date(int(iso.group(1)), int(iso.group(2)), int(iso.group(3)))
+    return datetime.strptime(f"{s} {YEAR}", "%d %b %Y").date()
 
 
 def load_timetable(csv_path: str) -> list[dict]:
-    """Load CSV rows into a list of dicts."""
+    """Load CSV rows into a list of dicts, normalising snake_case headers."""
     with open(csv_path, newline="", encoding="utf-8") as f:
-        return list(csv.DictReader(f))
+        rows = list(csv.DictReader(f))
+    return [
+        {HEADER_ALIASES.get(k, k): v for k, v in row.items()}
+        for row in rows
+    ]
 
 
 def find_row_for_date(rows: list[dict], target: date, date_col: str) -> dict | None:
@@ -98,12 +145,14 @@ def extract_times(row: dict, mosque_config: dict) -> dict:
             continue
         if col_name is None:
             # Quba has no Zohar Jama'at column — fixed at 1:00
-            times[key] = "1:00"
+            raw = "1:00"
         elif col_name not in row:
             # Column not in CSV (e.g. older CSVs without Maghrib Jama'at)
-            times[key] = ""
+            raw = ""
         else:
-            times[key] = row[col_name].strip()
+            raw = row[col_name].strip()
+        # Provider CSVs are 24h; normalise to bare 12h (no-op on 12h values).
+        times[key] = to_12h(raw)
     return times
 
 
@@ -112,21 +161,28 @@ def format_date_line(row: dict, mosque_config: dict) -> tuple[str, str]:
     cols = mosque_config["columns"]
     day_name = row[cols["day"]].strip()
     date_str = row[cols["date"]].strip()
-    hijri_raw = row[cols["hijri"]].strip()
+    hijri_raw = row.get(cols["hijri"], "").strip()
 
     day_map = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday",
                "Thu": "Thursday", "Fri": "Friday", "Sat": "Saturday", "Sun": "Sunday"}
     full_day = day_map.get(day_name, day_name)
 
-    english_date = f"{full_day} {date_str} {YEAR}"
+    # Render a consistent "Wednesday 20 May 2026" regardless of whether the CSV
+    # stored the date as "20 May" (legacy) or "2026-05-20" (provider/ISO).
+    date_obj = parse_csv_date(date_str)
+    english_date = f"{full_day} {date_obj.day} {date_obj.strftime('%b')} {YEAR}"
 
-    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447")
+    # Parse month abbreviation from Islamic Day (e.g. "12 Ram" → "12 Ramadan 1447").
+    # Provider CSVs leave this blank — show nothing rather than a broken
+    # "Ramadan" line (matches the website, which renders blank).
     month_abbrev_map = {"Ram": "Ramadan", "Shaw": "Shawwal", "Sha": "Sha'ban"}
     parts = hijri_raw.split()
     if len(parts) == 2 and parts[1] in month_abbrev_map:
         islamic_date = f"{parts[0]} {month_abbrev_map[parts[1]]} {HIJRI_YEAR}"
-    else:
+    elif hijri_raw:
         islamic_date = f"{hijri_raw} Ramadan {HIJRI_YEAR}"
+    else:
+        islamic_date = ""
 
     return english_date, islamic_date
 
@@ -189,38 +245,59 @@ def build_html(template_path: str, times: dict, date_parts: tuple[str, str], mos
     return html
 
 
-def render_to_png(html_content: str, output_path: str, script_dir: Path):
-    """Render HTML to a 1080x2400 PNG using Playwright + Pillow."""
-    tmp_dir = tempfile.gettempdir()
-    tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
-    tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
+class LockscreenRenderer:
+    """Reusable Playwright browser/page for rendering many lockscreens.
 
-    # Copy logos to temp directory so relative paths work
-    for logo_name in ["iqamah-icon.svg", "iqamah-icon-transparent.png"]:
-        logo_src = script_dir / logo_name
-        if logo_src.exists():
-            shutil.copy2(logo_src, os.path.join(tmp_dir, logo_name))
+    Launching Chromium and copying the logos is expensive, so do it once and
+    reuse the same page across every render rather than per image.
+    """
 
-    Path(tmp_html).write_text(html_content, encoding="utf-8")
+    def __init__(self, script_dir: Path):
+        self.script_dir = script_dir
+        tmp_dir = tempfile.gettempdir()
+        self.tmp_html = os.path.join(tmp_dir, "lockscreen_render.html")
+        self.tmp_screenshot = os.path.join(tmp_dir, "lockscreen_hires.png")
+        self._tmp_dir = tmp_dir
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch()
-        page = browser.new_page(
+    def __enter__(self):
+        # Copy logos to temp directory once so relative paths resolve
+        for logo_name in ["iqamah-icon.svg", "iqamah-icon-transparent.png"]:
+            logo_src = self.script_dir / logo_name
+            if logo_src.exists():
+                shutil.copy2(logo_src, os.path.join(self._tmp_dir, logo_name))
+
+        self._pw = sync_playwright().start()
+        self.browser = self._pw.chromium.launch()
+        self.page = self.browser.new_page(
             viewport={"width": 390, "height": 844},
             device_scale_factor=3,
         )
-        page.goto(Path(tmp_html).as_uri())
-        page.wait_for_timeout(2000)
-        page.screenshot(path=tmp_screenshot, full_page=False)
-        browser.close()
+        return self
 
-    img = Image.open(tmp_screenshot)
-    img_resized = img.resize((1080, 2400), Image.LANCZOS)
-    img_resized.save(output_path, dpi=(300, 300))
-    print(f"  ✅ Saved: {output_path}")
+    def __exit__(self, *exc):
+        self.page.close()
+        self.browser.close()
+        self._pw.stop()
+
+    def render(self, html_content: str, output_path: str):
+        """Render one HTML string to a 1080x2400 PNG using the shared page."""
+        Path(self.tmp_html).write_text(html_content, encoding="utf-8")
+
+        page = self.page
+        page.goto(Path(self.tmp_html).as_uri())
+        # Wait for web fonts to actually finish loading rather than a fixed
+        # sleep — document.fonts.ready is a promise Playwright auto-awaits.
+        page.evaluate("document.fonts.ready")
+        page.wait_for_timeout(100)  # brief settle for the final paint
+        page.screenshot(path=self.tmp_screenshot, full_page=False)
+
+        img = Image.open(self.tmp_screenshot)
+        img_resized = img.resize((1080, 2400), Image.LANCZOS)
+        img_resized.save(output_path, dpi=(300, 300))
+        print(f"  ✅ Saved: {output_path}")
 
 
-def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, script_dir: Path, suffix: str = ""):
+def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, template_path: str, data_dir: str, mosques: dict, renderer: "LockscreenRenderer", suffix: str = ""):
     """Full pipeline: CSV → HTML → PNG for one mosque and date."""
     config = mosques[mosque_key]
     csv_path = os.path.join(data_dir, config["csv"])
@@ -241,7 +318,7 @@ def generate_lockscreen(mosque_key: str, target_date: date, output_dir: str, tem
     output_path = os.path.join(output_dir, filename)
 
     os.makedirs(output_dir, exist_ok=True)
-    render_to_png(html, output_path, script_dir)
+    renderer.render(html, output_path)
 
     latest_name = f"ramadan_lockscreen_{config['slug']}{suffix}_latest.png"
     return output_path, latest_name
@@ -327,27 +404,29 @@ def main():
     print()
 
     generated = []
-    for key in mosque_keys:
-        if key not in mosques:
-            print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
-            continue
-        print(f"  📐 {mosques[key]['display_name']}...")
-        result = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, script_dir)
-        if result:
-            generated.append(result)
-
-    # Generate light variant if a matching _light template exists
-    light_template_path = script_dir / "templates" / f"lockscreen_{template_version}_light.html"
-    if light_template_path.exists():
-        print()
-        print(f"🌤️  Generating light variants...")
+    # Launch one browser for the whole run and reuse it across every render.
+    with LockscreenRenderer(script_dir) as renderer:
         for key in mosque_keys:
             if key not in mosques:
+                print(f"  ❌ Unknown mosque: {key}. Valid options: {', '.join(mosques.keys())}")
                 continue
-            print(f"  📐 {mosques[key]['display_name']} (light)...")
-            result = generate_lockscreen(key, target_date, output_dir, str(light_template_path), str(data_dir), mosques, script_dir, suffix="_light")
+            print(f"  📐 {mosques[key]['display_name']}...")
+            result = generate_lockscreen(key, target_date, output_dir, str(template_path), str(data_dir), mosques, renderer)
             if result:
                 generated.append(result)
+
+        # Generate light variant if a matching _light template exists
+        light_template_path = script_dir / "templates" / f"lockscreen_{template_version}_light.html"
+        if light_template_path.exists():
+            print()
+            print(f"🌤️  Generating light variants...")
+            for key in mosque_keys:
+                if key not in mosques:
+                    continue
+                print(f"  📐 {mosques[key]['display_name']} (light)...")
+                result = generate_lockscreen(key, target_date, output_dir, str(light_template_path), str(data_dir), mosques, renderer, suffix="_light")
+                if result:
+                    generated.append(result)
 
     print()
     if generated:
