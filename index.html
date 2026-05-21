@@ -965,22 +965,24 @@
     .masjid-map-locate svg { width: 18px; height: 18px; }
     .masjid-map-locate.loading svg { animation: spin 1s linear infinite; }
     .masjid-map-locate.error { color: #e74c3c; }
-    /* Popups */
-    .leaflet-popup-content-wrapper {
-      background: var(--card-bg); color: var(--text-primary);
-      border: 1px solid var(--card-border); border-radius: 12px;
-      backdrop-filter: blur(12px); box-shadow: 0 4px 20px var(--card-shadow);
+    /* Popups — light card with dark text in all themes (Leaflet renders the
+       popup on a white background, so dark text reads clearly). Selectors are
+       scoped under .leaflet-popup so they beat Leaflet's own CSS regardless of
+       stylesheet load order. */
+    .leaflet-popup .leaflet-popup-content-wrapper {
+      background: #ffffff; color: #1a1a2e;
+      border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.35);
     }
-    .leaflet-popup-tip { background: var(--card-bg); border: 1px solid var(--card-border); }
+    .leaflet-popup .leaflet-popup-tip { background: #ffffff; }
     .leaflet-popup-content { margin: 12px 14px; }
-    .map-popup-name { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
-    .map-popup-addr { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 6px; line-height: 1.3; }
-    .map-popup-next { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 8px; min-height: 0; }
-    .map-popup-next-label { color: var(--gold); font-weight: 600; }
-    .map-popup-next-time { font-weight: 700; }
-    .map-popup-link { display: inline-block; font-size: 0.8rem; font-weight: 600; color: var(--gold); text-decoration: none; }
-    .map-popup-link:hover { color: var(--gold-hover); }
-    .leaflet-popup-close-button { color: var(--text-muted) !important; }
+    .map-popup-name { font-size: 0.95rem; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
+    .map-popup-addr { font-size: 0.72rem; color: #4a4a55; margin-bottom: 6px; line-height: 1.3; }
+    .map-popup-next { font-size: 0.78rem; color: #1a1a2e; margin-bottom: 8px; min-height: 0; }
+    .map-popup-next-label { color: #9a7a10; font-weight: 700; }
+    .map-popup-next-time { font-weight: 700; color: #1a1a2e; }
+    .leaflet-popup-content a.map-popup-link { display: inline-block; font-size: 0.8rem; font-weight: 700; color: #9a7a10; text-decoration: none; }
+    .leaflet-popup-content a.map-popup-link:hover { color: #b8941f; text-decoration: underline; }
+    .leaflet-popup-close-button { color: #888 !important; }
     :root[data-theme="dark"] .leaflet-control-zoom a,
     :root[data-theme="night"] .leaflet-control-zoom a {
       background: #1a2630; color: #ddd; border-color: rgba(255,255,255,0.15);
