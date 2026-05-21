@@ -4,14 +4,57 @@ import { loadLeaflet } from '../utils/leaflet-loader.js';
 import { onThemeChange, getTheme } from '../theme.js';
 import { getCurrentPosition } from '../utils/geolocation.js';
 
-// CARTO basemaps — free, no API key. Light tiles in light mode, dark otherwise.
-const TILES = {
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-};
-const TILE_ATTRIB = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+// MapLibre GL vector tiles via OpenFreeMap — free, no API key.
+// Light mode uses OpenFreeMap's Positron style; dark/night use a custom style
+// with white roads and labels on a black background (see DARK_STYLE below).
+const OFM_GLYPHS = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
+const OFM_SOURCE = { openmaptiles: { type: 'vector', url: 'https://tiles.openfreemap.org/planet' } };
+const LIGHT_STYLE = 'https://tiles.openfreemap.org/styles/positron';
+const TILE_ATTRIB = '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 // Centre of Great Britain — fallback view when no markers and no user location.
 const GB_CENTER = [54.0, -2.5];
+
+// White roads + white labels on black. OpenMapTiles schema (matches OpenFreeMap).
+const DARK_STYLE = {
+  version: 8,
+  glyphs: OFM_GLYPHS,
+  sources: OFM_SOURCE,
+  layers: [
+    { id: 'bg', type: 'background', paint: { 'background-color': '#000000' } },
+    { id: 'water', type: 'fill', source: 'openmaptiles', 'source-layer': 'water',
+      paint: { 'fill-color': '#0c1118' } },
+    // Minor roads — thinner, slightly dimmed white so the hierarchy reads.
+    { id: 'roads-minor', type: 'line', source: 'openmaptiles', 'source-layer': 'transportation',
+      filter: ['all',
+        ['match', ['geometry-type'], ['LineString', 'MultiLineString'], true, false],
+        ['!', ['match', ['get', 'class'], ['motorway', 'trunk', 'primary', 'secondary'], true, false]]],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#cfd4da',
+        'line-width': ['interpolate', ['linear'], ['zoom'], 11, 0.4, 14, 1, 17, 3, 19, 7],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 11, 0.45, 14, 0.75] } },
+    // Major roads — full white, thicker.
+    { id: 'roads-major', type: 'line', source: 'openmaptiles', 'source-layer': 'transportation',
+      filter: ['all',
+        ['match', ['geometry-type'], ['LineString', 'MultiLineString'], true, false],
+        ['match', ['get', 'class'], ['motorway', 'trunk', 'primary', 'secondary'], true, false]],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#ffffff',
+        'line-width': ['interpolate', ['linear'], ['zoom'], 6, 0.6, 10, 1.4, 13, 2.4, 16, 5, 19, 12] } },
+    // Road name labels.
+    { id: 'road-labels', type: 'symbol', source: 'openmaptiles', 'source-layer': 'transportation_name',
+      minzoom: 13,
+      layout: { 'symbol-placement': 'line', 'text-font': ['Noto Sans Regular'], 'text-size': 11,
+        'text-field': ['coalesce', ['get', 'name_en'], ['get', 'name']] },
+      paint: { 'text-color': '#ffffff', 'text-halo-color': '#000000', 'text-halo-width': 1.2 } },
+    // Place labels (cities, towns, suburbs).
+    { id: 'place-labels', type: 'symbol', source: 'openmaptiles', 'source-layer': 'place',
+      filter: ['match', ['get', 'class'], ['city', 'town', 'village', 'suburb', 'neighbourhood'], true, false],
+      layout: { 'text-font': ['Noto Sans Regular'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 5, 11, 12, 16],
+        'text-field': ['coalesce', ['get', 'name_en'], ['get', 'name']] },
+      paint: { 'text-color': '#ffffff', 'text-halo-color': '#000000', 'text-halo-width': 1.4 } },
+  ],
+};
 
 let map = null;
 let tileLayer = null;
@@ -20,8 +63,19 @@ let userMarker = null;
 let themeUnsub = null;
 let loadNextFn = null;
 
-function tileUrlForTheme(theme) {
-  return theme === 'light' ? TILES.light : TILES.dark;
+function styleForTheme(theme) {
+  return theme === 'light' ? LIGHT_STYLE : DARK_STYLE;
+}
+
+function addBaseLayer(L, theme) {
+  if (tileLayer) { map.removeLayer(tileLayer); tileLayer = null; }
+  tileLayer = L.maplibreGL({ style: styleForTheme(theme) });
+  tileLayer.addTo(map);
+  // Keep the GL canvas beneath the marker/cluster panes.
+  if (tileLayer.getContainer) {
+    const c = tileLayer.getContainer();
+    if (c) c.style.zIndex = '200';
+  }
 }
 
 function markerIcon(L) {
@@ -84,13 +138,11 @@ export async function mountMap(container, { configs = [], userLocation = null, l
     zoomControl: true,
     attributionControl: true,
     scrollWheelZoom: true,
+    maxZoom: 19,
   });
 
-  tileLayer = L.tileLayer(tileUrlForTheme(theme), {
-    maxZoom: 19,
-    attribution: TILE_ATTRIB,
-    detectRetina: true,
-  }).addTo(map);
+  addBaseLayer(L, theme);
+  if (map.attributionControl) map.attributionControl.addAttribution(TILE_ATTRIB);
 
   clusterGroup = L.markerClusterGroup({
     showCoverageOnHover: false,
@@ -128,9 +180,9 @@ export async function mountMap(container, { configs = [], userLocation = null, l
 
   addLocateControl(L);
 
-  // Swap tiles when the user toggles theme while the map is open.
+  // Swap the basemap when the user toggles theme while the map is open.
   themeUnsub = onThemeChange((t) => {
-    if (tileLayer) tileLayer.setUrl(tileUrlForTheme(t));
+    if (map) addBaseLayer(L, t);
   });
 
   // Leaflet mis-sizes if the container animated in; settle after layout.
