@@ -1031,10 +1031,19 @@
     }
     .masjid-city-card:hover { border-color: var(--gold-tint-40); }
     .masjid-city-card:active { background: var(--card-active-bg); transform: scale(0.98); }
+    .masjid-city-card.pinned-city { border-color: var(--gold-tint-40); background: var(--gold-tint-08); }
     .masjid-city-card-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
     .masjid-city-name {
       font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+      display: flex; align-items: center; gap: 8px;
     }
+    .masjid-city-badge {
+      display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0;
+      font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+      color: var(--gold); background: var(--gold-tint-10); border: 1px solid var(--gold-tint-20);
+      padding: 2px 7px 2px 5px; border-radius: 999px;
+    }
+    .masjid-city-badge svg { width: 10px; height: 10px; }
     .masjid-city-count {
       font-size: 0.72rem; color: var(--text-muted); font-weight: 500;
     }
