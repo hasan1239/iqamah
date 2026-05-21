@@ -3,6 +3,7 @@ import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
+import { mountMap, unmountMap } from './masjid-map.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -35,6 +36,8 @@ let searchQuery = '';
 let loadGeneration = 0;
 let masjidsLoadPromise = null;
 let hasTimesMap = {}; // slug -> true/false, populated after CSV check
+let viewMode = 'list'; // 'list' | 'map'
+let mapMounted = false;
 
 export function render(container) {
   viewContainer = container;
@@ -42,30 +45,41 @@ export function render(container) {
     <div class="masjids-view">
       <header class="masjids-header">
         <h1 class="masjids-title">Masjids</h1>
+        <div class="masjids-mode-toggle toggle-container" id="masjidsModeToggle" role="tablist" aria-label="View mode">
+          <div class="toggle-slider"></div>
+          <button class="toggle-btn active" data-mode="list" role="tab" aria-selected="true">List</button>
+          <button class="toggle-btn" data-mode="map" role="tab" aria-selected="false">Map</button>
+        </div>
       </header>
 
-      <div class="masjids-search-bar">
-        <span class="masjids-search-icon">${SEARCH_SVG}</span>
-        <input type="text" id="masjidSearch" class="masjids-search-input" placeholder="Search masjids..." autocomplete="off">
-        <button class="location-btn" id="masjidsLocationBtn">
-          <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span class="location-btn-text">Nearby</span>
-        </button>
+      <div class="masjids-list-pane" id="masjidsListPane">
+        <div class="masjids-search-bar">
+          <span class="masjids-search-icon">${SEARCH_SVG}</span>
+          <input type="text" id="masjidSearch" class="masjids-search-input" placeholder="Search masjids..." autocomplete="off">
+          <button class="location-btn" id="masjidsLocationBtn">
+            <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span class="location-btn-text">Nearby</span>
+          </button>
+        </div>
+
+        ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
+          <span>Tip: Long press a masjid to set it as My Masjid</span>
+          <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
+        </div>` : ''}
+
+        <div class="masjid-grid" id="masjidsGrid"></div>
+
+        <div class="cta-section">
+          <p class="cta-heading">Can't find your masjid?</p>
+          <a class="cta-btn" href="/add" data-link>Add it here <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>
+        </div>
       </div>
 
-      ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
-        <span>Tip: Long press a masjid to set it as My Masjid</span>
-        <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
-      </div>` : ''}
-
-      <div class="masjid-grid" id="masjidsGrid"></div>
-
-      <div class="cta-section">
-        <p class="cta-heading">Can't find your masjid?</p>
-        <a class="cta-btn" href="/add" data-link>Add it here <span class="beta-badge" style="background:rgba(0,0,0,0.3);color:#fff">BETA</span></a>
+      <div class="masjids-map-pane" id="masjidsMapPane" hidden>
+        <div class="masjids-map" id="masjidsMap"></div>
       </div>
 
       <div class="pin-toast" id="masjidsPinToast"></div>
@@ -82,6 +96,7 @@ export function render(container) {
   setupGridClicks();
   setupLongPress();
   setupPinHint();
+  setupModeToggle();
 }
 
 function buildSkeletonCards(count) {
@@ -521,11 +536,103 @@ function setupLocationBtn() {
   });
 }
 
+// --- List / Map mode toggle ---
+
+function setupModeToggle() {
+  const toggle = (viewContainer && viewContainer.querySelector('#masjidsModeToggle')) || document.getElementById('masjidsModeToggle');
+  if (!toggle) return;
+  toggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('.toggle-btn');
+    if (!btn) return;
+    setMode(btn.dataset.mode);
+  });
+}
+
+function setMode(mode) {
+  if (mode === viewMode) return;
+  viewMode = mode;
+
+  const root = (viewContainer && viewContainer.querySelector('.masjids-view')) || document;
+  const slider = root.querySelector('#masjidsModeToggle .toggle-slider');
+  const btns = root.querySelectorAll('#masjidsModeToggle .toggle-btn');
+  const listPane = root.querySelector('#masjidsListPane');
+  const mapPane = root.querySelector('#masjidsMapPane');
+
+  if (slider) slider.classList.toggle('shifted', mode === 'map');
+  btns.forEach(b => {
+    const active = b.dataset.mode === mode;
+    b.classList.toggle('active', active);
+    b.setAttribute('aria-selected', active ? 'true' : 'false');
+  });
+
+  if (mode === 'map') {
+    if (listPane) listPane.hidden = true;
+    if (mapPane) mapPane.hidden = false;
+    showMap();
+  } else {
+    if (mapPane) mapPane.hidden = true;
+    if (listPane) listPane.hidden = false;
+  }
+}
+
+async function showMap() {
+  if (mapMounted) return;
+  mapMounted = true;
+  const container = (viewContainer && viewContainer.querySelector('#masjidsMap')) || document.getElementById('masjidsMap');
+  if (!container) { mapMounted = false; return; }
+
+  // Make sure configs are loaded before plotting.
+  if (masjidsLoadPromise) await masjidsLoadPromise;
+  if (!cachedConfigs.length) await loadMasjids();
+
+  // Use live location if "Nearby" was used, else any cached fix from a prior session.
+  let startLoc = userLocation;
+  if (!startLoc) {
+    try {
+      const cached = JSON.parse(localStorage.getItem('iqamah-cached-location') || 'null');
+      if (cached && cached.lat != null && cached.lon != null) startLoc = cached;
+    } catch { /* ignore */ }
+  }
+
+  try {
+    await mountMap(container, {
+      configs: cachedConfigs,
+      userLocation: startLoc,
+      loadNext: loadNextForPopup,
+    });
+  } catch (err) {
+    console.error('Map failed to load:', err);
+    mapMounted = false;
+    container.innerHTML = `<div class="masjids-map-error">Couldn't load the map. Check your connection and try again.</div>`;
+  }
+}
+
+// Fetch today's next jama'at for a single masjid — used to fill map popups on demand.
+async function loadNextForPopup(slug) {
+  const config = cachedConfigs.find(c => c.slug === slug);
+  if (!config) return null;
+  try {
+    const csvFile = config.csv || slug + '.csv';
+    const res = await fetch(`/data/${csvFile}`);
+    if (!res.ok) return null;
+    const todayRow = getTodayRow(parseCSV(await res.text()));
+    if (!todayRow) return null;
+    const next = getNextPrayerFromRow(todayRow);
+    if (!next) return null;
+    return { name: next.name, time: formatCardTime(next.time, next.isAM) };
+  } catch {
+    return null;
+  }
+}
+
 export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
   document.removeEventListener('click', handlePinClick, true);
+  unmountMap();
+  mapMounted = false;
+  viewMode = 'list';
   locationActive = false;
   userLocation = null;
   distanceMap = {};
