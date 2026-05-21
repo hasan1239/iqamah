@@ -1149,6 +1149,12 @@ async function handleSubmit(request, env) {
     if (imgMatch) {
       const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
       config.source_image = `sources/${slug}.${ext}`;
+      // Provider record: times come from a user-uploaded timetable image.
+      config.provider = {
+        type: 'image',
+        ref: { source_image: config.source_image },
+        source_url: `/data/${config.source_image}`,
+      };
     }
   }
 
@@ -1401,6 +1407,12 @@ async function handleUpdate(request, env) {
     if (imgMatch) {
       const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
       existingConfig.source_image = `sources/${slug}.${ext}`;
+      // Times now come from this uploaded timetable image.
+      existingConfig.provider = {
+        type: 'image',
+        ref: { source_image: existingConfig.source_image },
+        source_url: `/data/${existingConfig.source_image}`,
+      };
     }
   }
 
