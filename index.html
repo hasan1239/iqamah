@@ -915,21 +915,20 @@
        MASJIDS VIEW
        ============================================ */
     .masjids-view { padding-bottom: 40px; }
-    .masjids-header { margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .masjids-header { margin-bottom: 12px; }
     .masjids-header h1 { font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
-    .masjids-mode-toggle { width: auto; flex-shrink: 0; }
-    .masjids-mode-toggle .toggle-btn { padding: 7px 18px; }
+    .masjids-mode-toggle { width: 100%; margin-bottom: 14px; }
     .toggle-slider.shifted { transform: translateX(100%); }
 
     /* Map pane */
-    .masjids-map-pane { margin-top: 4px; }
+    .masjids-map-pane { margin-top: 0; }
     .masjids-map {
-      width: 100%; height: calc(100dvh - 230px); min-height: 380px;
+      width: 100%; height: calc(100dvh - 172px); min-height: 420px;
       border-radius: 14px; overflow: hidden;
       border: 1px solid var(--card-border); background: var(--card-bg);
     }
     .masjids-map-error { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
-    @media (min-width: 768px) { .masjids-map { height: calc(100vh - 200px); } }
+    @media (min-width: 768px) { .masjids-map { height: calc(100vh - 188px); } }
 
     /* Leaflet theming to match the design system */
     .leaflet-container { font-family: inherit; background: var(--card-bg); }
@@ -940,12 +939,14 @@
       transform: rotate(-45deg); box-shadow: 0 2px 6px rgba(0,0,0,0.45);
     }
     .masjid-map-cluster {
-      display: flex; align-items: center; justify-content: center;
+      display: flex !important; align-items: center; justify-content: center;
+      width: 40px; height: 40px; box-sizing: border-box;
       background: radial-gradient(circle, var(--gold), var(--gold-dark));
       color: #0a0a0a; font-weight: 700; font-size: 0.85rem; font-family: inherit;
       border-radius: 50%; border: 2px solid rgba(255,255,255,0.7);
       box-shadow: 0 2px 8px rgba(0,0,0,0.4);
     }
+    .masjid-map-cluster span { display: block; line-height: 1; text-align: center; }
     .masjid-map-user-dot {
       display: block; width: 16px; height: 16px; border-radius: 50%;
       background: #2e7dd1; border: 2px solid #fff;

@@ -45,12 +45,13 @@ export function render(container) {
     <div class="masjids-view">
       <header class="masjids-header">
         <h1 class="masjids-title">Masjids</h1>
-        <div class="masjids-mode-toggle toggle-container" id="masjidsModeToggle" role="tablist" aria-label="View mode">
-          <div class="toggle-slider"></div>
-          <button class="toggle-btn active" data-mode="list" role="tab" aria-selected="true">List</button>
-          <button class="toggle-btn" data-mode="map" role="tab" aria-selected="false">Map</button>
-        </div>
       </header>
+
+      <div class="masjids-mode-toggle toggle-container" id="masjidsModeToggle" role="tablist" aria-label="View mode">
+        <div class="toggle-slider"></div>
+        <button class="toggle-btn active" data-mode="list" role="tab" aria-selected="true">List</button>
+        <button class="toggle-btn" data-mode="map" role="tab" aria-selected="false">Map</button>
+      </div>
 
       <div class="masjids-list-pane" id="masjidsListPane">
         <div class="masjids-search-bar">
