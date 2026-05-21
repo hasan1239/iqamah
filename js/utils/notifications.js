@@ -11,7 +11,8 @@ import { buildReminders } from './prayer-schedule.js';
 
 const PREFS_KEY = 'iqamah-notif-prefs';
 const FIRED_KEY = 'iqamah-notif-fired';
-const NOTIF_ICON = '/icon-192.png';
+const NOTIF_ICON = '/iqamah-icon.png';            // large icon — navy/gold brand mark
+const NOTIF_BADGE = '/iqamah-icon-transparent.png'; // status-bar badge (Android masks to white)
 
 // Default state on first enable: all starts on at-time, jama'at/ends-soon off,
 // Ramadan Suhoor 30m + Iftar at-time. (spec §4)
@@ -172,7 +173,7 @@ async function fireNotification(reminder, masjidName, slug) {
       body,
       tag: `${todayKey()}:${id}`,
       icon: NOTIF_ICON,
-      badge: NOTIF_ICON,
+      badge: NOTIF_BADGE,
       data: { url: slug ? `/${slug}` : '/' },
     });
     markFired(id);
