@@ -1,8 +1,10 @@
 // Settings view — preferences and app info
 import { getTheme, setTheme, onThemeChange } from '../theme.js';
 import { isAdmin, clearAdminCache } from '../utils/admin.js';
+import { renderNotifications, setupNotifications } from './notifications-settings.js';
 
 let unsubTheme = null;
+let onNotifRerender = null;
 
 export function render(container) {
   const theme = getTheme();
@@ -93,6 +95,8 @@ export function render(container) {
           </div>
         </div>
       </div>
+
+      <div id="notifMount"></div>
 
       <div class="settings-group">
         <div class="settings-group-title">Contribute</div>
@@ -214,6 +218,29 @@ export function render(container) {
     }).catch(() => {});
   }
 
+  // Notifications group — mounted async (needs season + pinned masjid name)
+  async function mountNotifications() {
+    const mount = container.querySelector('#notifMount');
+    if (!mount) return;
+    let season = 'default';
+    let pinnedName = '';
+    try {
+      const [seasonRes, cfgRes] = await Promise.all([
+        fetch('/data/season.json').catch(() => null),
+        pinnedSlug ? fetch(`/data/mosques/${pinnedSlug}.json`).catch(() => null) : Promise.resolve(null),
+      ]);
+      if (seasonRes && seasonRes.ok) { try { season = (await seasonRes.json()).season || 'default'; } catch {} }
+      if (cfgRes && cfgRes.ok) { try { pinnedName = (await cfgRes.json()).display_name || pinnedSlug; } catch {} }
+    } catch { /* fall back to defaults */ }
+    if (!container.querySelector('#notifMount')) return; // view changed while awaiting
+    mount.innerHTML = renderNotifications(season, pinnedName);
+    setupNotifications(container);
+  }
+  mountNotifications();
+  // Re-render when the master toggle has to revert (e.g. permission denied).
+  onNotifRerender = () => mountNotifications();
+  window.addEventListener('iqamah-notif-rerender', onNotifRerender);
+
   // Theme segmented control
   const segmented = document.getElementById('themeSegmented');
   segmented.addEventListener('click', (e) => {
@@ -307,5 +334,9 @@ export function destroy() {
   if (unsubTheme) {
     unsubTheme();
     unsubTheme = null;
+  }
+  if (onNotifRerender) {
+    window.removeEventListener('iqamah-notif-rerender', onNotifRerender);
+    onNotifRerender = null;
   }
 }

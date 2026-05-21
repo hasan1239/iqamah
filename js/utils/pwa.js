@@ -68,3 +68,11 @@ export function isIOSSafari() {
 export function isIOS() {
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
 }
+
+// True when this browser can show notifications via the service worker.
+// On iOS this additionally requires the PWA to be installed (home screen).
+export function canUsePush() {
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) return false;
+  if (isIOS() && !isStandalone()) return false;
+  return true;
+}
