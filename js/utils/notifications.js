@@ -241,10 +241,16 @@ export async function sendTestNotification(masjidName) {
   }
   const sample = { kind: 'jamaat', label: 'Asr', lead: 15, prayer: 'asr', timeStr: '18:45', isAM: false };
   const { title, body } = buildCopy(sample, masjidName);
+  const slug = localStorage.getItem('iqamah-pinned-masjid');
   try {
     const reg = await navigator.serviceWorker.ready;
     await reg.showNotification(title, {
-      body, tag: 'iqamah-test', icon: NOTIF_ICON, badge: NOTIF_BADGE, data: { url: '/' },
+      body, tag: 'iqamah-test', icon: NOTIF_ICON, badge: NOTIF_BADGE,
+      data: { url: slug ? `/${slug}` : '/' },
+      actions: [
+        { action: 'view', title: 'View times' },
+        { action: 'dismiss', title: 'Dismiss' },
+      ],
     });
     return true;
   } catch { return false; }
