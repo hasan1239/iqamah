@@ -69,8 +69,6 @@ function summaryText(prayerPref, kinds) {
 function prayerRow(p, prefs) {
   const pref = prefs.prayers[p.key];
   const subs = p.kinds.map(k => subBlock(k, pref[k])).join('');
-  const maghribNote = p.key === 'maghrib'
-    ? '<div class="notif-aside">Pray Maghrib as soon as possible</div>' : '';
   return `
     <div class="notif-prayer" data-prayer="${p.key}">
       <button type="button" class="notif-prayer-head" aria-expanded="false">
@@ -80,7 +78,6 @@ function prayerRow(p, prefs) {
       </button>
       <div class="notif-prayer-body">
         ${subs}
-        ${maghribNote}
       </div>
     </div>`;
 }
