@@ -15,6 +15,7 @@ const RATE_LIMITS_CONFIG = {
   extract: { max: 5, windowSecs: 30 * 24 * 60 * 60 }, // 5 per month
   submit: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
   update: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
+  push: { max: 60, windowSecs: 60 * 60 },             // 60 push-API calls/hour per IP
 };
 
 async function isRateLimited(ip, action, env, request) {
@@ -685,6 +686,89 @@ function errorResponse(message, status = 400) {
 }
 
 // ============================================================
+// Push notification endpoints (v1)
+// Subscriptions live in the PUSH_SUBS KV namespace, shared with the
+// push-scheduler Worker. See docs/push-notifications-spec.md.
+// ============================================================
+
+// Stable per-device key derived from the (secret-ish) push endpoint URL.
+async function hashEndpoint(endpoint) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Today's date in Europe/London (YYYY-MM-DD) — matches the scheduler's day basis.
+function londonDateStr(d = new Date()) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(d);
+}
+
+async function handlePushSubscribe(request, env) {
+  if (!env.PUSH_SUBS) return errorResponse('Push not configured', 503);
+  let body;
+  try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
+  const sub = body.subscription;
+  if (!sub || !sub.endpoint || !sub.keys || !sub.keys.p256dh || !sub.keys.auth) {
+    return errorResponse('Invalid subscription');
+  }
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (await isRateLimited(ip, 'push', env, request)) return errorResponse('Rate limit exceeded', 429);
+
+  const hash = await hashEndpoint(sub.endpoint);
+  const existing = await env.PUSH_SUBS.get(`sub:${hash}`, 'json');
+  const now = Date.now();
+  const record = {
+    endpoint: sub.endpoint,
+    keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth },
+    slug: typeof body.slug === 'string' ? body.slug : (existing && existing.slug) || null,
+    tz: typeof body.tz === 'string' ? body.tz : (existing && existing.tz) || 'Europe/London',
+    tf: typeof body.tf === 'string' ? body.tf : (existing && existing.tf) || '24',
+    prefs: body.prefs || (existing && existing.prefs) || null,
+    created: existing ? existing.created : now,
+    updated: now,
+  };
+  await env.PUSH_SUBS.put(`sub:${hash}`, JSON.stringify(record));
+  return jsonResponse({ ok: true });
+}
+
+async function handlePushUpdate(request, env) {
+  if (!env.PUSH_SUBS) return errorResponse('Push not configured', 503);
+  let body;
+  try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
+  if (!body.endpoint) return errorResponse('Missing endpoint');
+  const hash = await hashEndpoint(body.endpoint);
+  const existing = await env.PUSH_SUBS.get(`sub:${hash}`, 'json');
+  if (!existing) return errorResponse('Not subscribed', 404);
+  if (body.prefs) existing.prefs = body.prefs;
+  if (typeof body.slug === 'string') existing.slug = body.slug;
+  if (typeof body.tz === 'string') existing.tz = body.tz;
+  existing.updated = Date.now();
+  await env.PUSH_SUBS.put(`sub:${hash}`, JSON.stringify(existing));
+  return jsonResponse({ ok: true });
+}
+
+async function handlePushUnsubscribe(request, env) {
+  if (!env.PUSH_SUBS) return errorResponse('Push not configured', 503);
+  let body;
+  try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
+  if (!body.endpoint) return errorResponse('Missing endpoint');
+  const hash = await hashEndpoint(body.endpoint);
+  await env.PUSH_SUBS.delete(`sub:${hash}`);
+  return jsonResponse({ ok: true });
+}
+
+// "Prayed" tap → marker the scheduler checks before sending jama'at/end pushes.
+async function handlePushPrayed(request, env) {
+  if (!env.PUSH_SUBS) return errorResponse('Push not configured', 503);
+  let body;
+  try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
+  if (!body.endpoint || !body.prayer) return errorResponse('Missing endpoint or prayer');
+  const hash = await hashEndpoint(body.endpoint);
+  const date = londonDateStr();
+  await env.PUSH_SUBS.put(`prayed:${hash}:${body.prayer}:${date}`, '1', { expirationTtl: 36 * 3600 });
+  return jsonResponse({ ok: true });
+}
+
+// ============================================================
 // Main fetch handler
 // ============================================================
 
@@ -723,6 +807,24 @@ export default {
 
     if (path === '/api/update' && request.method === 'POST') {
       return handleUpdate(request, env);
+    }
+
+    // --- Push notification endpoints (v1) ---
+
+    if (path === '/api/push/vapid-public-key' && request.method === 'GET') {
+      return jsonResponse({ key: env.VAPID_PUBLIC_KEY || null });
+    }
+    if (path === '/api/push/subscribe' && request.method === 'POST') {
+      return handlePushSubscribe(request, env);
+    }
+    if (path === '/api/push/update' && request.method === 'POST') {
+      return handlePushUpdate(request, env);
+    }
+    if (path === '/api/push/unsubscribe' && request.method === 'POST') {
+      return handlePushUnsubscribe(request, env);
+    }
+    if (path === '/api/push/prayed' && request.method === 'POST') {
+      return handlePushPrayed(request, env);
     }
 
     // --- Admin endpoints ---

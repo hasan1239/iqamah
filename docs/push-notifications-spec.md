@@ -186,7 +186,20 @@ KV is already used (`env.RATE_LIMITS`); eventually-consistent reads are fine; ac
 
 ---
 
-## 6. Scheduling model — precomputed minute-buckets
+## 6. Scheduling model
+
+> **v1 ships with the per-minute SCAN model** (`push-scheduler/src/index.js`),
+> not the bucket model below. Rationale: one copy of the build logic (in the
+> scheduler), correct immediately on subscribe (no nightly rebuild / incremental
+> build, no triple-duplicated logic), simplest to reason about at launch scale.
+> Each tick lists all `sub:*`, resolves today's reminders to UTC instants, and
+> sends any landing in the current minute. Dedup via `sent:*`; suppression via
+> `prayed:*`; `404/410` deletes the sub. **Cost:** ~1 KV get per subscription per
+> minute → comfortable to ~60 subs on the free tier; beyond that, switch to the
+> bucket model below or Workers Paid (1M reads/day). The bucket model remains the
+> documented scale upgrade:
+
+### Precomputed minute-buckets (scale upgrade — not built)
 
 **Nightly rebuild** (~00:30 UK, after the lockscreen pipeline commits fresh CSVs):
 1. `KV.list({ prefix: "sub:" })` → all subscriptions.

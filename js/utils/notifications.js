@@ -287,12 +287,83 @@ export async function sendTestNotification(masjidName) {
   } catch { return false; }
 }
 
+// --- Server push subscription (v1) ---
+//
+// The foreground scheduler above still runs (instant feedback while the app is
+// open); server pushes use the SAME notification `tag` so the two coalesce
+// rather than double-notify. If VAPID isn't configured server-side yet, the
+// subscribe call no-ops and only the foreground path works.
+
+let vapidKeyCache = null;
+
+async function getVapidKey() {
+  if (vapidKeyCache !== null) return vapidKeyCache;
+  try {
+    const res = await fetch('/api/push/vapid-public-key');
+    const j = await res.json();
+    vapidKeyCache = j.key || '';
+  } catch { vapidKeyCache = ''; }
+  return vapidKeyCache;
+}
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  const arr = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) arr[i] = raw.charCodeAt(i);
+  return arr;
+}
+
+async function removePushSubscription() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (!sub) return;
+    await fetch('/api/push/unsubscribe', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ endpoint: sub.endpoint }),
+    }).catch(() => {});
+    await sub.unsubscribe();
+  } catch { /* ignore */ }
+}
+
+// Create/refresh or tear down the server subscription to match current prefs.
+export async function syncPushSubscription() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  const prefs = loadPrefs();
+  const slug = prefs.slug || localStorage.getItem('iqamah-pinned-masjid');
+
+  if (!prefs.master || getNotificationState() !== 'granted' || !slug) {
+    await removePushSubscription();
+    return;
+  }
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      const key = await getVapidKey();
+      if (!key) return; // server not configured yet — foreground path still works
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(key),
+      });
+    }
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/London';
+    const tf = localStorage.getItem('iqamah-time-format') || '24';
+    await fetch('/api/push/subscribe', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ subscription: sub.toJSON(), prefs, slug, tz, tf }),
+    }).catch(() => {});
+  } catch { /* permission revoked / push unsupported — ignore */ }
+}
+
 // App-wide init (called once from app.js). Reschedules on prefs/pin changes.
 export function initNotifications() {
   if (initialised) return;
   initialised = true;
-  window.addEventListener('iqamah-notif-prefs-changed', () => rescheduleNotifications());
-  window.addEventListener('iqamah-pin-changed', () => rescheduleNotifications());
+  window.addEventListener('iqamah-notif-prefs-changed', () => { rescheduleNotifications(); syncPushSubscription(); });
+  window.addEventListener('iqamah-pin-changed', () => { rescheduleNotifications(); syncPushSubscription(); });
   // The SW relays a "Prayed" notification-action tap; record it and reschedule
   // so the salah's remaining jama'at/end reminders are dropped.
   if ('serviceWorker' in navigator) {
@@ -308,4 +379,5 @@ export function initNotifications() {
     if (document.visibilityState === 'visible') rescheduleNotifications();
   });
   rescheduleNotifications();
+  syncPushSubscription();
 }
