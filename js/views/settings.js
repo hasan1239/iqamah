@@ -183,6 +183,11 @@ export function render(container) {
           <button class="settings-reset-btn" id="resetAppBtn">Reset</button>
         </div>
       </div>
+
+      <p class="settings-attribution">
+        Geographic data © OpenStreetMap contributors.<br>
+        Postcode data from Postcodes.io.
+      </p>
     </div>
   `;
 
