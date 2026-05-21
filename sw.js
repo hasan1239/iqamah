@@ -30,8 +30,20 @@ self.addEventListener('message', event => {
 // open a new one. data.url is set by the foreground scheduler (js/utils/notifications.js).
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  if (event.action === 'dismiss') return; // "Dismiss" action — just close
-  const target = (event.notification.data && event.notification.data.url) || '/';
+  const data = event.notification.data || {};
+
+  // "Prayed" — don't open the app; relay to any open client so it can mark the
+  // salah done for today and cancel the remaining jama'at/end reminders.
+  if (event.action === 'prayed') {
+    event.waitUntil(
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
+        clients.forEach(c => c.postMessage({ type: 'iqamah-prayed', prayer: data.prayer }));
+      })
+    );
+    return;
+  }
+
+  const target = data.url || '/';
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
       for (const client of clients) {
