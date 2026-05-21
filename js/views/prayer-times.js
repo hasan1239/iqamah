@@ -54,7 +54,7 @@ const PROVIDER_LABELS = {
   masjidbox: 'MasjidBox',
   londonprayertimes: 'LondonPrayerTimes',
   masjidal: 'Masjidal',
-  image: 'Community upload',
+  image: 'Timetable',
   manual: 'Entered by maintainer',
 };
 
@@ -69,11 +69,25 @@ function renderMasjidLogo(cfg) {
 
 function renderSourceTag(cfg) {
   const provider = cfg && cfg.provider;
-  if (!provider || !provider.type) return '';
-  const label = PROVIDER_LABELS[provider.type] || provider.type;
-  const isExternal = provider.type === 'mawaqit' || provider.type === 'esalaat' || provider.type === 'londonprayertimes';
-  const providerHtml = isExternal && provider.source_url
-    ? `<a href="${provider.source_url}" target="_blank" rel="noopener" class="source-link">${label}</a>`
+  const ptype = provider && provider.type;
+
+  // A user-uploaded timetable is the "image" source — also covers legacy
+  // configs that only carry a source_image with no provider block.
+  const isTimetable = ptype === 'image' || (!ptype && cfg && cfg.source_image);
+  const type = isTimetable ? 'image' : ptype;
+  if (!type) return '';
+
+  const label = PROVIDER_LABELS[type] || type;
+
+  // External providers link to their site; uploaded timetables link to the image.
+  let sourceUrl = null;
+  if (isTimetable) {
+    sourceUrl = (provider && provider.source_url) || (cfg.source_image ? `/data/${cfg.source_image}` : null);
+  } else if (provider.source_url && (type === 'mawaqit' || type === 'esalaat' || type === 'londonprayertimes')) {
+    sourceUrl = provider.source_url;
+  }
+  const providerHtml = sourceUrl
+    ? `<a href="${sourceUrl}" target="_blank" rel="noopener" class="source-link">${label}</a>`
     : label;
 
   let dateHtml = '';
