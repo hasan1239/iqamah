@@ -13,6 +13,11 @@ const PREFS_KEY = 'iqamah-notif-prefs';
 const FIRED_KEY = 'iqamah-notif-fired';
 const NOTIF_ICON = '/iqamah-icon.png';            // large icon — navy/gold brand mark
 const NOTIF_BADGE = '/iqamah-icon-transparent.png'; // status-bar badge (Android masks to white)
+// Action buttons (Android / installed PWA only — iOS ignores them gracefully).
+const NOTIF_ACTIONS = [
+  { action: 'view', title: 'View times' },
+  { action: 'dismiss', title: 'Dismiss' },
+];
 
 // Default state on first enable: all starts on at-time, jama'at/ends-soon off,
 // Ramadan Suhoor 30m + Iftar at-time. (spec §4)
@@ -175,6 +180,7 @@ async function fireNotification(reminder, masjidName, slug) {
       icon: NOTIF_ICON,
       badge: NOTIF_BADGE,
       data: { url: slug ? `/${slug}` : '/' },
+      actions: NOTIF_ACTIONS,
     });
     markFired(id);
   } catch { /* SW not ready / permission revoked — skip silently */ }
@@ -247,10 +253,7 @@ export async function sendTestNotification(masjidName) {
     await reg.showNotification(title, {
       body, tag: 'iqamah-test', icon: NOTIF_ICON, badge: NOTIF_BADGE,
       data: { url: slug ? `/${slug}` : '/' },
-      actions: [
-        { action: 'view', title: 'View times' },
-        { action: 'dismiss', title: 'Dismiss' },
-      ],
+      actions: NOTIF_ACTIONS,
     });
     return true;
   } catch { return false; }
