@@ -133,6 +133,30 @@ All 5 **starts ON at-time**; all **jama'at OFF** (lead 15m when enabled); all **
 - suhoor → "Suhoor ends in 30 min · 4:12 AM"
 - iftar → "Iftar — time to break your fast · 8:45 PM"
 
+### Notification actions
+
+Every reminder (and the dev test notification) carries two action buttons. They
+render on Android / installed PWAs; iOS ignores them gracefully.
+
+- **View times** — opens the masjid page (`data.url` = `/{slug}`).
+- **Prayed** — marks that salah done **for today** so its remaining **jama'at and end**
+  reminders are suppressed (the user has already prayed; don't nag). Does NOT open the app.
+
+Notification `data` includes `{ url, prayer }`. `notificationclick` in `sw.js` branches on
+`event.action`: `prayed` posts `{type:'iqamah-prayed', prayer}` to open clients and returns
+without opening; anything else focuses/opens `data.url`.
+
+**Prayed-guard wiring:**
+- **v0** — the page receives the SW message, records the prayer in `iqamah-notif-prayed`
+  (localStorage, `{ "YYYY-MM-DD": [prayerKeys] }`, pruned to today), and reschedules; the
+  foreground loop skips `jamaat`/`end` for any prayed prayer. (Limitation: app-open only — if
+  the app is fully closed the page can't record it, but in v0 nothing fires then anyway.)
+- **v1** — the "Prayed" tap must reach the server to cancel the already-scheduled pushes. Add
+  `POST /api/push/prayed { endpoint, prayer }` (called from the SW's `notificationclick`, or
+  relayed via the page) that writes a `prayed:{endpointHash}:{slug}:{prayer}:{date}` KV marker
+  (TTL ~36h); the per-minute cron skips a `jamaat`/`end` send when that marker exists. The SW
+  relay is already in place from v0, so this is an additive endpoint + a cron check.
+
 ---
 
 ## 5. Subscription storage — Cloudflare KV (`PUSH_SUBS`)
@@ -205,16 +229,19 @@ KV is already used (`env.RATE_LIMITS`); eventually-consistent reads are fine; ac
 
 ## 10. Phased rollout
 
-### v0 — "best-effort, app-open" (ship first; zero infra)
-- No server / VAPID / KV. Build the **full settings UI** (§4) writing to `iqamah-notif-prefs`.
-- Foreground scheduler: while the app is open, fire `registration.showNotification(...)` at the right times (reuse the countdown machinery in `prayer-times.js`).
-- Honest UI note: "Reminders currently work while the app is open. Background reminders coming soon."
-- **Validates** copy, settings UX, and the per-prayer/lead model before the hard server work.
+### v0 — "best-effort, app-open" (BUILT on branch `feature/salah-notifications`; zero infra)
+- No server / VAPID / KV. Full settings UI (§4) writing to `iqamah-notif-prefs`.
+- Foreground scheduler: while the app is open, fires `registration.showNotification(...)` at the right times via `js/utils/prayer-schedule.js` + `js/utils/notifications.js`.
+- Branded icon/badge + action buttons (View times / Prayed). `notificationclick` handler in `sw.js`.
+- TEMP dev-only "Send test notification" button (remove/gate before merge).
+- The app-open caveat note was dropped (Hasan-only on the branch until v1 lands).
+- **Validates** copy, settings UX, branding, and the per-prayer/lead model before the hard server work.
 
 ### v1 — server push
-- Add VAPID, `PUSH_SUBS` KV, the four Pages endpoints, `sw.js` push/notificationclick handlers, the `push-scheduler` Worker (cron + nightly rebuild + 410-cleanup).
+- Add VAPID, `PUSH_SUBS` KV, the Pages endpoints (`subscribe`/`update`/`unsubscribe`/`vapid-public-key` + `prayed`), `sw.js` `push` handler, the `push-scheduler` Worker (cron + nightly rebuild + 410-cleanup).
 - Real permission flow + iOS install gate.
 - Migrate v0 localStorage prefs into the subscription record on first subscribe.
+- Wire the "Prayed" action to `POST /api/push/prayed` so server-scheduled jama'at/end pushes are cancelled (see §4 Notification actions). SW relay already exists from v0.
 
 ### v2 (future, optional)
 DO-alarm precision; masjid-initiated announcements (needs query-friendly store); Jummah; "remind in my own local clock" for travellers.
@@ -238,7 +265,7 @@ DO-alarm precision; masjid-initiated announcements (needs query-friendly store);
 **Changed**
 | File | Change |
 |---|---|
-| `sw.js` | add `push` (showNotification) + `notificationclick` (focus/open `/{slug}`); bump `APP_VERSION` |
+| `sw.js` | `notificationclick` (View/Prayed actions: open `/{slug}` or relay `iqamah-prayed`) — done in v0; add `push` (showNotification) in v1; bump `APP_VERSION` on merge |
 | `_worker.js` | routes `POST /api/push/{subscribe,update,unsubscribe}`, `GET /api/push/vapid-public-key`; reuse `isRateLimited`/`jsonResponse`; add `PUSH_SUBS` binding |
 | `js/utils/pwa.js` | export `canUsePush()` = `isStandalone()`/`isIOSSafari()`/`'PushManager' in window` |
 | `js/views/settings.js` | mount the Notifications group |
