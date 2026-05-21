@@ -1881,6 +1881,58 @@
     .theme-segmented button:hover { color: var(--toggle-inactive-hover); }
     .theme-segmented button.active { color: #1a1a2e; }
 
+    /* Notification settings */
+    .notif-info-card {
+      font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;
+      padding: 10px 14px; margin: 4px 0 0;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    }
+    .notif-v0-note { border-left: 2px solid var(--gold); }
+    .notif-denied { color: var(--error); border-color: var(--error); }
+
+    .notif-detail { opacity: 0.45; pointer-events: none; transition: opacity 0.2s; }
+    .notif-detail.notif-enabled { opacity: 1; pointer-events: auto; }
+    .notif-detail-group { margin-bottom: 24px; }
+
+    .notif-prayer {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      margin-bottom: 4px; overflow: hidden;
+    }
+    .notif-prayer-head {
+      width: 100%; display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px; background: none; border: none; cursor: pointer;
+      color: inherit; font-family: inherit; text-align: left;
+    }
+    .notif-prayer-name { font-size: 0.95rem; color: var(--text-primary); font-weight: 600; min-width: 64px; }
+    .notif-prayer-summary { flex: 1; font-size: 0.8rem; color: var(--text-muted); }
+    .notif-prayer-chevron { color: var(--text-muted); display: flex; transition: transform 0.2s; }
+    .notif-prayer.open .notif-prayer-chevron { transform: rotate(90deg); }
+    .notif-prayer-body { display: none; padding: 0 16px 14px; }
+    .notif-prayer.open .notif-prayer-body { display: block; }
+
+    .notif-sub { padding-top: 12px; border-top: 1px solid var(--divider); margin-top: 4px; }
+    .notif-sub:first-child { border-top: none; margin-top: 0; }
+    .notif-sub-top { display: flex; justify-content: space-between; align-items: center; }
+    .notif-sub-label { font-size: 0.9rem; color: var(--text-primary); }
+    .notif-aside { font-size: 0.78rem; color: var(--text-muted); font-style: italic; padding-top: 12px; }
+
+    .notif-leads { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .notif-chip {
+      padding: 5px 12px; border: 1px solid var(--divider); border-radius: 16px;
+      background: transparent; color: var(--text-muted); font-size: 0.78rem; font-weight: 600;
+      font-family: inherit; cursor: pointer; transition: all 0.2s;
+    }
+    .notif-chip:hover { border-color: var(--gold); }
+    .notif-chip.active { background: var(--gold); border-color: var(--gold); color: #1a1a2e; }
+
+    .notif-extra {
+      padding: 14px 16px; background: var(--card-bg);
+      border: 1px solid var(--card-border); border-radius: 12px;
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); margin-bottom: 4px;
+    }
+
     /* ============================================
        ADD MASJID VIEW
        ============================================ */

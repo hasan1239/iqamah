@@ -4,6 +4,7 @@ import { initBackground } from './background.js';
 import { initRouter, navigate } from './router.js';
 import { initNav, updateActiveTab } from './nav.js';
 import { registerServiceWorker, initInstallPrompt } from './utils/pwa.js';
+import { initNotifications } from './utils/notifications.js';
 
 const viewModules = {};
 let currentViewModule = null;
@@ -154,3 +155,4 @@ initNav();
 initInstallPrompt();
 registerServiceWorker();
 initRouter(renderView);
+initNotifications();
