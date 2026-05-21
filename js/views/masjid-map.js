@@ -238,6 +238,14 @@ function addLocateControl(L) {
   map.addControl(new LocateControl());
 }
 
+// Recompute the map's size — needed whenever the container was hidden (e.g.
+// toggled to the list view) and then shown again, or the GL canvas renders white.
+export function refreshMap() {
+  if (!map) return;
+  map.invalidateSize();
+  requestAnimationFrame(() => { if (map) map.invalidateSize(); });
+}
+
 // Pan/zoom the map to a set of [lat, lon] points (e.g. all masjids in a city).
 export function focusBounds(points, { maxZoom = 14 } = {}) {
   if (!map || !points || !points.length) return;

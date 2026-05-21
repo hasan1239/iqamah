@@ -3,7 +3,7 @@ import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
-import { mountMap, unmountMap, focusBounds } from './masjid-map.js';
+import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -744,6 +744,8 @@ async function focusCityOnMap(city) {
   // mid-scroll where the tapped card was.
   window.scrollTo({ top: 0, behavior: 'auto' });
   if (mapReadyPromise) await mapReadyPromise;
+  // Recompute size after the scroll/show settles, then frame the city.
+  refreshMap();
   const points = cachedConfigs
     .filter(c => deriveCity(c) === city)
     .map(c => {
@@ -957,7 +959,14 @@ function setMode(mode) {
   if (mode === 'map') {
     if (listPane) listPane.hidden = true;
     if (mapPane) mapPane.hidden = false;
-    mapReadyPromise = showMap();
+    if (mapMounted) {
+      // Re-showing an already-mounted map: recompute size so the GL canvas
+      // doesn't render white after being hidden.
+      mapReadyPromise = Promise.resolve();
+      refreshMap();
+    } else {
+      mapReadyPromise = showMap();
+    }
   } else {
     if (mapPane) mapPane.hidden = true;
     if (listPane) listPane.hidden = false;
