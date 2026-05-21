@@ -1888,12 +1888,14 @@
       background: var(--card-bg); border: 1px solid var(--card-border);
       border-radius: 10px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     }
-    .notif-v0-note { border-left: 2px solid var(--gold); }
     .notif-denied { color: var(--error); border-color: var(--error); }
 
-    .notif-detail { opacity: 0.45; pointer-events: none; transition: opacity 0.2s; }
+    .notif-detail { opacity: 0.45; pointer-events: none; transition: opacity 0.2s; margin-top: 4px; }
     .notif-detail.notif-enabled { opacity: 1; pointer-events: auto; }
-    .notif-detail-group { margin-bottom: 24px; }
+    .notif-subtitle {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--text-muted); margin: 16px 0 8px; padding-left: 4px;
+    }
 
     .notif-prayer {
       background: var(--card-bg); border: 1px solid var(--card-border);
