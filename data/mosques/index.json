@@ -1210,10 +1210,11 @@
       "source_url": "https://masjidbox.com/prayer-times/aston-university-prayer-room"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-21",
+      "row_count": 3,
       "warnings": [],
       "issues": []
     },
@@ -2310,10 +2311,11 @@
       "source_url": "https://masjidbox.com/prayer-times/east-birmingham-central-masjid"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-21",
+      "row_count": 3,
       "warnings": [],
       "issues": []
     },
@@ -3230,10 +3232,11 @@
       "source_url": "https://masjidbox.com/prayer-times/gulhar-shareef-birmingham"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-21",
+      "row_count": 3,
       "warnings": [],
       "issues": []
     },
@@ -6600,10 +6603,11 @@
       "source_url": "https://masjidbox.com/prayer-times/mohammadi-masjid-alum-rock"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-21",
+      "row_count": 3,
       "warnings": [],
       "issues": []
     },
@@ -8582,10 +8586,11 @@
       "source_url": "https://masjidbox.com/prayer-times/sparkbrook-masjid"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-21",
+      "row_count": 3,
       "warnings": [],
       "issues": []
     },
