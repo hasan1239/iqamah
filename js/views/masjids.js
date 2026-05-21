@@ -3,7 +3,7 @@ import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
-import { mountMap, unmountMap } from './masjid-map.js';
+import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -13,6 +13,64 @@ let longPressTimer = null;
 let toastTimer = null;
 let viewContainer = null;
 let longPressCleanup = null;
+let selectedCity = null;
+let resizeListener = null;
+let lastIsMobile = null;
+
+const MOBILE_BREAKPOINT = 768;
+const STREET_SUFFIX_RE = /\b(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl|Court|Ct|Park|Square|Sq|Crescent|Hill|Terrace|Gardens?|Mews|Grove|Walk|Row)\b\.?$/i;
+const POSTCODE_RE = /\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/i;
+const OTHER_CITY = 'Other';
+
+// UK postcode area → major city rollup. The letter(s) before the first digit
+// of a postcode identify the postcode area (e.g. B = Birmingham). Mapping here
+// is intentionally conservative — only major metros that we want to group as
+// one. Other areas (WD/Watford, HX/Halifax, etc.) fall through to config.city.
+const POSTCODE_AREA_TO_CITY = {
+  // Inner London
+  E: 'London', EC: 'London', N: 'London', NW: 'London',
+  SE: 'London', SW: 'London', W: 'London', WC: 'London',
+  // Outer London / Greater London postcode areas
+  BR: 'London', CR: 'London', DA: 'London', EN: 'London',
+  HA: 'London', IG: 'London', KT: 'London', RM: 'London',
+  SM: 'London', TW: 'London', UB: 'London', WD: 'London',
+  // Other major UK metros
+  B: 'Birmingham',
+  M: 'Manchester',
+  G: 'Glasgow',
+  L: 'Liverpool',
+  BD: 'Bradford',
+  LE: 'Leicester',
+  LS: 'Leeds',
+  CV: 'Coventry',
+  WV: 'Wolverhampton',
+  HX: 'Halifax',
+  HD: 'Huddersfield',
+  EH: 'Edinburgh',
+  CF: 'Cardiff',
+  NP: 'Newport',
+  SA: 'Swansea',
+  NG: 'Nottingham',
+  BS: 'Bristol',
+  S: 'Sheffield',
+  SL: 'Slough',
+  BB: 'Blackburn',
+  PR: 'Preston',
+  // Greater Manchester (Bolton, Oldham, Stockport, Wigan) → Manchester
+  BL: 'Manchester', OL: 'Manchester', SK: 'Manchester', WN: 'Manchester',
+  // West Midlands metropolitan county (Dudley, Walsall) → Birmingham.
+  // Wolverhampton (WV) and Coventry (CV) kept separate — chartered cities.
+  DY: 'Birmingham', WS: 'Birmingham',
+};
+
+// Final fallback: scan for these tokens in address / display name when no
+// postcode and no explicit city.
+const KNOWN_CITY_TOKENS = [
+  'London', 'Birmingham', 'Manchester', 'Glasgow', 'Liverpool',
+  'Bradford', 'Leicester', 'Leeds', 'Coventry', 'Bolton',
+  'Blackburn', 'Halifax', 'Watford', 'Wolverhampton', 'Gloucester',
+  'Smethwick', 'Batley', 'Elland', 'Halesowen',
+];
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -25,12 +83,79 @@ function getCityPostcode(address) {
   return city ? `${city}, ${postcode}` : postcode;
 }
 
+function normaliseCity(city) {
+  if (!city) return OTHER_CITY;
+  let c = city.replace(/\s+/g, ' ').trim();
+  c = c.replace(/^City of\s+/i, '');
+  c = c.replace(/\b(City|Borough|District)\b$/i, '').trim();
+  c = c.replace(/,$/, '').trim();
+  if (!c) return OTHER_CITY;
+  return c.charAt(0).toUpperCase() + c.slice(1);
+}
+
+function cityFromPostcode(addr) {
+  if (!addr) return null;
+  const m = addr.match(POSTCODE_RE);
+  if (!m) return null;
+  const areaMatch = m[0].match(/^([A-Z]{1,2})/i);
+  if (!areaMatch) return null;
+  const area = areaMatch[1].toUpperCase();
+  return POSTCODE_AREA_TO_CITY[area] || null;
+}
+
+function cityFromTokens(text) {
+  if (!text) return null;
+  for (const city of KNOWN_CITY_TOKENS) {
+    if (new RegExp('\\b' + city + '\\b', 'i').test(text)) return city;
+  }
+  return null;
+}
+
+function deriveCity(config) {
+  // 1. Postcode-area rollup wins (groups London boroughs → London, B-area
+  //    suburbs like Smethwick/Halesowen → Birmingham, etc.)
+  const pcCity = cityFromPostcode(config.address);
+  if (pcCity) return pcCity;
+  // 2. Explicit city field
+  if (config.city && config.city.trim()) return normaliseCity(config.city.trim());
+  // 3. Known city token anywhere in address / display name
+  const tokenCity = cityFromTokens(config.address) || cityFromTokens(config.display_name);
+  if (tokenCity) return tokenCity;
+  // 4. Last comma-separated segment of address as final fallback
+  const addr = (config.address || '').trim();
+  if (!addr) return OTHER_CITY;
+  const withoutPC = addr.replace(POSTCODE_RE, '').replace(/[,\.\s]+$/, '').trim();
+  if (!withoutPC) return OTHER_CITY;
+  const parts = withoutPC.split(',').map(s => s.trim()).filter(Boolean);
+  let candidate = parts.length ? parts[parts.length - 1] : withoutPC;
+  candidate = candidate.replace(/\bUK\b\.?/i, '').replace(/\bGreater\b/i, '').trim();
+  if (!candidate) return OTHER_CITY;
+  if (parts.length <= 1 || STREET_SUFFIX_RE.test(candidate)) {
+    const words = candidate.split(/\s+/).filter(Boolean);
+    const last = words[words.length - 1];
+    if (!last || /^(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl)\.?$/i.test(last)) {
+      return OTHER_CITY;
+    }
+    return normaliseCity(last);
+  }
+  return normaliseCity(candidate);
+}
+
+function isMobile() {
+  return window.innerWidth < MOBILE_BREAKPOINT;
+}
+
+function isCityListMode() {
+  return isMobile() && !selectedCity && !locationActive;
+}
+
 // SVG icons
 const STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
 let searchQuery = '';
 let loadGeneration = 0;
@@ -38,13 +163,17 @@ let masjidsLoadPromise = null;
 let hasTimesMap = {}; // slug -> true/false, populated after CSV check
 let viewMode = 'list'; // 'list' | 'map'
 let mapMounted = false;
+let mapReadyPromise = null;
+
+const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 
 export function render(container) {
-  viewContainer = container;
+  selectedCity = null;
   container.innerHTML = `
-    <div class="masjids-view">
+    <div class="masjids-view" data-mode="${isCityListMode() ? 'cities' : 'list'}">
       <header class="masjids-header">
-        <h1 class="masjids-title">Masjids</h1>
+        <button class="masjids-back-btn" id="masjidsBackBtn" aria-label="Back to cities">${BACK_SVG}</button>
+        <h1 class="masjids-title" id="masjidsTitle">Masjids</h1>
       </header>
 
       <div class="masjids-mode-toggle toggle-container" id="masjidsModeToggle" role="tablist" aria-label="View mode">
@@ -54,7 +183,7 @@ export function render(container) {
       </div>
 
       <div class="masjids-list-pane" id="masjidsListPane">
-        <div class="masjids-search-bar">
+        <div class="masjids-search-bar" id="masjidsSearchBar">
           <span class="masjids-search-icon">${SEARCH_SVG}</span>
           <input type="text" id="masjidSearch" class="masjids-search-input" placeholder="Search masjids..." autocomplete="off">
           <button class="location-btn" id="masjidsLocationBtn">
@@ -66,10 +195,22 @@ export function render(container) {
           </button>
         </div>
 
+        <div class="masjids-cities-actions" id="masjidsCitiesActions">
+          <button class="masjids-nearby-pill" id="masjidsNearbyPill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Find masjids near me</span>
+          </button>
+        </div>
+
         ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
           <span>Tip: Long press a masjid to set it as My Masjid</span>
           <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
         </div>` : ''}
+
+        <div class="masjid-city-grid" id="masjidsCityGrid"></div>
 
         <div class="masjid-grid" id="masjidsGrid"></div>
 
@@ -87,17 +228,106 @@ export function render(container) {
     </div>
   `;
 
+  // Hold a reference to .masjids-view itself (not the outer container).
+  // The router moves children out of the transition wrapper after the slide
+  // animation, so the outer container goes empty — but .masjids-view itself
+  // is the moved node, so this reference survives.
+  viewContainer = container.querySelector('.masjids-view');
+
   // Show skeleton immediately
   const grid = viewContainer.querySelector('#masjidsGrid');
   grid.innerHTML = buildSkeletonCards(6);
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  cityGrid.innerHTML = buildCitySkeletons(6);
 
+  lastIsMobile = isMobile();
   masjidsLoadPromise = loadMasjids();
   setupSearch();
   setupLocationBtn();
   setupGridClicks();
   setupLongPress();
   setupPinHint();
+  setupCityNav();
+  setupNearbyPill();
+  setupResizeListener();
   setupModeToggle();
+  updateHeaderState();
+}
+
+function buildCitySkeletons(count) {
+  let html = '';
+  const widths = [80, 110, 70, 95, 85, 100];
+  for (let i = 0; i < count; i++) {
+    const w = widths[i % widths.length];
+    html += `<div class="masjid-city-card" style="pointer-events:none">
+      <div class="masjid-city-card-info">
+        <div class="skeleton-bone" style="width:${w}px;height:14px;margin-bottom:6px"></div>
+        <div class="skeleton-bone" style="width:60px;height:9px"></div>
+      </div>
+      <div class="skeleton-bone" style="width:24px;height:24px;border-radius:8px"></div>
+    </div>`;
+  }
+  return html;
+}
+
+function setupResizeListener() {
+  resizeListener = () => {
+    const nowMobile = isMobile();
+    if (nowMobile !== lastIsMobile) {
+      lastIsMobile = nowMobile;
+      updateHeaderState();
+      renderCards();
+    }
+  };
+  window.addEventListener('resize', resizeListener);
+}
+
+function setupCityNav() {
+  const backBtn = viewContainer && viewContainer.querySelector('#masjidsBackBtn');
+  if (!backBtn) return;
+  backBtn.addEventListener('click', () => {
+    selectedCity = null;
+    searchQuery = '';
+    const input = viewContainer.querySelector('#masjidSearch');
+    if (input) input.value = '';
+    // Reset Nearby too — going back returns the user to the clean cities list,
+    // which doesn't use distance sort.
+    if (locationActive) {
+      locationActive = false;
+      userLocation = null;
+      distanceMap = {};
+      const locBtn = viewContainer.querySelector('#masjidsLocationBtn');
+      if (locBtn) {
+        locBtn.classList.remove('active');
+        const txt = locBtn.querySelector('.location-btn-text');
+        if (txt) txt.textContent = 'Nearby';
+      }
+    }
+    updateHeaderState();
+    renderCards();
+  });
+}
+
+function setupNearbyPill() {
+  const pill = viewContainer && viewContainer.querySelector('#masjidsNearbyPill');
+  if (!pill) return;
+  pill.addEventListener('click', () => {
+    const locBtn = viewContainer.querySelector('#masjidsLocationBtn');
+    if (locBtn) locBtn.click();
+  });
+}
+
+function updateHeaderState() {
+  if (!viewContainer) return;
+  const title = viewContainer.querySelector('#masjidsTitle');
+  if (!title) return;
+  if (isCityListMode()) {
+    viewContainer.setAttribute('data-mode', 'cities');
+    title.textContent = 'Masjids';
+  } else {
+    viewContainer.setAttribute('data-mode', selectedCity ? 'city-detail' : 'list');
+    title.textContent = selectedCity || 'Masjids';
+  }
 }
 
 function buildSkeletonCards(count) {
@@ -141,12 +371,124 @@ async function loadMasjids() {
 }
 
 export function renderCards() {
-  const grid = (viewContainer && viewContainer.querySelector('#masjidsGrid')) || document.getElementById('masjidsGrid');
+  if (!viewContainer) return;
+  updateHeaderState();
+
+  if (isCityListMode()) {
+    renderCityGrid();
+    return;
+  }
+  renderMasjidGrid();
+}
+
+function getCachedLocation() {
+  if (userLocation) return userLocation;
+  try {
+    const c = JSON.parse(localStorage.getItem('iqamah-cached-location') || 'null');
+    if (c && c.lat != null && c.lon != null) return c;
+  } catch { /* ignore */ }
+  return null;
+}
+
+function renderCityGrid() {
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  if (!cityGrid) return;
+
+  const counts = {};
+  cachedConfigs.forEach(config => {
+    const city = deriveCity(config);
+    counts[city] = (counts[city] || 0) + 1;
+  });
+
+  // Auto-surface the city of the pinned masjid (My Masjid) to the top.
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
+  const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
+
+  // Last city the user drilled into (fallback ordering signal).
+  const lastCity = localStorage.getItem('iqamah-last-city');
+
+  // Distance to the nearest masjid in each city, from a cached/live location.
+  const loc = getCachedLocation();
+  const cityDist = {};
+  if (loc) {
+    cachedConfigs.forEach(config => {
+      const lat = config.lat != null ? config.lat : config.latitude;
+      const lon = config.lon != null ? config.lon : config.longitude;
+      if (lat == null || lon == null) return;
+      const city = deriveCity(config);
+      const d = haversineDistance(loc.lat, loc.lon, lat, lon);
+      if (cityDist[city] == null || d < cityDist[city]) cityDist[city] = d;
+    });
+  }
+
+  const cities = Object.keys(counts).sort((a, b) => {
+    // Pinned city (My Masjid's city) always floats to the top
+    if (pinnedCity) {
+      if (a === pinnedCity && b !== pinnedCity) return -1;
+      if (b === pinnedCity && a !== pinnedCity) return 1;
+    }
+    // "Other" always sinks to the bottom
+    if (a === OTHER_CITY && b !== OTHER_CITY) return 1;
+    if (b === OTHER_CITY && a !== OTHER_CITY) return -1;
+    // Last-viewed city next (below pinned)
+    if (lastCity && lastCity !== pinnedCity) {
+      if (a === lastCity && b !== lastCity) return -1;
+      if (b === lastCity && a !== lastCity) return 1;
+    }
+    // Then by distance to nearest masjid when we know where the user is
+    if (loc) {
+      const da = cityDist[a], db = cityDist[b];
+      if (da != null && db != null && da !== db) return da - db;
+      if (da != null && db == null) return -1;
+      if (da == null && db != null) return 1;
+    }
+    return a.localeCompare(b, undefined, { sensitivity: 'base' });
+  });
+
+  if (cities.length === 0) {
+    cityGrid.innerHTML = `<div class="masjids-empty">No masjids found</div>`;
+    return;
+  }
+
+  cityGrid.innerHTML = cities.map(city => {
+    const n = counts[city];
+    const safeCity = city.replace(/"/g, '&quot;');
+    const isPinned = city === pinnedCity;
+    const isRecent = !isPinned && city === lastCity && city !== OTHER_CITY;
+    let badge = '';
+    if (isPinned) badge = `<span class="masjid-city-badge">${STAR_FILLED_SVG} My city</span>`;
+    else if (isRecent) badge = `<span class="masjid-city-badge recent">Recent</span>`;
+
+    const d = cityDist[city];
+    const distText = d != null ? ` &middot; ${d < 0.1 ? '< 0.1' : d.toFixed(1)} mi` : '';
+
+    return `<button type="button" class="masjid-city-card${isPinned ? ' pinned-city' : ''}" data-city="${safeCity}">
+      <div class="masjid-city-card-info">
+        <div class="masjid-city-name">${city}${badge}</div>
+        <div class="masjid-city-count">${n} masjid${n === 1 ? '' : 's'}${distText}</div>
+      </div>
+      <div class="masjid-city-actions">
+        <span class="masjid-city-map-btn" role="button" tabindex="0" aria-label="Show ${safeCity} on map">${MAP_PIN_SVG}</span>
+        <span class="masjid-city-chevron">${CHEVRON_SVG}</span>
+      </div>
+    </button>`;
+  }).join('');
+}
+
+function renderMasjidGrid() {
+  const grid = viewContainer.querySelector('#masjidsGrid');
   if (!grid) return;
 
   const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
 
   let filtered = cachedConfigs.slice();
+
+  // City filter — keep filtering when Nearby is on inside a city so distance
+  // sort applies only to that city's masjids.
+  if (selectedCity && isMobile()) {
+    filtered = filtered.filter(c => deriveCity(c) === selectedCity);
+  }
 
   // Apply search filter
   if (searchQuery) {
@@ -367,6 +709,52 @@ function setupSearch() {
 
 function setupGridClicks() {
   document.addEventListener('click', handlePinClick, true);
+  if (!viewContainer) return;
+  const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
+  if (cityGrid) cityGrid.addEventListener('click', handleCityCardClick);
+}
+
+function handleCityCardClick(e) {
+  // Map button on a city card → open the map focused on that city
+  const mapBtn = e.target.closest('.masjid-city-map-btn');
+  if (mapBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    const c = mapBtn.closest('.masjid-city-card[data-city]');
+    if (c) focusCityOnMap(c.dataset.city);
+    return;
+  }
+
+  const card = e.target.closest('.masjid-city-card[data-city]');
+  if (!card) return;
+  selectedCity = card.dataset.city;
+  searchQuery = '';
+  try { localStorage.setItem('iqamah-last-city', selectedCity); } catch { /* ignore */ }
+  const input = viewContainer && viewContainer.querySelector('#masjidSearch');
+  if (input) input.value = '';
+  updateHeaderState();
+  renderCards();
+  if (viewContainer) viewContainer.scrollIntoView({ behavior: 'instant', block: 'start' });
+}
+
+async function focusCityOnMap(city) {
+  // Switch to map mode (mounts the map lazily) then frame that city's masjids.
+  setMode('map');
+  // Scroll back to the top so the map fills the viewport instead of opening
+  // mid-scroll where the tapped card was.
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  if (mapReadyPromise) await mapReadyPromise;
+  // Recompute size after the scroll/show settles, then frame the city.
+  refreshMap();
+  const points = cachedConfigs
+    .filter(c => deriveCity(c) === city)
+    .map(c => {
+      const lat = c.lat != null ? c.lat : c.latitude;
+      const lon = c.lon != null ? c.lon : c.longitude;
+      return (lat != null && lon != null) ? [lat, lon] : null;
+    })
+    .filter(Boolean);
+  focusBounds(points);
 }
 
 function handlePinClick(e) {
@@ -382,7 +770,7 @@ function handlePinClick(e) {
 }
 
 function setupLongPress() {
-  const view = (viewContainer && viewContainer.querySelector('.masjids-view')) || document.querySelector('.masjids-view');
+  const view = viewContainer || document.querySelector('.masjids-view');
   if (!view) return;
 
   let pressTarget = null;
@@ -487,6 +875,7 @@ function setupLocationBtn() {
       distanceMap = {};
       btn.classList.remove('active');
       textEl.textContent = 'Nearby';
+      updateHeaderState();
       renderCards();
       return;
     }
@@ -521,6 +910,7 @@ function setupLocationBtn() {
       locationActive = true;
       btn.classList.add('active');
       textEl.textContent = 'Nearby';
+      updateHeaderState();
       renderCards();
     } catch (err) {
       btn.classList.remove('loading');
@@ -553,7 +943,7 @@ function setMode(mode) {
   if (mode === viewMode) return;
   viewMode = mode;
 
-  const root = (viewContainer && viewContainer.querySelector('.masjids-view')) || document;
+  const root = viewContainer || document;
   const slider = root.querySelector('#masjidsModeToggle .toggle-slider');
   const btns = root.querySelectorAll('#masjidsModeToggle .toggle-btn');
   const listPane = root.querySelector('#masjidsListPane');
@@ -569,7 +959,14 @@ function setMode(mode) {
   if (mode === 'map') {
     if (listPane) listPane.hidden = true;
     if (mapPane) mapPane.hidden = false;
-    showMap();
+    if (mapMounted) {
+      // Re-showing an already-mounted map: recompute size so the GL canvas
+      // doesn't render white after being hidden.
+      mapReadyPromise = Promise.resolve();
+      refreshMap();
+    } else {
+      mapReadyPromise = showMap();
+    }
   } else {
     if (mapPane) mapPane.hidden = true;
     if (listPane) listPane.hidden = false;
@@ -638,13 +1035,16 @@ export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
+  if (resizeListener) { window.removeEventListener('resize', resizeListener); resizeListener = null; }
   document.removeEventListener('click', handlePinClick, true);
   unmountMap();
   mapMounted = false;
+  mapReadyPromise = null;
   viewMode = 'list';
   locationActive = false;
   userLocation = null;
   distanceMap = {};
   searchQuery = '';
+  selectedCity = null;
   viewContainer = null;
 }
