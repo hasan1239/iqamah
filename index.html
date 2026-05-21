@@ -915,8 +915,87 @@
        MASJIDS VIEW
        ============================================ */
     .masjids-view { padding-bottom: 40px; }
-    .masjids-header { margin-bottom: 16px; }
+    .masjids-header { margin-bottom: 12px; }
     .masjids-header h1 { font-size: 1.3rem; color: var(--gold); font-weight: 600; margin: 0; }
+    .masjids-mode-toggle { width: 100%; margin-bottom: 14px; }
+    .toggle-slider.shifted { transform: translateX(100%); }
+
+    /* Map pane */
+    .masjids-map-pane { margin-top: 0; }
+    .masjids-map {
+      width: 100%; height: calc(100dvh - 172px); min-height: 420px;
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--card-border); background: var(--card-bg);
+    }
+    .masjids-map-error { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    @media (min-width: 768px) { .masjids-map { height: calc(100vh - 188px); } }
+
+    /* Leaflet theming to match the design system */
+    .leaflet-container { font-family: inherit; background: var(--card-bg); }
+    .masjid-map-pin-dot {
+      display: block; width: 22px; height: 22px; margin: 4px auto 0;
+      background: linear-gradient(135deg, var(--gold-hover), var(--gold-dark));
+      border: 2px solid #fff; border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg); box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+    }
+    .masjid-map-cluster {
+      display: flex !important; align-items: center; justify-content: center;
+      width: 40px; height: 40px; box-sizing: border-box;
+      background: radial-gradient(circle, var(--gold), var(--gold-dark));
+      color: #0a0a0a; font-weight: 700; font-size: 0.85rem; font-family: inherit;
+      border-radius: 50%; border: 2px solid rgba(255,255,255,0.7);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .masjid-map-cluster span { display: block; line-height: 1; text-align: center; }
+    .masjid-map-user-dot {
+      display: block; width: 16px; height: 16px; border-radius: 50%;
+      background: #2e7dd1; border: 2px solid #fff;
+      box-shadow: 0 0 0 4px rgba(46,125,209,0.3); animation: mapUserPulse 2s ease-out infinite;
+    }
+    @keyframes mapUserPulse {
+      0% { box-shadow: 0 0 0 0 rgba(46,125,209,0.4); }
+      70% { box-shadow: 0 0 0 12px rgba(46,125,209,0); }
+      100% { box-shadow: 0 0 0 0 rgba(46,125,209,0); }
+    }
+    .masjid-map-locate {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; padding: 0; cursor: pointer;
+      background: #fff; color: #333; border: none; border-radius: 4px;
+    }
+    .masjid-map-locate svg { width: 18px; height: 18px; }
+    .masjid-map-locate.loading svg { animation: spin 1s linear infinite; }
+    .masjid-map-locate.error { color: #e74c3c; }
+    /* Popups — light card with dark text in all themes (Leaflet renders the
+       popup on a white background, so dark text reads clearly). Selectors are
+       scoped under .leaflet-popup so they beat Leaflet's own CSS regardless of
+       stylesheet load order. */
+    .leaflet-popup .leaflet-popup-content-wrapper {
+      background: #ffffff; color: #1a1a2e;
+      border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+    }
+    .leaflet-popup .leaflet-popup-tip { background: #ffffff; }
+    .leaflet-popup-content { margin: 12px 14px; }
+    .map-popup { min-width: 210px; }
+    .map-popup-name { font-size: 0.95rem; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
+    .map-popup-addr { font-size: 0.72rem; color: #4a4a55; margin-bottom: 8px; line-height: 1.3; }
+    .map-popup-times { margin-bottom: 8px; }
+    .map-popup-times-loading, .map-popup-times-none { font-size: 0.75rem; color: #6a6a75; padding: 4px 0; }
+    .map-popup-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+    .map-popup-table th {
+      text-align: right; font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.4px; color: #9a7a10; padding: 0 0 4px; border-bottom: 1px solid #e2ddc9;
+    }
+    .map-popup-table th:first-child { text-align: left; }
+    .map-popup-table td { padding: 3px 0; text-align: right; color: #1a1a2e; font-weight: 600; }
+    .map-popup-table tr td.map-popup-salah { text-align: left; font-weight: 700; color: #1a1a2e; }
+    .map-popup-table tbody tr + tr td { border-top: 1px solid #f0ece0; }
+    .leaflet-popup-content a.map-popup-link { display: inline-block; font-size: 0.8rem; font-weight: 700; color: #9a7a10; text-decoration: none; }
+    .leaflet-popup-content a.map-popup-link:hover { color: #b8941f; text-decoration: underline; }
+    .leaflet-popup-close-button { color: #888 !important; }
+    :root[data-theme="dark"] .leaflet-control-zoom a,
+    :root[data-theme="night"] .leaflet-control-zoom a {
+      background: #1a2630; color: #ddd; border-color: rgba(255,255,255,0.15);
+    }
     .masjids-search-bar {
       display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
       padding: 6px 6px 6px 14px; background: var(--card-bg); border: 1px solid var(--card-border);
@@ -1881,6 +1960,7 @@
       .desktop-masjid-list .masjids-header { display: flex; align-items: center; gap: 12px; }
       .desktop-masjid-list .masjids-title { font-size: 0; }
       .desktop-masjid-list .masjids-title::after { content: 'All Masjids'; font-size: 1.5rem; font-family: inherit; }
+      .desktop-masjid-list .masjids-mode-toggle { display: none; }
     }
     /* ============================================
        Eid Times Page
