@@ -3,7 +3,7 @@
 // See docs/push-notifications-spec.md §4 for the model. v0 = app-open only.
 
 import {
-  loadPrefs, savePrefs, getNotificationState, requestPermission,
+  loadPrefs, savePrefs, getNotificationState, requestPermission, sendTestNotification,
 } from '../utils/notifications.js';
 
 const BELL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
@@ -137,6 +137,7 @@ export function renderNotifications(season, pinnedName) {
         <div class="settings-item-left"><span class="settings-icon">${MOSQUE_SVG}</span><span class="settings-label">Remind me for</span></div>
         <span class="settings-value">${pinnedName || 'No masjid pinned'}</span>
       </div>
+      <button type="button" id="notifTestBtn" class="notif-test-btn" data-masjid="${pinnedName || ''}">Send test notification</button>
       ${state === 'denied' ? '<div class="notif-info-card notif-denied">Notifications are blocked. Enable them for this site in your browser settings, then turn this on.</div>' : ''}`;
   }
 
@@ -198,6 +199,18 @@ export function setupNotifications(container) {
       }
       savePrefs(prefs);
       refreshEnabled();
+    });
+  }
+
+  // TEMP: test-notification button.
+  const testBtn = container.querySelector('#notifTestBtn');
+  if (testBtn) {
+    testBtn.addEventListener('click', async () => {
+      const original = testBtn.textContent;
+      testBtn.disabled = true;
+      const ok = await sendTestNotification(testBtn.dataset.masjid || '');
+      testBtn.textContent = ok ? 'Sent — check your notifications' : 'Blocked — allow notifications first';
+      setTimeout(() => { testBtn.textContent = original; testBtn.disabled = false; }, 2500);
     });
   }
 

@@ -231,6 +231,25 @@ export async function rescheduleNotifications() {
   scheduleMidnightRollover();
 }
 
+// TEMP (dev): fire a representative sample notification immediately so the
+// look/feel can be checked without waiting for a prayer time. Bypasses the
+// fired-guard so it can be triggered repeatedly. Remove before v1 ships.
+export async function sendTestNotification(masjidName) {
+  if (getNotificationState() !== 'granted') {
+    const s = await requestPermission();
+    if (s !== 'granted') return false;
+  }
+  const sample = { kind: 'jamaat', label: 'Asr', lead: 15, prayer: 'asr', timeStr: '18:45', isAM: false };
+  const { title, body } = buildCopy(sample, masjidName);
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    await reg.showNotification(title, {
+      body, tag: 'iqamah-test', icon: NOTIF_ICON, badge: NOTIF_BADGE, data: { url: '/' },
+    });
+    return true;
+  } catch { return false; }
+}
+
 // App-wide init (called once from app.js). Reschedules on prefs/pin changes.
 export function initNotifications() {
   if (initialised) return;
