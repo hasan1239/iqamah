@@ -30,6 +30,7 @@ self.addEventListener('message', event => {
 // open a new one. data.url is set by the foreground scheduler (js/utils/notifications.js).
 self.addEventListener('notificationclick', event => {
   event.notification.close();
+  if (event.action === 'dismiss') return; // "Dismiss" action — just close
   const target = (event.notification.data && event.notification.data.url) || '/';
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
