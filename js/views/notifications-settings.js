@@ -140,7 +140,6 @@ export function renderNotifications(season, pinnedName) {
         <div class="settings-item-left"><span class="settings-icon">${MOSQUE_SVG}</span><span class="settings-label">Remind me for</span></div>
         <span class="settings-value">${pinnedName || 'No masjid pinned'}</span>
       </div>
-      <div class="notif-info-card notif-v0-note">Reminders currently work while the app is open. Background reminders are coming soon.</div>
       ${state === 'denied' ? '<div class="notif-info-card notif-denied">Notifications are blocked. Enable them for this site in your browser settings, then turn this on.</div>' : ''}`;
   }
 
@@ -151,27 +150,24 @@ export function renderNotifications(season, pinnedName) {
   if (showDetail) {
     const prayersHtml = PRAYERS.map(p => prayerRow(p, prefs)).join('');
     const ramadanHtml = season === 'ramadan' ? `
-      <div class="settings-group notif-detail-group">
-        <div class="settings-group-title">Ramadan</div>
-        ${ramadanRow('suhoor', 'Suhoor ends', 'Before Sehri ends', prefs.ramadanExtras.suhoor)}
-        ${ramadanRow('iftar', 'Iftar', 'At Maghrib / iftar time', prefs.ramadanExtras.iftar)}
-      </div>` : '';
+      <div class="notif-subtitle">Ramadan</div>
+      ${ramadanRow('suhoor', 'Suhoor ends', 'Before Sehri ends', prefs.ramadanExtras.suhoor)}
+      ${ramadanRow('iftar', 'Iftar', 'At Maghrib / iftar time', prefs.ramadanExtras.iftar)}` : '';
     detail = `
       <div class="notif-detail${enabledClass}" id="notifDetail">
-        <div class="settings-group notif-detail-group">
-          <div class="settings-group-title">Prayers</div>
-          ${prayersHtml}
-        </div>
+        ${prayersHtml}
         ${ramadanHtml}
       </div>`;
   }
 
+  // Prayers + Ramadan live inside the same "Prayer Reminders" group (no separate
+  // heading) so they don't read as a distinct feature.
   return `
     <div class="settings-group" id="notifMasterGroup">
       <div class="settings-group-title">Prayer Reminders</div>
       ${masterInner}
-    </div>
-    ${detail}`;
+      ${detail}
+    </div>`;
 }
 
 // Wire all interactions within `container` (the settings view root).
