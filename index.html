@@ -510,20 +510,18 @@
       font-size: 0.85rem;
     }
 
-    /* Global attribution footer (OSM/Postcodes.io) */
-    .site-footer {
+    /* Attribution line (OSM/Postcodes.io) — shown only on the Settings page */
+    .settings-attribution {
       text-align: center;
-      padding: 16px 20px 8px;
-      margin-top: 32px;
+      padding: 8px 20px 0;
+      margin: 20px auto 0;
       font-size: 0.65rem;
       color: var(--text-muted);
       opacity: 0.55;
       line-height: 1.5;
       max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
     }
-    .site-footer a { color: inherit; }
+    .settings-attribution a { color: inherit; }
 
     /* Error */
     .error { text-align: center; padding: 60px 20px; font-size: 1.1rem; color: var(--error); }
@@ -2169,11 +2167,6 @@
 
   <!-- App content area -->
   <div id="app"></div>
-
-  <!-- Global attribution footer -->
-  <footer class="site-footer">
-    Geographic data © OpenStreetMap contributors. Postcode data from Postcodes.io.
-  </footer>
 
   <!-- Bottom navigation bar -->
   <nav id="bottom-nav" class="bottom-nav"></nav>
