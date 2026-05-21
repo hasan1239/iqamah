@@ -26,20 +26,51 @@ self.addEventListener('message', event => {
   }
 });
 
+// Push: server-sent reminder (v1). Payload is JSON with the rendered copy +
+// routing data; the scheduler Worker builds it. Falls back gracefully if empty.
+self.addEventListener('push', event => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
+  const title = data.title || 'Prayer reminder';
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: data.body || '',
+      tag: data.tag || undefined,
+      icon: '/iqamah-icon.png',
+      badge: '/iqamah-icon-transparent.png',
+      data: { url: data.url || '/', prayer: data.prayer },
+      actions: [
+        { action: 'view', title: 'View times' },
+        { action: 'prayed', title: 'Prayed' },
+      ],
+    })
+  );
+});
+
 // Notification click: focus an existing tab (navigating it to the target) or
 // open a new one. data.url is set by the foreground scheduler (js/utils/notifications.js).
 self.addEventListener('notificationclick', event => {
   event.notification.close();
   const data = event.notification.data || {};
 
-  // "Prayed" — don't open the app; relay to any open client so it can mark the
-  // salah done for today and cancel the remaining jama'at/end reminders.
+  // "Prayed" — don't open the app. Mark the salah done so its remaining
+  // jama'at/end reminders are suppressed, both client-side (open page →
+  // localStorage, v0) and server-side (POST /api/push/prayed → KV, v1).
   if (event.action === 'prayed') {
-    event.waitUntil(
-      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
-        clients.forEach(c => c.postMessage({ type: 'iqamah-prayed', prayer: data.prayer }));
-      })
-    );
+    event.waitUntil((async () => {
+      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      clients.forEach(c => c.postMessage({ type: 'iqamah-prayed', prayer: data.prayer }));
+      try {
+        const sub = await self.registration.pushManager.getSubscription();
+        if (sub && data.prayer) {
+          await fetch('/api/push/prayed', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ endpoint: sub.endpoint, prayer: data.prayer }),
+          });
+        }
+      } catch { /* offline / no sub — page-side marker still applies */ }
+    })());
     return;
   }
 
