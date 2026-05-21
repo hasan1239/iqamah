@@ -599,7 +599,7 @@ async function showMap() {
     await mountMap(container, {
       configs: cachedConfigs,
       userLocation: startLoc,
-      loadNext: loadNextForPopup,
+      loadToday: loadTodayForPopup,
     });
   } catch (err) {
     console.error('Map failed to load:', err);
@@ -608,19 +608,27 @@ async function showMap() {
   }
 }
 
-// Fetch today's next jama'at for a single masjid — used to fill map popups on demand.
-async function loadNextForPopup(slug) {
+// Fetch today's prayer times (start + jama'at per salah) for a single masjid —
+// used to fill the map popup table on demand. Mirrors prayer-times.js mapping.
+async function loadTodayForPopup(slug) {
   const config = cachedConfigs.find(c => c.slug === slug);
   if (!config) return null;
   try {
     const csvFile = config.csv || slug + '.csv';
     const res = await fetch(`/data/${csvFile}`);
     if (!res.ok) return null;
-    const todayRow = getTodayRow(parseCSV(await res.text()));
-    if (!todayRow) return null;
-    const next = getNextPrayerFromRow(todayRow);
-    if (!next) return null;
-    return { name: next.name, time: formatCardTime(next.time, next.isAM) };
+    const r = getTodayRow(parseCSV(await res.text()));
+    if (!r) return null;
+    const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '—');
+    const fajrStart = r['Fajr Start'] || r['Subha Sadiq'] || r['Sehri Ends'] || '';
+    const rows = [
+      { name: 'Fajr', start: fmt(fajrStart, true), jamaat: fmt(r["Fajr Jama'at"], true) },
+      { name: 'Dhuhr', start: fmt(r['Zohr'], false), jamaat: fmt(r["Zohar Jama'at"] || '1:00', false) },
+      { name: 'Asr', start: fmt(r['Asr'], false), jamaat: fmt(r["Asr Jama'at"], false) },
+      { name: 'Maghrib', start: fmt(r['Maghrib Iftari'], false), jamaat: fmt(r["Maghrib Jama'at"] || r['Maghrib Iftari'], false) },
+      { name: 'Esha', start: fmt(r['Esha'], false), jamaat: fmt(r["Esha Jama'at"], false) },
+    ];
+    return { rows };
   } catch {
     return null;
   }

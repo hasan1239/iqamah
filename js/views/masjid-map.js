@@ -61,7 +61,7 @@ let tileLayer = null;
 let clusterGroup = null;
 let userMarker = null;
 let themeUnsub = null;
-let loadNextFn = null;
+let loadTodayFn = null;
 
 function styleForTheme(theme) {
   return theme === 'light' ? LIGHT_STYLE : DARK_STYLE;
@@ -103,30 +103,43 @@ function popupHtml(config) {
     <div class="map-popup" data-slug="${config.slug}">
       <div class="map-popup-name">${config.display_name}</div>
       ${addr}
-      <div class="map-popup-next" data-popup-next="${config.slug}"></div>
+      <div class="map-popup-times" data-popup-times="${config.slug}">
+        <div class="map-popup-times-loading">Loading today's times…</div>
+      </div>
       <a class="map-popup-link" href="/${config.slug}" data-link>View prayer times &rsaquo;</a>
     </div>`;
 }
 
-// Fill in the popup's "next prayer" line once it opens (lazy CSV fetch).
-async function fillPopupNext(config) {
-  if (!loadNextFn) return;
-  const el = document.querySelector(`[data-popup-next="${config.slug}"]`);
+// Fill in the popup's today's-times table once it opens (lazy CSV fetch).
+async function fillPopupTimes(config) {
+  if (!loadTodayFn) return;
+  const el = document.querySelector(`[data-popup-times="${config.slug}"]`);
   if (!el) return;
+  let data = null;
   try {
-    const next = await loadNextFn(config.slug);
-    const fresh = document.querySelector(`[data-popup-next="${config.slug}"]`);
-    if (!fresh) return;
-    if (next) {
-      fresh.innerHTML = `<span class="map-popup-next-label">${next.name}</span> <span class="map-popup-next-time">${next.time}</span>`;
-    } else {
-      fresh.innerHTML = '';
-    }
+    data = await loadTodayFn(config.slug);
   } catch { /* ignore */ }
+  const fresh = document.querySelector(`[data-popup-times="${config.slug}"]`);
+  if (!fresh) return;
+  if (!data || !data.rows || !data.rows.length) {
+    fresh.innerHTML = `<div class="map-popup-times-none">Times not available today</div>`;
+    return;
+  }
+  const body = data.rows.map(r => `
+    <tr>
+      <td class="map-popup-salah">${r.name}</td>
+      <td>${r.start}</td>
+      <td>${r.jamaat}</td>
+    </tr>`).join('');
+  fresh.innerHTML = `
+    <table class="map-popup-table">
+      <thead><tr><th>Salah</th><th>Start</th><th>Jama'at</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>`;
 }
 
-export async function mountMap(container, { configs = [], userLocation = null, loadNext = null } = {}) {
-  loadNextFn = loadNext;
+export async function mountMap(container, { configs = [], userLocation = null, loadToday = null } = {}) {
+  loadTodayFn = loadToday;
   const L = await loadLeaflet();
 
   // Container may have been torn down while Leaflet loaded.
@@ -162,7 +175,7 @@ export async function mountMap(container, { configs = [], userLocation = null, l
     if (lat == null || lon == null) return;
     const marker = L.marker([lat, lon], { icon, title: config.display_name });
     marker.bindPopup(popupHtml(config), { closeButton: true, autoPan: true });
-    marker.on('popupopen', () => fillPopupNext(config));
+    marker.on('popupopen', () => fillPopupTimes(config));
     clusterGroup.addLayer(marker);
     bounds.push([lat, lon]);
   });
@@ -231,5 +244,5 @@ export function unmountMap() {
   tileLayer = null;
   clusterGroup = null;
   userMarker = null;
-  loadNextFn = null;
+  loadTodayFn = null;
 }
