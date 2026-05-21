@@ -39,7 +39,10 @@ export function render(container) {
     greetingHTML = `<div class="greeting-salaam">Assalamu Alaikum</div>`;
   }
 
-  const showRebrand = !localStorage.getItem('iqamah-rebrand-dismissed');
+  // The "Prayerly is now Iqamah" rebrand welcome is retired — no longer shown
+  // to anyone. showWelcomeScreen() below is kept as a template for future
+  // feature-announcement overlays (e.g. the map / new-masjids showcase).
+  const showRebrand = false;
 
   container.innerHTML = `
     <div class="home-view">
@@ -77,8 +80,10 @@ export function render(container) {
   setupInstallBanner();
   loadDesktopMasjidList();
 
-  // Welcome screen priority: Eid welcome > rebrand welcome (never both)
-  // Eid welcome is deferred until season.json is loaded (see loadMasjids)
+  // Rebrand welcome is retired (showRebrand is always false). The call is kept
+  // so showWelcomeScreen() stays as a working template for future overlays.
+  // The Eid welcome (deferred until season.json loads, see loadMasjids) is now
+  // the only overlay actually shown.
   if (showRebrand) {
     showWelcomeScreen();
   }
@@ -153,8 +158,6 @@ function showWelcomeScreen() {
 
 function showEidWelcome() {
   if (localStorage.getItem('iqamah-eid-dismissed')) return;
-  // Don't show if rebrand welcome is being shown
-  if (!localStorage.getItem('iqamah-rebrand-dismissed')) return;
 
   const overlay = document.createElement('div');
   overlay.className = 'welcome-overlay eid-overlay';
