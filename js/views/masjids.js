@@ -389,9 +389,20 @@ function renderCityGrid() {
     counts[city] = (counts[city] || 0) + 1;
   });
 
+  // Auto-surface the city of the pinned masjid (My Masjid) to the top.
+  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
+  const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
+
   const cities = Object.keys(counts).sort((a, b) => {
-    if (a === OTHER_CITY) return 1;
-    if (b === OTHER_CITY) return -1;
+    // Pinned city (My Masjid's city) always floats to the top
+    if (pinnedCity) {
+      if (a === pinnedCity && b !== pinnedCity) return -1;
+      if (b === pinnedCity && a !== pinnedCity) return 1;
+    }
+    // "Other" always sinks to the bottom
+    if (a === OTHER_CITY && b !== OTHER_CITY) return 1;
+    if (b === OTHER_CITY && a !== OTHER_CITY) return -1;
     return a.localeCompare(b, undefined, { sensitivity: 'base' });
   });
 
@@ -403,9 +414,11 @@ function renderCityGrid() {
   cityGrid.innerHTML = cities.map(city => {
     const n = counts[city];
     const safeCity = city.replace(/"/g, '&quot;');
-    return `<button type="button" class="masjid-city-card" data-city="${safeCity}">
+    const isPinned = city === pinnedCity;
+    const badge = isPinned ? `<span class="masjid-city-badge">${STAR_FILLED_SVG} My city</span>` : '';
+    return `<button type="button" class="masjid-city-card${isPinned ? ' pinned-city' : ''}" data-city="${safeCity}">
       <div class="masjid-city-card-info">
-        <div class="masjid-city-name">${city}</div>
+        <div class="masjid-city-name">${city}${badge}</div>
         <div class="masjid-city-count">${n} masjid${n === 1 ? '' : 's'}</div>
       </div>
       <div class="masjid-city-chevron">${CHEVRON_SVG}</div>
