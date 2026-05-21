@@ -238,6 +238,16 @@ function addLocateControl(L) {
   map.addControl(new LocateControl());
 }
 
+// Pan/zoom the map to a set of [lat, lon] points (e.g. all masjids in a city).
+export function focusBounds(points, { maxZoom = 14 } = {}) {
+  if (!map || !points || !points.length) return;
+  if (points.length === 1) {
+    map.setView(points[0], maxZoom);
+  } else {
+    map.fitBounds(points, { padding: [40, 40], maxZoom });
+  }
+}
+
 export function unmountMap() {
   if (themeUnsub) { themeUnsub(); themeUnsub = null; }
   if (map) { map.remove(); map = null; }

@@ -3,7 +3,7 @@ import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
-import { mountMap, unmountMap } from './masjid-map.js';
+import { mountMap, unmountMap, focusBounds } from './masjid-map.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -155,6 +155,7 @@ const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="cu
 const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
 let searchQuery = '';
 let loadGeneration = 0;
@@ -162,6 +163,7 @@ let masjidsLoadPromise = null;
 let hasTimesMap = {}; // slug -> true/false, populated after CSV check
 let viewMode = 'list'; // 'list' | 'map'
 let mapMounted = false;
+let mapReadyPromise = null;
 
 const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 
@@ -379,6 +381,15 @@ export function renderCards() {
   renderMasjidGrid();
 }
 
+function getCachedLocation() {
+  if (userLocation) return userLocation;
+  try {
+    const c = JSON.parse(localStorage.getItem('iqamah-cached-location') || 'null');
+    if (c && c.lat != null && c.lon != null) return c;
+  } catch { /* ignore */ }
+  return null;
+}
+
 function renderCityGrid() {
   const cityGrid = viewContainer.querySelector('#masjidsCityGrid');
   if (!cityGrid) return;
@@ -394,6 +405,23 @@ function renderCityGrid() {
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
   const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
 
+  // Last city the user drilled into (fallback ordering signal).
+  const lastCity = localStorage.getItem('iqamah-last-city');
+
+  // Distance to the nearest masjid in each city, from a cached/live location.
+  const loc = getCachedLocation();
+  const cityDist = {};
+  if (loc) {
+    cachedConfigs.forEach(config => {
+      const lat = config.lat != null ? config.lat : config.latitude;
+      const lon = config.lon != null ? config.lon : config.longitude;
+      if (lat == null || lon == null) return;
+      const city = deriveCity(config);
+      const d = haversineDistance(loc.lat, loc.lon, lat, lon);
+      if (cityDist[city] == null || d < cityDist[city]) cityDist[city] = d;
+    });
+  }
+
   const cities = Object.keys(counts).sort((a, b) => {
     // Pinned city (My Masjid's city) always floats to the top
     if (pinnedCity) {
@@ -403,6 +431,18 @@ function renderCityGrid() {
     // "Other" always sinks to the bottom
     if (a === OTHER_CITY && b !== OTHER_CITY) return 1;
     if (b === OTHER_CITY && a !== OTHER_CITY) return -1;
+    // Last-viewed city next (below pinned)
+    if (lastCity && lastCity !== pinnedCity) {
+      if (a === lastCity && b !== lastCity) return -1;
+      if (b === lastCity && a !== lastCity) return 1;
+    }
+    // Then by distance to nearest masjid when we know where the user is
+    if (loc) {
+      const da = cityDist[a], db = cityDist[b];
+      if (da != null && db != null && da !== db) return da - db;
+      if (da != null && db == null) return -1;
+      if (da == null && db != null) return 1;
+    }
     return a.localeCompare(b, undefined, { sensitivity: 'base' });
   });
 
@@ -415,13 +455,23 @@ function renderCityGrid() {
     const n = counts[city];
     const safeCity = city.replace(/"/g, '&quot;');
     const isPinned = city === pinnedCity;
-    const badge = isPinned ? `<span class="masjid-city-badge">${STAR_FILLED_SVG} My city</span>` : '';
+    const isRecent = !isPinned && city === lastCity && city !== OTHER_CITY;
+    let badge = '';
+    if (isPinned) badge = `<span class="masjid-city-badge">${STAR_FILLED_SVG} My city</span>`;
+    else if (isRecent) badge = `<span class="masjid-city-badge recent">Recent</span>`;
+
+    const d = cityDist[city];
+    const distText = d != null ? ` &middot; ${d < 0.1 ? '< 0.1' : d.toFixed(1)} mi` : '';
+
     return `<button type="button" class="masjid-city-card${isPinned ? ' pinned-city' : ''}" data-city="${safeCity}">
       <div class="masjid-city-card-info">
         <div class="masjid-city-name">${city}${badge}</div>
-        <div class="masjid-city-count">${n} masjid${n === 1 ? '' : 's'}</div>
+        <div class="masjid-city-count">${n} masjid${n === 1 ? '' : 's'}${distText}</div>
       </div>
-      <div class="masjid-city-chevron">${CHEVRON_SVG}</div>
+      <div class="masjid-city-actions">
+        <span class="masjid-city-map-btn" role="button" tabindex="0" aria-label="Show ${safeCity} on map">${MAP_PIN_SVG}</span>
+        <span class="masjid-city-chevron">${CHEVRON_SVG}</span>
+      </div>
     </button>`;
   }).join('');
 }
@@ -665,15 +715,41 @@ function setupGridClicks() {
 }
 
 function handleCityCardClick(e) {
+  // Map button on a city card → open the map focused on that city
+  const mapBtn = e.target.closest('.masjid-city-map-btn');
+  if (mapBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    const c = mapBtn.closest('.masjid-city-card[data-city]');
+    if (c) focusCityOnMap(c.dataset.city);
+    return;
+  }
+
   const card = e.target.closest('.masjid-city-card[data-city]');
   if (!card) return;
   selectedCity = card.dataset.city;
   searchQuery = '';
+  try { localStorage.setItem('iqamah-last-city', selectedCity); } catch { /* ignore */ }
   const input = viewContainer && viewContainer.querySelector('#masjidSearch');
   if (input) input.value = '';
   updateHeaderState();
   renderCards();
   if (viewContainer) viewContainer.scrollIntoView({ behavior: 'instant', block: 'start' });
+}
+
+async function focusCityOnMap(city) {
+  // Switch to map mode (mounts the map lazily) then frame that city's masjids.
+  setMode('map');
+  if (mapReadyPromise) await mapReadyPromise;
+  const points = cachedConfigs
+    .filter(c => deriveCity(c) === city)
+    .map(c => {
+      const lat = c.lat != null ? c.lat : c.latitude;
+      const lon = c.lon != null ? c.lon : c.longitude;
+      return (lat != null && lon != null) ? [lat, lon] : null;
+    })
+    .filter(Boolean);
+  focusBounds(points);
 }
 
 function handlePinClick(e) {
@@ -878,7 +954,7 @@ function setMode(mode) {
   if (mode === 'map') {
     if (listPane) listPane.hidden = true;
     if (mapPane) mapPane.hidden = false;
-    showMap();
+    mapReadyPromise = showMap();
   } else {
     if (mapPane) mapPane.hidden = true;
     if (listPane) listPane.hidden = false;
@@ -951,6 +1027,7 @@ export function destroy() {
   document.removeEventListener('click', handlePinClick, true);
   unmountMap();
   mapMounted = false;
+  mapReadyPromise = null;
   viewMode = 'list';
   locationActive = false;
   userLocation = null;

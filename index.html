@@ -1044,6 +1044,21 @@
       padding: 2px 7px 2px 5px; border-radius: 999px;
     }
     .masjid-city-badge svg { width: 10px; height: 10px; }
+    .masjid-city-badge.recent {
+      color: var(--text-muted); background: var(--gold-tint-08); border-color: var(--card-border);
+      padding: 2px 7px;
+    }
+    .masjid-city-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .masjid-city-map-btn {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); cursor: pointer; transition: background 0.2s, border-color 0.2s;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+    }
+    .masjid-city-map-btn:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
+    .masjid-city-map-btn:active { transform: scale(0.94); }
+    .masjid-city-map-btn svg { width: 16px; height: 16px; }
     .masjid-city-count {
       font-size: 0.72rem; color: var(--text-muted); font-weight: 500;
     }
