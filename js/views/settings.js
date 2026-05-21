@@ -185,7 +185,8 @@ export function render(container) {
       </div>
 
       <p class="settings-attribution">
-        Geographic data © OpenStreetMap contributors. Postcode data from Postcodes.io.
+        Geographic data © OpenStreetMap contributors.<br>
+        Postcode data from Postcodes.io.
       </p>
     </div>
   `;
