@@ -14,7 +14,7 @@ VAPID_SUBJECT = "mailto:prayerly@hotmail.com"
 # from: wrangler kv namespace create PUSH_SUBS
 [[kv_namespaces]]
 binding = "PUSH_SUBS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "21dacec89daf443c9e087a009467dbed"
 
 # Secrets (set with `wrangler secret put <NAME>` — do NOT commit):
 #   VAPID_PUBLIC_KEY    — base64url, from `npx web-push generate-vapid-keys`
