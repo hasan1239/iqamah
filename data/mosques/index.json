@@ -1245,10 +1245,11 @@
       "source_url": "https://masjidbox.com/prayer-times/at-taqwa-centre-birmingham"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -1422,8 +1423,8 @@
     ],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -3198,10 +3199,11 @@
       "source_url": "https://masjidbox.com/prayer-times/green-lane-masjid-1666108368685"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -3267,10 +3269,11 @@
       "source_url": "https://masjidbox.com/prayer-times/hall-green-mosque-and-muslim-association"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -3772,10 +3775,11 @@
       "source_url": "https://masjidbox.com/prayer-times/jmic"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -4317,8 +4321,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-21",
-      "row_count": 7,
+      "checked_at": "2026-05-22",
+      "row_count": 8,
       "warnings": [],
       "issues": []
     },
@@ -4349,10 +4353,11 @@
       "source_url": "https://masjidbox.com/prayer-times/lozells-central-mosque-1720027911987"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -6013,10 +6018,11 @@
       "source_url": "https://masjidbox.com/prayer-times/masjid-ibn-salah"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
@@ -8550,10 +8556,11 @@
       "source_url": "https://masjidbox.com/prayer-times/ukim-alum-rock-islamic-centre"
     },
     "today_only": true,
+    "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-20",
-      "row_count": 2,
+      "checked_at": "2026-05-22",
+      "row_count": 4,
       "warnings": [],
       "issues": []
     },
