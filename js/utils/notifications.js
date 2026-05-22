@@ -13,13 +13,12 @@ const PREFS_KEY = 'iqamah-notif-prefs';
 const FIRED_KEY = 'iqamah-notif-fired';
 const NOTIF_ICON = '/iqamah-icon.png';            // large icon — navy/gold brand mark
 const NOTIF_BADGE = '/iqamah-icon-transparent.png'; // status-bar badge (Android masks to white)
-// Action buttons (Android / installed PWA only — iOS ignores them gracefully).
+// Action button (Android / installed PWA only — iOS ignores it gracefully).
 // "Prayed" marks the salah done for today so its remaining jama'at/end
-// reminders are suppressed (see handleSwMessage + the prayed-guard below).
-const NOTIF_ACTIONS = [
-  { action: 'view', title: 'View times' },
-  { action: 'prayed', title: 'Prayed' },
-];
+// reminders are suppressed. (No "View times" — tapping the notification body
+// already opens the masjid page; an action-button openWindow is unreliable on
+// Android, so the button would be a flaky duplicate.)
+const NOTIF_ACTIONS = [{ action: 'prayed', title: 'Prayed' }];
 
 // Default state on first enable: all starts on at-time, jama'at/ends-soon off,
 // Ramadan Suhoor 30m + Iftar at-time. (spec §4)

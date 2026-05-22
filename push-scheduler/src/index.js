@@ -150,7 +150,7 @@ export default {
       for (const { record } of subs) {
         const payload = JSON.stringify({
           title: 'Iqamah server push works ✅',
-          body: 'This came from the scheduler with the app closed.',
+          body: 'Tap me, or use Prayed. Came from the scheduler, app closed.',
           url: record.slug ? `/${record.slug}` : '/',
           prayer: 'asr',
           tag: 'iqamah-server-test',

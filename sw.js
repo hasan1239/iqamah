@@ -39,10 +39,7 @@ self.addEventListener('push', event => {
       icon: '/iqamah-icon.png',
       badge: '/iqamah-icon-transparent.png',
       data: { url: data.url || '/', prayer: data.prayer },
-      actions: [
-        { action: 'view', title: 'View times' },
-        { action: 'prayed', title: 'Prayed' },
-      ],
+      actions: [{ action: 'prayed', title: 'Prayed' }],
     })
   );
 });
