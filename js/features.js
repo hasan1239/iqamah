@@ -20,7 +20,7 @@ export const FEATURES = [
   {
     id: 'qibla',
     label: 'Qibla',
-    desc: 'Find the direction of the Kaaba',
+    desc: 'Direction of the Kaaba',
     icon: QIBLA_SVG,
     route: '/qibla',
     badge: null,
