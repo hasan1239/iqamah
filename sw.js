@@ -74,18 +74,18 @@ self.addEventListener('notificationclick', event => {
     return;
   }
 
-  const target = data.url || '/';
-  event.waitUntil(
-    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
-      for (const client of clients) {
-        if ('focus' in client) {
-          if ('navigate' in client) client.navigate(target).catch(() => {});
-          return client.focus();
-        }
+  // Absolute URL — relative paths can fail to launch an installed PWA on Android.
+  const target = new URL(data.url || '/', self.location.origin).href;
+  event.waitUntil((async () => {
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clients) {
+      if ('focus' in client) {
+        try { if ('navigate' in client) await client.navigate(target); } catch { /* cross-origin etc. */ }
+        return client.focus();
       }
-      if (self.clients.openWindow) return self.clients.openWindow(target);
-    })
-  );
+    }
+    if (self.clients.openWindow) return self.clients.openWindow(target);
+  })());
 });
 
 // Fetch: network-only, cache populated only as an offline fallback
