@@ -134,6 +134,38 @@ export default {
       await runMinute(env);
       return new Response('ran', { status: 200 });
     }
+    // TEMP (dev): send a real push to every subscription on demand, to verify the
+    // server→device delivery path without waiting for a scheduled reminder.
+    if (url.pathname === '/test-push' && env.SCHEDULER_SECRET && url.searchParams.get('key') === env.SCHEDULER_SECRET) {
+      if (!env.VAPID_PUBLIC_KEY || !env.VAPID_PRIVATE_KEY) {
+        return new Response('VAPID not set', { status: 503 });
+      }
+      const vapid = {
+        publicKey: env.VAPID_PUBLIC_KEY,
+        privateKey: env.VAPID_PRIVATE_KEY,
+        subject: env.VAPID_SUBJECT || 'mailto:prayerly@hotmail.com',
+      };
+      const subs = await listAllSubs(env);
+      const results = [];
+      for (const { record } of subs) {
+        const payload = JSON.stringify({
+          title: 'Iqamah server push works ✅',
+          body: 'This came from the scheduler with the app closed.',
+          url: record.slug ? `/${record.slug}` : '/',
+          prayer: 'asr',
+          tag: 'iqamah-server-test',
+        });
+        try {
+          const res = await sendWebPush(record.endpoint, payload, vapid);
+          results.push(res.status);
+        } catch (e) {
+          results.push(`err:${e && e.message ? e.message : 'unknown'}`);
+        }
+      }
+      return new Response(JSON.stringify({ subs: subs.length, results }, null, 2), {
+        headers: { 'content-type': 'application/json' },
+      });
+    }
     return new Response('iqamah push-scheduler', { status: 200 });
   },
 };
