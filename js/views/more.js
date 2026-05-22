@@ -18,7 +18,8 @@ function tileHTML(f) {
        data-enabled="${f.enabled ? '1' : '0'}"
        ${disabled ? 'aria-disabled="true"' : 'data-link'}>
       <span class="more-tile-icon">${f.icon}</span>
-      <span class="more-tile-label">${f.label}${badge}</span>
+      <span class="more-tile-label">${f.label}</span>
+      ${badge}
       ${desc}
     </a>`;
 }
