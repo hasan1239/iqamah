@@ -1449,6 +1449,7 @@
       .more-grid { grid-template-columns: repeat(3, 1fr); }
     }
     .more-tile {
+      position: relative;
       display: flex; flex-direction: column; align-items: center; text-align: center;
       gap: 8px; padding: 20px 14px;
       background: var(--card-bg); border: 1px solid var(--card-border);
@@ -1472,7 +1473,7 @@
     .more-tile-desc {
       font-size: 0.75rem; color: var(--text-muted); line-height: 1.35;
     }
-    .more-tile-badge { top: 0; margin-left: 0; }
+    .more-tile-badge { position: absolute; top: 8px; right: 8px; margin: 0; }
     .more-tile-disabled {
       opacity: 0.5; cursor: default;
     }
