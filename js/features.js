@@ -53,7 +53,7 @@ export const FEATURES = [
     desc: 'Coming soon',
     icon: CHECK_SVG,
     route: '/tracker',
-    badge: 'SOON',
+    badge: null, // "Coming soon" desc already conveys this
     enabled: false,
     show: () => true,
   },
@@ -63,7 +63,7 @@ export const FEATURES = [
     desc: 'Coming soon',
     icon: BEADS_SVG,
     route: '/tasbih',
-    badge: 'SOON',
+    badge: null, // "Coming soon" desc already conveys this
     enabled: false,
     show: () => true,
   },
