@@ -112,7 +112,7 @@ async function runMinute(env) {
       });
 
       try {
-        const res = await sendWebPush(record.endpoint, payload, vapid);
+        const res = await sendWebPush(record, payload, vapid);
         if (res.status === 404 || res.status === 410) {
           await env.PUSH_SUBS.delete(`sub:${hash}`); // gone — clean up
         } else if (res.ok) {
@@ -156,7 +156,7 @@ export default {
           tag: 'iqamah-server-test',
         });
         try {
-          const res = await sendWebPush(record.endpoint, payload, vapid);
+          const res = await sendWebPush(record, payload, vapid);
           results.push(res.status);
         } catch (e) {
           results.push(`err:${e && e.message ? e.message : 'unknown'}`);
