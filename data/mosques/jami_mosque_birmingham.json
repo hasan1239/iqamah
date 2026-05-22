@@ -23,10 +23,11 @@
     "source_url": "https://masjidbox.com/prayer-times/jmic"
   },
   "today_only": true,
+  "suppress_times": [],
   "quality": {
     "status": "ok",
-    "checked_at": "2026-05-20",
-    "row_count": 2,
+    "checked_at": "2026-05-22",
+    "row_count": 4,
     "warnings": [],
     "issues": []
   },
