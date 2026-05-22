@@ -18,6 +18,7 @@ async function loadView(viewName) {
     'home': () => import('./views/home.js'),
     'masjids': () => import('./views/masjids.js'),
     'prayer-times': () => import('./views/prayer-times.js'),
+    'more': () => import('./views/more.js'),
     'qibla': () => import('./views/qibla.js'),
     'settings': () => import('./views/settings.js'),
     'add-masjid': () => import('./views/add-masjid.js'),
