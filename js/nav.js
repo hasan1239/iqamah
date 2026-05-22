@@ -21,10 +21,10 @@ const TABS = [
     icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
   },
   {
-    id: 'qibla',
-    label: 'Qibla',
-    path: '/qibla',
-    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>',
+    id: 'more',
+    label: 'More',
+    path: '/more',
+    icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
   },
   {
     id: 'settings',
@@ -39,10 +39,46 @@ function getTimesPath() {
   return pinned ? '/' + pinned : '/times';
 }
 
+// Views that live under the More hub all highlight the More tab.
+const MORE_HOSTED = new Set(['more', 'qibla', 'tracker', 'tasbih', 'dua', 'jummah-times']);
+
 function getActiveTabId() {
   const route = getCurrentRoute();
   if (route.view === 'add-masjid') return 'settings';
+  if (MORE_HOSTED.has(route.view)) return 'more';
   return route.view;
+}
+
+// One-time "Qibla moved to More" hint for existing users (mobile bottom nav only).
+function maybeShowMoreHint() {
+  if (localStorage.getItem('iqamah-more-hint')) return;
+  if (window.matchMedia('(min-width: 768px)').matches) return; // bottom nav is mobile-only
+
+  const dismiss = () => {
+    localStorage.setItem('iqamah-more-hint', '1');
+    toast.classList.remove('visible');
+    setTimeout(() => toast.remove(), 300);
+  };
+
+  const toast = document.createElement('div');
+  toast.className = 'more-hint-toast';
+  toast.innerHTML = `
+    <span class="toast-star">★</span>
+    <span class="more-hint-text">Qibla is now under <strong>More</strong></span>
+    <button class="more-hint-close" aria-label="Dismiss">&times;</button>`;
+  document.body.appendChild(toast);
+
+  toast.querySelector('.more-hint-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    dismiss();
+  });
+  toast.addEventListener('click', () => {
+    dismiss();
+    navigate('/more');
+  });
+
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  setTimeout(() => { if (toast.isConnected) dismiss(); }, 7000);
 }
 
 export function initNav() {
@@ -50,6 +86,8 @@ export function initNav() {
   if (!nav) return;
 
   renderNav(nav);
+
+  maybeShowMoreHint();
 
   // Show desktop Eid link if season is eid
   fetch('/data/season.json').then(r => r.ok ? r.json() : null).then(s => {
@@ -109,6 +147,6 @@ export function updateActiveTab() {
   const activeView = route.view;
   desktopLinks.querySelectorAll('.desktop-nav-link').forEach(link => {
     const navId = link.dataset.nav;
-    link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times') || (navId === 'eid-times' && activeView === 'eid-times'));
+    link.classList.toggle('active', navId === activeView || (navId === 'masjids' && activeView === 'prayer-times') || (navId === 'eid-times' && activeView === 'eid-times') || (navId === 'more' && MORE_HOSTED.has(activeView)));
   });
 }
