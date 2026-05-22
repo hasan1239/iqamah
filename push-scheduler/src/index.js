@@ -3,12 +3,13 @@
 // Pages Functions can't run cron, so this sidecar owns scheduling + sending. It
 // shares the PUSH_SUBS KV namespace with the Pages worker (_worker.js).
 //
-// v1 model: per-minute SCAN. Each tick lists all subscriptions, resolves today's
-// reminders to UTC instants, and sends any whose fire-time falls in the current
-// minute. Simple and correct-on-subscribe (no nightly rebuild / incremental
-// build needed). Cost note: ~1 KV get per subscription per minute — fine on the
-// free tier to ~60 subs; beyond that move to the precomputed-bucket model in
-// docs/push-notifications-spec.md §6, or use Workers Paid (1M reads).
+// v1 model: per-minute SCAN of all subscriptions, which live in ONE KV key
+// `subs:all` (object keyed by endpoint hash, written by _worker.js). Each tick
+// does a single KV `get` (no `list`), resolves today's reminders to UTC
+// instants, and sends any whose fire-time falls in the current minute.
+// (A per-minute `list` busted KV's free-tier list cap of 1,000/day even with one
+// sub — hence the single-key design. For very large scale, see the bucket model
+// in docs/push-notifications-spec.md §6.)
 
 import { parseCSV, rowForDate, buildReminderInstants, buildCopy } from './schedule.js';
 import { sendWebPush } from './webpush.js';
@@ -17,23 +18,12 @@ function londonDateStr(d = new Date()) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(d);
 }
 
-async function endpointHash(endpoint) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+const ALL_SUBS_KEY = 'subs:all';
+async function getAllSubs(env) {
+  return (await env.PUSH_SUBS.get(ALL_SUBS_KEY, 'json')) || {};
 }
-
-async function listAllSubs(env) {
-  const out = [];
-  let cursor;
-  do {
-    const res = await env.PUSH_SUBS.list({ prefix: 'sub:', cursor });
-    for (const k of res.keys) {
-      const record = await env.PUSH_SUBS.get(k.name, 'json');
-      if (record) out.push({ key: k.name, record });
-    }
-    cursor = res.list_complete ? null : res.cursor;
-  } while (cursor);
-  return out;
+async function putAllSubs(env, subs) {
+  await env.PUSH_SUBS.put(ALL_SUBS_KEY, JSON.stringify(subs));
 }
 
 async function loadMasjid(origin, slug, cache) {
@@ -74,10 +64,11 @@ async function runMinute(env) {
   const dateStr = londonDateStr(now);
 
   const season = await fetchSeason(origin);
-  const subs = await listAllSubs(env);
+  const subs = await getAllSubs(env);
   const csvCache = new Map();
+  let dirty = false; // set if a gone subscription is removed
 
-  for (const { record } of subs) {
+  for (const [hash, record] of Object.entries(subs)) {
     const prefs = record.prefs;
     const slug = record.slug;
     if (!prefs || !prefs.master || !slug) continue;
@@ -94,7 +85,6 @@ async function runMinute(env) {
       const fire = r.fireAt.getTime();
       if (fire < minuteStart || fire >= minuteEnd) continue;
 
-      const hash = await endpointHash(record.endpoint);
       // Suppress jama'at/end once marked prayed today.
       if (r.kind === 'jamaat' || r.kind === 'end') {
         if (await env.PUSH_SUBS.get(`prayed:${hash}:${r.prayer}:${dateStr}`)) continue;
@@ -114,13 +104,17 @@ async function runMinute(env) {
       try {
         const res = await sendWebPush(record, payload, vapid);
         if (res.status === 404 || res.status === 410) {
-          await env.PUSH_SUBS.delete(`sub:${hash}`); // gone — clean up
+          delete subs[hash]; // gone — drop it
+          dirty = true;
+          break; // no more reminders for this dead sub
         } else if (res.ok) {
           await env.PUSH_SUBS.put(sentKey, '1', { expirationTtl: 36 * 3600 });
         }
       } catch { /* transient send error — retried next applicable minute */ }
     }
   }
+
+  if (dirty) await putAllSubs(env, subs);
 }
 
 export default {
@@ -145,9 +139,9 @@ export default {
         privateKey: env.VAPID_PRIVATE_KEY,
         subject: env.VAPID_SUBJECT || 'mailto:prayerly@hotmail.com',
       };
-      const subs = await listAllSubs(env);
+      const subs = await getAllSubs(env);
       const results = [];
-      for (const { record } of subs) {
+      for (const record of Object.values(subs)) {
         const payload = JSON.stringify({
           title: 'Iqamah server push works ✅',
           body: 'Tap me, or use Prayed. Came from the scheduler, app closed.',
@@ -162,7 +156,7 @@ export default {
           results.push(`err:${e && e.message ? e.message : 'unknown'}`);
         }
       }
-      return new Response(JSON.stringify({ subs: subs.length, results }, null, 2), {
+      return new Response(JSON.stringify({ subs: Object.keys(subs).length, results }, null, 2), {
         headers: { 'content-type': 'application/json' },
       });
     }

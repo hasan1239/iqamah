@@ -702,6 +702,17 @@ function londonDateStr(d = new Date()) {
   return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/London' }).format(d);
 }
 
+// All subscriptions live in ONE KV key `subs:all` (object keyed by endpoint
+// hash) so the per-minute scheduler does a single read, never a `list`. KV's
+// free tier caps `list` at 1,000/day — a per-minute list (~1,440/day) blew it.
+const ALL_SUBS_KEY = 'subs:all';
+async function getAllSubs(env) {
+  return (await env.PUSH_SUBS.get(ALL_SUBS_KEY, 'json')) || {};
+}
+async function putAllSubs(env, subs) {
+  await env.PUSH_SUBS.put(ALL_SUBS_KEY, JSON.stringify(subs));
+}
+
 async function handlePushSubscribe(request, env) {
   if (!env.PUSH_SUBS) return errorResponse('Push not configured', 503);
   let body;
@@ -714,9 +725,10 @@ async function handlePushSubscribe(request, env) {
   if (await isRateLimited(ip, 'push', env, request)) return errorResponse('Rate limit exceeded', 429);
 
   const hash = await hashEndpoint(sub.endpoint);
-  const existing = await env.PUSH_SUBS.get(`sub:${hash}`, 'json');
+  const subs = await getAllSubs(env);
+  const existing = subs[hash];
   const now = Date.now();
-  const record = {
+  subs[hash] = {
     endpoint: sub.endpoint,
     keys: { p256dh: sub.keys.p256dh, auth: sub.keys.auth },
     slug: typeof body.slug === 'string' ? body.slug : (existing && existing.slug) || null,
@@ -726,7 +738,7 @@ async function handlePushSubscribe(request, env) {
     created: existing ? existing.created : now,
     updated: now,
   };
-  await env.PUSH_SUBS.put(`sub:${hash}`, JSON.stringify(record));
+  await putAllSubs(env, subs);
   return jsonResponse({ ok: true });
 }
 
@@ -736,13 +748,15 @@ async function handlePushUpdate(request, env) {
   try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
   if (!body.endpoint) return errorResponse('Missing endpoint');
   const hash = await hashEndpoint(body.endpoint);
-  const existing = await env.PUSH_SUBS.get(`sub:${hash}`, 'json');
+  const subs = await getAllSubs(env);
+  const existing = subs[hash];
   if (!existing) return errorResponse('Not subscribed', 404);
   if (body.prefs) existing.prefs = body.prefs;
   if (typeof body.slug === 'string') existing.slug = body.slug;
   if (typeof body.tz === 'string') existing.tz = body.tz;
+  if (typeof body.tf === 'string') existing.tf = body.tf;
   existing.updated = Date.now();
-  await env.PUSH_SUBS.put(`sub:${hash}`, JSON.stringify(existing));
+  await putAllSubs(env, subs);
   return jsonResponse({ ok: true });
 }
 
@@ -752,7 +766,8 @@ async function handlePushUnsubscribe(request, env) {
   try { body = await request.json(); } catch { return errorResponse('Invalid JSON'); }
   if (!body.endpoint) return errorResponse('Missing endpoint');
   const hash = await hashEndpoint(body.endpoint);
-  await env.PUSH_SUBS.delete(`sub:${hash}`);
+  const subs = await getAllSubs(env);
+  if (subs[hash]) { delete subs[hash]; await putAllSubs(env, subs); }
   return jsonResponse({ ok: true });
 }
 
