@@ -35,7 +35,7 @@ export const FEATURES = [
     route: '/eid',
     badge: null,
     enabled: true,
-    show: () => true,
+    show: () => false, // hidden for now — re-enable when Eid masjids are ready
   },
   {
     id: 'add',
