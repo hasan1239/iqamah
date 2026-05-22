@@ -1436,6 +1436,71 @@
       margin-left: 4px;
     }
     .btn .beta-badge, .update-btn .beta-badge, .cta-btn .beta-badge { top: -1px; border: none; }
+
+    /* "More" hub grid */
+    .more-view { max-width: 720px; margin: 0 auto; }
+    .more-header { margin-bottom: 24px; }
+    .more-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (min-width: 560px) {
+      .more-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .more-tile {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: 8px; padding: 20px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      text-decoration: none; color: var(--text-primary);
+      transition: background 0.2s, border-color 0.2s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .more-tile:hover { border-color: var(--gold-tint-40); background: var(--card-hover-bg); }
+    .more-tile:active { transform: scale(0.97); }
+    .more-tile-icon {
+      display: flex; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border-radius: 14px;
+      background: var(--gold-tint-10); border: 1px solid var(--gold-tint-15);
+      color: var(--gold);
+    }
+    .more-tile-icon svg { width: 26px; height: 26px; }
+    .more-tile-label {
+      font-size: 0.95rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;
+    }
+    .more-tile-desc {
+      font-size: 0.75rem; color: var(--text-muted); line-height: 1.35;
+    }
+    .more-tile-badge { top: 0; }
+    .more-tile-disabled {
+      opacity: 0.5; cursor: default;
+    }
+    .more-tile-disabled:hover { border-color: var(--card-border); background: var(--card-bg); }
+    .more-tile-disabled:active { transform: none; }
+
+    /* "Qibla moved to More" one-time hint toast */
+    .more-hint-toast {
+      position: fixed; bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      left: 50%; transform: translateX(-50%) translateY(20px);
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--gold-tint-40);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      color: var(--text-primary);
+      padding: 10px 12px 10px 16px; border-radius: 12px; font-size: 0.85rem; font-weight: 500;
+      z-index: 300; opacity: 0; cursor: pointer; max-width: calc(100vw - 32px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    }
+    .more-hint-toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .more-hint-toast .toast-star { color: var(--gold); }
+    .more-hint-toast .more-hint-close {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 1.2rem; line-height: 1; cursor: pointer; padding: 0 2px;
+      font-family: inherit;
+    }
+    .more-hint-toast .more-hint-close:hover { color: var(--text-primary); }
+
     .pending-notice {
       text-align: center;
       padding: 10px 16px;
@@ -2153,6 +2218,7 @@
         <a href="/" class="desktop-nav-link" data-nav="home" data-link>Home</a>
         <a href="/eid" class="desktop-nav-link" data-nav="eid-times" data-link id="desktopEidLink" style="display:none">Eid Salah</a>
         <a href="/add" class="desktop-nav-link" data-nav="add-masjid" data-link>Add Masjid</a>
+        <a href="/more" class="desktop-nav-link" data-nav="more" data-link>More</a>
         <a href="/settings" class="desktop-nav-link" data-nav="settings" data-link>Settings</a>
       </div>
     </div>

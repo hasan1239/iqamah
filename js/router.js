@@ -3,12 +3,19 @@
 let renderCallback = null;
 let currentPath = null;
 
-// Tab indices for slide direction
+// Tab indices for slide direction.
+// The More hub lives at index 3; every More-hosted view shares that index so
+// slide direction stays sane when navigating between the hub and its features.
 const TAB_INDEX = {
   home: 0,
   masjids: 1,
   'prayer-times': 2,
+  more: 3,
   qibla: 3,
+  tracker: 3,
+  tasbih: 3,
+  dua: 3,
+  'jummah-times': 3,
   settings: 4,
 };
 
@@ -24,6 +31,9 @@ export function resolvePath(path) {
   }
   if (clean === 'masjids') {
     return { view: 'masjids', params: {} };
+  }
+  if (clean === 'more') {
+    return { view: 'more', params: {} };
   }
   if (clean === 'qibla') {
     return { view: 'qibla', params: {} };
