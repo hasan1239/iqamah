@@ -1,0 +1,24 @@
+{
+  "display_name": "Masjid Usman",
+  "slug": "usman",
+  "csv": "usman.csv",
+  "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
+  "phone": "01215655767",
+  "month": "May 2026",
+  "islamic_month": "Dhul Qadah 1447",
+  "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable — only beginning times are listed.",
+  "source_image": "sources/usman.jpg",
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/usman.jpg"
+    },
+    "source_url": "/data/sources/usman.jpg"
+  }
+}
