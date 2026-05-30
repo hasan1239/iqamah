@@ -2,18 +2,26 @@
   "display_name": "Madani Masjid",
   "slug": "madani",
   "csv": "madani.csv",
-  "address": "77 Evington Valley Road, Leicester, LE5 5LL",
-  "phone": "",
-  "month": "February-March 2026",
-  "islamic_month": "Ramadan 1447",
-  "jummah_times": "Jumu'ah Lecture: 12:00pm, Jumu'ah Adhan: 12:17-12:24pm, Jumu'ah Khutbah: 12:25-12:30pm, Gate 4 Opens",
-  "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah at 9:00am",
-  "sadaqatul_fitr": "\u00a35.00 per head",
-  "radio_frequency": "459.800",
+  "address": "Leicester Central Mosque, Conduit Street, Leicester, LE2 0JN / Leicester Mosque, 2A Sutherland Street, Leicester, LE2 1DS",
+  "phone": "0116 254 4459",
+  "month": "May 2026",
+  "islamic_month": "Dhul Hijjah 1447",
+  "jummah_times": "Sutherland St: Speech 12:45, Khutba 1:25; Conduit St: Speech 12:45, Khutba 1:25; 2nd Jamaat (Sutherl",
+  "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah a",
+  "sadaqatul_fitr": "£5.00 per head",
+  "radio_frequency": "454.100",
   "approved": true,
   "is_stale": false,
-  "notes": "No Salat is permitted during the 10 minutes before Zawal time. Timetable subject to sighting of the new moon. Listen LIVE on: emasjidlive.co.uk/listen/madanimasjid and https://www.youtube.com/@MCCSoundBytes/streams. Download timetable from madani.school. Sadaqatul Fitr must be paid before the Eid Salah. The timetable has no separate fajr_start, zohr, or maghrib_jamaat columns \u2014 the Dawn/Subh Sadiq/Suhoor Ends column is a single combined column mapped to sehri_ends.",
+  "notes": "Dhul Hijjah 1447 AH is expected to start on Monday 18th May 2026 (subject to sighting of the new moon). Dars-e-Quran every Sunday after Zuhr (Conduit St). Ladies Dars-e-Quran every fortnight (Conduit St) 11 AM to 1 PM. June Timetable Overleaf. Asr Jama'at column shows 'See Juma Details' on certain Fridays (1, 8, 15, 22, 29 May) for Zuhr Jama'at.",
   "source_image": "sources/madani.png",
   "lat": 52.6278525,
-  "lon": -1.0987708
+  "lon": -1.0987708,
+  "pending_update": true,
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/madani.png"
+    },
+    "source_url": "/data/sources/madani.png"
+  }
 }
