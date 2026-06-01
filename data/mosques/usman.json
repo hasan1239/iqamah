@@ -10,9 +10,9 @@
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
-  "approved": false,
+  "approved": true,
   "is_stale": false,
-  "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable — only beginning times are listed.",
+  "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable \u2014 only beginning times are listed.",
   "source_image": "sources/usman.jpg",
   "provider": {
     "type": "image",

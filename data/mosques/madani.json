@@ -8,7 +8,7 @@
   "islamic_month": "Dhul Hijjah 1447",
   "jummah_times": "Sutherland St: Speech 12:45, Khutba 1:25; Conduit St: Speech 12:45, Khutba 1:25; 2nd Jamaat (Sutherl",
   "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah a",
-  "sadaqatul_fitr": "£5.00 per head",
+  "sadaqatul_fitr": "\u00a35.00 per head",
   "radio_frequency": "454.100",
   "approved": true,
   "is_stale": false,
@@ -16,7 +16,7 @@
   "source_image": "sources/madani.png",
   "lat": 52.6278525,
   "lon": -1.0987708,
-  "pending_update": true,
+  "pending_update": false,
   "provider": {
     "type": "image",
     "ref": {
