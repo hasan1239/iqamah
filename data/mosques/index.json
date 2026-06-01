@@ -1248,8 +1248,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -1423,8 +1423,8 @@
     ],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -3202,8 +3202,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -3272,8 +3272,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -3778,8 +3778,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -4356,8 +4356,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -4383,7 +4383,7 @@
     "source_image": "sources/madani.png",
     "lat": 52.6278525,
     "lon": -1.0987708,
-    "pending_update": true,
+    "pending_update": false,
     "provider": {
       "type": "image",
       "ref": {
@@ -6029,8 +6029,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -8567,8 +8567,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-05-30",
-      "row_count": 12,
+      "checked_at": "2026-06-01",
+      "row_count": 14,
       "warnings": [],
       "issues": []
     },
@@ -8666,7 +8666,7 @@
     "eid_salah": "",
     "sadaqatul_fitr": "",
     "radio_frequency": "",
-    "approved": false,
+    "approved": true,
     "is_stale": false,
     "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable — only beginning times are listed.",
     "source_image": "sources/usman.jpg",
