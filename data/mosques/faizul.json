@@ -6,14 +6,22 @@
   "lat": 52.5106,
   "lon": -1.8912,
   "phone": "07812372352",
-  "month": "May 2026",
-  "islamic_month": "Thul-Qaidah - Hijjah 1447",
-  "jummah_times": "1st Jumu'ah: 1:30pm, 2nd Jumu'ah: 4:10pm",
+  "month": "June 2026",
+  "islamic_month": "Thul-Hijjah 1447 - Muharram 1448 A.H",
+  "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
   "sadaqatul_fitr": "Minimum Â£6.00 for adults & children",
   "radio_frequency": "453.7000",
   "is_stale": false,
-  "notes": "Zuhr Jama'at: 2:00pm on Saturdays and Sundays (as shown in table). Jamaat times are subject to change, please refer to Masjid notice board for changes. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Darse-Quraan will take place in Urdu.",
+  "notes": "Zuhr Jama'at 2PM daily. Jummah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
   "source_image": "sources/faizul.jpg",
-  "approved": true
+  "approved": true,
+  "pending_update": true,
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/faizul.jpg"
+    },
+    "source_url": "/data/sources/faizul.jpg"
+  }
 }
