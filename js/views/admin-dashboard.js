@@ -230,7 +230,7 @@ function rowDetail(cfg) {
   let html = '';
 
   if (!q) {
-    html += `<p class="admin-detail-empty">No quality data — legacy config (no provider block).</p>`;
+    html += `<p class="admin-detail-empty">No quality data: legacy config (no provider block).</p>`;
   } else {
     const warnings = q.warnings || [];
     if (warnings.length) {

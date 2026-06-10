@@ -541,7 +541,7 @@ async function handleShare(btn) {
         // User cancelling the share sheet is not an error
         if (err && err.name !== 'AbortError') {
           triggerDownload(blob);
-          setStatus('Sharing failed — the card has been downloaded instead.');
+          setStatus('Sharing failed, so the card has been downloaded instead.');
         } else {
           setStatus('');
         }
@@ -549,7 +549,7 @@ async function handleShare(btn) {
     } else {
       trackEvent('/eid-card/share-fallback');
       triggerDownload(blob);
-      setStatus('Sharing is not supported on this device — the card has been downloaded instead.');
+      setStatus('Sharing is not supported on this device, so the card has been downloaded instead.');
     }
   } catch (err) {
     setStatus('Sorry, something went wrong creating the image.');

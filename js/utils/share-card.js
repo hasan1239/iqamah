@@ -174,7 +174,7 @@ function to12h(t) {
 }
 
 function fmt(t) {
-  return to12h(t) || '—';
+  return to12h(t) || '-';
 }
 
 function parseRowDate(dateStr) {
