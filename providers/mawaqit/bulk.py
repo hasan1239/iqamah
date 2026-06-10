@@ -36,7 +36,7 @@ import traceback
 from collections import Counter
 from pathlib import Path
 
-from providers import regenerate_index
+from providers import INDEX_FILENAMES, regenerate_index
 from providers.mawaqit.fetch import (
     extract_postcode_from_slug,
     fetch_one,
@@ -142,7 +142,7 @@ def derive_short_slug(mawaqit_path: str, taken: set[str]) -> str:
 
 def existing_short_slugs(mosques_dir: Path) -> set[str]:
     """Set of slugs currently checked into data/mosques/."""
-    return {p.stem for p in mosques_dir.glob("*.json") if p.name != "index.json"}
+    return {p.stem for p in mosques_dir.glob("*.json") if p.name not in INDEX_FILENAMES}
 
 
 def existing_path_to_slug(mosques_dir: Path) -> dict[str, str]:
@@ -155,7 +155,7 @@ def existing_path_to_slug(mosques_dir: Path) -> dict[str, str]:
     """
     mapping = {}
     for p in mosques_dir.glob("*.json"):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             with open(p, encoding="utf-8") as f:

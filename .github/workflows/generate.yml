@@ -47,7 +47,7 @@ jobs:
           months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
           today = datetime.now().date()
           for path in sorted(glob.glob('data/mosques/*.json')):
-              if path.endswith('index.json'):
+              if path.endswith('index.json') or path.endswith('index-slim.json'):
                   continue
               with open(path) as f:
                   c = json.load(f)
@@ -84,15 +84,15 @@ jobs:
 
       - name: Regenerate mosque index
         run: |
-          # Bundle all mosque configs into index.json so the landing page needs one fetch
-          cd data/mosques
-          if ls *.json 1> /dev/null 2>&1; then
-            jq -s '.' $(ls *.json | grep -v "index.json" | sort) > index.json
-            echo "✅ Regenerated data/mosques/index.json"
-          else
-            echo "⚠️ No mosque configs found, skipping index regeneration"
-          fi
-          cd ../..
+          # Bundle all mosque configs into index.json (plus the index-slim.json
+          # companion the list views fetch) so the landing page needs one fetch.
+          # Shared logic lives in providers/__init__.py:regenerate_index.
+          python3 -c "
+          from pathlib import Path
+          from providers import regenerate_index
+          count = regenerate_index(Path('data/mosques'))
+          print(f'✅ Regenerated data/mosques/index.json + index-slim.json ({count} masjids)')
+          "
 
       - name: Set up Python
         uses: actions/setup-python@v5

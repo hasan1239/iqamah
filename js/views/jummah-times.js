@@ -5,6 +5,7 @@
 // docs/jummah-times-spec.md.
 
 import { parseCSV, parseDate } from '../utils/csv.js';
+import { loadMasjidIndex } from '../utils/masjid-index.js';
 
 // How many CSV fallback fetches run at once (don't block initial paint; be kind to the network)
 const FALLBACK_CONCURRENCY = 6;
@@ -221,9 +222,7 @@ export async function render(container) {
     </div>`;
 
   try {
-    const res = await fetch('/data/mosques/index.json');
-    if (!res.ok || gen !== loadGeneration) return;
-    const configs = await res.json();
+    const configs = await loadMasjidIndex();
     if (gen !== loadGeneration) return;
 
     // Exclude test masjids + quality-flagged ones (same gate as eid-times.js).

@@ -31,7 +31,7 @@ import argparse
 import json
 from pathlib import Path
 
-from providers import regenerate_index
+from providers import INDEX_FILENAMES, regenerate_index
 
 
 ISSUE_DESCRIPTIONS = {
@@ -45,7 +45,7 @@ ISSUE_DESCRIPTIONS = {
 def load_needs_review(mosques_dir: Path):
     out = []
     for p in sorted(mosques_dir.glob("*.json")):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             cfg = json.loads(p.read_text(encoding="utf-8"))

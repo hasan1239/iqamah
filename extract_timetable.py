@@ -25,6 +25,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from providers import INDEX_FILENAMES, regenerate_index
+
 
 ESALAAT_TIMETABLE_URL = "https://esalaat.com/timetables/{code}.jpg"
 
@@ -503,25 +505,19 @@ def save_mosque_config(mosque_name: str, slug: str, csv_filename: str, data: dic
         json.dump(config, f, indent=2)
     print(f"  \u2705 Config saved: {config_path}")
 
-    # Regenerate index.json
+    # Regenerate index.json (+ index-slim.json companion)
     _regenerate_index(config_dir)
 
 
 def _regenerate_index(config_dir: str):
-    """Regenerate data/mosques/index.json from the config files on disk.
+    """Regenerate data/mosques/index.json (and index-slim.json) on disk.
 
-    Embeds full config objects so the landing page needs only one fetch.
+    Delegates to the shared providers.regenerate_index so the slim companion
+    index stays in sync with the full one.
     """
-    configs = []
-    for p in sorted(Path(config_dir).glob("*.json"), key=lambda p: p.stem):
-        if p.name == "index.json":
-            continue
-        with open(p, encoding="utf-8") as f:
-            configs.append(json.load(f))
+    count = regenerate_index(Path(config_dir))
     index_path = os.path.join(config_dir, "index.json")
-    with open(index_path, "w", encoding="utf-8") as f:
-        json.dump(configs, f)
-    print(f"  \u2705 Index updated: {index_path} ({len(configs)} mosques)")
+    print(f"  \u2705 Index updated: {index_path} (+ index-slim.json, {count} mosques)")
 
 
 def slugify(name: str) -> str:
@@ -541,7 +537,7 @@ def deduplicate_slug(slug: str, address: str, config_dir: str) -> str:
     """
     existing_slugs = {
         p.stem for p in Path(config_dir).glob("*.json")
-        if p.name != "index.json"
+        if p.name not in INDEX_FILENAMES
     }
 
     if slug not in existing_slugs:
@@ -743,7 +739,7 @@ def parse_args():
     esalaat_parser.add_argument("--name", help="Override masjid name (optional)")
 
     # Reindex mode
-    subparsers.add_parser("reindex", help="Regenerate data/mosques/index.json")
+    subparsers.add_parser("reindex", help="Regenerate data/mosques/index.json (+ index-slim.json)")
 
     return parser.parse_args()
 
@@ -849,7 +845,7 @@ def main_update(args, api_key, data_dir, config_dir):
     config_path = os.path.join(config_dir, f"{slug}.json")
     if not os.path.exists(config_path):
         print(f"\u274c No config found for slug '{slug}' at {config_path}")
-        print(f"   Available masjids: {', '.join(p.stem for p in Path(config_dir).glob('*.json') if p.name != 'index.json')}")
+        print(f"   Available masjids: {', '.join(p.stem for p in Path(config_dir).glob('*.json') if p.name not in INDEX_FILENAMES)}")
         sys.exit(1)
 
     if not os.path.exists(image_path):
