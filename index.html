@@ -3186,12 +3186,12 @@
 /* --- Home "Your Masjids" section (clone of .recent-section) --- */
 .your-masjids-section { margin-bottom: 12px; }
 
-/* Mobile scroller cards: hug their own content instead of stretching to the
-   tallest sibling, with tighter vertical rhythm. The next-jama'at line still
-   grows the card slightly when it loads — that's expected. Desktop keeps its
-   own single-row card layout (rules in the desktop media block). */
+/* Mobile scroller cards: uniform height across siblings (stretch) so a card
+   with no times isn't shorter than its neighbours, with tighter vertical
+   rhythm. Desktop keeps its own single-row card layout (rules in the desktop
+   media block). */
 @media (max-width: 767.98px) {
-  .masjid-grid.horizontal { align-items: flex-start; }
+  .masjid-grid.horizontal { align-items: stretch; }
   .masjid-grid.horizontal .masjid-card { padding: 12px 14px; }
   .masjid-grid.horizontal .masjid-card-top { margin-bottom: 8px; }
   .masjid-grid.horizontal .masjid-card-bottom { padding-top: 8px; }

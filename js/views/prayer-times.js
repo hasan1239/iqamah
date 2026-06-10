@@ -1348,8 +1348,8 @@ function renderInfoSection() {
 
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const STAR_OUTLINE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
-const BOOKMARK_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+const PIN_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
 
 let pinToastTimer = null;
 
@@ -1377,7 +1377,7 @@ function renderPrimaryButton() {
   const isMine = getMyMasjid() === masjidId;
   const starSvg = isMine ? STAR_FILLED_SVG : STAR_OUTLINE_SVG;
   const cls = isMine ? ' is-primary' : '';
-  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn" aria-haspopup="menu" aria-label="Set as My Masjid or save to Other Masjids">${starSvg} Set as</button>`;
+  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn" aria-haspopup="menu" aria-label="Set as My Masjid or pin masjid">${starSvg} Set as</button>`;
 }
 
 function refreshPrimaryButton() {
@@ -1426,23 +1426,23 @@ function openSetAsMenu(anchor) {
   }
 
   items.push({
-    icon: saved ? BOOKMARK_SVG : BOOKMARK_FILLED_SVG,
-    label: saved ? 'Remove from Other Masjids' : 'Save to Other Masjids',
+    icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+    label: saved ? 'Unpin masjid' : 'Pin masjid',
     disabled: isMine, // the My Masjid can't also be an "other"
     onSelect: () => {
       if (isOther(masjidId)) {
         removeOther(masjidId);
-        showPinToast(`Removed ${name} from Other Masjids`);
+        showPinToast(`Unpinned ${name}`);
         refreshPrimaryButton();
         return;
       }
       const r = saveOther(masjidId);
       if (!r.ok) {
-        if (r.reason === 'cap') showPinToast(`You can save up to ${OTHERS_CAP} other masjids`);
+        if (r.reason === 'cap') showPinToast(`You can pin up to ${OTHERS_CAP} masjids`);
         else if (r.reason === 'is_my_masjid') showPinToast(`${name} is already My Masjid`);
         return;
       }
-      showPinToast(`Saved ${name} to Other Masjids`);
+      showPinToast(`Pinned ${name}`);
       refreshPrimaryButton();
     },
   });
