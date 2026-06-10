@@ -260,7 +260,7 @@ function to12h(t) {
 
 function fmt(t) {
   const v = to12h(t);
-  return v || '—';
+  return v || '-';
 }
 
 function parseRowDate(dateStr) {

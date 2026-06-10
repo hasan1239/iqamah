@@ -4,9 +4,9 @@
     "type": "dua",
     "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي، فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
     "transliteration": "Allahumma anta rabbi la ilaha illa ant, khalaqtani wa ana 'abduk, wa ana 'ala 'ahdika wa wa'dika mas-tata't, a'udhu bika min sharri ma sana't, abu'u laka bini'matika 'alayya, wa abu'u laka bidhanbi, faghfir li fa innahu la yaghfirudh-dhunuba illa ant",
-    "english": "O Allah, You are my Lord; there is no god but You. You created me and I am Your servant, and I keep Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me, and I admit my sin, so forgive me — for none forgives sins but You.",
+    "english": "O Allah, You are my Lord; there is no god but You. You created me and I am Your servant, and I keep Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me, and I admit my sin, so forgive me, for none forgives sins but You.",
     "source": "Bukhari 6306",
-    "occasion": "Morning and evening — Sayyidul Istighfar"
+    "occasion": "Morning and evening, Sayyidul Istighfar"
   },
   {
     "id": "rabbana-dunya-akhirah",
@@ -51,7 +51,7 @@
     "transliteration": "La ilaha illa anta subhanaka inni kuntu minaz-zalimin",
     "english": "There is no god but You; glory be to You. Truly, I have been among the wrongdoers.",
     "source": "Qur'an 21:87",
-    "occasion": "Distress — dua of Yunus"
+    "occasion": "Distress, dua of Yunus"
   },
   {
     "id": "leaving-home",
@@ -159,14 +159,14 @@
     "transliteration": "Rabbana zalamna anfusana wa il-lam taghfir lana wa tarhamna lanakunanna minal-khasirin",
     "english": "Our Lord, we have wronged ourselves. If You do not forgive us and have mercy upon us, we will surely be among the losers.",
     "source": "Qur'an 7:23",
-    "occasion": "Repentance — dua of Adam"
+    "occasion": "Repentance, dua of Adam"
   },
   {
     "id": "bismillah-protection",
     "type": "dua",
     "arabic": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
     "transliteration": "Bismillahil-ladhi la yadurru ma'as-mihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim",
-    "english": "In the name of Allah, with whose name nothing on earth or in heaven can cause harm — and He is the All-Hearing, the All-Knowing.",
+    "english": "In the name of Allah, with whose name nothing on earth or in heaven can cause harm, and He is the All-Hearing, the All-Knowing.",
     "source": "Tirmidhi 3388",
     "occasion": "Morning and evening"
   },
@@ -265,7 +265,7 @@
     "type": "dua",
     "arabic": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
     "transliteration": "Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrinin, wa inna ila rabbina lamunqalibun",
-    "english": "Glory be to Him who has subjected this to us, for we could never have done it ourselves — and to our Lord we shall surely return.",
+    "english": "Glory be to Him who has subjected this to us, for we could never have done it ourselves, and to our Lord we shall surely return.",
     "source": "Muslim 1342",
     "occasion": "Travelling"
   },
@@ -292,7 +292,7 @@
     "type": "dua",
     "arabic": "اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا",
     "transliteration": "Allahumma la sahla illa ma ja'altahu sahla, wa anta taj'alul-hazna idha shi'ta sahla",
-    "english": "O Allah, there is no ease except in what You have made easy — and You make the difficult easy when You will.",
+    "english": "O Allah, there is no ease except in what You have made easy, and You make the difficult easy when You will.",
     "source": "Ibn Hibban 974",
     "occasion": "Facing difficulty"
   },

@@ -681,7 +681,7 @@ function renderTodayView(target) {
   const sunriseMin = toMin(todayRow['Sunrise']);
   const fajrAfterSunrise = fajrJamMin !== null && sunriseMin !== null && fajrJamMin > sunriseMin;
   const fajrAfterSunriseNote = fajrAfterSunrise
-    ? "Fajr jama'at is listed after sunrise today — please confirm with the masjid."
+    ? "Fajr jama'at is listed after sunrise today. Please confirm with the masjid."
     : '';
 
   // Build sunrise/zawal split row (inserted after Fajr in the table)
@@ -702,8 +702,8 @@ function renderTodayView(target) {
     const nameHtml = showAsterisk
       ? `${p.name}<sup class="esha-note" title="${noteForRow}">*</sup>`
       : p.name;
-    const startVal = (isEsha && eshaEmpty) ? '—' : (ft(p.start, p.isAM) || '-');
-    const jamaatVal = (isEsha && eshaEmpty) ? '—' : (ft(p.jamaat, p.isAM) || '-');
+    const startVal = (isEsha && eshaEmpty) ? '-' : (ft(p.start, p.isAM) || '-');
+    const jamaatVal = (isEsha && eshaEmpty) ? '-' : (ft(p.jamaat, p.isAM) || '-');
     const rowTitle = noteForRow ? ` title="${noteForRow}"` : '';
     return `
     <div class="time-row" data-prayer="${p.name}"${rowTitle}>
@@ -718,7 +718,7 @@ function renderTodayView(target) {
     : '';
 
   const fajrFootnoteHtml = fajrAfterSunriseNote
-    ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today — please confirm with the masjid.</div>`
+    ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today. Please confirm with the masjid.</div>`
     : '';
 
   target.innerHTML = `
