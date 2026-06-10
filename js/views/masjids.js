@@ -4,7 +4,7 @@ import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
-import { getFollowed, isFollowed, getPrimary, follow, unfollow, setPrimary, FOLLOW_CAP } from '../utils/follow.js';
+import { getOthers, isOther, getMyMasjid, setMyMasjid, clearMyMasjid, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
 import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
 import { deriveCity, getCityPostcode, OTHER_CITY } from '../utils/cities.js';
@@ -39,6 +39,8 @@ const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 const KEBAB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
+const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+const BOOKMARK_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
 const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
@@ -128,7 +130,7 @@ export function render(container) {
         </div>
 
         ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
-          <span>Tip: Long press a masjid to follow it or set it as My Masjid</span>
+          <span>Tip: Long press a masjid to set it as My Masjid or save it</span>
           <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
         </div>` : ''}
 
@@ -339,7 +341,7 @@ function renderCityGrid() {
   });
 
   // Auto-surface the city of the pinned masjid (My Masjid) to the top.
-  const pinnedSlug = getPrimary();
+  const pinnedSlug = getMyMasjid();
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
   const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
 
@@ -418,8 +420,8 @@ function renderMasjidGrid() {
   const grid = viewContainer.querySelector('#masjidsGrid');
   if (!grid) return;
 
-  const followedSet = new Set(getFollowed());
-  const primarySlug = getPrimary();
+  const savedSet = new Set(getOthers());
+  const myMasjidSlug = getMyMasjid();
 
   let filtered = cachedConfigs.slice();
 
@@ -469,10 +471,8 @@ function renderMasjidGrid() {
     const distText = getDistText(config.slug);
     const shortAddr = getCityPostcode(config.address);
     const fullAddr = config.address || '';
-    const isFollowedCard = followedSet.has(config.slug);
-    const isPrimary = config.slug === primarySlug;
-    const pinIcon = isFollowedCard ? STAR_FILLED_SVG : STAR_SVG;
-    const pinClass = isFollowedCard ? ' pinned followed' : '';
+    const isMine = config.slug === myMasjidSlug;
+    const isSaved = savedSet.has(config.slug);
     const isPending = config.approved === false;
 
     let subHtml = '';
@@ -484,7 +484,7 @@ function renderMasjidGrid() {
       subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
     }
 
-    const primaryChip = isPrimary
+    const primaryChip = isMine
       ? `<div class="my-masjid-chip-row"><span class="my-masjid-chip">★ My Masjid</span></div>`
       : '';
     const thumbContent = config.logo
@@ -497,8 +497,11 @@ function renderMasjidGrid() {
         <div class="masjid-card-info">
           <div class="masjid-name-row">
             <div class="masjid-name">${config.display_name}</div>
-            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="${isFollowedCard ? 'Unfollow' : 'Follow'} ${config.display_name}" title="${isFollowedCard ? 'Unfollow' : 'Follow'}">
-              ${pinIcon}
+            <button class="pin-btn${isMine ? ' pinned' : ''}" data-slug="${config.slug}" aria-label="${isMine ? `Unset ${config.display_name} as My Masjid` : `Set ${config.display_name} as My Masjid`}" title="${isMine ? 'Unset My Masjid' : 'Set as My Masjid'}">
+              ${isMine ? STAR_FILLED_SVG : STAR_SVG}
+            </button>
+            <button class="save-btn${isSaved ? ' saved' : ''}" data-slug="${config.slug}" aria-label="${isSaved ? `Remove ${config.display_name} from Other Masjids` : `Save ${config.display_name} to Other Masjids`}" title="${isSaved ? 'Remove from Other Masjids' : 'Save to Other Masjids'}">
+              ${isSaved ? BOOKMARK_FILLED_SVG : BOOKMARK_SVG}
             </button>
             <button class="kebab-btn" data-slug="${config.slug}" aria-label="More options for ${config.display_name}" title="More options">
               ${KEBAB_SVG}
@@ -719,12 +722,21 @@ function handlePinClick(e) {
     return;
   }
 
-  // Star → follow / unfollow
+  // Bookmark → save / remove from Other Masjids
+  const saveBtn = e.target.closest('.save-btn');
+  if (saveBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleOtherFor(saveBtn.dataset.slug);
+    return;
+  }
+
+  // Star → set / unset My Masjid
   const pinBtn = e.target.closest('.pin-btn');
   if (!pinBtn) return;
   e.preventDefault();
   e.stopPropagation();
-  toggleFollowFor(pinBtn.dataset.slug);
+  toggleMyMasjidFor(pinBtn.dataset.slug);
 }
 
 function setupLongPress() {
@@ -787,50 +799,52 @@ function masjidName(slug) {
   return config ? config.display_name : 'Masjid';
 }
 
-// Star action \u2014 follow / unfollow. First follow auto-becomes primary;
-// unfollowing the primary auto-promotes the next followed masjid.
+// Star action \u2014 set / unset My Masjid (original star semantics: tapping
+// the current My Masjid's star unsets it, no auto-promotion from others).
 // Re-renders happen via the iqamah-follow-changed listener.
-function toggleFollowFor(slug) {
+function toggleMyMasjidFor(slug) {
   const name = masjidName(slug);
-  if (isFollowed(slug)) {
-    const r = unfollow(slug);
-    if (r.removedPrimary && r.newPrimary) {
-      // Auto-promotion: the toast announces the new primary (.pin-toast is
-      // nowrap, so keep it compact)
-      showToast(`<span class="toast-star">\u2605</span> ${masjidName(r.newPrimary)} is now My Masjid`);
-    } else {
-      showToast(`Unfollowed ${name}`);
-    }
-  } else {
-    const r = follow(slug);
-    if (!r.ok && r.reason === 'cap') {
-      showToast(`You can follow up to ${FOLLOW_CAP} masjids`);
-      return;
-    }
-    showToast(r.becamePrimary
-      ? `<span class="toast-star">\u2605</span> ${name} set as My Masjid`
-      : `<span class="toast-star">\u2605</span> Following ${name}`);
-    dismissPinHint();
-  }
-}
-
-// Promote to primary (follows first if needed).
-function setPrimaryFor(slug) {
-  const name = masjidName(slug);
-  const r = setPrimary(slug);
-  if (!r.ok && r.reason === 'cap') {
-    showToast(`You can follow up to ${FOLLOW_CAP} masjids`);
+  if (getMyMasjid() === slug) {
+    clearMyMasjid();
+    showToast(`${name} is no longer My Masjid`);
     return;
   }
+  setMyMasjidFor(slug);
+}
+
+// Set My Masjid. When the masjid was saved in Other Masjids, follow.js swaps
+// the old My Masjid into the others list so nothing is lost.
+function setMyMasjidFor(slug) {
+  const name = masjidName(slug);
+  const r = setMyMasjid(slug);
+  if (!r.ok) return;
   showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
+  dismissPinHint();
+}
+
+// Bookmark action \u2014 save to / remove from Other Masjids.
+function toggleOtherFor(slug) {
+  const name = masjidName(slug);
+  if (isOther(slug)) {
+    removeOther(slug);
+    showToast(`Removed ${name} from Other Masjids`);
+    return;
+  }
+  const r = saveOther(slug);
+  if (!r.ok) {
+    if (r.reason === 'cap') showToast(`You can save up to ${OTHERS_CAP} other masjids`);
+    else if (r.reason === 'is_my_masjid') showToast(`${name} is already My Masjid`);
+    return;
+  }
+  showToast(`Saved ${name} to Other Masjids`);
   dismissPinHint();
 }
 
 // Context menu \u2014 opened by long-press (touch) or the \u22ef kebab (non-touch).
 function openMasjidMenu(slug, anchor) {
   const name = masjidName(slug);
-  const followed = isFollowed(slug);
-  const primary = getPrimary() === slug;
+  const isMine = getMyMasjid() === slug;
+  const saved = isOther(slug);
 
   openContextMenu({
     title: name,
@@ -839,14 +853,15 @@ function openMasjidMenu(slug, anchor) {
       {
         icon: STAR_FILLED_SVG,
         label: 'Set as My Masjid',
-        checked: primary,
-        disabled: primary,
-        onSelect: () => setPrimaryFor(slug),
+        checked: isMine,
+        disabled: isMine,
+        onSelect: () => setMyMasjidFor(slug),
       },
       {
-        icon: followed ? STAR_SVG : STAR_FILLED_SVG,
-        label: followed ? 'Unfollow' : 'Follow',
-        onSelect: () => toggleFollowFor(slug),
+        icon: saved ? BOOKMARK_SVG : BOOKMARK_FILLED_SVG,
+        label: saved ? 'Remove from Other Masjids' : 'Save to Other Masjids',
+        disabled: isMine, // the My Masjid can't also be an "other"
+        onSelect: () => toggleOtherFor(slug),
       },
       {
         icon: CLOCK_SVG,
@@ -1072,7 +1087,7 @@ function updateInlineHint() {
   if (postcodeHint === 'looking') {
     el.textContent = `Finding masjids near ${postcodeHintLabel}…`;
   } else if (postcodeHint === 'notfound') {
-    el.textContent = 'Postcode not found — check it and try again';
+    el.textContent = 'Postcode not found. Check it and try again';
   } else {
     el.textContent = '';
   }
@@ -1308,7 +1323,7 @@ async function loadTodayForPopup(slug) {
     if (!res.ok) return null;
     const r = getTodayRow(parseCSV(await res.text()));
     if (!r) return null;
-    const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '—');
+    const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '-');
     const fajrStart = r['Fajr Start'] || r['Subha Sadiq'] || r['Sehri Ends'] || '';
     const rows = [
       { name: 'Fajr', start: fmt(fajrStart, true), jamaat: fmt(r["Fajr Jama'at"], true) },

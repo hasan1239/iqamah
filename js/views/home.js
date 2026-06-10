@@ -4,7 +4,7 @@ import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/p
 import { parseCSV, getTodayRow, getTomorrowRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
-import { getFollowed, getPrimary, unfollow } from '../utils/follow.js';
+import { getOthers, getMyMasjid, clearMyMasjid } from '../utils/follow.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
 // Tracker data layer (no side effects on import — top level is constants and
 // function declarations only). Powers the "Today's Prayers" check-in card.
@@ -398,7 +398,7 @@ function renderHero() {
   const heroContainer = document.getElementById('heroContainer');
   if (!heroContainer) return;
 
-  const pinnedSlug = getPrimary();
+  const pinnedSlug = getMyMasjid();
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
 
   if (!pinnedConfig) {
@@ -429,7 +429,7 @@ function renderHero() {
         <span class="hero-badge hero-badge-primary">My Masjid</span>
         <div class="hero-header-right">
           ${heroPendingBadge}
-          <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Unfollow ${pinnedConfig.display_name}" title="Unfollow">
+          <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Unset ${pinnedConfig.display_name} as My Masjid" title="Unset My Masjid">
             ${STAR_FILLED_SVG}
           </button>
         </div>
@@ -670,24 +670,22 @@ async function loadSuggestedNextPrayer(config) {
   }
 }
 
-// --- Your Masjids (followed) ---
+// --- Your Masjids (My Masjid + Other Masjids) ---
 
 function renderYourMasjids() {
   const section = document.getElementById('yourMasjidsSection');
   if (!section) return;
 
-  const followed = getFollowed();
-  const primary = getPrimary();
+  const myMasjid = getMyMasjid();
+  const others = getOthers();
 
-  // Primary first, then follow order
-  const ordered = primary && followed.includes(primary)
-    ? [primary, ...followed.filter(s => s !== primary)]
-    : followed;
+  // My Masjid first (with its chip), then the saved others in save order
+  const ordered = myMasjid ? [myMasjid, ...others] : [...others];
   const configs = ordered
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean);
 
-  // Zero-UI: section only appears once the user follows >= 1 masjid
+  // Zero-UI: section only appears once there's a My Masjid or a saved other
   if (configs.length === 0) {
     section.innerHTML = '';
     return;
@@ -703,7 +701,7 @@ function renderYourMasjids() {
         ${configs.map(config => {
           const shortAddr = getCityPostcode(config.address);
           const fullAddr = config.address || '';
-          const isPrimary = config.slug === primary;
+          const isPrimary = config.slug === myMasjid;
           const isPending = config.approved === false;
           let subHtml = '';
           if (isPending) {
@@ -740,8 +738,8 @@ function renderYourMasjids() {
     </div>`;
 
   // Reuse the recently-viewed prayer loader (cards share the
-  // data-recent-next attribute; followed slugs are excluded from
-  // Recently Viewed so there are no duplicate attributes).
+  // data-recent-next attribute; My Masjid and the saved others are excluded
+  // from Recently Viewed so there are no duplicate attributes).
   loadRecentCardPrayers(configs);
 }
 
@@ -752,13 +750,13 @@ function renderRecentlyViewed() {
   if (!section) return;
 
   const recentSlugs = getRecentSlugs();
-  const pinnedSlug = getPrimary();
-  const followedSet = new Set(getFollowed());
+  const pinnedSlug = getMyMasjid();
+  const savedSet = new Set(getOthers());
 
-  // Filter out pinned + followed masjids (they live in Your Masjids) and
+  // Filter out My Masjid + saved others (they live in Your Masjids) and
   // only show ones that exist in configs
   const recentConfigs = recentSlugs
-    .filter(s => s !== pinnedSlug && !followedSet.has(s))
+    .filter(s => s !== pinnedSlug && !savedSet.has(s))
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean)
     .slice(0, 3);
@@ -1139,7 +1137,15 @@ async function loadRecentCardPrayers(configs) {
           <span class="masjid-card-next-label">${next.name}</span>
           <span class="masjid-card-next-time">${formatCardTime(next.time, next.isAM)}</span>`;
       } else {
-        el.innerHTML = '';
+        // All of today's jama'ats have passed — fall back to tomorrow's Fajr
+        // so the line still carries content instead of sitting empty.
+        const tomorrowRow = getTomorrowRow(csvData);
+        const fajrJamaat = tomorrowRow ? (tomorrowRow["Fajr Jama'at"] || '') : '';
+        el.innerHTML = fajrJamaat
+          ? `
+          <span class="masjid-card-next-label">Fajr</span>
+          <span class="masjid-card-next-time">${formatCardTime(fajrJamaat, true)}</span>`
+          : '';
       }
     } catch {
       el.innerHTML = '';
@@ -1206,7 +1212,7 @@ function renderCheckInCard() {
       <button type="button" class="hck-chip${checkinPickerFor === p.key ? ' is-open' : ''}"
               data-prayer="${p.key}" aria-haspopup="menu"
               aria-expanded="${checkinPickerFor === p.key}"
-              aria-label="${p.label} — ${checkinStatusLabel(st) || 'not logged yet'}">
+              aria-label="${p.label}: ${checkinStatusLabel(st) || 'not logged yet'}">
         <span class="hck-dot ${stClass}">${icon}</span>
         <span class="hck-name">${p.label}</span>
       </button>`;
@@ -1231,7 +1237,7 @@ function renderCheckInCard() {
     : `<span class="hck-streak hck-streak-zero">${FLAME_SVG}<span>Log all five to start a streak</span></span>`;
 
   section.innerHTML = `
-    <div class="hck-card" id="homeCheckin" role="link" aria-label="Today's prayers — open Prayer Tracker">
+    <div class="hck-card" id="homeCheckin" role="link" aria-label="Today's prayers: open Prayer Tracker">
       <div class="hck-head">
         <span class="hck-title">Today's Prayers</span>
         <a href="/tracker" class="hck-viewall" data-link>View all ${CHEVRON_SVG}</a>
@@ -1319,16 +1325,11 @@ function handleHeroClick(e) {
 
   e.preventDefault();
   e.stopPropagation();
-  // Unfollow the primary — auto-promotes the next followed masjid (or clears
-  // the primary if none remain). Events from follow.js re-render the hero,
-  // sections and the embedded masjids list.
-  const r = unfollow(unpinBtn.dataset.slug);
-  if (r.newPrimary) {
-    const next = cachedConfigs.find(c => c.slug === r.newPrimary);
-    showToast(`<span class="toast-star">★</span> ${next ? next.display_name : r.newPrimary} is now My Masjid`);
-  } else {
-    showToast('Removed from Your Masjids');
-  }
+  // Unset My Masjid — no auto-promotion from Other Masjids. Events from
+  // follow.js re-render the hero, sections and the embedded masjids list.
+  clearMyMasjid();
+  const config = cachedConfigs.find(c => c.slug === unpinBtn.dataset.slug);
+  showToast(`${config ? config.display_name : 'Masjid'} is no longer My Masjid`);
 }
 
 function showToast(html) {
@@ -1372,7 +1373,7 @@ function setupInstallBanner() {
   } else if (isIOSSafari()) {
     banner.innerHTML = `
       <button class="install-dismiss" aria-label="Dismiss">&times;</button>
-      <div class="install-banner-text"><strong>Install Iqamah</strong> — tap <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> then <strong>"Add to Home Screen"</strong>.</div>`;
+      <div class="install-banner-text"><strong>Install Iqamah</strong>: tap <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin: 0 2px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg> then <strong>"Add to Home Screen"</strong>.</div>`;
     banner.classList.add('visible');
     banner.querySelector('.install-dismiss').addEventListener('click', () => {
       banner.classList.remove('visible');

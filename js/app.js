@@ -154,12 +154,10 @@ if (!localStorage.getItem('iqamah-migrated')) {
   localStorage.setItem('iqamah-migrated', '1');
 }
 
-// Seed the followed-masjids set from an existing pinned masjid (one-time).
-// Runs after the prayerly->iqamah migration so a legacy pinned key counts.
-if (!localStorage.getItem('iqamah-followed-masjids')) {
-  const pinned = localStorage.getItem('iqamah-pinned-masjid');
-  if (pinned) localStorage.setItem('iqamah-followed-masjids', JSON.stringify([pinned]));
-}
+// Note: iqamah-pinned-masjid (My Masjid) and iqamah-followed-masjids
+// (Other Masjids) are separate concepts — others start empty and are never
+// seeded from the pin. js/utils/follow.js self-heals the others list on read
+// (strips the pinned slug), which migrates users of the old follow model.
 
 // Init
 initTheme();
