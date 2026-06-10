@@ -1398,54 +1398,52 @@ function openSetAsMenu(anchor) {
   const isMine = getMyMasjid() === masjidId;
   const saved = isOther(masjidId);
 
-  const items = [
-    {
-      icon: STAR_FILLED_SVG,
-      label: isMine ? 'My Masjid' : 'Set as My Masjid',
-      checked: isMine,
-      disabled: isMine,
-      onSelect: () => {
-        const r = setMyMasjid(masjidId);
-        if (!r.ok) return;
-        showPinToast(`<span class="toast-star">★</span> ${name} set as My Masjid`);
-        refreshPrimaryButton();
-      },
-    },
-  ];
-
-  if (isMine) {
-    items.push({
-      icon: STAR_OUTLINE_SVG,
-      label: 'Remove My Masjid',
-      onSelect: () => {
-        clearMyMasjid();
-        showPinToast(`${name} is no longer My Masjid`);
-        refreshPrimaryButton();
-      },
-    });
-  }
-
-  items.push({
-    icon: saved ? PIN_SVG : PIN_FILLED_SVG,
-    label: saved ? 'Unpin masjid' : 'Pin masjid',
-    disabled: isMine, // the My Masjid can't also be an "other"
-    onSelect: () => {
-      if (isOther(masjidId)) {
-        removeOther(masjidId);
-        showPinToast(`Unpinned ${name}`);
-        refreshPrimaryButton();
-        return;
-      }
-      const r = saveOther(masjidId);
-      if (!r.ok) {
-        if (r.reason === 'cap') showPinToast(`You can pin up to ${OTHERS_CAP} masjids`);
-        else if (r.reason === 'is_my_masjid') showPinToast(`${name} is already My Masjid`);
-        return;
-      }
-      showPinToast(`Pinned ${name}`);
-      refreshPrimaryButton();
-    },
-  });
+  // Current My Masjid: the only meaningful action is removing it, so the
+  // menu offers just that (no redundant checked/disabled entries).
+  const items = isMine
+    ? [
+        {
+          icon: STAR_OUTLINE_SVG,
+          label: 'Remove My Masjid',
+          onSelect: () => {
+            clearMyMasjid();
+            showPinToast(`${name} is no longer My Masjid`);
+            refreshPrimaryButton();
+          },
+        },
+      ]
+    : [
+        {
+          icon: STAR_FILLED_SVG,
+          label: 'Set as My Masjid',
+          onSelect: () => {
+            const r = setMyMasjid(masjidId);
+            if (!r.ok) return;
+            showPinToast(`<span class="toast-star">★</span> ${name} set as My Masjid`);
+            refreshPrimaryButton();
+          },
+        },
+        {
+          icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+          label: saved ? 'Unpin masjid' : 'Pin masjid',
+          onSelect: () => {
+            if (isOther(masjidId)) {
+              removeOther(masjidId);
+              showPinToast(`Unpinned ${name}`);
+              refreshPrimaryButton();
+              return;
+            }
+            const r = saveOther(masjidId);
+            if (!r.ok) {
+              if (r.reason === 'cap') showPinToast(`You can pin up to ${OTHERS_CAP} masjids`);
+              else if (r.reason === 'is_my_masjid') showPinToast(`${name} is already My Masjid`);
+              return;
+            }
+            showPinToast(`Pinned ${name}`);
+            refreshPrimaryButton();
+          },
+        },
+      ];
 
   openContextMenu({ title: name, anchor, items });
 }

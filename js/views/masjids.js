@@ -842,30 +842,35 @@ function openMasjidMenu(slug, anchor) {
   const isMine = getMyMasjid() === slug;
   const saved = isOther(slug);
 
-  openContextMenu({
-    title: name,
-    anchor,
-    items: [
-      {
-        icon: STAR_FILLED_SVG,
-        label: isMine ? 'My Masjid' : 'Set as My Masjid',
-        checked: isMine,
-        disabled: isMine,
-        onSelect: () => setMyMasjidFor(slug),
-      },
-      {
-        icon: saved ? PIN_SVG : PIN_FILLED_SVG,
-        label: saved ? 'Unpin masjid' : 'Pin masjid',
-        disabled: isMine, // the My Masjid can't also be an "other"
-        onSelect: () => toggleOtherFor(slug),
-      },
-      {
-        icon: CLOCK_SVG,
-        label: 'View times',
-        onSelect: () => navigate('/' + slug),
-      },
-    ],
+  // Current My Masjid: only removal makes sense, so skip the redundant
+  // checked "My Masjid" entry and the disabled pin entry.
+  const items = isMine
+    ? [
+        {
+          icon: STAR_SVG,
+          label: 'Remove My Masjid',
+          onSelect: () => toggleMyMasjidFor(slug),
+        },
+      ]
+    : [
+        {
+          icon: STAR_FILLED_SVG,
+          label: 'Set as My Masjid',
+          onSelect: () => setMyMasjidFor(slug),
+        },
+        {
+          icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+          label: saved ? 'Unpin masjid' : 'Pin masjid',
+          onSelect: () => toggleOtherFor(slug),
+        },
+      ];
+  items.push({
+    icon: CLOCK_SVG,
+    label: 'View times',
+    onSelect: () => navigate('/' + slug),
   });
+
+  openContextMenu({ title: name, anchor, items });
 }
 
 function setupPinHint() {
