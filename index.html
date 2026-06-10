@@ -3588,7 +3588,12 @@
   cursor: pointer; -webkit-tap-highlight-color: transparent;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-.hck-opt:hover { border-color: var(--gold-tint-40); color: var(--text-secondary); }
+/* Each option wears its status colour (jama'ah gold, on-time green, late amber,
+   missed grey) so the choice reads at a glance; active adds weight + fill. */
+.hck-opt.tr-st-jamaah, .hck-opt.tr-st-ontime, .hck-opt.tr-st-late, .hck-opt.tr-st-missed {
+  color: var(--trc); border-color: var(--trc);
+}
+.hck-opt:hover { background: var(--gold-tint-08); }
 .hck-opt.active {
   font-weight: 700; border-color: var(--trc); color: var(--trc);
   background: var(--gold-tint-08);

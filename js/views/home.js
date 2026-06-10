@@ -78,9 +78,9 @@ export function render(container) {
 
       <div id="eidBrowseSlot"></div>
 
-      <div id="yourMasjidsSection"></div>
-
       <div id="checkInSection"></div>
+
+      <div id="yourMasjidsSection"></div>
 
       <div id="recentSection"></div>
 
@@ -1220,9 +1220,10 @@ function renderCheckInCard() {
       </div>`;
   }
 
-  const streakHtml = current > 0
-    ? `<span class="hck-streak">${FLAME_SVG}<span><strong>${current}</strong>-day streak</span></span>`
-    : `<span class="hck-streak hck-streak-zero">${FLAME_SVG}<span>Log all five to start a streak</span></span>`;
+  // Minimal card: the streak line only appears once there is a streak.
+  const footHtml = current > 0
+    ? `<div class="hck-foot"><span class="hck-streak">${FLAME_SVG}<span><strong>${current}</strong>-day streak</span></span></div>`
+    : '';
 
   section.innerHTML = `
     <div class="hck-card" id="homeCheckin" role="link" aria-label="Today's prayers: open Prayer Tracker">
@@ -1232,7 +1233,7 @@ function renderCheckInCard() {
       </div>
       <div class="hck-row">${chips}</div>
       ${pickerHtml}
-      <div class="hck-foot">${streakHtml}</div>
+      ${footHtml}
     </div>`;
 }
 
