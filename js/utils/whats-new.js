@@ -163,17 +163,37 @@ function visibleEntries(changelog) {
     .filter((r) => r && Array.isArray(r.items) && r.items.length > 0);
 }
 
+// Keys only ever created by real user interaction. Presence of any of them
+// on a profile with no last-seen marker means an existing user from before
+// the what's-new feature shipped — they should see the current release notes.
+const RETURNING_USER_KEYS = [
+  'iqamah-pinned-masjid', 'iqamah-followed-masjids', 'iqamah-recent-masjids',
+  'iqamah-user-name', 'iqamah-last-city', 'iqamah-install-dismissed',
+  'iqamah-more-hint', 'iqamah-pin-hint-dismissed', 'iqamah-tracker-log',
+  'iqamah-tasbih', 'iqamah-postcode', 'iqamah-cached-location',
+];
+
+function isReturningUser() {
+  return RETURNING_USER_KEYS.some((k) => localStorage.getItem(k) !== null);
+}
+
 // Boot-time check. Call once after the router has rendered the first view.
 export async function checkWhatsNew() {
   try {
-    const lastSeen = localStorage.getItem(LAST_SEEN_KEY);
+    let lastSeen = localStorage.getItem(LAST_SEEN_KEY);
     const current = (await fetchJSON('/version.json')).version;
     if (!current) return;
 
     if (!lastSeen) {
-      // First visit (or pre-feature profile): seed quietly, show nothing.
-      localStorage.setItem(LAST_SEEN_KEY, current);
-      return;
+      if (!isReturningUser()) {
+        // Genuinely first visit: seed quietly, show nothing.
+        localStorage.setItem(LAST_SEEN_KEY, current);
+        return;
+      }
+      // Existing user from before this feature: backdate so the newest
+      // release entries show once.
+      lastSeen = '0.0.0';
+      localStorage.setItem(LAST_SEEN_KEY, lastSeen);
     }
     if (cmpVersions(current, lastSeen) <= 0) return; // up to date
 
