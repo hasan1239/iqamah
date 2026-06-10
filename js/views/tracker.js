@@ -316,7 +316,7 @@ export function render(container) {
       <section class="tracker-stats" id="trackerStats"></section>
       <section class="tracker-month-card" id="trackerMonth"></section>
       <section id="trackerEditorSlot"></section>
-      <p class="tracker-note">Stored privately on this device<span class="tracker-note-edit">Today and the previous two days can be edited</span></p>
+      <p class="tracker-note">Today and the previous two days can be edited</p>
     </div>`;
 
   root = container.querySelector('.tracker-view');
