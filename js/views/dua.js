@@ -9,17 +9,43 @@ const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 let actionsClickHandler = null;
 let listClickHandler = null;
 let listKeyHandler = null;
+let todayTranslitHandler = null;
+
+// Length-aware Arabic sizing tiers. Counted on the diacritic-stripped string
+// (harakat roughly double the raw length without adding width). Calibrated
+// against the current dataset: most duas are <= 75 stripped chars, a middle
+// band sits around 87-118, and Sayyidul Istighfar tops out at 174.
+const ARABIC_MEDIUM_FROM = 76;  // stripped chars at/above this -> medium tier
+const ARABIC_LONG_FROM = 141;   // stripped chars at/above this -> long tier
+const ARABIC_DIACRITICS = /[ً-ٰٟۖ-ۭ]/g;
+
+function arabicSizeClass(arabic) {
+  const len = String(arabic || '').replace(ARABIC_DIACRITICS, '').length;
+  if (len >= ARABIC_LONG_FROM) return 'dua-arabic-long';
+  if (len >= ARABIC_MEDIUM_FROM) return 'dua-arabic-medium';
+  return 'dua-arabic-short';
+}
+
+// No em dashes in user-facing text. Occasion strings in the dataset may join
+// parts with one ("Morning and evening — Sayyidul Istighfar"); the dataset is
+// under scholarly review, so rewrite at display time instead of editing it.
+function formatOccasion(text) {
+  return String(text || '').replace(/\s*[–—]\s*/g, ' · ');
+}
 
 function duaBodyHTML(dua) {
   return `
-    <div class="dua-arabic" lang="ar" dir="rtl">${dua.arabic}</div>
-    <p class="dua-transliteration">${dua.transliteration}</p>
+    <div class="dua-arabic ${arabicSizeClass(dua.arabic)}" lang="ar" dir="rtl">${dua.arabic}</div>
+    <div class="dua-translit-block">
+      <button type="button" class="dua-translit-toggle" aria-expanded="false"><span class="dua-translit-toggle-label">Show transliteration</span>${CHEVRON_SVG}</button>
+      <p class="dua-transliteration">${dua.transliteration}</p>
+    </div>
     <p class="dua-english">&ldquo;${dua.english}&rdquo;</p>
     <div class="dua-source-line"><span class="dua-source-chip">${dua.source}</span></div>`;
 }
 
 function shareText(dua) {
-  return `${dua.arabic}\n\n${dua.transliteration}\n\n"${dua.english}"\n— ${dua.source}`;
+  return `${dua.arabic}\n\n${dua.transliteration}\n\n"${dua.english}"\n(${dua.source})`;
 }
 
 function flashLabel(btn, label) {
@@ -61,6 +87,17 @@ function toggleItem(item) {
   item.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 }
 
+// Collapsible transliteration — collapsed by default on every visit
+// (deliberately not persisted).
+function toggleTranslit(btn) {
+  const block = btn.closest('.dua-translit-block');
+  if (!block) return;
+  const open = block.classList.toggle('dua-translit-open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  const label = btn.querySelector('.dua-translit-toggle-label');
+  if (label) label.textContent = open ? 'Hide transliteration' : 'Show transliteration';
+}
+
 export async function render(container) {
   container.innerHTML = `
     <div class="dua-view">
@@ -97,7 +134,7 @@ export async function render(container) {
          role="button" tabindex="0" aria-expanded="false" data-index="${i}">
       <div class="dua-item-row">
         <div class="dua-item-meta">
-          <span class="dua-item-occasion">${d.occasion}</span>
+          <span class="dua-item-occasion">${formatOccasion(d.occasion)}</span>
           <span class="dua-item-snippet">${d.english}</span>
         </div>
         ${d.id === today.id ? '<span class="dua-item-chip">Today</span>' : ''}
@@ -110,7 +147,7 @@ export async function render(container) {
     <section class="dua-today-card">
       <div class="dua-today-top">
         <span class="dua-today-badge">Dua of the Day</span>
-        <span class="dua-occasion">${today.occasion}</span>
+        <span class="dua-occasion">${formatOccasion(today.occasion)}</span>
       </div>
       ${duaBodyHTML(today)}
       <div class="dua-actions">
@@ -133,14 +170,28 @@ export async function render(container) {
   };
   if (actionsEl) actionsEl.addEventListener('click', actionsClickHandler);
 
+  // Transliteration toggle on the today card (list items handle theirs in the
+  // delegated list click handler below)
+  const todayCardEl = container.querySelector('.dua-today-card');
+  todayTranslitHandler = (e) => {
+    const btn = e.target.closest('.dua-translit-toggle');
+    if (btn) toggleTranslit(btn);
+  };
+  if (todayCardEl) todayCardEl.addEventListener('click', todayTranslitHandler);
+
   // Expand/collapse items in the collection list
   const listEl = container.querySelector('.dua-list');
   listClickHandler = (e) => {
+    const toggle = e.target.closest('.dua-translit-toggle');
+    if (toggle) { toggleTranslit(toggle); return; } // don't collapse the item
     const item = e.target.closest('.dua-item');
     if (item) toggleItem(item);
   };
   listKeyHandler = (e) => {
     if (e.key !== 'Enter' && e.key !== ' ') return;
+    // The translit toggle is a real <button>; let its native key handling
+    // fire the click instead of collapsing the surrounding item.
+    if (e.target.closest('.dua-translit-toggle')) return;
     const item = e.target.closest('.dua-item');
     if (!item) return;
     e.preventDefault();
@@ -156,4 +207,5 @@ export function destroy() {
   actionsClickHandler = null;
   listClickHandler = null;
   listKeyHandler = null;
+  todayTranslitHandler = null;
 }
