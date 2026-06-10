@@ -1006,9 +1006,12 @@
     "csv": "faizul.csv",
     "approved": true,
     "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-    "jummah_times": "1st Jumu'ah: 1:30pm, 2nd Jumu'ah: 4:10pm",
+    "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
     "lat": 52.5106,
-    "lon": -1.8912
+    "lon": -1.8912,
+    "provider": {
+      "type": "image"
+    }
   },
   {
     "slug": "falaah",
@@ -1562,13 +1565,16 @@
   {
     "slug": "madani",
     "display_name": "Madani Masjid",
-    "address": "77 Evington Valley Road, Leicester, LE5 5LL",
+    "address": "Leicester Central Mosque, Conduit Street, Leicester, LE2 0JN / Leicester Mosque, 2A Sutherland Street, Leicester, LE2 1DS",
     "csv": "madani.csv",
     "approved": true,
-    "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah at 9:00am",
-    "jummah_times": "Jumu'ah Lecture: 12:00pm, Jumu'ah Adhan: 12:17-12:24pm, Jumu'ah Khutbah: 12:25-12:30pm, Gate 4 Opens",
+    "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah a",
+    "jummah_times": "Sutherland St: Speech 12:45, Khutba 1:25; Conduit St: Speech 12:45, Khutba 1:25; 2nd Jamaat (Sutherl",
     "lat": 52.6278525,
-    "lon": -1.0987708
+    "lon": -1.0987708,
+    "provider": {
+      "type": "image"
+    }
   },
   {
     "slug": "madina_islamic_centre_cricklewood",
@@ -2597,9 +2603,12 @@
     "csv": "quba.csv",
     "approved": true,
     "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
+    "jummah_times": "Jumuah Sermon: 1:10pm",
     "lat": 52.5127,
-    "lon": -1.9206
+    "lon": -1.9206,
+    "provider": {
+      "type": "image"
+    }
   },
   {
     "slug": "quba_aston",
@@ -2644,7 +2653,10 @@
     "eid_salah": "",
     "jummah_times": "First Khutba in Kurdish & English at 01:00, Second Khutba in Arabic at 02:00",
     "lat": 53.4608698,
-    "lon": -2.2513595
+    "lon": -2.2513595,
+    "provider": {
+      "type": "image"
+    }
   },
   {
     "slug": "redbridge_muslim_community_centre",
@@ -3057,6 +3069,18 @@
     },
     "provider": {
       "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "usman",
+    "display_name": "Masjid Usman",
+    "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
+    "csv": "usman.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
+    "provider": {
+      "type": "image"
     }
   },
   {
