@@ -86,14 +86,6 @@ export function render(container) {
 
       <div id="duaSection"></div>
 
-      <div class="home-browse-all">
-        <a href="/masjids" class="home-browse-btn" data-link>
-          ${MOSQUE_SVG}
-          <span>Browse All Masjids</span>
-          ${CHEVRON_SVG}
-        </a>
-      </div>
-
       <div id="desktopMasjidList" class="desktop-masjid-list"></div>
 
       <div class="install-banner" id="installBanner"></div>
