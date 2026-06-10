@@ -361,7 +361,7 @@ function increment() {
       const cycleEnd = state.segment === PRESET_CYCLE.length - 1;
       buzz(cycleEnd ? HAPTIC_CYCLE : HAPTIC_TARGET);
       celebrate();
-      flashHint(cycleEnd ? 'Tasbih complete — 100 dhikr' : `${seg.translit} complete`, cycleEnd ? 2000 : 1200);
+      flashHint(cycleEnd ? 'Tasbih complete · 100 dhikr' : `${seg.translit} complete`, cycleEnd ? 2000 : 1200);
       // Brief pause on the full ring, then advance. A tap landing inside this
       // window commits the advance first (commitPendingAdvance), so fast,
       // eyes-free tapping never loses a count.
