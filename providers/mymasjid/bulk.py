@@ -26,7 +26,7 @@ import traceback
 from collections import Counter
 from pathlib import Path
 
-from providers import regenerate_index, check_start_outliers
+from providers import INDEX_FILENAMES, regenerate_index, check_start_outliers
 from providers.mymasjid.fetch import fetch_one, fetch_timings
 from providers.mymasjid.discover import slugify, dedup_key
 
@@ -50,14 +50,14 @@ def parse_list_file(path: Path) -> list[tuple[str, str | None]]:
 
 
 def existing_slugs(mosques_dir: Path) -> set[str]:
-    return {p.stem for p in mosques_dir.glob("*.json") if p.name != "index.json"}
+    return {p.stem for p in mosques_dir.glob("*.json") if p.name not in INDEX_FILENAMES}
 
 
 def existing_guid_to_slug(mosques_dir: Path) -> dict[str, str]:
     """Map mymasjid provider.ref.guidId → existing slug, for idempotent re-fetch."""
     mapping = {}
     for p in mosques_dir.glob("*.json"):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             with open(p, encoding="utf-8") as f:

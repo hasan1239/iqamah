@@ -16,6 +16,14 @@ const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 
 const BEADS_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="20" cy="13" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="4" cy="13" r="2"/><path d="M6.5 7.2 10.3 4.8M13.7 4.8l3.8 2.4M19.7 8l.5 3M18.4 14.4 13.6 18.7M10.4 18.7 5.6 14.4M4.3 11 4.8 8"/></svg>';
 
+const BOOK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
+
+const CALENDAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+const GIFT_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>';
+
+const SHIELD_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>';
+
 export const FEATURES = [
   {
     id: 'qibla',
@@ -50,21 +58,62 @@ export const FEATURES = [
   {
     id: 'tracker',
     label: 'Prayer Tracker',
-    desc: 'Coming soon',
+    desc: 'Log your daily salah',
     icon: CHECK_SVG,
     route: '/tracker',
-    badge: null, // "Coming soon" desc already conveys this
-    enabled: false,
+    badge: 'NEW',
+    enabled: true,
     show: () => true,
   },
   {
     id: 'tasbih',
     label: 'Tasbih',
-    desc: 'Coming soon',
+    desc: 'Dhikr counter',
     icon: BEADS_SVG,
     route: '/tasbih',
-    badge: null, // "Coming soon" desc already conveys this
-    enabled: false,
+    badge: 'NEW',
+    enabled: true,
     show: () => true,
+  },
+  {
+    id: 'dua',
+    label: 'Daily Dua',
+    desc: 'A dua for every day',
+    icon: BOOK_SVG,
+    route: '/dua',
+    badge: 'NEW',
+    enabled: true,
+    show: () => true,
+  },
+  {
+    id: 'jummah',
+    label: 'Jummah Times',
+    desc: 'Friday jama\'at times',
+    icon: CALENDAR_SVG,
+    route: '/jummah-times',
+    badge: 'NEW',
+    enabled: true,
+    show: () => true,
+  },
+  {
+    id: 'eid-card',
+    label: 'Eid Card',
+    desc: 'Share an Eid Mubarak greeting',
+    icon: GIFT_SVG,
+    route: '/eid-card',
+    badge: null,
+    enabled: true,
+    show: () => true, // consider season-gating (eid/late ramadan) once seasons cache locally
+  },
+  {
+    id: 'admin',
+    label: 'Admin',
+    desc: 'Masjid data health',
+    icon: SHIELD_SVG,
+    route: '/admin',
+    badge: null,
+    enabled: true,
+    // Only admins ever see this tile (session cache set by isAdmin()).
+    show: () => sessionStorage.getItem('iqamah-admin') === '1',
   },
 ];

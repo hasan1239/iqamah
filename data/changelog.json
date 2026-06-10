@@ -1,0 +1,52 @@
+[
+  {
+    "version": "2.5.0",
+    "date": "2026-06-10",
+    "title": "Feature pack",
+    "items": [
+      {
+        "title": "Prayer Tracker",
+        "desc": "Log your five daily prayers and build a streak",
+        "route": "/tracker"
+      },
+      {
+        "title": "Tasbih",
+        "desc": "A simple counter for your daily dhikr",
+        "route": "/tasbih"
+      },
+      {
+        "title": "Daily Dua",
+        "desc": "A new dua to read every day",
+        "route": "/dua"
+      },
+      {
+        "title": "Jummah Times",
+        "desc": "Friday jama'at times for every masjid, grouped by city",
+        "route": "/jummah-times"
+      },
+      {
+        "title": "Pinned Masjids",
+        "desc": "Save up to 5 masjids alongside My Masjid",
+        "route": "/masjids"
+      },
+      {
+        "title": "Share today's times",
+        "desc": "Send today's prayer times to friends as an image"
+      },
+      {
+        "title": "Postcode search",
+        "desc": "Find masjids near you with a quick postcode search",
+        "route": "/masjids"
+      },
+      {
+        "title": "Eid greeting cards",
+        "desc": "Create and share an Eid Mubarak card",
+        "route": "/eid-card"
+      },
+      {
+        "title": "Instant lockscreens",
+        "desc": "Download a lockscreen wallpaper for any masjid in seconds"
+      }
+    ]
+  }
+]

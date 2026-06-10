@@ -24,7 +24,7 @@ import time
 import traceback
 from pathlib import Path
 
-from providers import regenerate_index, check_start_outliers
+from providers import INDEX_FILENAMES, regenerate_index, check_start_outliers
 from providers.masjidbox.fetch import fetch_one, fetch_athany, slugify
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -48,13 +48,13 @@ def parse_list_file(path: Path) -> list[tuple[str, str | None]]:
 
 
 def existing_slugs(mosques_dir: Path) -> set[str]:
-    return {p.stem for p in mosques_dir.glob("*.json") if p.name != "index.json"}
+    return {p.stem for p in mosques_dir.glob("*.json") if p.name not in INDEX_FILENAMES}
 
 
 def existing_mbslug_to_slug(mosques_dir: Path) -> dict[str, str]:
     mapping = {}
     for p in mosques_dir.glob("*.json"):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             cfg = json.loads(p.read_text(encoding="utf-8"))

@@ -26,7 +26,7 @@ import json
 import time
 from pathlib import Path
 
-from providers import regenerate_index
+from providers import INDEX_FILENAMES, regenerate_index
 from providers.mawaqit.fetch import parse_mawaqit_label
 from providers.mawaqit.sweep import name_to_slug, extract_postcode
 
@@ -169,7 +169,7 @@ def main():
     # Collect mawaqit configs + their cached raw data
     configs: list[tuple[str, dict, dict]] = []  # (current_slug, config, raw_data_or_None)
     for p in sorted(mosques_dir.glob("*.json")):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             cfg = json.loads(p.read_text(encoding="utf-8"))

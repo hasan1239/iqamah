@@ -40,6 +40,7 @@ import urllib.request
 from datetime import date
 from pathlib import Path
 
+from providers import INDEX_FILENAMES
 from providers.mawaqit.discover import (
     discover_search,
     extract_city,
@@ -156,7 +157,7 @@ def load_onboarded(mosques_dir: Path) -> set[str]:
     """Mawaqit-provider paths already on disk (provider.ref.path)."""
     out = set()
     for p in mosques_dir.glob("*.json"):
-        if p.name == "index.json":
+        if p.name in INDEX_FILENAMES:
             continue
         try:
             cfg = json.loads(p.read_text(encoding="utf-8"))
@@ -394,7 +395,7 @@ def main():
 
     # Derive a name-based short slug for each keeper, handling collisions
     # against existing configs on disk and other keepers in this batch.
-    taken = {p.stem for p in mosques_dir.glob("*.json") if p.name != "index.json"}
+    taken = {p.stem for p in mosques_dir.glob("*.json") if p.name not in INDEX_FILENAMES}
     proposed: list[tuple[str, dict, str]] = []  # (mawaqit_path, masjid_data, short_slug)
     for slug, m, _src in keepers:
         short = name_to_slug(m.get("name") or "")

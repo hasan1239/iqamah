@@ -16,6 +16,8 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 from PIL import Image
 
+from providers import INDEX_FILENAMES
+
 # Configure UTF-8 encoding for Windows console
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8')
@@ -88,7 +90,7 @@ def load_mosques(data_dir: str) -> dict:
     config_dir = os.path.join(data_dir, "mosques")
     if os.path.isdir(config_dir):
         for f in sorted(os.listdir(config_dir)):
-            if not f.endswith(".json") or f == "index.json":
+            if not f.endswith(".json") or f in INDEX_FILENAMES:
                 continue
             config_path = os.path.join(config_dir, f)
             with open(config_path, encoding="utf-8") as fh:

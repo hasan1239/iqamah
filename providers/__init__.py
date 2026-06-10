@@ -40,26 +40,64 @@ def lookup_uk_postcode(postcode: str) -> dict | None:
         return None
 
 
+# Generated index files living alongside the per-masjid configs in
+# data/mosques/ — every *.json glob over that directory must skip these.
+INDEX_FILENAMES = {"index.json", "index-slim.json"}
+
+# Slim companion index (data/mosques/index-slim.json) — same array order as
+# index.json, but each entry is stripped down to only the fields the list/map/
+# home/eid views actually read off index entries (see js/views/home.js,
+# masjids.js, masjid-map.js, eid-times.js, settings.js):
+#   slug, display_name, address, city, logo, csv, approved, eid_salah,
+#   test_masjid, hidden, latitude/longitude (+ legacy lat/lon),
+#   quality  -> slimmed to just {"status": ...}
+#   provider -> slimmed to just {"type": ...}
+# Everything else (quality.warnings/issues, notes, provider.ref/source_url,
+# phone/email/website, jummah_times, columns, source_image, ...) is
+# deliberately excluded — detail pages fetch the full per-masjid config
+# (data/mosques/{slug}.json) instead. Values are copied verbatim; keys absent
+# from a config stay absent from its slim entry.
+SLIM_INDEX_FIELDS = (
+    "slug", "display_name", "address", "city", "logo", "csv", "approved",
+    "eid_salah", "jummah_times", "test_masjid", "hidden",
+    "latitude", "longitude", "lat", "lon",
+)
+
+
+def slim_config(cfg: dict) -> dict:
+    """Reduce a full masjid config to its slim index entry (values verbatim)."""
+    slim = {k: cfg[k] for k in SLIM_INDEX_FIELDS if k in cfg}
+    quality = cfg.get("quality")
+    if isinstance(quality, dict) and "status" in quality:
+        slim["quality"] = {"status": quality["status"]}
+    provider = cfg.get("provider")
+    if isinstance(provider, dict) and "type" in provider:
+        slim["provider"] = {"type": provider["type"]}
+    return slim
+
+
 def regenerate_index(mosques_dir: Path) -> int:
     """
-    Rebuild data/mosques/index.json by bundling every masjid config in the
-    directory, regardless of provider. Mirrors the
-    `jq -s '.' $(ls *.json | sort)` step in the GitHub Actions workflows so
-    local runs stay in sync without a deploy.
+    Rebuild data/mosques/index.json (full configs) AND its slim companion
+    data/mosques/index-slim.json (lightweight entries for the list/map/home
+    views — see SLIM_INDEX_FIELDS above) by bundling every masjid config in
+    the directory, regardless of provider. The GitHub Actions workflows call
+    this same function, so local runs stay in sync without a deploy.
     Returns the number of masjids written.
     """
-    index_path = mosques_dir / "index.json"
     configs = []
     for path in sorted(mosques_dir.glob("*.json")):
-        if path.name == "index.json":
+        if path.name in INDEX_FILENAMES:
             continue
         try:
             with open(path, encoding="utf-8") as f:
                 configs.append(json.load(f))
         except Exception as e:
             print(f"  Skipping {path.name} in index ({e})")
-    with open(index_path, "w", encoding="utf-8") as f:
+    with open(mosques_dir / "index.json", "w", encoding="utf-8") as f:
         json.dump(configs, f, indent=2, ensure_ascii=False)
+    with open(mosques_dir / "index-slim.json", "w", encoding="utf-8") as f:
+        json.dump([slim_config(c) for c in configs], f, indent=2, ensure_ascii=False)
     return len(configs)
 
 
@@ -108,7 +146,7 @@ def check_start_outliers(data_dir: Path, slugs_to_check: list[str], ref_date: st
     no_area = set()  # configs with no parseable postcode — can't be grouped/checked
     check_set = set(slugs_to_check)
     for cfg_path in (data_dir / "mosques").glob("*.json"):
-        if cfg_path.name == "index.json":
+        if cfg_path.name in INDEX_FILENAMES:
             continue
         try:
             cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
