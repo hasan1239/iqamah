@@ -1111,13 +1111,10 @@ function updateHeroLeaveLine(config, todayRow) {
 // --- Recent card prayers ---
 
 async function loadRecentCardPrayers(configs) {
-  // The chevron no longer occupies the card's bottom row, so when there is
-  // no next-prayer content the whole row (and its top divider) is hidden
-  // rather than left as an empty strip.
+  // The bottom row (and its top divider) stays rendered even with no
+  // next-prayer content, so cards in the scroller keep a consistent shape.
   const setNext = (el, html) => {
     el.innerHTML = html;
-    const bottom = el.closest('.masjid-card-bottom');
-    if (bottom) bottom.hidden = !html;
   };
   for (const config of configs) {
     const el = document.querySelector(`[data-recent-next="${config.slug}"]`);
