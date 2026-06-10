@@ -848,7 +848,7 @@ function openMasjidMenu(slug, anchor) {
     items: [
       {
         icon: STAR_FILLED_SVG,
-        label: 'Set as My Masjid',
+        label: isMine ? 'My Masjid' : 'Set as My Masjid',
         checked: isMine,
         disabled: isMine,
         onSelect: () => setMyMasjidFor(slug),
