@@ -670,22 +670,20 @@ async function loadSuggestedNextPrayer(config) {
   }
 }
 
-// --- Your Masjids (My Masjid + Other Masjids) ---
+// --- Other Masjids (saved others only — My Masjid lives in the hero above) ---
 
 function renderYourMasjids() {
   const section = document.getElementById('yourMasjidsSection');
   if (!section) return;
 
-  const myMasjid = getMyMasjid();
-  const others = getOthers();
-
-  // My Masjid first (with its chip), then the saved others in save order
-  const ordered = myMasjid ? [myMasjid, ...others] : [...others];
-  const configs = ordered
+  // Saved others only, in save order. My Masjid is deliberately excluded —
+  // it already leads the page as the hero card, so repeating it here would
+  // duplicate it.
+  const configs = getOthers()
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean);
 
-  // Zero-UI: section only appears once there's a My Masjid or a saved other
+  // Zero-UI: section only appears once there's at least one other masjid
   if (configs.length === 0) {
     section.innerHTML = '';
     return;
@@ -694,14 +692,13 @@ function renderYourMasjids() {
   section.innerHTML = `
     <div class="recent-section your-masjids-section">
       <div class="masjid-scroll-header">
-        <span class="masjid-scroll-title">Your Masjids</span>
+        <span class="masjid-scroll-title">Other Masjids</span>
         <a href="/settings" class="your-masjids-edit" data-link>Edit ${CHEVRON_SVG}</a>
       </div>
       <div class="masjid-grid horizontal">
         ${configs.map(config => {
           const shortAddr = getCityPostcode(config.address);
           const fullAddr = config.address || '';
-          const isPrimary = config.slug === myMasjid;
           const isPending = config.approved === false;
           let subHtml = '';
           if (isPending) {
@@ -709,19 +706,15 @@ function renderYourMasjids() {
           } else if (config.address) {
             subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
           }
-          const primaryChip = isPrimary
-            ? `<div class="my-masjid-chip-row"><span class="my-masjid-chip">★ My Masjid</span></div>`
-            : '';
           const thumbContent = config.logo
             ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
             : MOSQUE_SVG;
           const cityAttr = config.city ? ` data-city="${config.city}"` : '';
-          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr}>
+          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr} aria-label="${config.display_name}: view prayer times">
             <div class="masjid-card-top">
               <div class="masjid-card-thumb${config.logo ? ' has-logo' : ''}">${thumbContent}</div>
               <div class="masjid-card-info">
                 <div class="masjid-name">${config.display_name}</div>
-                ${primaryChip}
                 ${subHtml}
               </div>
             </div>
@@ -730,7 +723,6 @@ function renderYourMasjids() {
                 <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
                 <div class="skeleton-bone" style="width:56px;height:12px"></div>
               </div>
-              <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
             </div>
           </a>`;
         }).join('')}
@@ -801,7 +793,7 @@ function renderRecentlyViewed() {
             ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
             : MOSQUE_SVG;
           const cityAttr = config.city ? ` data-city="${config.city}"` : '';
-          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr}>
+          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr} aria-label="${config.display_name}: view prayer times">
             <div class="masjid-card-top">
               <div class="masjid-card-thumb${config.logo ? ' has-logo' : ''}">${thumbContent}</div>
               <div class="masjid-card-info">
@@ -814,7 +806,6 @@ function renderRecentlyViewed() {
                 <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
                 <div class="skeleton-bone" style="width:56px;height:12px"></div>
               </div>
-              <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
             </div>
           </a>`;
         }).join('')}
@@ -1120,35 +1111,43 @@ function updateHeroLeaveLine(config, todayRow) {
 // --- Recent card prayers ---
 
 async function loadRecentCardPrayers(configs) {
+  // The chevron no longer occupies the card's bottom row, so when there is
+  // no next-prayer content the whole row (and its top divider) is hidden
+  // rather than left as an empty strip.
+  const setNext = (el, html) => {
+    el.innerHTML = html;
+    const bottom = el.closest('.masjid-card-bottom');
+    if (bottom) bottom.hidden = !html;
+  };
   for (const config of configs) {
     const el = document.querySelector(`[data-recent-next="${config.slug}"]`);
     if (!el) continue;
     try {
       const csvFile = config.csv || config.slug + '.csv';
       const res = await fetch(`/data/${csvFile}`);
-      if (!res.ok) { el.innerHTML = ''; continue; }
+      if (!res.ok) { setNext(el, ''); continue; }
       const text = await res.text();
       const csvData = parseCSV(text);
       const todayRow = getTodayRow(csvData);
-      if (!todayRow) { el.innerHTML = ''; continue; }
+      if (!todayRow) { setNext(el, ''); continue; }
       const next = getNextJamaatFromRow(todayRow);
       if (next) {
-        el.innerHTML = `
+        setNext(el, `
           <span class="masjid-card-next-label">${next.name}</span>
-          <span class="masjid-card-next-time">${formatCardTime(next.time, next.isAM)}</span>`;
+          <span class="masjid-card-next-time">${formatCardTime(next.time, next.isAM)}</span>`);
       } else {
         // All of today's jama'ats have passed — fall back to tomorrow's Fajr
         // so the line still carries content instead of sitting empty.
         const tomorrowRow = getTomorrowRow(csvData);
         const fajrJamaat = tomorrowRow ? (tomorrowRow["Fajr Jama'at"] || '') : '';
-        el.innerHTML = fajrJamaat
+        setNext(el, fajrJamaat
           ? `
           <span class="masjid-card-next-label">Fajr</span>
           <span class="masjid-card-next-time">${formatCardTime(fajrJamaat, true)}</span>`
-          : '';
+          : '');
       }
     } catch {
-      el.innerHTML = '';
+      setNext(el, '');
     }
   }
 }
@@ -1296,10 +1295,9 @@ async function renderDuaCard() {
     if (!sec) return;
     if (!dua) { sec.innerHTML = ''; return; }
     sec.innerHTML = `
-      <a href="/dua" class="home-dua-card" data-link>
+      <a href="/dua" class="home-dua-card" data-link aria-label="Dua of the Day: ${dua.occasion}. Open daily duas">
         <div class="home-dua-top">
           <span class="home-dua-badge">Dua of the Day</span>
-          <span class="home-dua-chevron">${CHEVRON_SVG}</span>
         </div>
         <div class="home-dua-occasion">${dua.occasion}</div>
         <p class="home-dua-text">&ldquo;${dua.english}&rdquo;</p>

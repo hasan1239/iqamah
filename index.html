@@ -3832,6 +3832,101 @@
   .jummah-city-header { top: 48px; }
 }
 
+
+    /* ========== Fix round 3: Home: Other Masjids section, chevron removal (merged from _agent_css/home-round3.css) ========== */
+/* Home round 3 — Other Masjids section + chevron removal (appended after
+   index.html styles, so these later rules win). */
+
+/* Card bottom rows no longer hold a chevron. When a card has no next-prayer
+   content, home.js sets [hidden] on the row so it doesn't sit as an empty
+   strip under its top divider. The base rule's display:flex would otherwise
+   defeat the hidden attribute. */
+.masjid-card-bottom[hidden] { display: none; }
+
+/* With the chevron gone the bottom row has a single child; no space needs
+   reserving for the old 28px chevron button. */
+.masjid-card-bottom { justify-content: flex-start; }
+
+/* Dua of the Day card: the top row only carries the badge now. */
+.home-dua-top { justify-content: flex-start; }
+
+    /* ========== Fix round 3: Tasbih: harakat ink clearance (merged from _agent_css/tasbih-clearance.css) ========== */
+/* ============================================
+   TASBIH — real clearance between the transliteration and the Arabic
+   (follow-up to the earlier "tasbih-dua-fixes" round, which raised
+   line-height to 1.9 and declared the overlap fixed from element-box
+   metrics).
+
+   Why that fix could not work: Amiri's font bounding box is ~1.74em
+   (ascent 41px + descent 23px at 2.3rem), so a 1.9 line-height leaves
+   under 3px of half-leading above the content area. Worse, the stacked
+   harakat (shadda + superscript alef on Allah's lam, dammas on the
+   seen) are INK overflow: measured actualBoundingBoxAscent is 54.4px
+   at 2.3rem, 13.4px ABOVE the font's own ascent. Glyph ink paints
+   outside the line box no matter the line-height, so the harakat
+   painted ~8px above the element's top edge, straight over the
+   transliteration. Element boxes never overlapped — only ink did —
+   which is exactly what a computed-metrics check misses.
+
+   The fix gives the ink real, dedicated room: padding-top on the
+   Arabic element sized to swallow the ink overshoot, plus a small
+   margin under the transliteration. Three-class selectors beat the
+   earlier round's two-class overrides at any source order.
+   ============================================ */
+
+.tasbih-view .tasbih-dhikr .tasbih-translit { margin-bottom: 4px; }
+
+.tasbih-view .tasbih-dhikr .tasbih-arabic {
+  /* Ink tops out ~10.5px above the box at 2.3rem/1.9 with no padding;
+     16px puts ~5.5px of true daylight above the tallest harakat stack,
+     ~9.5px to the transliteration's border box once the margin lands. */
+  padding-top: 16px;
+  padding-bottom: 2px; /* descent ink stays inside the 1.9 line box */
+}
+
+/* Short phones (the 700px tier re-declares font metrics, so restate
+   the clearance: ink overshoot is ~9px at 1.9rem/1.85 with no padding) */
+@media (max-height: 700px) {
+  .tasbih-view .tasbih-dhikr .tasbih-arabic { padding-top: 14px; }
+}
+
+    /* ========== Fix round 3: Jummah: full-bleed city headers (merged from _agent_css/jummah-headers.css) ========== */
+/* ============================================
+   JUMMAH — full-bleed city group headers
+   The view sits in a centred, padded column (body 16px padding ->
+   #app max-width 1200px -> .jummah-view max-width 600px with 16px
+   padding). The headers previously stopped at the column edge; these
+   rules stretch each sticky header band across the full screen width
+   while keeping its text aligned with the column content.
+
+   Technique: width 100vw + margin-left calc(50% - 50vw). Every
+   wrapper in the chain is symmetrically centred, so the band's left
+   edge lands on the screen edge at any viewport. On desktop with a
+   classic scrollbar, 100vw overshoots by the scrollbar width; body's
+   existing overflow-x: hidden clips it (body propagates its overflow
+   to the viewport, so position: sticky keeps working).
+
+   Text realignment: the original header text sat at
+   16px (body) + 16px (view) + 4px (header padding) = 36px on mobile,
+   and at column-content + 4px = 50vw - 280px once the viewport
+   exceeds 632px (600px column + 32px body padding) - the max() picks
+   the right one with a crossover exactly at that width. Both the
+   band offset and the padding use vw, so the scrollbar-width error
+   cancels and the text stays flush with the cards below.
+
+   Two-class selectors beat the original single-class rules at any
+   source order; sticky offsets (top: 0 / top: 48px desktop) are
+   untouched, and the solid var(--month-header-bg) band now covers
+   the whole row, so cards never peek through while sliding under.
+   ============================================ */
+
+.jummah-list .jummah-city-header {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-left: max(36px, calc(50vw - 280px));
+  padding-right: max(36px, calc(50vw - 280px));
+}
+
   </style>
 </head>
 <body>
