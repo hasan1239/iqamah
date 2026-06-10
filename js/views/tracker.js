@@ -316,7 +316,7 @@ export function render(container) {
       <section class="tracker-stats" id="trackerStats"></section>
       <section class="tracker-month-card" id="trackerMonth"></section>
       <section id="trackerEditorSlot"></section>
-      <p class="tracker-note">Stored privately on this device · today and the previous two days can be edited</p>
+      <p class="tracker-note">Stored privately on this device<span class="tracker-note-edit">Today and the previous two days can be edited</span></p>
     </div>`;
 
   root = container.querySelector('.tracker-view');
@@ -348,6 +348,7 @@ export function render(container) {
 }
 
 export function destroy() {
+  closePicker(); // popover lives on document.body now — remove it explicitly
   if (docClickHandler) {
     document.removeEventListener('click', docClickHandler, true);
     docClickHandler = null;
@@ -365,7 +366,6 @@ export function destroy() {
     tickInterval = null;
   }
   root = null;
-  pickerOpenFor = null;
   editorDateKey = null;
 }
 
@@ -404,7 +404,7 @@ function renderStreak(log) {
 
   let hint;
   if (todayComplete) {
-    hint = 'All five logged today — ma sha Allah';
+    hint = 'All five logged today, ma sha Allah';
   } else if (current > 0) {
     hint = "Log today's prayers to keep it going";
   } else {
@@ -443,7 +443,7 @@ function renderToday(log) {
     const stText = statusLabel(st) || 'Log';
     return `
       <button class="tracker-seg" data-prayer="${p.key}" aria-haspopup="menu"
-              aria-label="${p.label} — ${statusLabel(st) || 'not logged yet'}">
+              aria-label="${p.label}: ${statusLabel(st) || 'not logged yet'}">
         <span class="tracker-seg-name">${p.label}</span>
         <span class="tracker-seg-dot ${stClass}">${statusIcon(st)}</span>
         <span class="tracker-seg-status ${stClass}">${stText}</span>
@@ -459,18 +459,25 @@ function renderToday(log) {
 }
 
 // ---------- Status picker popover ----------
+// The popover is portalled to document.body with fixed positioning. It used
+// to live inside #trackerToday, but every tracker card has backdrop-filter,
+// which creates a stacking context per card — so the stats cards (later in
+// DOM order) always painted over the picker no matter its z-index. A body
+// portal escapes the card's stacking context entirely; styling lives in
+// _agent_css/tracker-fixes.css under .tracker-picker-portal.
+
+let pickerEl = null;          // the portalled popover element, if open
+let pickerReposition = null;  // scroll/resize handler keeping it anchored
 
 function openPicker(prayerKey, segEl) {
   closePicker();
   pickerOpenFor = prayerKey;
 
-  const card = root.querySelector('#trackerToday');
-  if (!card) return;
   const entry = readLog()[todayKey] || emptyEntry();
   const current = entry[prayerKey];
 
   const pop = document.createElement('div');
-  pop.className = 'tracker-picker';
+  pop.className = 'tracker-picker tracker-picker-portal';
   pop.setAttribute('role', 'menu');
   pop.innerHTML = STATUSES.map(s => `
     <button class="tracker-picker-opt${current === s.key ? ' active' : ''}"
@@ -479,21 +486,55 @@ function openPicker(prayerKey, segEl) {
     </button>`).join('')
     + (current ? `<button class="tracker-picker-opt tracker-picker-clear" data-status="">Clear</button>` : '');
 
-  card.appendChild(pop);
+  // The popover no longer lives inside the view root, so option clicks won't
+  // reach the delegated root handler — handle them on the element itself.
+  pop.addEventListener('click', (e) => {
+    const opt = e.target.closest('.tracker-picker-opt');
+    if (!opt || !pickerOpenFor) return;
+    setPrayerStatus(todayKey, pickerOpenFor, opt.dataset.status || null);
+    buzz();
+    refreshAll(); // closes the picker via closePicker()
+  });
 
-  // Anchor under the tapped segment, clamped inside the card
-  const popW = pop.offsetWidth;
-  let left = segEl.offsetLeft + segEl.offsetWidth / 2 - popW / 2;
-  left = Math.max(8, Math.min(left, card.clientWidth - popW - 8));
-  pop.style.left = `${left}px`;
-  pop.style.top = `${segEl.offsetTop + segEl.offsetHeight + 6}px`;
+  document.body.appendChild(pop);
+  pickerEl = pop;
+
+  // Anchor under the tapped segment in viewport coords, clamped to the
+  // viewport; flips above the segment when there's no room below.
+  const position = () => {
+    if (!pickerEl) return;
+    const rect = segEl.getBoundingClientRect();
+    const popW = pickerEl.offsetWidth;
+    const popH = pickerEl.offsetHeight;
+    let left = rect.left + rect.width / 2 - popW / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - popW - 8));
+    let top = rect.bottom + 6;
+    if (top + popH + 8 > window.innerHeight) {
+      top = Math.max(8, rect.top - popH - 6);
+    }
+    pickerEl.style.left = `${left}px`;
+    pickerEl.style.top = `${top}px`;
+  };
+  position();
+
+  // Fixed positioning means viewport coords drift as the page scrolls —
+  // keep the popover glued to its segment (capture catches inner scrollers).
+  pickerReposition = position;
+  window.addEventListener('scroll', pickerReposition, true);
+  window.addEventListener('resize', pickerReposition);
 }
 
 function closePicker() {
   pickerOpenFor = null;
-  if (!root) return;
-  const pop = root.querySelector('.tracker-picker');
-  if (pop) pop.remove();
+  if (pickerReposition) {
+    window.removeEventListener('scroll', pickerReposition, true);
+    window.removeEventListener('resize', pickerReposition);
+    pickerReposition = null;
+  }
+  if (pickerEl) {
+    pickerEl.remove();
+    pickerEl = null;
+  }
 }
 
 // ---------- Stats strip ----------
@@ -514,9 +555,9 @@ function renderStats(log) {
       <div class="tracker-stat-sub">prayed</div>
     </div>
     <div class="tracker-stat">
-      <div class="tracker-stat-value">${jamaahPct === null ? '—' : jamaahPct + '%'}</div>
-      <div class="tracker-stat-label">In jama'ah</div>
-      <div class="tracker-stat-sub">of prayed</div>
+      <div class="tracker-stat-value">${jamaahPct === null ? 'n/a' : jamaahPct + '%'}</div>
+      <div class="tracker-stat-label">Prayed in jama'ah</div>
+      <div class="tracker-stat-sub">share of prayed salah</div>
     </div>`;
 }
 
@@ -617,7 +658,7 @@ function renderEditor(log) {
   slot.innerHTML = `
     <div class="tracker-editor">
       <div class="tracker-card-head">
-        <span class="tracker-card-title">Edit — ${title}</span>
+        <span class="tracker-card-title">Edit · ${title}</span>
         <button class="tracker-editor-close" aria-label="Close editor">${ICON_CLOSE}</button>
       </div>
       ${rows}
@@ -628,15 +669,8 @@ function renderEditor(log) {
 // ---------- Delegated click handling ----------
 
 function onRootClick(e) {
-  // Status popover option
-  const opt = e.target.closest('.tracker-picker-opt');
-  if (opt && pickerOpenFor) {
-    const status = opt.dataset.status || null;
-    setPrayerStatus(todayKey, pickerOpenFor, status);
-    buzz();
-    refreshAll();
-    return;
-  }
+  // (Status popover options are handled on the popover element itself —
+  // it's portalled to document.body, so those clicks never reach here.)
 
   // Today segment → toggle the status popover
   const seg = e.target.closest('.tracker-seg');
