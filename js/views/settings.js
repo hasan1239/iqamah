@@ -8,7 +8,7 @@ let unsubTheme = null;
 let masjidNames = {}; // slug -> display_name (from index.json)
 
 const STAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
 const REMOVE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
 export function render(container) {
@@ -80,7 +80,7 @@ export function render(container) {
       <div class="settings-group" id="yourMasjidsGroup">
         <div class="settings-group-title">My Masjid</div>
         <div id="myMasjidRow"></div>
-        <div class="settings-group-title settings-group-title-inner">Other Masjids</div>
+        <div class="settings-group-title settings-group-title-inner">Pinned Masjids</div>
         <div id="otherMasjidsList"></div>
       </div>
 
@@ -348,8 +348,8 @@ function renderOtherMasjidsList() {
     wrap.innerHTML = `
       <div class="settings-item">
         <div class="settings-item-left">
-          <span class="settings-icon settings-icon-muted">${BOOKMARK_SVG}</span>
-          <span class="settings-label settings-label-muted">No other masjids saved</span>
+          <span class="settings-icon settings-icon-muted">${PIN_SVG}</span>
+          <span class="settings-label settings-label-muted">No pinned masjids yet</span>
         </div>
       </div>`;
     return;
@@ -363,7 +363,7 @@ function renderOtherMasjidsList() {
       </div>
       <div class="your-masjid-actions">
         <button class="set-my-btn" data-slug="${slug}" aria-label="Set ${name} as My Masjid">Set as My Masjid</button>
-        <button class="settings-remove-btn other-masjid-remove" data-slug="${slug}" aria-label="Remove ${name} from Other Masjids" title="Remove">
+        <button class="settings-remove-btn other-masjid-remove" data-slug="${slug}" aria-label="Unpin ${name}" title="Remove">
           ${REMOVE_SVG}
         </button>
       </div>

@@ -692,7 +692,7 @@ function renderYourMasjids() {
   section.innerHTML = `
     <div class="recent-section your-masjids-section">
       <div class="masjid-scroll-header">
-        <span class="masjid-scroll-title">Other Masjids</span>
+        <span class="masjid-scroll-title">Pinned Masjids</span>
         <a href="/settings" class="your-masjids-edit" data-link>Edit ${CHEVRON_SVG}</a>
       </div>
       <div class="masjid-grid horizontal">

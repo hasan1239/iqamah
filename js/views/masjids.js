@@ -38,8 +38,8 @@ const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="cu
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 const KEBAB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
-const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
-const BOOKMARK_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+const PIN_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
 const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
@@ -497,8 +497,8 @@ function renderMasjidGrid() {
             <button class="pin-btn${isMine ? ' pinned' : ''}" data-slug="${config.slug}" aria-label="${isMine ? `Unset ${config.display_name} as My Masjid` : `Set ${config.display_name} as My Masjid`}" title="${isMine ? 'Unset My Masjid' : 'Set as My Masjid'}">
               ${isMine ? STAR_FILLED_SVG : STAR_SVG}
             </button>
-            <button class="save-btn${isSaved ? ' saved' : ''}" data-slug="${config.slug}" aria-label="${isSaved ? `Remove ${config.display_name} from Other Masjids` : `Save ${config.display_name} to Other Masjids`}" title="${isSaved ? 'Remove from Other Masjids' : 'Save to Other Masjids'}">
-              ${isSaved ? BOOKMARK_FILLED_SVG : BOOKMARK_SVG}
+            <button class="save-btn${isSaved ? ' saved' : ''}" data-slug="${config.slug}" aria-label="${isSaved ? `Unpin ${config.display_name}` : `Pin ${config.display_name}`}" title="${isSaved ? 'Unpin masjid' : 'Pin masjid'}">
+              ${isSaved ? PIN_FILLED_SVG : PIN_SVG}
             </button>
             <button class="kebab-btn" data-slug="${config.slug}" aria-label="More options for ${config.display_name}" title="More options">
               ${KEBAB_SVG}
@@ -823,16 +823,16 @@ function toggleOtherFor(slug) {
   const name = masjidName(slug);
   if (isOther(slug)) {
     removeOther(slug);
-    showToast(`Removed ${name} from Other Masjids`);
+    showToast(`Unpinned ${name}`);
     return;
   }
   const r = saveOther(slug);
   if (!r.ok) {
-    if (r.reason === 'cap') showToast(`You can save up to ${OTHERS_CAP} other masjids`);
+    if (r.reason === 'cap') showToast(`You can pin up to ${OTHERS_CAP} masjids`);
     else if (r.reason === 'is_my_masjid') showToast(`${name} is already My Masjid`);
     return;
   }
-  showToast(`Saved ${name} to Other Masjids`);
+  showToast(`Pinned ${name}`);
   dismissPinHint();
 }
 
@@ -854,8 +854,8 @@ function openMasjidMenu(slug, anchor) {
         onSelect: () => setMyMasjidFor(slug),
       },
       {
-        icon: saved ? BOOKMARK_SVG : BOOKMARK_FILLED_SVG,
-        label: saved ? 'Remove from Other Masjids' : 'Save to Other Masjids',
+        icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+        label: saved ? 'Unpin masjid' : 'Pin masjid',
         disabled: isMine, // the My Masjid can't also be an "other"
         onSelect: () => toggleOtherFor(slug),
       },
