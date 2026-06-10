@@ -2,6 +2,8 @@
 import { onThemeChange, getTheme } from '../theme.js';
 import { gregorianToHijri, formatHijriDate } from '../utils/hijri.js';
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+import { getMyMasjid, setMyMasjid, clearMyMasjid, isOther, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
+import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
 
 let config = null;
 let csvData = [];
@@ -210,6 +212,8 @@ export function destroy() {
   if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
   if (eshaRerenderId) { clearTimeout(eshaRerenderId); eshaRerenderId = null; }
   if (unsubTheme) { unsubTheme(); unsubTheme = null; }
+  closeContextMenu();
+  removePinToast();
   document.title = 'Iqamah';
 }
 
@@ -681,7 +685,7 @@ function renderTodayView(target) {
   const sunriseMin = toMin(todayRow['Sunrise']);
   const fajrAfterSunrise = fajrJamMin !== null && sunriseMin !== null && fajrJamMin > sunriseMin;
   const fajrAfterSunriseNote = fajrAfterSunrise
-    ? "Fajr jama'at is listed after sunrise today — please confirm with the masjid."
+    ? "Fajr jama'at is listed after sunrise today. Please confirm with the masjid."
     : '';
 
   // Build sunrise/zawal split row (inserted after Fajr in the table)
@@ -702,8 +706,8 @@ function renderTodayView(target) {
     const nameHtml = showAsterisk
       ? `${p.name}<sup class="esha-note" title="${noteForRow}">*</sup>`
       : p.name;
-    const startVal = (isEsha && eshaEmpty) ? '—' : (ft(p.start, p.isAM) || '-');
-    const jamaatVal = (isEsha && eshaEmpty) ? '—' : (ft(p.jamaat, p.isAM) || '-');
+    const startVal = (isEsha && eshaEmpty) ? '-' : (ft(p.start, p.isAM) || '-');
+    const jamaatVal = (isEsha && eshaEmpty) ? '-' : (ft(p.jamaat, p.isAM) || '-');
     const rowTitle = noteForRow ? ` title="${noteForRow}"` : '';
     return `
     <div class="time-row" data-prayer="${p.name}"${rowTitle}>
@@ -718,7 +722,7 @@ function renderTodayView(target) {
     : '';
 
   const fajrFootnoteHtml = fajrAfterSunriseNote
-    ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today — please confirm with the masjid.</div>`
+    ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today. Please confirm with the masjid.</div>`
     : '';
 
   target.innerHTML = `
@@ -784,7 +788,7 @@ function renderTodayView(target) {
   setupFlipCard();
   setupShareButton();
   setupInfoToggle();
-  setupDownloadTracking();
+  setupDownloadButton();
   updateDownloadLink();
   setupPrimaryButton();
 
@@ -1110,32 +1114,128 @@ function setupShareButton() {
   const btn = document.getElementById('shareBtn');
   if (!btn) return;
   btn.addEventListener('click', async () => {
-    const shareUrl = window.location.href;
+    if (btn.classList.contains('generating')) return;
     if (window.goatcounter) {
       window.goatcounter.count({ path: `/share/${masjidId}`, title: `Share - ${config.display_name}`, event: true });
     }
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${config.display_name} - Iqamah`, text: `Prayer times for ${config.display_name} on Iqamah`, url: shareUrl });
-      } catch (err) { /* user cancelled */ }
-    } else if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`);
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Share'; }, 2000);
-      } catch (err) { /* fallback failed */ }
+    btn.classList.add('generating');
+    btn.setAttribute('aria-busy', 'true');
+    try {
+      // Render today's times as a branded image card — UK masjid WhatsApp
+      // groups forward timetable images, not links.
+      const todayRow = getTodayRow();
+      if (!todayRow) throw new Error('No timetable row for today');
+      const { renderShareCard } = await import('../utils/share-card.js');
+      const blob = await renderShareCard({ config, todayRow, season });
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const filename = `iqamah_times_${masjidId}_${dateStr}.png`;
+      const file = new File([blob], filename, { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        // Files-only payload: adding title/text/url alongside files makes
+        // WhatsApp attach the link instead of the image on some versions.
+        try {
+          await navigator.share({ files: [file] });
+        } catch (err) {
+          if (err && err.name === 'AbortError') return; // user cancelled — done
+          throw err; // real failure → link-share fallback below
+        }
+      } else {
+        // No file-share support (e.g. desktop Firefox) → download the PNG
+        const url = URL.createObjectURL(blob);
+        triggerDownload(url, filename);
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+      if (window.goatcounter) {
+        window.goatcounter.count({ path: `/share-card/${masjidId}`, title: `Share card - ${config.display_name}`, event: true });
+      }
+    } catch (err) {
+      // Any failure → the previous link-share behaviour; never a dead button.
+      await shareLinkFallback(btn);
+    } finally {
+      btn.classList.remove('generating');
+      btn.removeAttribute('aria-busy');
     }
   });
 }
 
-function setupDownloadTracking() {
+// Previous share behaviour, kept as the final fallback chain:
+// native link share → clipboard copy with "Copied!" feedback.
+async function shareLinkFallback(btn) {
+  const shareUrl = window.location.href;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `${config.display_name} - Iqamah`, text: `Prayer times for ${config.display_name} on Iqamah`, url: shareUrl });
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') return; // user cancelled
+      // fall through to clipboard
+    }
+  }
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`);
+      const original = btn.innerHTML;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.innerHTML = original; }, 2000);
+    } catch (err) { /* fallback failed */ }
+  }
+}
+
+function setupDownloadButton() {
   const btn = document.getElementById('downloadBtn');
   if (!btn) return;
-  btn.addEventListener('click', () => {
+
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (btn.classList.contains('generating')) return;
     if (window.goatcounter) {
       window.goatcounter.count({ path: `/download/${masjidId}`, title: `Download - ${config.display_name}`, event: true });
     }
+
+    // Fallback URL: the CI-generated latest/ PNG, kept theme-aware by
+    // updateDownloadLink(). Used if client-side generation fails for any reason.
+    const fallbackHref = btn.getAttribute('href');
+    const label = btn.textContent;
+    btn.classList.add('generating');
+    btn.setAttribute('aria-busy', 'true');
+    btn.textContent = 'Generating…';
+    try {
+      const todayRow = getTodayRow();
+      if (!todayRow) throw new Error('No timetable row for today');
+      const { renderLockscreen } = await import('../utils/lockscreen-render.js');
+      const blob = await renderLockscreen({
+        config,
+        todayRow,
+        season,
+        light: getTheme() === 'light',
+      });
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const url = URL.createObjectURL(blob);
+      triggerDownload(url, `iqamah_lockscreen_${masjidId}_${dateStr}.png`);
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (err) {
+      // Any failure → fall back to the pre-generated PNG (may 404 for masjids
+      // without CI output, matching the previous behaviour).
+      if (fallbackHref) triggerDownload(fallbackHref, '');
+    } finally {
+      btn.classList.remove('generating');
+      btn.removeAttribute('aria-busy');
+      btn.textContent = label;
+    }
   });
+}
+
+function triggerDownload(href, filename) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename || '';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 function updateDownloadLink() {
@@ -1240,29 +1340,112 @@ function renderInfoSection() {
 }
 
 
+// --- "Set as" button + saved-masjid context menu ---
+// Opens the same context menu the masjids list shows on long-press/kebab.
+// All mutations go through follow.js so both iqamah-follow-changed and
+// iqamah-pin-changed fire (hero/nav listeners stay in sync) and the
+// self-healing invariants hold. Icons match js/views/masjids.js.
+
+const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const STAR_OUTLINE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+const PIN_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+
+let pinToastTimer = null;
+
+function showPinToast(html) {
+  let toast = document.getElementById('ptPinToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ptPinToast';
+    toast.className = 'pin-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = html;
+  toast.classList.add('visible');
+  if (pinToastTimer) clearTimeout(pinToastTimer);
+  pinToastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
+}
+
+function removePinToast() {
+  if (pinToastTimer) { clearTimeout(pinToastTimer); pinToastTimer = null; }
+  const toast = document.getElementById('ptPinToast');
+  if (toast) toast.remove();
+}
+
 function renderPrimaryButton() {
-  const current = localStorage.getItem('iqamah-pinned-masjid');
-  const isPrimary = current === masjidId;
-  const starSvg = '<svg viewBox="0 0 24 24" fill="' + (isPrimary ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-  const label = isPrimary ? 'My Masjid' : 'Set as My Masjid';
-  const cls = isPrimary ? ' is-primary' : '';
-  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn">${starSvg} ${label}</button>`;
+  const isMine = getMyMasjid() === masjidId;
+  const starSvg = isMine ? STAR_FILLED_SVG : STAR_OUTLINE_SVG;
+  const cls = isMine ? ' is-primary' : '';
+  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn" aria-haspopup="menu" aria-label="Set as My Masjid or pin masjid">${starSvg} Set as</button>`;
+}
+
+function refreshPrimaryButton() {
+  const btn = document.getElementById('setPrimaryBtn');
+  if (!btn) return;
+  btn.outerHTML = renderPrimaryButton();
+  setupPrimaryButton();
 }
 
 function setupPrimaryButton() {
   const btn = document.getElementById('setPrimaryBtn');
   if (!btn) return;
-  btn.addEventListener('click', () => {
-    const current = localStorage.getItem('iqamah-pinned-masjid');
-    if (current === masjidId) {
-      localStorage.removeItem('iqamah-pinned-masjid');
-    } else {
-      localStorage.setItem('iqamah-pinned-masjid', masjidId);
-    }
-    // Re-render button
-    btn.outerHTML = renderPrimaryButton();
-    setupPrimaryButton();
-  });
+  btn.addEventListener('click', () => openSetAsMenu(btn));
+}
+
+function openSetAsMenu(anchor) {
+  const name = (config && config.display_name) || 'Masjid';
+  const isMine = getMyMasjid() === masjidId;
+  const saved = isOther(masjidId);
+
+  // Current My Masjid: the only meaningful action is removing it, so the
+  // menu offers just that (no redundant checked/disabled entries).
+  const items = isMine
+    ? [
+        {
+          icon: STAR_OUTLINE_SVG,
+          label: 'Remove My Masjid',
+          onSelect: () => {
+            clearMyMasjid();
+            showPinToast(`${name} is no longer My Masjid`);
+            refreshPrimaryButton();
+          },
+        },
+      ]
+    : [
+        {
+          icon: STAR_FILLED_SVG,
+          label: 'Set as My Masjid',
+          onSelect: () => {
+            const r = setMyMasjid(masjidId);
+            if (!r.ok) return;
+            showPinToast(`<span class="toast-star">★</span> ${name} set as My Masjid`);
+            refreshPrimaryButton();
+          },
+        },
+        {
+          icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+          label: saved ? 'Unpin masjid' : 'Pin masjid',
+          onSelect: () => {
+            if (isOther(masjidId)) {
+              removeOther(masjidId);
+              showPinToast(`Unpinned ${name}`);
+              refreshPrimaryButton();
+              return;
+            }
+            const r = saveOther(masjidId);
+            if (!r.ok) {
+              if (r.reason === 'cap') showPinToast(`You can pin up to ${OTHERS_CAP} masjids`);
+              else if (r.reason === 'is_my_masjid') showPinToast(`${name} is already My Masjid`);
+              return;
+            }
+            showPinToast(`Pinned ${name}`);
+            refreshPrimaryButton();
+          },
+        },
+      ];
+
+  openContextMenu({ title: name, anchor, items });
 }
 
 async function renderAdminControls(container) {
@@ -1393,9 +1576,8 @@ async function renderAdminControls(container) {
       });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Failed');
-      if (localStorage.getItem('iqamah-pinned-masjid') === masjidId) {
-        localStorage.removeItem('iqamah-pinned-masjid');
-      }
+      if (getMyMasjid() === masjidId) clearMyMasjid();
+      removeOther(masjidId);
       try {
         let recent = JSON.parse(localStorage.getItem('iqamah-recent-masjids') || '[]');
         recent = recent.filter(s => s !== masjidId);

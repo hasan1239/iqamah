@@ -4,6 +4,11 @@ import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
+import { getOthers, isOther, getMyMasjid, setMyMasjid, clearMyMasjid, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
+import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
+import { loadMasjidIndex } from '../utils/masjid-index.js';
+import { deriveCity, getCityPostcode, OTHER_CITY } from '../utils/cities.js';
+import { parsePostcodeQuery, lookupPostcode } from '../utils/postcode.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -18,128 +23,6 @@ let resizeListener = null;
 let lastIsMobile = null;
 
 const MOBILE_BREAKPOINT = 768;
-const STREET_SUFFIX_RE = /\b(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl|Court|Ct|Park|Square|Sq|Crescent|Hill|Terrace|Gardens?|Mews|Grove|Walk|Row)\b\.?$/i;
-const POSTCODE_RE = /\b[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}\b/i;
-const OTHER_CITY = 'Other';
-
-// UK postcode area → major city rollup. The letter(s) before the first digit
-// of a postcode identify the postcode area (e.g. B = Birmingham). Mapping here
-// is intentionally conservative — only major metros that we want to group as
-// one. Other areas (WD/Watford, HX/Halifax, etc.) fall through to config.city.
-const POSTCODE_AREA_TO_CITY = {
-  // Inner London
-  E: 'London', EC: 'London', N: 'London', NW: 'London',
-  SE: 'London', SW: 'London', W: 'London', WC: 'London',
-  // Outer London / Greater London postcode areas
-  BR: 'London', CR: 'London', DA: 'London', EN: 'London',
-  HA: 'London', IG: 'London', KT: 'London', RM: 'London',
-  SM: 'London', TW: 'London', UB: 'London', WD: 'London',
-  // Other major UK metros
-  B: 'Birmingham',
-  M: 'Manchester',
-  G: 'Glasgow',
-  L: 'Liverpool',
-  BD: 'Bradford',
-  LE: 'Leicester',
-  LS: 'Leeds',
-  CV: 'Coventry',
-  WV: 'Wolverhampton',
-  HX: 'Halifax',
-  HD: 'Huddersfield',
-  EH: 'Edinburgh',
-  CF: 'Cardiff',
-  NP: 'Newport',
-  SA: 'Swansea',
-  NG: 'Nottingham',
-  BS: 'Bristol',
-  S: 'Sheffield',
-  SL: 'Slough',
-  BB: 'Blackburn',
-  PR: 'Preston',
-  // Greater Manchester (Bolton, Oldham, Stockport, Wigan) → Manchester
-  BL: 'Manchester', OL: 'Manchester', SK: 'Manchester', WN: 'Manchester',
-  // West Midlands metropolitan county (Dudley, Walsall) → Birmingham.
-  // Wolverhampton (WV) and Coventry (CV) kept separate — chartered cities.
-  DY: 'Birmingham', WS: 'Birmingham',
-};
-
-// Final fallback: scan for these tokens in address / display name when no
-// postcode and no explicit city.
-const KNOWN_CITY_TOKENS = [
-  'London', 'Birmingham', 'Manchester', 'Glasgow', 'Liverpool',
-  'Bradford', 'Leicester', 'Leeds', 'Coventry', 'Bolton',
-  'Blackburn', 'Halifax', 'Watford', 'Wolverhampton', 'Gloucester',
-  'Smethwick', 'Batley', 'Elland', 'Halesowen',
-];
-
-function getCityPostcode(address) {
-  if (!address) return '';
-  const pcMatch = address.match(/[A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2}/i);
-  if (!pcMatch) return address.split(',').pop().trim();
-  const postcode = pcMatch[0];
-  const before = address.slice(0, pcMatch.index).replace(/,\s*$/, '');
-  const parts = before.split(',').map(s => s.trim()).filter(Boolean);
-  const city = parts.length > 0 ? parts[parts.length - 1] : '';
-  return city ? `${city}, ${postcode}` : postcode;
-}
-
-function normaliseCity(city) {
-  if (!city) return OTHER_CITY;
-  let c = city.replace(/\s+/g, ' ').trim();
-  c = c.replace(/^City of\s+/i, '');
-  c = c.replace(/\b(City|Borough|District)\b$/i, '').trim();
-  c = c.replace(/,$/, '').trim();
-  if (!c) return OTHER_CITY;
-  return c.charAt(0).toUpperCase() + c.slice(1);
-}
-
-function cityFromPostcode(addr) {
-  if (!addr) return null;
-  const m = addr.match(POSTCODE_RE);
-  if (!m) return null;
-  const areaMatch = m[0].match(/^([A-Z]{1,2})/i);
-  if (!areaMatch) return null;
-  const area = areaMatch[1].toUpperCase();
-  return POSTCODE_AREA_TO_CITY[area] || null;
-}
-
-function cityFromTokens(text) {
-  if (!text) return null;
-  for (const city of KNOWN_CITY_TOKENS) {
-    if (new RegExp('\\b' + city + '\\b', 'i').test(text)) return city;
-  }
-  return null;
-}
-
-function deriveCity(config) {
-  // 1. Postcode-area rollup wins (groups London boroughs → London, B-area
-  //    suburbs like Smethwick/Halesowen → Birmingham, etc.)
-  const pcCity = cityFromPostcode(config.address);
-  if (pcCity) return pcCity;
-  // 2. Explicit city field
-  if (config.city && config.city.trim()) return normaliseCity(config.city.trim());
-  // 3. Known city token anywhere in address / display name
-  const tokenCity = cityFromTokens(config.address) || cityFromTokens(config.display_name);
-  if (tokenCity) return tokenCity;
-  // 4. Last comma-separated segment of address as final fallback
-  const addr = (config.address || '').trim();
-  if (!addr) return OTHER_CITY;
-  const withoutPC = addr.replace(POSTCODE_RE, '').replace(/[,\.\s]+$/, '').trim();
-  if (!withoutPC) return OTHER_CITY;
-  const parts = withoutPC.split(',').map(s => s.trim()).filter(Boolean);
-  let candidate = parts.length ? parts[parts.length - 1] : withoutPC;
-  candidate = candidate.replace(/\bUK\b\.?/i, '').replace(/\bGreater\b/i, '').trim();
-  if (!candidate) return OTHER_CITY;
-  if (parts.length <= 1 || STREET_SUFFIX_RE.test(candidate)) {
-    const words = candidate.split(/\s+/).filter(Boolean);
-    const last = words[words.length - 1];
-    if (!last || /^(Road|Rd|Street|St|Avenue|Ave|Lane|Ln|Way|Drive|Dr|Close|Cl|Place|Pl)\.?$/i.test(last)) {
-      return OTHER_CITY;
-    }
-    return normaliseCity(last);
-  }
-  return normaliseCity(candidate);
-}
 
 function isMobile() {
   return window.innerWidth < MOBILE_BREAKPOINT;
@@ -152,9 +35,12 @@ function isCityListMode() {
 // SVG icons
 const STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+const KEBAB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
+const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+const PIN_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4a1 1 0 0 1 1 1z"/></svg>';
+const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
 let searchQuery = '';
@@ -165,10 +51,25 @@ let viewMode = 'list'; // 'list' | 'map'
 let mapMounted = false;
 let mapReadyPromise = null;
 
+// Postcode search — a typed postcode/outcode becomes the location source
+// (no permission prompt needed), feeding the same distance-sort path as
+// the geolocation button.
+const POSTCODE_STORE_KEY = 'iqamah-postcode';
+const POSTCODE_DEBOUNCE_MS = 550;
+let postcodeActive = false;   // postcode is the current location source
+let postcodeInfo = null;      // { lat, lon, postcode, outcode }
+let postcodeHint = null;      // null | 'looking' | 'notfound'
+let postcodeHintLabel = '';
+let postcodeTimer = null;
+let postcodeGen = 0;          // cancels stale debounces / in-flight lookups
+
 const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 
 export function render(container) {
   selectedCity = null;
+  // Restore a persisted postcode sort before building markup — locationActive
+  // feeds isCityListMode(), so this must happen before data-mode is computed.
+  restorePostcodeState();
   container.innerHTML = `
     <div class="masjids-view" data-mode="${isCityListMode() ? 'cities' : 'list'}">
       <header class="masjids-header">
@@ -195,6 +96,14 @@ export function render(container) {
           </button>
         </div>
 
+        <div class="postcode-chip-row" id="postcodeChipRow" hidden>
+          <span class="postcode-chip">
+            ${MAP_PIN_SVG}
+            <span class="postcode-chip-text">Near <strong id="postcodeChipLabel"></strong></span>
+            <button type="button" class="postcode-chip-clear" id="postcodeChipClear" aria-label="Clear postcode sort">&times;</button>
+          </span>
+        </div>
+
         <div class="masjids-cities-actions" id="masjidsCitiesActions">
           <button class="masjids-nearby-pill" id="masjidsNearbyPill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -205,8 +114,22 @@ export function render(container) {
           </button>
         </div>
 
+        <div class="postcode-cities-row" id="postcodeCitiesRow">
+          <button type="button" class="masjids-postcode-pill" id="postcodePill">
+            ${SEARCH_SVG}
+            <span>Search by postcode</span>
+          </button>
+          <form class="postcode-inline-form" id="postcodeInlineForm" hidden>
+            <input type="text" id="postcodeInlineInput" class="postcode-inline-input"
+              placeholder="e.g. B12 0XS or M14" autocomplete="postal-code"
+              autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="8">
+            <button type="submit" class="postcode-inline-go">Go</button>
+          </form>
+          <div class="postcode-inline-hint" id="postcodeInlineHint" hidden></div>
+        </div>
+
         ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
-          <span>Tip: Long press a masjid to set it as My Masjid</span>
+          <span>Tip: Long press a masjid to set it as My Masjid or save it</span>
           <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
         </div>` : ''}
 
@@ -243,6 +166,7 @@ export function render(container) {
   lastIsMobile = isMobile();
   masjidsLoadPromise = loadMasjids();
   setupSearch();
+  setupPostcodeUI();
   setupLocationBtn();
   setupGridClicks();
   setupLongPress();
@@ -252,6 +176,16 @@ export function render(container) {
   setupResizeListener();
   setupModeToggle();
   updateHeaderState();
+
+  // Re-render when the follow set / primary changes anywhere (settings, home
+  // hero, prayer-times set-primary). Defensive remove first — render() can be
+  // called again (embedded desktop list) before destroy().
+  window.removeEventListener('iqamah-follow-changed', onFollowChanged);
+  window.addEventListener('iqamah-follow-changed', onFollowChanged);
+}
+
+function onFollowChanged() {
+  renderCards();
 }
 
 function buildCitySkeletons(count) {
@@ -290,9 +224,14 @@ function setupCityNav() {
     searchQuery = '';
     const input = viewContainer.querySelector('#masjidSearch');
     if (input) input.value = '';
+    // Cancel any pending/in-flight postcode lookup so it can't apply a
+    // distance sort after the user has returned to the cities list.
+    if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+    postcodeGen++;
     // Reset Nearby too — going back returns the user to the clean cities list,
     // which doesn't use distance sort.
     if (locationActive) {
+      if (postcodeActive) clearPostcodeMode(true);
       locationActive = false;
       userLocation = null;
       distanceMap = {};
@@ -350,7 +289,6 @@ function buildSkeletonCards(count) {
           <div class="skeleton-bone" style="width:32px;height:8px;margin-bottom:4px"></div>
           <div class="skeleton-bone" style="width:52px;height:12px"></div>
         </div>
-        <div class="skeleton-bone" style="width:28px;height:28px;border-radius:8px"></div>
       </div>
     </div>`;
   }
@@ -359,11 +297,11 @@ function buildSkeletonCards(count) {
 
 async function loadMasjids() {
   try {
-    const res = await fetch('/data/mosques/index.json');
-    if (!res.ok) return;
-    cachedConfigs = (await res.json()).filter(c =>
+    cachedConfigs = (await loadMasjidIndex()).filter(c =>
       !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
+    // A restored postcode sort needs distances once configs are available.
+    if (locationActive && userLocation) computeDistances();
     renderCards();
   } catch (error) {
     console.error('Error loading masjids:', error);
@@ -401,7 +339,7 @@ function renderCityGrid() {
   });
 
   // Auto-surface the city of the pinned masjid (My Masjid) to the top.
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedSlug = getMyMasjid();
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
   const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
 
@@ -470,7 +408,6 @@ function renderCityGrid() {
       </div>
       <div class="masjid-city-actions">
         <span class="masjid-city-map-btn" role="button" tabindex="0" aria-label="Show ${safeCity} on map">${MAP_PIN_SVG}</span>
-        <span class="masjid-city-chevron">${CHEVRON_SVG}</span>
       </div>
     </button>`;
   }).join('');
@@ -480,7 +417,8 @@ function renderMasjidGrid() {
   const grid = viewContainer.querySelector('#masjidsGrid');
   if (!grid) return;
 
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const savedSet = new Set(getOthers());
+  const myMasjidSlug = getMyMasjid();
 
   let filtered = cachedConfigs.slice();
 
@@ -522,7 +460,7 @@ function renderMasjidGrid() {
   });
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="masjids-empty">No masjids found</div>`;
+    grid.innerHTML = buildEmptyStateHtml();
     return;
   }
 
@@ -530,9 +468,8 @@ function renderMasjidGrid() {
     const distText = getDistText(config.slug);
     const shortAddr = getCityPostcode(config.address);
     const fullAddr = config.address || '';
-    const isPinned = config.slug === pinnedSlug;
-    const pinIcon = isPinned ? STAR_FILLED_SVG : STAR_SVG;
-    const pinClass = isPinned ? ' pinned' : '';
+    const isMine = config.slug === myMasjidSlug;
+    const isSaved = savedSet.has(config.slug);
     const isPending = config.approved === false;
 
     let subHtml = '';
@@ -544,6 +481,9 @@ function renderMasjidGrid() {
       subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
     }
 
+    const primaryChip = isMine
+      ? `<div class="my-masjid-chip-row"><span class="my-masjid-chip">★ My Masjid</span></div>`
+      : '';
     const thumbContent = config.logo
       ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
       : MOSQUE_SVG;
@@ -554,10 +494,17 @@ function renderMasjidGrid() {
         <div class="masjid-card-info">
           <div class="masjid-name-row">
             <div class="masjid-name">${config.display_name}</div>
-            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Set ${config.display_name} as My Masjid" title="Set as My Masjid">
-              ${pinIcon}
+            <button class="pin-btn${isMine ? ' pinned' : ''}" data-slug="${config.slug}" aria-label="${isMine ? `Unset ${config.display_name} as My Masjid` : `Set ${config.display_name} as My Masjid`}" title="${isMine ? 'Unset My Masjid' : 'Set as My Masjid'}">
+              ${isMine ? STAR_FILLED_SVG : STAR_SVG}
+            </button>
+            <button class="save-btn${isSaved ? ' saved' : ''}" data-slug="${config.slug}" aria-label="${isSaved ? `Unpin ${config.display_name}` : `Pin ${config.display_name}`}" title="${isSaved ? 'Unpin masjid' : 'Pin masjid'}">
+              ${isSaved ? PIN_FILLED_SVG : PIN_SVG}
+            </button>
+            <button class="kebab-btn" data-slug="${config.slug}" aria-label="More options for ${config.display_name}" title="More options">
+              ${KEBAB_SVG}
             </button>
           </div>
+          ${primaryChip}
           ${subHtml}
         </div>
       </div>
@@ -566,7 +513,6 @@ function renderMasjidGrid() {
           <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
           <div class="skeleton-bone" style="width:56px;height:12px"></div>
         </div>
-        <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
       </div>
     </a>`;
   }).join('');
@@ -702,6 +648,8 @@ function setupSearch() {
   input.addEventListener('input', () => {
     searchQuery = input.value.trim();
     renderCards();
+    // Postcode-shaped query with no masjid matches → debounced lookup.
+    schedulePostcodeLookup(searchQuery, 'search');
   });
 }
 
@@ -758,15 +706,33 @@ async function focusCityOnMap(city) {
 }
 
 function handlePinClick(e) {
-  const pinBtn = e.target.closest('.pin-btn');
-  if (!pinBtn) return;
   const masjidsView = e.target.closest('.masjids-view');
   if (!masjidsView) return;
 
+  // ⋯ kebab (non-touch) → context menu anchored to the button
+  const kebabBtn = e.target.closest('.kebab-btn');
+  if (kebabBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    openMasjidMenu(kebabBtn.dataset.slug, kebabBtn);
+    return;
+  }
+
+  // Bookmark → save / remove from Other Masjids
+  const saveBtn = e.target.closest('.save-btn');
+  if (saveBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleOtherFor(saveBtn.dataset.slug);
+    return;
+  }
+
+  // Star → set / unset My Masjid
+  const pinBtn = e.target.closest('.pin-btn');
+  if (!pinBtn) return;
   e.preventDefault();
   e.stopPropagation();
-  const slug = pinBtn.dataset.slug;
-  togglePin(slug);
+  toggleMyMasjidFor(pinBtn.dataset.slug);
 }
 
 function setupLongPress() {
@@ -786,7 +752,8 @@ function setupLongPress() {
       didLongPress = true;
       card.classList.add('long-pressing');
       if (navigator.vibrate) navigator.vibrate(30);
-      togglePin(card.dataset.slug);
+      openMasjidMenu(card.dataset.slug, card);
+      dismissPinHint();
       setTimeout(() => card.classList.remove('long-pressing'), 200);
     }, 500);
   };
@@ -823,20 +790,87 @@ function setupLongPress() {
   };
 }
 
-function togglePin(slug) {
-  const current = localStorage.getItem('iqamah-pinned-masjid');
-  if (current === slug) {
-    localStorage.removeItem('iqamah-pinned-masjid');
-    showToast('Removed from My Masjid');
-  } else {
-    localStorage.setItem('iqamah-pinned-masjid', slug);
-    const config = cachedConfigs.find(c => c.slug === slug);
-    const name = config ? config.display_name : 'Masjid';
-    showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
-    dismissPinHint();
+function masjidName(slug) {
+  const config = cachedConfigs.find(c => c.slug === slug);
+  return config ? config.display_name : 'Masjid';
+}
+
+// Star action \u2014 set / unset My Masjid (original star semantics: tapping
+// the current My Masjid's star unsets it, no auto-promotion from others).
+// Re-renders happen via the iqamah-follow-changed listener.
+function toggleMyMasjidFor(slug) {
+  const name = masjidName(slug);
+  if (getMyMasjid() === slug) {
+    clearMyMasjid();
+    showToast(`${name} is no longer My Masjid`);
+    return;
   }
-  renderCards();
-  window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
+  setMyMasjidFor(slug);
+}
+
+// Set My Masjid. When the masjid was saved in Other Masjids, follow.js swaps
+// the old My Masjid into the others list so nothing is lost.
+function setMyMasjidFor(slug) {
+  const name = masjidName(slug);
+  const r = setMyMasjid(slug);
+  if (!r.ok) return;
+  showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
+  dismissPinHint();
+}
+
+// Bookmark action \u2014 save to / remove from Other Masjids.
+function toggleOtherFor(slug) {
+  const name = masjidName(slug);
+  if (isOther(slug)) {
+    removeOther(slug);
+    showToast(`Unpinned ${name}`);
+    return;
+  }
+  const r = saveOther(slug);
+  if (!r.ok) {
+    if (r.reason === 'cap') showToast(`You can pin up to ${OTHERS_CAP} masjids`);
+    else if (r.reason === 'is_my_masjid') showToast(`${name} is already My Masjid`);
+    return;
+  }
+  showToast(`Pinned ${name}`);
+  dismissPinHint();
+}
+
+// Context menu \u2014 opened by long-press (touch) or the \u22ef kebab (non-touch).
+function openMasjidMenu(slug, anchor) {
+  const name = masjidName(slug);
+  const isMine = getMyMasjid() === slug;
+  const saved = isOther(slug);
+
+  // Current My Masjid: only removal makes sense, so skip the redundant
+  // checked "My Masjid" entry and the disabled pin entry.
+  const items = isMine
+    ? [
+        {
+          icon: STAR_SVG,
+          label: 'Remove My Masjid',
+          onSelect: () => toggleMyMasjidFor(slug),
+        },
+      ]
+    : [
+        {
+          icon: STAR_FILLED_SVG,
+          label: 'Set as My Masjid',
+          onSelect: () => setMyMasjidFor(slug),
+        },
+        {
+          icon: saved ? PIN_SVG : PIN_FILLED_SVG,
+          label: saved ? 'Unpin masjid' : 'Pin masjid',
+          onSelect: () => toggleOtherFor(slug),
+        },
+      ];
+  items.push({
+    icon: CLOCK_SVG,
+    label: 'View times',
+    onSelect: () => navigate('/' + slug),
+  });
+
+  openContextMenu({ title: name, anchor, items });
 }
 
 function setupPinHint() {
@@ -860,6 +894,280 @@ function showToast(html) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
 }
 
+// --- Postcode search (Postcodes.io) ---
+// No-permission alternative to the geolocation button: a query shaped like a
+// UK postcode/outcode that matches no masjid names/addresses is looked up via
+// Postcodes.io, and the resulting coords feed the exact same distance-sort
+// path (userLocation / distanceMap / locationActive) as the Nearby button.
+
+function queryRoot() {
+  return (viewContainer && viewContainer.isConnected) ? viewContainer : document;
+}
+
+function getSearchInput() {
+  return queryRoot().querySelector('#masjidSearch');
+}
+
+function restorePostcodeState() {
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+  try {
+    const saved = JSON.parse(localStorage.getItem(POSTCODE_STORE_KEY) || 'null');
+    if (saved && saved.lat != null && saved.lon != null && saved.outcode) {
+      postcodeInfo = {
+        lat: saved.lat,
+        lon: saved.lon,
+        postcode: saved.postcode || saved.outcode,
+        outcode: saved.outcode,
+      };
+      postcodeActive = true;
+      // Coords were persisted alongside the postcode — no fetch needed.
+      userLocation = { lat: saved.lat, lon: saved.lon };
+      locationActive = true;
+    }
+  } catch { /* ignore corrupt storage */ }
+}
+
+// Shared by the geolocation and postcode paths.
+function computeDistances() {
+  distanceMap = {};
+  if (!userLocation) return;
+  cachedConfigs.forEach(config => {
+    const lat = config.lat != null ? config.lat : config.latitude;
+    const lon = config.lon != null ? config.lon : config.longitude;
+    if (lat != null && lon != null) {
+      distanceMap[config.slug] = haversineDistance(
+        userLocation.lat, userLocation.lon, lat, lon
+      );
+    }
+  });
+}
+
+// How many masjids the normal text filter would show for this query —
+// postcode lookup only kicks in when the answer is zero.
+function countQueryMatches(q) {
+  const ql = q.toLowerCase();
+  let list = cachedConfigs;
+  if (selectedCity && isMobile()) list = list.filter(c => deriveCity(c) === selectedCity);
+  return list.filter(c =>
+    c.display_name.toLowerCase().includes(ql) ||
+    (c.address && c.address.toLowerCase().includes(ql))
+  ).length;
+}
+
+function buildEmptyStateHtml() {
+  if (postcodeHint === 'looking') {
+    return `<div class="masjids-empty postcode-status"><span class="postcode-spinner" aria-hidden="true"></span>Finding masjids near <strong>${postcodeHintLabel}</strong>&hellip;</div>`;
+  }
+  if (postcodeHint === 'notfound') {
+    return `<div class="masjids-empty postcode-status">Postcode not found &mdash; check it and try again</div>`;
+  }
+  return `<div class="masjids-empty">No masjids found</div>`;
+}
+
+// source: 'search' (main search input — requires zero masjid matches) or
+// 'inline' (the dedicated postcode field on the cities screen).
+function schedulePostcodeLookup(raw, source) {
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  const parsed = parsePostcodeQuery(raw);
+  if (!parsed || (source === 'search' && countQueryMatches(raw) > 0)) {
+    if (postcodeHint) setPostcodeHint(null);
+    return;
+  }
+  const gen = postcodeGen;
+  postcodeTimer = setTimeout(() => {
+    postcodeTimer = null;
+    if (gen !== postcodeGen) return;
+    runPostcodeLookup(parsed, gen);
+  }, POSTCODE_DEBOUNCE_MS);
+}
+
+async function runPostcodeLookup(parsed, gen) {
+  setPostcodeHint('looking', parsed.display);
+  let result;
+  try {
+    result = await lookupPostcode(parsed);
+  } catch (err) {
+    if (gen !== postcodeGen) return;
+    if (err && err.notFound) {
+      setPostcodeHint('notfound', parsed.display);
+    } else {
+      // Network error / timeout — degrade silently to normal search.
+      setPostcodeHint(null);
+    }
+    return;
+  }
+  if (gen !== postcodeGen) return;
+  applyPostcodeLocation(result);
+}
+
+function applyPostcodeLocation(result) {
+  postcodeActive = true;
+  postcodeInfo = result;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+
+  // The postcode coords become the active location source — same path as
+  // the geolocation button.
+  userLocation = { lat: result.lat, lon: result.lon };
+  locationActive = true;
+  computeDistances();
+
+  try {
+    localStorage.setItem(POSTCODE_STORE_KEY, JSON.stringify({
+      postcode: result.postcode,
+      outcode: result.outcode,
+      lat: result.lat,
+      lon: result.lon,
+      ts: Date.now(),
+    }));
+  } catch { /* storage full / private mode */ }
+
+  // The query was consumed as a location, not a text filter.
+  searchQuery = '';
+  const input = getSearchInput();
+  if (input) input.value = '';
+  collapseInlineForm();
+  updateInlineHint();
+
+  // The Nearby (GPS) button is not the source any more — chip communicates it.
+  const locBtn = queryRoot().querySelector('#masjidsLocationBtn');
+  if (locBtn) {
+    locBtn.classList.remove('active', 'loading', 'error');
+    const txt = locBtn.querySelector('.location-btn-text');
+    if (txt) txt.textContent = 'Nearby';
+  }
+
+  updatePostcodeChip();
+  updateHeaderState();
+  renderCards();
+
+  // If the map is already mounted, recentre it on the postcode.
+  if (mapMounted) focusBounds([[result.lat, result.lon]], { maxZoom: 13 });
+}
+
+// Clears postcode state (and optionally the persisted record) without
+// touching the location-sort variables — callers decide those.
+function clearPostcodeMode(forget) {
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+  if (forget) {
+    try { localStorage.removeItem(POSTCODE_STORE_KEY); } catch { /* ignore */ }
+  }
+  updatePostcodeChip();
+  updateInlineHint();
+}
+
+// Chip dismissed — back to default (alphabetical) ordering.
+function dismissPostcode() {
+  clearPostcodeMode(true);
+  locationActive = false;
+  userLocation = null;
+  distanceMap = {};
+  updateHeaderState();
+  renderCards();
+}
+
+function setPostcodeHint(state, label) {
+  postcodeHint = state;
+  postcodeHintLabel = label || '';
+  updateInlineHint();
+  renderCards();
+}
+
+function updateInlineHint() {
+  const el = queryRoot().querySelector('#postcodeInlineHint');
+  if (!el) return;
+  if (postcodeHint === 'looking') {
+    el.textContent = `Finding masjids near ${postcodeHintLabel}…`;
+  } else if (postcodeHint === 'notfound') {
+    el.textContent = 'Postcode not found. Check it and try again';
+  } else {
+    el.textContent = '';
+  }
+  el.hidden = !postcodeHint;
+}
+
+function updatePostcodeChip() {
+  const row = queryRoot().querySelector('#postcodeChipRow');
+  if (!row) return;
+  if (postcodeActive && postcodeInfo) {
+    const label = row.querySelector('#postcodeChipLabel');
+    if (label) label.textContent = postcodeInfo.outcode;
+    const chip = row.querySelector('.postcode-chip');
+    if (chip) chip.title = `Sorted by distance from ${postcodeInfo.postcode}`;
+    row.hidden = false;
+  } else {
+    row.hidden = true;
+  }
+}
+
+function collapseInlineForm() {
+  const root = queryRoot();
+  const form = root.querySelector('#postcodeInlineForm');
+  const pill = root.querySelector('#postcodePill');
+  if (form) {
+    form.hidden = true;
+    const input = form.querySelector('#postcodeInlineInput');
+    if (input) input.value = '';
+  }
+  if (pill) pill.hidden = false;
+}
+
+function setupPostcodeUI() {
+  if (!viewContainer) return;
+
+  // Dismissible "Near {OUTCODE}" chip.
+  const chipClear = viewContainer.querySelector('#postcodeChipClear');
+  if (chipClear) chipClear.addEventListener('click', dismissPostcode);
+  updatePostcodeChip();
+
+  // Cities screen (mobile landing) has no search input, so it gets a compact
+  // pill that expands into a postcode field.
+  const pill = viewContainer.querySelector('#postcodePill');
+  const form = viewContainer.querySelector('#postcodeInlineForm');
+  const input = viewContainer.querySelector('#postcodeInlineInput');
+  if (!pill || !form || !input) return;
+
+  pill.addEventListener('click', () => {
+    pill.hidden = true;
+    form.hidden = false;
+    input.focus();
+  });
+
+  input.addEventListener('input', () => {
+    schedulePostcodeLookup(input.value.trim(), 'inline');
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      // Cancel any pending/in-flight lookup before collapsing.
+      if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+      postcodeGen++;
+      collapseInlineForm();
+      setPostcodeHint(null);
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+    const parsed = parsePostcodeQuery(input.value.trim());
+    if (!parsed) {
+      setPostcodeHint('notfound', input.value.trim());
+      return;
+    }
+    runPostcodeLookup(parsed, ++postcodeGen);
+  });
+}
+
 // --- Location ---
 
 function setupLocationBtn() {
@@ -869,7 +1177,9 @@ function setupLocationBtn() {
   btn.addEventListener('click', async () => {
     const textEl = btn.querySelector('.location-btn-text');
 
-    if (locationActive) {
+    // Toggle off — but if a postcode is the current source, fall through and
+    // let GPS replace it instead.
+    if (locationActive && !postcodeActive) {
       locationActive = false;
       userLocation = null;
       distanceMap = {};
@@ -896,16 +1206,10 @@ function setupLocationBtn() {
         await loadMasjids();
       }
 
-      distanceMap = {};
-      cachedConfigs.forEach(config => {
-        const lat = config.lat != null ? config.lat : config.latitude;
-        const lon = config.lon != null ? config.lon : config.longitude;
-        if (lat != null && lon != null) {
-          distanceMap[config.slug] = haversineDistance(
-            userLocation.lat, userLocation.lon, lat, lon
-          );
-        }
-      });
+      // GPS replaces any active postcode as the location source.
+      if (postcodeActive) clearPostcodeMode(true);
+
+      computeDistances();
 
       locationActive = true;
       btn.classList.add('active');
@@ -923,6 +1227,10 @@ function setupLocationBtn() {
         btn.classList.remove('error');
         textEl.textContent = 'Nearby';
       }, 3000);
+      // Permission denied — point at the no-permission alternative.
+      if (err.code === 1 && !postcodeActive) {
+        showToast('Tip: type your postcode to sort by distance');
+      }
     }
   });
 }
@@ -1016,7 +1324,7 @@ async function loadTodayForPopup(slug) {
     if (!res.ok) return null;
     const r = getTodayRow(parseCSV(await res.text()));
     if (!r) return null;
-    const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '—');
+    const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '-');
     const fajrStart = r['Fajr Start'] || r['Subha Sadiq'] || r['Sehri Ends'] || '';
     const rows = [
       { name: 'Fajr', start: fmt(fajrStart, true), jamaat: fmt(r["Fajr Jama'at"], true) },
@@ -1034,9 +1342,17 @@ async function loadTodayForPopup(slug) {
 export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
   if (resizeListener) { window.removeEventListener('resize', resizeListener); resizeListener = null; }
   document.removeEventListener('click', handlePinClick, true);
+  window.removeEventListener('iqamah-follow-changed', onFollowChanged);
+  closeContextMenu();
   unmountMap();
   mapMounted = false;
   mapReadyPromise = null;

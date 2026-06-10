@@ -1,4 +1,4 @@
-const APP_VERSION = '2.4.75'; // Must match version.json
+﻿const APP_VERSION = '2.5.0'; // Must match version.json
 const OFFLINE_CACHE = `iqamah-offline-v${APP_VERSION}`;
 
 // Install: cache index.html as offline fallback, then skip waiting
@@ -42,7 +42,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     fetch(event.request, { cache: 'no-store' })
       .then(response => {
-        // Stash a copy for offline fallback only — never read from on success
+        // Stash a copy for offline fallback only â€” never read from on success
         if (response.ok && url.origin === self.location.origin) {
           const clone = response.clone();
           caches.open(OFFLINE_CACHE).then(cache => cache.put(event.request, clone));

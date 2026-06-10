@@ -40,11 +40,12 @@ function getTimesPath() {
 }
 
 // Views that live under the More hub all highlight the More tab.
-const MORE_HOSTED = new Set(['more', 'qibla', 'tracker', 'tasbih', 'dua', 'jummah-times']);
+const MORE_HOSTED = new Set(['more', 'qibla', 'tracker', 'tasbih', 'dua', 'jummah-times', 'eid-greeting']);
 
 function getActiveTabId() {
   const route = getCurrentRoute();
   if (route.view === 'add-masjid') return 'settings';
+  if (route.view === 'admin-dashboard') return 'settings';
   if (MORE_HOSTED.has(route.view)) return 'more';
   return route.view;
 }

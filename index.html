@@ -580,7 +580,7 @@
     /* Hero card */
     .hero-card {
       position: relative; border: 1px solid var(--gold-tint-40);
-      border-radius: 20px; overflow: hidden; margin-bottom: 28px;
+      border-radius: 20px; overflow: hidden; margin-bottom: 16px;
       box-shadow: 0 0 30px var(--gold-shadow-light);
       background: var(--card-bg);
       backdrop-filter: blur(12px);
@@ -857,7 +857,7 @@
     }
 
     /* Recently viewed section */
-    .recent-section { margin-bottom: 12px; }
+    .recent-section { margin-bottom: 16px; }
     .recent-hint-card {
       display: flex; align-items: center; gap: 14px; padding: 16px;
       border: 1px dashed var(--gold-tint-30); border-radius: 14px;
@@ -2200,12 +2200,1854 @@
       box-shadow: 0 4px 20px rgba(212,175,55,0.4);
       color: #0a1210;
     }
-    #eidBrowseSlot .home-browse-all { margin-top: -16px; margin-bottom: 20px; }
+    #eidBrowseSlot .home-browse-all { margin-top: 0; margin-bottom: 16px; }
 
     @media (min-width: 768px) {
       .eid-times-view { padding-bottom: 40px; }
       .eid-times-header h1 { font-size: 1.8rem; }
     }
+
+
+    /* ========== Feature: Prayer Tracker (merged from _agent_css/tracker.css) ========== */
+/* ============================================
+   PRAYER TRACKER VIEW
+   ============================================ */
+/* Status colours — night (default) values; light overrides below.
+   The OLED dark theme inherits the night values, matching the rest
+   of the app's variable cascade. */
+:root {
+  --tr-jamaah: var(--gold);
+  --tr-ontime: var(--green);
+  --tr-late: #c9824d;
+  --tr-missed: rgba(255,255,255,0.30);
+  --tr-empty: rgba(255,255,255,0.16);
+  --tr-ontime-tint: rgba(144,192,144,0.12);
+  --tr-late-tint: rgba(201,130,77,0.12);
+  --tr-missed-tint: rgba(255,255,255,0.06);
+  --tr-on-status: #0c1220;
+}
+:root[data-theme="light"] {
+  --tr-late: #a8651f;
+  --tr-missed: rgba(26,26,46,0.30);
+  --tr-empty: rgba(26,26,46,0.16);
+  --tr-ontime-tint: rgba(45,122,79,0.10);
+  --tr-late-tint: rgba(168,101,31,0.10);
+  --tr-missed-tint: rgba(26,26,46,0.06);
+  --tr-on-status: #ffffff;
+}
+
+/* Status colour hook — elements carrying .tr-st-* read var(--trc) */
+.tr-st-jamaah { --trc: var(--tr-jamaah); }
+.tr-st-ontime { --trc: var(--tr-ontime); }
+.tr-st-late { --trc: var(--tr-late); }
+.tr-st-missed { --trc: var(--tr-missed); }
+
+.tracker-view { padding: 4px 0 100px; max-width: 600px; margin: 0 auto; }
+.tracker-header { text-align: center; margin-bottom: 20px; padding-top: 16px; }
+.tracker-header h1 { font-family: 'Lato', sans-serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
+.tracker-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+
+/* Shared card chrome */
+.tracker-streak-card, .tracker-today-card, .tracker-month-card, .tracker-stat, .tracker-editor {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+}
+
+/* In-card header (Today / Editor) */
+.tracker-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.tracker-card-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.2px; font-weight: 700; color: var(--gold); }
+.tracker-card-date { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ---------- Streak card ---------- */
+.tracker-streak-card { display: flex; align-items: center; gap: 14px; padding: 16px; margin-bottom: 12px; }
+.tracker-flame {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--gold-tint-10); border: 1px solid var(--gold-tint-15); color: var(--gold);
+}
+.tracker-flame svg { width: 24px; height: 24px; }
+.tracker-flame.is-zero { color: var(--text-muted); background: var(--divider-subtle); border-color: var(--divider); }
+.tracker-streak-text { flex: 1; min-width: 0; }
+.tracker-streak-count { font-size: 1rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+.tracker-streak-count strong { font-size: 1.5rem; color: var(--gold); font-weight: 700; margin-right: 1px; }
+.tracker-streak-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; line-height: 1.35; }
+.tracker-streak-best { display: flex; flex-direction: column; align-items: center; gap: 1px; flex-shrink: 0; padding-left: 12px; border-left: 1px solid var(--divider); }
+.tracker-streak-best span { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+.tracker-streak-best strong { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); }
+
+/* ---------- Today check-in card ---------- */
+.tracker-today-card { position: relative; padding: 14px 12px 12px; margin-bottom: 12px; }
+.tracker-today-card .tracker-card-head { padding: 0 4px; }
+.tracker-seg-row { display: flex; }
+.tracker-seg {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: none; border: none; padding: 6px 2px; cursor: pointer;
+  font-family: inherit; border-radius: 10px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+}
+.tracker-seg:hover { background: var(--gold-tint-08); }
+.tracker-seg:active { transform: scale(0.96); }
+.tracker-seg-name { font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); }
+.tracker-seg-dot {
+  display: flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px dashed var(--tr-empty); color: var(--text-muted);
+  background: transparent; transition: background 0.2s, border-color 0.2s;
+}
+.tracker-seg-dot svg { width: 15px; height: 15px; }
+.tracker-seg-dot.tr-st-jamaah, .tracker-seg-dot.tr-st-ontime, .tracker-seg-dot.tr-st-late {
+  background: var(--trc); border: none; color: var(--tr-on-status);
+}
+.tracker-seg-dot.tr-st-jamaah { box-shadow: 0 0 12px var(--gold-shadow-light); }
+.tracker-seg-dot.tr-st-missed { background: var(--tr-missed-tint); border: 1.5px solid var(--tr-missed); color: var(--text-muted); }
+
+/* Status picker popover */
+.tracker-picker {
+  position: absolute; z-index: 60; min-width: 150px;
+  background: var(--nav-bg); border: 1px solid var(--card-border); border-radius: 12px;
+  padding: 5px; box-shadow: 0 8px 24px var(--card-shadow);
+  animation: trackerPopIn 0.15s ease-out;
+}
+@keyframes trackerPopIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.tracker-picker-opt {
+  display: flex; align-items: center; gap: 9px; width: 100%;
+  background: none; border: none; border-radius: 8px;
+  padding: 9px 12px; font-family: inherit; font-size: 0.85rem;
+  color: var(--text-primary); cursor: pointer; text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker-picker-opt:hover { background: var(--gold-tint-08); }
+.tracker-picker-opt.active { background: var(--gold-tint-10); font-weight: 700; }
+.tracker-picker-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: var(--trc, transparent); }
+.tracker-picker-clear { color: var(--text-muted); border-top: 1px solid var(--divider); border-radius: 0 0 8px 8px; margin-top: 3px; padding-top: 10px; }
+
+/* ---------- Stats strip ---------- */
+.tracker-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.tracker-stat { padding: 12px 6px; text-align: center; }
+.tracker-stat-value { font-size: 1.25rem; font-weight: 700; color: var(--gold); line-height: 1.2; }
+.tracker-stat-label { font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; margin-top: 3px; }
+.tracker-stat-sub { font-size: 0.6rem; color: var(--text-muted); margin-top: 1px; }
+
+/* ---------- Month grid ---------- */
+.tracker-month-card { padding: 14px 12px; }
+.tracker-month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.tracker-month-title { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); }
+.tracker-month-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
+  color: var(--gold); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker-month-btn:hover { background: var(--gold-tint-15); }
+.tracker-month-btn:disabled { opacity: 0.3; cursor: default; }
+.tracker-month-btn:disabled:hover { background: var(--gold-tint-08); }
+.tracker-dow { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
+.tracker-dow span { text-align: center; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+.tracker-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.tracker-day {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  background: none; border: none; border-radius: 9px;
+  padding: 5px 1px 6px; font-family: inherit; cursor: default;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker-day-blank { pointer-events: none; }
+.tracker-day-num { font-size: 0.68rem; color: var(--text-tertiary); line-height: 1; }
+.tracker-day-dots { display: flex; gap: 2px; }
+.tracker-day-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--trc, transparent); }
+.tracker-day-dot.tr-st-none { box-shadow: inset 0 0 0 1px var(--tr-empty); }
+.tracker-day.is-today { background: var(--gold-tint-08); }
+.tracker-day.is-today .tracker-day-num { color: var(--gold); font-weight: 700; }
+.tracker-day.is-complete { box-shadow: inset 0 0 0 1.5px var(--gold-tint-50); }
+.tracker-day.is-editable { cursor: pointer; }
+.tracker-day.is-editable:hover { background: var(--gold-tint-10); }
+.tracker-day.is-future { opacity: 0.35; }
+.tracker-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--divider-subtle); }
+.tracker-legend-item { display: inline-flex; align-items: center; gap: 5px; font-size: 0.62rem; color: var(--text-muted); }
+.tracker-legend-item .tracker-day-dot { width: 7px; height: 7px; }
+.tracker-legend-ring { width: 9px; height: 9px; border-radius: 3px; box-shadow: inset 0 0 0 1.5px var(--gold-tint-50); }
+
+/* ---------- Day editor ---------- */
+.tracker-editor { padding: 14px 14px 10px; margin-top: 12px; animation: trackerPopIn 0.15s ease-out; }
+.tracker-editor-close {
+  display: flex; align-items: center; justify-content: center;
+  background: none; border: 1px solid var(--divider); border-radius: 6px;
+  color: var(--text-muted); cursor: pointer; padding: 4px;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker-editor-close:hover { color: var(--text-primary); border-color: var(--gold-tint-40); }
+.tracker-editor-row { padding: 8px 0; border-bottom: 1px solid var(--divider-subtle); }
+.tracker-editor-row:last-of-type { border-bottom: none; }
+.tracker-editor-prayer { display: block; font-size: 0.78rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; }
+.tracker-editor-opts { display: flex; gap: 6px; }
+.tracker-chip {
+  flex: 1; padding: 7px 2px; border-radius: 7px;
+  background: none; border: 1px solid var(--divider);
+  color: var(--text-muted); font-family: inherit; font-size: 0.68rem; font-weight: 600;
+  white-space: nowrap; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.tracker-chip:hover { border-color: var(--gold-tint-40); color: var(--text-secondary); }
+.tracker-chip.active { font-weight: 700; }
+.tracker-chip.active.tr-st-jamaah { border-color: var(--tr-jamaah); color: var(--tr-jamaah); background: var(--gold-tint-10); }
+.tracker-chip.active.tr-st-ontime { border-color: var(--tr-ontime); color: var(--tr-ontime); background: var(--tr-ontime-tint); }
+.tracker-chip.active.tr-st-late { border-color: var(--tr-late); color: var(--tr-late); background: var(--tr-late-tint); }
+.tracker-chip.active.tr-st-missed { border-color: var(--tr-missed); color: var(--text-secondary); background: var(--tr-missed-tint); }
+.tracker-editor-hint { font-size: 0.62rem; color: var(--text-muted); text-align: center; margin: 10px 0 2px; opacity: 0.8; }
+
+.tracker-note { text-align: center; font-size: 0.66rem; color: var(--text-muted); opacity: 0.8; margin-top: 16px; line-height: 1.5; }
+
+/* ---------- Desktop ---------- */
+@media (min-width: 768px) {
+  .tracker-view { padding-bottom: 40px; }
+  .tracker-header h1 { font-size: 1.8rem; }
+  .tracker-seg-dot { width: 40px; height: 40px; }
+  .tracker-seg-dot svg { width: 17px; height: 17px; }
+  .tracker-seg-name { font-size: 0.78rem; }
+  .tracker-stat-value { font-size: 1.5rem; }
+  .tracker-day { padding: 8px 2px 9px; }
+  .tracker-day-num { font-size: 0.74rem; }
+  .tracker-day-dot { width: 6px; height: 6px; }
+}
+
+    /* ========== Feature: Tasbih (merged from _agent_css/tasbih.css) ========== */
+/* ============================================
+   TASBIH VIEW
+   (merge into index.html inline CSS)
+   ============================================ */
+.tasbih-view {
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  min-height: calc(100vh - 100px);
+  min-height: calc(100dvh - 100px);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Kill double-tap zoom / pinch weirdness across the whole tap area */
+.tasbih-view, .tasbih-view * { touch-action: manipulation; }
+
+.tasbih-header { position: relative; margin-bottom: 10px; }
+
+/* Haptic feedback opt-out (hidden by JS where vibration is unsupported) */
+.tasbih-haptic-btn {
+  position: absolute; top: 0; right: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: var(--gold); cursor: pointer; transition: all 0.2s;
+}
+.tasbih-haptic-btn:hover { border-color: var(--gold-tint-40); }
+.tasbih-haptic-btn.tasbih-haptic-off { color: var(--text-muted); opacity: 0.65; }
+.tasbih-haptic-slash { display: none; }
+.tasbih-haptic-off .tasbih-haptic-slash { display: block; }
+
+/* Current dhikr */
+.tasbih-dhikr { text-align: center; min-height: 122px; margin-bottom: 4px; }
+.tasbih-translit {
+  font-size: 1.05rem; font-weight: 700; color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+.tasbih-arabic {
+  font-family: 'Amiri', serif; /* Amiri is reserved for Arabic text */
+  font-size: 2rem; line-height: 1.5; color: var(--gold);
+  min-height: 1.5em;
+}
+.tasbih-meaning { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Cycle position dots (33 / 33 / 34) */
+.tasbih-segments {
+  display: flex; justify-content: center; gap: 8px;
+  margin-top: 10px; min-height: 8px;
+}
+.tasbih-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--divider); border: 1px solid var(--card-border);
+  transition: all 0.3s;
+}
+.tasbih-dot-active {
+  background: var(--gold); border-color: var(--gold);
+  box-shadow: 0 0 8px var(--gold-shadow);
+}
+.tasbih-dot-done { background: var(--gold-tint-50); border-color: var(--gold-tint-50); }
+
+/* Count + progress ring */
+.tasbih-stage {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 8px 0;
+}
+.tasbih-ring-wrap { position: relative; width: 232px; height: 232px; }
+.tasbih-ring { width: 100%; height: 100%; display: block; }
+.tasbih-ring-track {
+  fill: none; stroke: var(--gold-tint-15); stroke-width: 10;
+}
+.tasbih-ring-progress {
+  fill: none; stroke: url(#tasbihRingGrad); stroke-width: 10;
+  stroke-linecap: round;
+  transform: rotate(-90deg); transform-origin: center;
+  transition: stroke-dashoffset 0.18s ease, opacity 0.3s ease;
+}
+.tasbih-grad-a { stop-color: var(--gold); }
+.tasbih-grad-b { stop-color: var(--gold-dark); }
+
+.tasbih-ring-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
+}
+.tasbih-count {
+  font-size: 3.8rem; font-weight: 300; line-height: 1;
+  color: var(--text-primary); font-variant-numeric: tabular-nums;
+}
+.tasbih-count-pop { animation: tasbihPop 0.18s ease-out; }
+@keyframes tasbihPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.09); }
+  100% { transform: scale(1); }
+}
+.tasbih-count-target { font-size: 0.95rem; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+
+/* Target / cycle-complete pulse */
+.tasbih-ring-celebrate { animation: tasbihCelebrate 0.65s ease-out; }
+@keyframes tasbihCelebrate {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0 var(--gold-shadow-glow)); }
+  35% { transform: scale(1.045); filter: drop-shadow(0 0 22px var(--gold-shadow)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 var(--gold-shadow-glow)); }
+}
+
+/* Hint line (doubles as the target/complete announcement) */
+.tasbih-hint {
+  text-align: center; font-size: 0.8rem; color: var(--text-muted);
+  margin-bottom: 14px; transition: color 0.2s; min-height: 1.2em;
+}
+.tasbih-hint-flash { color: var(--gold); font-weight: 600; }
+
+/* Free-mode target chips (visible in free mode only) */
+.tasbih-free-targets {
+  display: none; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 8px; margin-bottom: 14px; cursor: default;
+  position: relative; z-index: 2; /* above the tap ripple */
+}
+.tasbih-view[data-mode="free"] .tasbih-free-targets { display: flex; }
+.tasbih-free-label {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted); margin-right: 2px;
+}
+.tasbih-chip {
+  padding: 5px 14px; border-radius: 999px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; transition: all 0.2s;
+  font-variant-numeric: tabular-nums;
+}
+.tasbih-chip:hover { border-color: var(--gold-tint-40); }
+.tasbih-chip-active.tasbih-chip { background: var(--gold); border-color: var(--gold); color: #1a1a2e; }
+.tasbih-chip-input {
+  width: 76px; padding: 5px 10px; border-radius: 999px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  color: var(--text-primary); font-size: 0.8rem; font-weight: 600;
+  font-family: inherit; text-align: center;
+  appearance: textfield; -moz-appearance: textfield;
+}
+.tasbih-chip-input::-webkit-outer-spin-button,
+.tasbih-chip-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.tasbih-chip-input:focus { outline: none; border-color: var(--gold); }
+.tasbih-chip-input.tasbih-chip-active { border-color: var(--gold); color: var(--gold); }
+
+/* Bottom controls bar — pinned under the tap area */
+.tasbih-controls {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  cursor: default;
+  position: relative; z-index: 2; /* above the tap ripple */
+}
+.tasbih-reset-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--divider); border-radius: 10px;
+  color: var(--text-muted); cursor: pointer; padding: 7px 12px;
+  font-size: 0.75rem; font-weight: 600; font-family: inherit;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tasbih-reset-btn:hover { color: var(--error); border-color: var(--error); }
+.tasbih-reset-confirm,
+.tasbih-reset-confirm:hover { background: var(--error); color: #fff; border-color: var(--error); }
+
+.tasbih-mode-toggle {
+  display: flex; position: relative; min-width: 124px;
+  background: var(--toggle-bg); border: 1px solid var(--toggle-border);
+  border-radius: 8px; padding: 2px;
+}
+.tasbih-mode-slider {
+  position: absolute; top: 2px; left: 2px;
+  height: calc(100% - 4px); width: calc(50% - 2px);
+  background: var(--gold); border-radius: 6px;
+  transition: transform 0.3s ease; z-index: 0;
+}
+.tasbih-mode-toggle[data-active="free"] .tasbih-mode-slider { transform: translateX(100%); }
+.tasbih-mode-toggle button {
+  flex: 1; padding: 6px 10px; border: none; background: transparent;
+  color: var(--toggle-inactive); font-size: 12px; font-weight: 600;
+  font-family: 'Lato', sans-serif; cursor: pointer; border-radius: 6px;
+  position: relative; z-index: 1; transition: color 0.3s ease;
+}
+.tasbih-mode-toggle button:hover { color: var(--toggle-inactive-hover); }
+.tasbih-mode-toggle button.active { color: #1a1a2e; }
+
+.tasbih-total {
+  display: flex; flex-direction: column; align-items: flex-end;
+  min-width: 56px;
+}
+.tasbih-total-label {
+  font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-muted);
+}
+.tasbih-total-value {
+  font-size: 0.95rem; font-weight: 700; color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tap ripple (single reusable element) */
+.tasbih-ripple {
+  position: absolute; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--gold-tint-40); pointer-events: none;
+  transform: translate(-50%, -50%) scale(0); opacity: 0; z-index: 1;
+}
+.tasbih-ripple-go { animation: tasbihRipple 0.45s ease-out; }
+@keyframes tasbihRipple {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(4.5); opacity: 0; }
+}
+
+/* OLED dark theme — match the white-accent segmented-control treatment */
+:root[data-theme="dark"] .tasbih-mode-toggle { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+:root[data-theme="dark"] .tasbih-mode-slider { background: #ffffff; }
+:root[data-theme="dark"] .tasbih-mode-toggle button.active { color: #000000; }
+:root[data-theme="dark"] .tasbih-chip-active.tasbih-chip { background: #ffffff; border-color: #ffffff; color: #000000; }
+
+/* Short phones — keep the whole counter on one screen */
+@media (max-height: 700px) {
+  .tasbih-dhikr { min-height: 104px; }
+  .tasbih-arabic { font-size: 1.7rem; }
+  .tasbih-ring-wrap { width: 196px; height: 196px; }
+  .tasbih-count { font-size: 3.1rem; }
+  .tasbih-hint { margin-bottom: 10px; }
+}
+
+/* Desktop — top nav instead of bottom nav, room for a larger ring */
+@media (min-width: 768px) {
+  .tasbih-view { min-height: calc(100vh - 130px); min-height: calc(100dvh - 130px); }
+  .tasbih-ring-wrap { width: 264px; height: 264px; }
+  .tasbih-count { font-size: 4.2rem; }
+}
+
+    /* ========== Feature: Daily Dua (merged from _agent_css/dua.css) ========== */
+/* ============================================
+   DAILY DUA VIEW
+   ============================================ */
+.dua-view { padding: 16px 16px 100px; max-width: 600px; margin: 0 auto; }
+.dua-header { text-align: center; margin-bottom: 20px; padding-top: 16px; }
+.dua-header h1 { font-family: 'Lato', sans-serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
+.dua-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+.dua-error { text-align: center; color: var(--text-muted); padding: 40px 0; font-size: 0.9rem; }
+
+/* Today's dua card */
+.dua-today-card {
+  background: var(--card-bg); border: 1px solid var(--gold-tint-30); border-radius: 16px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 22px 18px; margin-bottom: 28px; text-align: center;
+}
+.dua-today-top {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
+  gap: 8px; margin-bottom: 18px;
+}
+.dua-today-badge {
+  display: inline-flex; align-items: center; padding: 4px 14px; border-radius: 999px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-30);
+  color: var(--gold); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.dua-occasion { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+/* Dua name sits on its own line under the Dua of the Day chip */
+.dua-today-top .dua-occasion { flex-basis: 100%; text-align: center; }
+
+/* Dua body (shared by today card + expanded list items) */
+.dua-arabic {
+  font-family: 'Amiri', serif; font-size: 1.65rem; line-height: 2.1;
+  color: var(--text-primary); direction: rtl; text-align: center; margin-bottom: 14px;
+}
+.dua-transliteration {
+  font-size: 0.85rem; font-style: italic; color: var(--text-tertiary);
+  line-height: 1.6; margin: 0 0 10px;
+}
+.dua-english { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0 0 14px; }
+.dua-source-line { display: flex; justify-content: center; }
+.dua-source-chip {
+  display: inline-block; padding: 4px 12px; font-size: 0.72rem; font-weight: 600;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10); border-radius: 20px;
+  color: var(--gold); white-space: nowrap;
+}
+
+/* Share / copy actions */
+.dua-actions { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+.dua-share-btn, .dua-copy-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 10px 22px; border-radius: 12px; font-family: inherit;
+  font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.dua-share-btn svg, .dua-copy-btn svg { width: 15px; height: 15px; }
+.dua-share-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border: none; color: #0a0a0a;
+  box-shadow: 0 4px 15px var(--gold-shadow-light);
+}
+.dua-share-btn:hover { background: linear-gradient(135deg, var(--gold-hover), var(--gold)); }
+.dua-share-btn:active { transform: scale(0.97); }
+.dua-copy-btn { background: transparent; border: 1px solid var(--gold-tint-40); color: var(--gold); }
+.dua-copy-btn:hover { background: var(--gold-tint-08); border-color: var(--gold-tint-50); }
+.dua-copy-btn:active { transform: scale(0.97); }
+
+/* Collection list */
+.dua-collection-title {
+  font-family: 'Lato', sans-serif; font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--text-muted); margin: 0 0 10px; padding-left: 4px;
+}
+.dua-collection-count { font-weight: 400; }
+.dua-list { display: flex; flex-direction: column; gap: 10px; }
+.dua-item {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 14px 16px; cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.dua-item:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-30); }
+.dua-item:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: 2px; }
+.dua-item-today { border-color: var(--gold-tint-50); }
+.dua-item-row { display: flex; align-items: center; gap: 10px; }
+.dua-item-meta { flex: 1; min-width: 0; }
+.dua-item-occasion {
+  display: block; font-size: 0.85rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 2px;
+}
+.dua-item-snippet {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;
+}
+.dua-item-chip {
+  flex-shrink: 0; padding: 3px 10px; font-size: 0.65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-30); border-radius: 20px;
+  color: var(--gold); white-space: nowrap;
+}
+.dua-item-chevron { flex-shrink: 0; display: flex; color: var(--text-muted); transition: transform 0.2s ease; }
+.dua-item-chevron svg { width: 16px; height: 16px; }
+.dua-item-expanded .dua-item-chevron { transform: rotate(180deg); }
+.dua-item-full { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); text-align: center; }
+.dua-item-expanded .dua-item-full { display: block; }
+.dua-item-expanded .dua-item-snippet { display: none; }
+.dua-item-full .dua-arabic { font-size: 1.35rem; line-height: 2; }
+.dua-item-full .dua-english { font-size: 0.85rem; }
+
+/* Desktop */
+@media (min-width: 768px) {
+  .dua-view { padding-bottom: 40px; }
+  .dua-header h1 { font-size: 1.8rem; }
+  .dua-subtitle { font-size: 0.85rem; }
+  .dua-today-card { padding: 28px 32px; }
+  .dua-arabic { font-size: 1.9rem; }
+  .dua-transliteration { font-size: 0.9rem; }
+  .dua-english { font-size: 1rem; }
+}
+
+    /* ========== Feature: Jummah Times (merged from _agent_css/jummah.css) ========== */
+/* ============================================
+   Jummah Times Page
+   (mirrors the Eid Times page styles — uses theme variables only,
+   so light / night / dark all work without theme-specific rules)
+   ============================================ */
+.jummah-view { padding: 16px 16px 100px; max-width: 600px; margin: 0 auto; }
+.jummah-header { text-align: center; margin-bottom: 24px; padding-top: 16px; }
+.jummah-header h1 { font-family: 'Lato', sans-serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
+.jummah-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+.jummah-hint { font-size: 0.72rem; color: var(--text-muted); margin: 6px 0 0; opacity: 0.7; }
+.jummah-empty { text-align: center; color: var(--text-muted); padding: 40px 0; font-size: 0.9rem; }
+.jummah-list { display: flex; flex-direction: column; gap: 12px; }
+.jummah-card {
+  display: flex; gap: 14px; padding: 16px;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  text-decoration: none; color: var(--text-primary); transition: all 0.2s ease;
+}
+.jummah-card:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-30); }
+.jummah-card-content { flex: 1; min-width: 0; }
+.jummah-card-name { font-weight: 600; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 4px; }
+.jummah-card-address { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
+.jummah-card-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.jummah-time-pill {
+  display: inline-block; padding: 4px 10px; font-size: 0.78rem; font-weight: 600;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-10); border-radius: 20px;
+  color: var(--gold); white-space: nowrap;
+}
+/* Marks times derived from the Friday-row Dhuhr jama'at in the masjid's CSV */
+.jummah-card-hint { font-size: 0.68rem; color: var(--text-muted); font-style: italic; opacity: 0.8; white-space: nowrap; }
+/* No explicit time and no CSV fallback available */
+.jummah-card-none { font-size: 0.75rem; color: var(--text-muted); font-style: italic; }
+/* Placeholder pill while the CSV fallback resolves */
+.jummah-pill-skeleton { width: 68px; height: 26px; border-radius: 20px; }
+.jummah-card-raw { font-size: 0.72rem; color: var(--text-muted); line-height: 1.4; margin-top: 8px; }
+.jummah-footer { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-top: 20px; }
+.jummah-footer a { color: var(--gold); text-decoration: none; font-weight: 600; }
+.jummah-footer a:hover { text-decoration: underline; }
+
+@media (min-width: 768px) {
+  .jummah-view { padding-bottom: 40px; }
+  .jummah-header h1 { font-size: 1.8rem; }
+}
+
+    /* ========== Feature: Eid Greeting Card (merged from _agent_css/eid-greeting.css) ========== */
+/* ============================================
+   EID GREETING CARD VIEW (/eid-card)
+   Works in all three themes via CSS variables.
+   ============================================ */
+
+.eid-greeting-view {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.eid-greeting-header {
+  margin-bottom: 18px;
+}
+.eid-greeting-header h1 {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+.eid-greeting-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Preview frame — opaque card so background stars/motes don't show through */
+.eid-card-preview {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.eid-card-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  /* Card art is theme-independent; solid base avoids a flash before first paint */
+  background: #1a1028;
+  box-shadow: 0 8px 30px var(--card-shadow);
+}
+
+/* Controls card */
+.eid-card-controls {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 16px;
+}
+
+.eid-card-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.eid-card-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--gold-tint-08);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.eid-card-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+.eid-card-input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-tint-15);
+}
+
+.eid-card-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+  line-height: 1.4;
+}
+
+.eid-card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Layout for the global .btn-primary / .btn-secondary with inline SVG icons */
+.eid-card-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+}
+.eid-card-btn svg {
+  flex-shrink: 0;
+}
+
+.eid-card-status {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.4;
+  min-height: 1em;
+}
+
+/* Slightly tighter spacing on small phones so preview + controls fit nicely */
+@media (max-width: 380px) {
+  .eid-card-preview { padding: 10px; }
+  .eid-card-controls { padding: 14px; }
+  .eid-card-actions { grid-template-columns: 1fr; }
+}
+
+    /* ========== Feature: Admin Dashboard (merged from _agent_css/admin-dashboard.css) ========== */
+/* ============================================
+   Admin Fleet Health Dashboard (/admin)
+   ============================================ */
+.admin-view { padding: 16px 16px 100px; max-width: 600px; margin: 0 auto; }
+
+/* Gate / denied states */
+.admin-gate { padding-top: 24px; }
+.admin-denied {
+  text-align: center; padding: 48px 20px;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  margin-top: 32px;
+}
+.admin-denied h1 { font-family: 'Lato', sans-serif; font-size: 1.3rem; color: var(--text-primary); font-weight: 700; margin: 0 0 8px; }
+.admin-denied p { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 20px; }
+
+/* Header */
+.admin-header { text-align: center; margin-bottom: 18px; padding-top: 16px; }
+.admin-header h1 { font-family: 'Lato', sans-serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; margin: 0 0 6px; }
+.admin-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+
+/* Summary stat tiles */
+.admin-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+.admin-stat {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 10px 4px; cursor: pointer;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  font-family: inherit; color: var(--text-primary);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.admin-stat:hover { background: var(--card-hover-bg); border-color: var(--gold-tint-40); }
+.admin-stat-value { font-size: 1.2rem; font-weight: 700; line-height: 1.1; }
+.admin-stat-label { font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+.admin-stat-ok .admin-stat-value { color: #6fcb96; }
+.admin-stat-warn .admin-stat-value { color: #e0b94f; }
+.admin-stat-review .admin-stat-value { color: #e88080; }
+:root[data-theme="light"] .admin-stat-ok .admin-stat-value { color: #1e7a45; }
+:root[data-theme="light"] .admin-stat-warn .admin-stat-value { color: #8a6400; }
+:root[data-theme="light"] .admin-stat-review .admin-stat-value { color: #b03028; }
+
+/* Provider breakdown pills */
+.admin-providers { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.admin-provider-pill {
+  font-size: 0.65rem; padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
+  color: var(--text-secondary);
+}
+.admin-provider-pill strong { color: var(--gold); font-weight: 700; }
+
+/* Controls */
+.admin-controls { margin-bottom: 14px; }
+.admin-search-bar {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  padding: 9px 14px; background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 12px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.2s;
+}
+.admin-search-bar:focus-within { border-color: var(--gold-tint-50); }
+.admin-search-icon { flex-shrink: 0; color: var(--text-muted); display: flex; }
+.admin-search-icon svg { width: 16px; height: 16px; }
+.admin-search-input {
+  flex: 1; background: none; border: none; outline: none; min-width: 0;
+  color: var(--text-primary); font-size: 0.85rem; font-family: inherit;
+}
+.admin-search-input::placeholder { color: var(--text-muted); }
+
+.admin-filter-row {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 6px;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.admin-filter-row::-webkit-scrollbar { display: none; }
+.admin-filter-chip {
+  flex-shrink: 0; padding: 6px 12px; cursor: pointer; white-space: nowrap;
+  font-family: inherit; font-size: 0.72rem; font-weight: 600;
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
+  color: var(--text-secondary); transition: all 0.2s ease;
+}
+.admin-filter-chip:hover { border-color: var(--gold-tint-40); }
+.admin-filter-chip.active {
+  background: var(--gold-tint-08); border-color: var(--gold);
+  color: var(--gold);
+}
+
+.admin-sort-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.admin-result-count { font-size: 0.68rem; color: var(--text-muted); }
+.admin-sort-label {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.68rem; color: var(--text-muted); font-weight: 600;
+}
+.admin-sort-select {
+  font-family: inherit; font-size: 0.72rem; font-weight: 600;
+  padding: 4px 8px; border-radius: 8px; cursor: pointer;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  color: var(--text-primary); outline: none;
+}
+.admin-sort-select:focus { border-color: var(--gold-tint-50); }
+.admin-sort-select option { background: var(--nav-bg); color: var(--text-primary); }
+
+/* Masjid rows */
+.admin-list { display: flex; flex-direction: column; gap: 8px; }
+.admin-empty { text-align: center; color: var(--text-muted); padding: 40px 0; font-size: 0.9rem; }
+.admin-row {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  cursor: pointer; transition: border-color 0.2s ease;
+}
+.admin-row:hover { border-color: var(--gold-tint-30); }
+.admin-row.expanded { border-color: var(--gold-tint-40); }
+.admin-row-main { padding: 10px 12px; }
+.admin-row-head { display: flex; align-items: center; gap: 8px; }
+.admin-row-name {
+  flex: 1; min-width: 0; font-size: 0.85rem; font-weight: 700;
+  color: var(--text-primary); text-decoration: none; line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.admin-row-name:hover { color: var(--gold); }
+.admin-row-caret { flex-shrink: 0; display: flex; color: var(--text-muted); transition: transform 0.2s ease; }
+.admin-row-caret svg { width: 14px; height: 14px; }
+.admin-row.expanded .admin-row-caret { transform: rotate(180deg); }
+.admin-row-meta {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 5px;
+  font-size: 0.65rem; color: var(--text-muted); margin-top: 3px;
+}
+.admin-meta-provider { color: var(--text-tertiary); font-weight: 600; }
+.admin-meta-dot { opacity: 0.6; }
+.admin-meta-checked.is-old { color: #e0b94f; font-weight: 600; }
+:root[data-theme="light"] .admin-meta-checked.is-old { color: #8a6400; }
+.admin-row-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+
+/* Quality status chips */
+.admin-chip {
+  flex-shrink: 0; display: inline-block; padding: 2px 8px; border-radius: 20px;
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.admin-chip-ok { background: rgba(80,200,130,0.12); border-color: rgba(80,200,130,0.35); color: #6fcb96; }
+.admin-chip-warn { background: rgba(230,180,60,0.12); border-color: rgba(230,180,60,0.35); color: #e0b94f; }
+.admin-chip-review { background: rgba(225,90,90,0.14); border-color: rgba(225,90,90,0.4); color: #e88080; }
+.admin-chip-none { background: rgba(128,128,128,0.12); border-color: rgba(128,128,128,0.3); color: var(--text-muted); }
+:root[data-theme="light"] .admin-chip-ok { background: rgba(45,122,79,0.1); border-color: rgba(45,122,79,0.3); color: #1e7a45; }
+:root[data-theme="light"] .admin-chip-warn { background: rgba(154,111,0,0.1); border-color: rgba(154,111,0,0.3); color: #8a6400; }
+:root[data-theme="light"] .admin-chip-review { background: rgba(192,57,43,0.1); border-color: rgba(192,57,43,0.3); color: #b03028; }
+
+/* Flag badges */
+.admin-flag {
+  display: inline-block; padding: 2px 7px; border-radius: 6px;
+  font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  background: rgba(128,128,128,0.12); border: 1px solid rgba(128,128,128,0.25);
+  color: var(--text-muted);
+}
+.admin-flag-unapproved { background: rgba(230,180,60,0.12); border-color: rgba(230,180,60,0.35); color: #e0b94f; }
+.admin-flag-stale, .admin-flag-pending { background: rgba(225,140,70,0.12); border-color: rgba(225,140,70,0.35); color: #e8a070; }
+.admin-flag-hidden { background: rgba(225,90,90,0.12); border-color: rgba(225,90,90,0.35); color: #e88080; }
+:root[data-theme="light"] .admin-flag-unapproved { color: #8a6400; border-color: rgba(154,111,0,0.3); background: rgba(154,111,0,0.08); }
+:root[data-theme="light"] .admin-flag-stale, :root[data-theme="light"] .admin-flag-pending { color: #a05a20; border-color: rgba(160,90,32,0.3); background: rgba(160,90,32,0.08); }
+:root[data-theme="light"] .admin-flag-hidden { color: #b03028; border-color: rgba(192,57,43,0.3); background: rgba(192,57,43,0.08); }
+
+/* Issue type tags */
+.admin-issue-tag {
+  display: inline-block; padding: 2px 7px; border-radius: 6px;
+  font-size: 0.58rem; font-weight: 600; font-family: ui-monospace, 'SF Mono', Consolas, monospace;
+  background: rgba(128,128,128,0.1); border: 1px solid rgba(128,128,128,0.25);
+  color: var(--text-tertiary); white-space: nowrap;
+}
+.admin-issue-high { background: rgba(225,90,90,0.12); border-color: rgba(225,90,90,0.35); color: #e88080; }
+.admin-issue-medium { background: rgba(230,180,60,0.1); border-color: rgba(230,180,60,0.3); color: #e0b94f; }
+:root[data-theme="light"] .admin-issue-high { color: #b03028; border-color: rgba(192,57,43,0.3); background: rgba(192,57,43,0.08); }
+:root[data-theme="light"] .admin-issue-medium { color: #8a6400; border-color: rgba(154,111,0,0.3); background: rgba(154,111,0,0.08); }
+.admin-issue-more { color: var(--text-muted); }
+.admin-issue-ack { color: #6fcb96; font-weight: 700; }
+:root[data-theme="light"] .admin-issue-ack { color: #1e7a45; }
+
+/* Drill-down detail */
+.admin-row-detail {
+  padding: 10px 12px 12px; border-top: 1px solid var(--divider);
+  cursor: default;
+}
+.admin-detail-section { margin-bottom: 10px; }
+.admin-detail-title {
+  font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  color: var(--gold); margin-bottom: 5px;
+}
+.admin-detail-list { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+.admin-detail-list li { font-size: 0.72rem; color: var(--text-secondary); line-height: 1.45; }
+.admin-detail-sev { font-size: 0.65rem; color: var(--text-muted); margin-left: 4px; }
+.admin-detail-bits { font-size: 0.66rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+.admin-detail-empty { font-size: 0.75rem; color: var(--text-muted); margin: 0 0 10px; }
+.admin-detail-ack { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 10px; }
+.admin-detail-meta { font-size: 0.66rem; color: var(--text-muted); margin-bottom: 12px; }
+.admin-detail-meta code {
+  font-family: ui-monospace, 'SF Mono', Consolas, monospace; font-size: 0.66rem;
+  background: var(--gold-tint-08); padding: 1px 5px; border-radius: 4px;
+  color: var(--text-tertiary);
+}
+.admin-detail-actions { display: flex; gap: 8px; }
+.admin-detail-btn {
+  display: inline-block; padding: 7px 14px; border-radius: 8px; text-decoration: none;
+  font-size: 0.72rem; font-weight: 700;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-40);
+  color: var(--gold); transition: all 0.2s ease;
+}
+.admin-detail-btn:hover { background: var(--gold-tint-15); border-color: var(--gold); }
+.admin-detail-btn-ghost { background: transparent; border-color: var(--card-border); color: var(--text-secondary); }
+.admin-detail-btn-ghost:hover { border-color: var(--gold-tint-40); color: var(--gold); background: transparent; }
+
+/* Desktop: denser, table-like rows */
+@media (min-width: 768px) {
+  .admin-view { padding-bottom: 40px; max-width: 860px; }
+  .admin-header h1 { font-size: 1.8rem; }
+  .admin-summary { grid-template-columns: repeat(6, 1fr); }
+  .admin-row-main {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px; align-items: center; padding: 8px 14px;
+  }
+  .admin-row-head { grid-column: 1; }
+  .admin-row-meta { grid-column: 2; grid-row: 1; margin-top: 0; flex-wrap: nowrap; justify-content: flex-end; }
+  .admin-row-tags { grid-column: 1 / -1; margin-top: 4px; }
+  .admin-row-tags:empty { display: none; margin: 0; }
+}
+
+
+    /* ========== Feature: Follow Multiple Masjids (merged from _agent_css/follow.css) ========== */
+/* ============================================
+   My Masjid + Other Masjids
+   (Your Masjids section, star = My Masjid, bookmark = save
+   to Other Masjids, kebab, context menu, settings rows.
+   Theme variables only — light / night / dark all work.)
+   ============================================ */
+
+/* --- Home "Your Masjids" section (clone of .recent-section) --- */
+.your-masjids-section { margin-bottom: 16px; }
+
+/* Mobile scroller cards: uniform height across siblings (stretch) so a card
+   with no times isn't shorter than its neighbours, with tighter vertical
+   rhythm. Desktop keeps its own single-row card layout (rules in the desktop
+   media block). */
+@media (max-width: 767.98px) {
+  .masjid-grid.horizontal { align-items: stretch; }
+  .masjid-grid.horizontal .masjid-card { padding: 12px 14px; }
+  .masjid-grid.horizontal .masjid-card-top { margin-bottom: 8px; }
+  .masjid-grid.horizontal .masjid-card-bottom { padding-top: 8px; }
+}
+.your-masjids-edit {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 700; color: var(--gold); text-decoration: none;
+}
+.your-masjids-edit:hover { color: var(--gold-hover); }
+.your-masjids-edit svg { width: 12px; height: 12px; }
+
+/* --- Primary ("My Masjid") crown badge on cards --- */
+.my-masjid-chip-row { margin-top: 3px; }
+.my-masjid-chip {
+  display: inline-flex; align-items: center; gap: 4px; width: fit-content;
+  font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.8px;
+  font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  background: var(--gold); color: #0a1210; white-space: nowrap;
+}
+
+/* --- Star (My Masjid) + bookmark (Other Masjids) buttons --- */
+/* The star (.pin-btn, base styles above) sets/unsets My Masjid. The bookmark
+   (.save-btn) saves/removes an Other Masjid — deliberately a different shape
+   so the two actions read as distinct. On mobile both buttons are normally
+   hidden (long-press menu is the entry point) — the active states stay
+   visible as indicators (tap = undo). */
+.save-btn {
+  display: none; width: 20px; height: 20px; flex-shrink: 0; margin-left: 4px;
+  border: none; background: transparent; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.save-btn svg { width: 13px; height: 13px; color: var(--text-muted); transition: color 0.2s ease; }
+@media (min-width: 768px) {
+  .save-btn { display: inline-flex; position: relative; top: -2px; }
+  .masjid-card:hover .save-btn { opacity: 0.6; }
+}
+.save-btn:hover { opacity: 1 !important; }
+.save-btn:hover svg { color: var(--gold); }
+.save-btn.saved { opacity: 1; }
+.save-btn.saved svg { color: var(--gold); }
+@media (max-width: 767.98px) {
+  .pin-btn.pinned { display: inline-flex; opacity: 1; position: relative; top: -2px; }
+  .pin-btn.pinned svg { color: var(--gold); }
+  .save-btn.saved { display: inline-flex; position: relative; top: -2px; }
+}
+
+/* --- Kebab (non-touch context-menu trigger) --- */
+.kebab-btn {
+  display: none; width: 22px; height: 22px; flex-shrink: 0; margin-left: 2px;
+  border: none; background: transparent; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center; border-radius: 6px;
+  color: var(--text-muted);
+  opacity: 0; transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+.kebab-btn svg { width: 15px; height: 15px; }
+@media (min-width: 768px) and (hover: hover) and (pointer: fine) {
+  .kebab-btn { display: inline-flex; position: relative; top: -2px; }
+  .masjid-card:hover .kebab-btn { opacity: 0.6; }
+}
+.kebab-btn:hover { opacity: 1 !important; color: var(--gold); background: var(--gold-tint-08); }
+
+/* --- Context menu (bottom sheet on touch, popover on desktop) --- */
+.ctx-backdrop {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0; transition: opacity 0.25s ease;
+}
+.ctx-backdrop.visible { opacity: 1; }
+.ctx-backdrop.ctx-transparent { background: transparent; }
+
+/* Bottom sheet — solid surface (--nav-bg is opaque in all three themes),
+   safe-area-aware padding */
+.ctx-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 1001;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--card-border);
+  border-radius: 18px 18px 0 0;
+  padding: 10px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -8px 30px var(--card-shadow);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0.3, 1);
+}
+.ctx-sheet.visible { transform: translateY(0); }
+.ctx-grabber {
+  width: 36px; height: 4px; border-radius: 2px;
+  background: var(--divider-footer); margin: 0 auto 10px;
+}
+
+/* Popover (desktop) — also a solid surface */
+.ctx-popover {
+  position: fixed; z-index: 1001; min-width: 220px;
+  background: var(--nav-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px; padding: 6px;
+  box-shadow: 0 10px 40px var(--card-shadow);
+  opacity: 0; transform: scale(0.96); transform-origin: top right;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+:root[data-theme="light"] .ctx-popover { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18); }
+:root[data-theme="dark"] .ctx-popover { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
+.ctx-popover.visible { opacity: 1; transform: scale(1); }
+
+.ctx-title {
+  font-size: 0.78rem; font-weight: 700; color: var(--text-muted);
+  padding: 4px 8px 10px; margin-bottom: 6px;
+  border-bottom: 1px solid var(--divider-subtle);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ctx-popover .ctx-title { padding: 8px 10px 10px; }
+
+.ctx-item {
+  display: flex; align-items: center; gap: 12px; width: 100%;
+  padding: 13px 8px; border: none; background: transparent;
+  color: var(--text-primary); font-family: inherit; font-size: 0.92rem;
+  font-weight: 600; text-align: left; border-radius: 10px; cursor: pointer;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+  transition: background 0.15s ease;
+}
+.ctx-popover .ctx-item { padding: 10px; font-size: 0.85rem; }
+.ctx-item:hover { background: var(--gold-tint-08); }
+.ctx-item:active { background: var(--card-active-bg); }
+.ctx-item:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: -2px; }
+.ctx-item.disabled { opacity: 0.5; cursor: default; }
+.ctx-item.disabled:hover { background: transparent; }
+.ctx-item-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; flex-shrink: 0; color: var(--gold);
+}
+.ctx-item-icon svg { width: 18px; height: 18px; }
+.ctx-item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ctx-check { display: flex; align-items: center; margin-left: auto; color: var(--gold); flex-shrink: 0; }
+
+/* --- Settings "My Masjid" / "Other Masjids" rows --- */
+.settings-group-title-inner { margin-top: 18px; }
+.your-masjid-row .settings-item-left { flex: 1; min-width: 0; }
+.your-masjid-row .your-masjid-name {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.settings-icon-muted { color: var(--text-muted); opacity: 0.7; }
+.settings-label-muted { color: var(--text-muted); }
+.your-masjid-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 10px; }
+.set-my-btn {
+  flex-shrink: 0; display: inline-flex; align-items: center;
+  padding: 6px 10px; border-radius: 999px;
+  background: transparent; border: 1px solid var(--gold-tint-30);
+  color: var(--gold); font-family: inherit; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.set-my-btn:hover { background: var(--gold-tint-10); border-color: var(--gold); }
+.set-my-btn:active { transform: scale(0.97); }
+.settings-browse-link { color: var(--gold); text-decoration: none; font-weight: 600; }
+.settings-browse-link:hover { text-decoration: underline; }
+
+    /* ========== Feature: Client-side Lockscreen Download (merged from _agent_css/lockscreen.css) ========== */
+/* Client-side lockscreen generation — download button states.
+   Injected on demand by js/views/prayer-times.js (not linked from index.html). */
+
+.download-btn.generating {
+  pointer-events: none;
+  cursor: progress;
+  animation: lockscreen-btn-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes lockscreen-btn-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.55; }
+}
+
+
+    /* ========== Feature: Postcode Search (merged from _agent_css/postcode.css) ========== */
+/* ========== Feature: Postcode Search (Masjids view) ==========
+   No-permission alternative to geolocation — a typed UK postcode/outcode
+   becomes the active location source for distance sorting.
+   Uses existing theme variables so all three themes (light/dark/night)
+   are covered automatically. Font is inherited (Lato). */
+
+/* --- "Near {OUTCODE}" indicator chip (below the search bar) --- */
+.postcode-chip-row {
+  display: flex;
+  margin: -4px 0 14px;
+}
+/* JS toggles visibility via the hidden attribute — make sure it always wins
+   over the display rules above/below. */
+.postcode-chip-row[hidden],
+.masjids-postcode-pill[hidden],
+.postcode-inline-hint[hidden] { display: none !important; }
+.postcode-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 6px 5px 10px; border-radius: 999px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-25);
+  backdrop-filter: blur(12px);
+  color: var(--gold); font-size: 0.72rem; font-weight: 700;
+  line-height: 1; white-space: nowrap;
+}
+.postcode-chip svg { width: 12px; height: 12px; flex-shrink: 0; }
+.postcode-chip-text strong { font-weight: 800; letter-spacing: 0.3px; }
+.postcode-chip-clear {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: var(--gold-tint-10); border: none;
+  color: var(--gold); font-family: inherit; font-size: 0.85rem;
+  line-height: 1; padding: 0; cursor: pointer;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.postcode-chip-clear:hover { background: var(--gold-tint-25); }
+.postcode-chip-clear:active { transform: scale(0.92); }
+
+/* --- Cities screen (mobile landing) postcode affordance ---
+   The search bar is hidden in cities mode, so this full-width search-style
+   row (expanding into an inline postcode field) is the entry point there.
+   Hidden everywhere else; desktop always shows the full search bar instead. */
+.postcode-cities-row { display: none; }
+.masjids-view[data-mode="cities"] .postcode-cities-row {
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 0 0 14px;
+}
+@media (min-width: 768px) {
+  .masjids-view .postcode-cities-row { display: none !important; }
+}
+
+/* Full-width search-style row — matches the width and vertical rhythm of the
+   List/Map toggle above it and the search bar used on the list screen. */
+.masjids-postcode-pill {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 13px 14px; border-radius: 12px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  color: var(--text-muted); font-family: inherit; font-size: 0.85rem; font-weight: 500;
+  text-align: left; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.masjids-postcode-pill:hover { border-color: var(--gold-tint-40); }
+.masjids-postcode-pill:active { background: var(--card-active-bg); }
+.masjids-postcode-pill svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--gold); opacity: 0.8; }
+
+/* Expanded inline postcode form — same full-width search-bar styling so the
+   pill-to-form swap doesn't shift the layout */
+.postcode-inline-form {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 6px 6px 6px 14px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 12px; backdrop-filter: blur(12px);
+  transition: border-color 0.2s;
+}
+.postcode-inline-form[hidden] { display: none; }
+.postcode-inline-form:focus-within { border-color: var(--gold-tint-50); }
+.postcode-inline-input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  color: var(--text-primary); font-size: 0.85rem; font-family: inherit;
+  text-transform: uppercase;
+}
+.postcode-inline-input::placeholder {
+  color: var(--text-muted); text-transform: none;
+}
+.postcode-inline-go {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 8px;
+  background: var(--gold-tint-10); border: 1px solid var(--gold-tint-25);
+  color: var(--gold); font-family: inherit; font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.postcode-inline-go:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-40); }
+.postcode-inline-go:active { transform: scale(0.96); }
+.postcode-inline-hint {
+  font-size: 0.72rem; color: var(--text-muted); padding-left: 4px;
+}
+
+/* --- Lookup status shown in the (empty) results area --- */
+.masjids-empty.postcode-status {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  flex-wrap: wrap;
+}
+.masjids-empty.postcode-status strong { color: var(--text-secondary); font-weight: 700; }
+.postcode-spinner {
+  display: inline-block; width: 14px; height: 14px; flex-shrink: 0;
+  border: 2px solid var(--gold-tint-25); border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: postcode-spin 0.7s linear infinite;
+}
+@keyframes postcode-spin { to { transform: rotate(360deg); } }
+
+    /* ========== Feature: Home Extras: leave-by, check-in, dua (merged from _agent_css/home-extras.css) ========== */
+/* ============================================================
+   HOME EXTRAS (feature pack) — styles for the three Home additions
+   rendered by js/views/home.js:
+
+   1. .hero-leave-line  — quiet "time to leave" line on the hero card
+   2. .hck-*            — "Today's Prayers" check-in mini card
+   3. .home-dua-*       — "Dua of the day" card
+
+   Loaded at runtime via a <link> injected by home.js; merge into the
+   index.html <style> block (like previous _agent_css features) and
+   remove the injection when ready.
+
+   All colours come from existing theme variables (--card-bg,
+   --card-border, --gold, --gold-tint-*, --text-*, --divider*, and the
+   tracker's --tr-* / --trc status hooks already merged into
+   index.html), so light / night / dark themes are handled by the
+   variable cascade. Font is inherited Lato throughout.
+   ============================================================ */
+
+/* ---------- 1. Hero "time to leave" line ---------- */
+
+.hero-leave-line {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 10px; padding-top: 9px;
+  border-top: 1px solid var(--divider-subtle);
+  font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+  letter-spacing: 0.2px;
+}
+.hero-leave-line[hidden] { display: none; }
+.hero-leave-line svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--gold-tint-70); }
+.hero-leave-line .hero-leave-time { color: var(--text-secondary); font-weight: 700; }
+.hero-leave-line.is-now { color: var(--gold); }
+.hero-leave-line.is-now svg { color: var(--gold); }
+
+/* ---------- 2. "Today's Prayers" check-in card ---------- */
+
+.hck-card {
+  position: relative; display: block;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 12px 14px 10px; margin-bottom: 16px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+  transition: border-color 0.2s;
+}
+.hck-card:hover { border-color: var(--gold-tint-40); }
+
+.hck-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.hck-title {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.4px;
+  font-weight: 700; color: var(--gold);
+}
+.hck-viewall {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+  text-decoration: none;
+}
+.hck-viewall svg { width: 12px; height: 12px; }
+.hck-viewall:hover { color: var(--gold); }
+
+.hck-row { display: flex; }
+.hck-chip {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; padding: 5px 2px 6px;
+  font-family: inherit; border-radius: 10px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+}
+.hck-chip:hover, .hck-chip.is-open { background: var(--gold-tint-08); }
+.hck-chip:active { transform: scale(0.96); }
+.hck-name { font-size: 0.62rem; font-weight: 700; color: var(--text-secondary); }
+
+/* Status dot — colour comes from the global .tr-st-* → --trc hook
+   (merged tracker CSS in index.html) */
+.hck-dot {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px dashed var(--tr-empty); color: var(--tr-on-status);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+.hck-dot svg { width: 12px; height: 12px; }
+.hck-dot.tr-st-jamaah, .hck-dot.tr-st-ontime, .hck-dot.tr-st-late {
+  background: var(--trc); border: none;
+}
+.hck-dot.tr-st-jamaah { box-shadow: 0 0 10px var(--gold-shadow-light); }
+.hck-dot.tr-st-missed {
+  background: var(--tr-missed-tint); border: 1.5px solid var(--tr-missed);
+  color: var(--text-muted);
+}
+
+/* Inline status picker (Jama'ah / On time / Late / Missed / Clear) */
+.hck-picker {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 8px 2px 4px; margin-top: 4px;
+  border-top: 1px solid var(--divider-subtle);
+  animation: hckPopIn 0.15s ease-out;
+}
+@keyframes hckPopIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hck-opt {
+  flex: 1; min-width: 0; padding: 7px 4px; border-radius: 8px;
+  background: none; border: 1px solid var(--divider);
+  color: var(--text-muted); font-family: inherit;
+  font-size: 0.66rem; font-weight: 600; white-space: nowrap;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+/* Each option wears its status colour (jama'ah gold, on-time green, late amber,
+   missed grey) so the choice reads at a glance; active adds weight + fill. */
+.hck-opt.tr-st-jamaah, .hck-opt.tr-st-ontime, .hck-opt.tr-st-late, .hck-opt.tr-st-missed {
+  color: var(--trc); border-color: var(--trc);
+}
+.hck-opt:hover { background: var(--gold-tint-08); }
+.hck-opt.active {
+  font-weight: 700; border-color: var(--trc); color: var(--trc);
+  background: var(--gold-tint-08);
+}
+.hck-opt.active.tr-st-missed { color: var(--text-secondary); }
+.hck-opt-clear { flex: 0 0 auto; padding: 7px 10px; }
+
+.hck-foot { display: flex; align-items: center; margin-top: 7px; padding: 0 2px; }
+.hck-streak {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+}
+.hck-streak svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+.hck-streak strong { color: var(--gold); font-weight: 700; }
+.hck-streak-zero { color: var(--text-muted); }
+.hck-streak-zero svg { color: var(--text-muted); }
+
+/* ---------- 3. "Dua of the day" card ---------- */
+
+.home-dua-card {
+  display: block;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 13px 16px 14px; margin: 0 0 16px;
+  text-decoration: none; color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+  transition: border-color 0.2s;
+}
+.home-dua-card:hover { border-color: var(--gold-tint-40); }
+.home-dua-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 6px;
+}
+.home-dua-badge {
+  font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.4px;
+  font-weight: 700; color: var(--gold);
+}
+.home-dua-chevron { display: flex; color: var(--text-muted); flex-shrink: 0; }
+.home-dua-chevron svg { width: 14px; height: 14px; }
+.home-dua-occasion {
+  font-size: 0.8rem; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.home-dua-text {
+  margin: 0; font-size: 0.78rem; line-height: 1.55;
+  color: var(--text-secondary); font-style: italic;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 768px) {
+  .hero-leave-line { font-size: 0.78rem; }
+  .hck-dot { width: 34px; height: 34px; }
+  .hck-dot svg { width: 14px; height: 14px; }
+  .hck-name { font-size: 0.7rem; }
+  .hck-opt { font-size: 0.72rem; }
+  .home-dua-text { font-size: 0.82rem; }
+}
+
+    /* ========== Feature: Share Times Card (merged from _agent_css/share-card.css) ========== */
+/* Share-card generation — share button states.
+   Injected on demand by js/views/prayer-times.js (not linked from index.html). */
+
+.share-icon-btn.generating {
+  pointer-events: none;
+  cursor: progress;
+  animation: share-card-btn-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes share-card-btn-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.45; }
+}
+
+
+    /* ========== Fix round: Tracker fixes (picker portal, hint) (merged from _agent_css/tracker-fixes.css) ========== */
+/* Tracker fixes — override rules appended AFTER the merged tracker CSS in
+   index.html. Two-class selectors out-specify the originals' single class,
+   and equal-specificity rules win here by source order. */
+
+/* 1. Status picker portal.
+   The popover used to be position:absolute inside .tracker-today-card, but
+   every tracker card has backdrop-filter (a stacking context per card), so
+   the stats cards below — later in DOM order — always painted over it,
+   whatever its z-index. js/views/tracker.js now appends the popover to
+   document.body and anchors it to the tapped segment with inline fixed
+   coords (re-clamped on scroll/resize, flips above when short of space).
+   These rules supply the body-level positioning; the visual chrome
+   (background, border, shadow, pop-in animation) still comes from the
+   existing .tracker-picker rule, which the portalled element keeps. */
+.tracker-picker.tracker-picker-portal {
+  position: fixed;
+  z-index: 1200; /* above all backdrop-filter cards; below full-screen overlays (10000) */
+}
+
+/* 3. Edit-window hint on its own line below the storage note */
+.tracker-note .tracker-note-edit {
+  display: block;
+  margin-top: 3px;
+}
+
+    /* ========== Fix round: Tasbih/Dua fixes (Arabic sizing, tiers, toggle) (merged from _agent_css/tasbih-dua-fixes.css) ========== */
+/* Tasbih + Daily Dua fixes — override rules appended AFTER the merged
+   feature CSS in index.html. Two-class selectors out-specify the originals'
+   single class (including their media-query re-declarations), and
+   equal-specificity rules win here by source order. */
+
+/* ============================================
+   1. TASBIH — un-squash the Arabic dhikr line
+   Root cause: .tasbih-arabic used line-height 1.5, but Amiri's vertical
+   metrics plus harakat extend well beyond a 1.5 line box, so the glyphs
+   overlapped the transliteration above and the meaning below (diacritics
+   looked clipped). Amiri with harakat needs roughly 1.8-2x line-height.
+   The fixed min-height on .tasbih-dhikr was sized for the cramped layout,
+   so it grows too; the flexible ring stage below absorbs the difference.
+   ============================================ */
+.tasbih-view .tasbih-dhikr { min-height: 150px; margin-bottom: 6px; }
+.tasbih-view .tasbih-translit { margin-bottom: 2px; }
+.tasbih-view .tasbih-arabic {
+  font-size: 2.3rem;
+  line-height: 1.9;     /* room for Amiri ascenders + harakat */
+  min-height: 1.9em;    /* keeps free mode (empty Arabic) from jumping */
+  padding: 2px 0;
+}
+.tasbih-view .tasbih-meaning { margin-top: 2px; line-height: 1.45; }
+
+/* Short phones — keep the whole counter on one screen, never below ~1.85 lh */
+@media (max-height: 700px) {
+  .tasbih-view .tasbih-dhikr { min-height: 126px; }
+  .tasbih-view .tasbih-arabic { font-size: 1.9rem; line-height: 1.85; }
+}
+
+/* ============================================
+   2. DAILY DUA — tighter density + length-aware Arabic sizing
+   ============================================ */
+
+/* Tighter card padding / margins / line spacing */
+.dua-view .dua-header { margin-bottom: 14px; }
+.dua-view .dua-today-card { padding: 18px 16px; margin-bottom: 20px; }
+.dua-view .dua-today-top { margin-bottom: 12px; }
+.dua-view .dua-arabic { margin-bottom: 10px; }
+.dua-view .dua-english { line-height: 1.5; margin-bottom: 10px; }
+.dua-view .dua-actions { margin-top: 14px; }
+.dua-view .dua-item-full { margin-top: 10px; padding-top: 10px; }
+
+/* Length-aware Arabic tiers — class set by js/views/dua.js from the
+   diacritic-stripped character count (short <= 75, medium 76-140, long 141+).
+   Every tier keeps an Amiri-safe line-height so harakat never clip. */
+.dua-view .dua-arabic.dua-arabic-short { font-size: 1.65rem; line-height: 2.05; }
+.dua-view .dua-arabic.dua-arabic-medium { font-size: 1.4rem; line-height: 1.95; }
+.dua-view .dua-arabic.dua-arabic-long { font-size: 1.2rem; line-height: 1.9; }
+
+/* A step smaller again inside expanded collection items */
+.dua-view .dua-item-full .dua-arabic.dua-arabic-short { font-size: 1.35rem; line-height: 2; }
+.dua-view .dua-item-full .dua-arabic.dua-arabic-medium { font-size: 1.2rem; line-height: 1.95; }
+.dua-view .dua-item-full .dua-arabic.dua-arabic-long { font-size: 1.1rem; line-height: 1.9; }
+
+/* Collapsible transliteration — quiet toggle, collapsed by default */
+.dua-view .dua-translit-block { margin: 0 0 10px; }
+.dua-view .dua-translit-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: none; border: none; padding: 2px 8px;
+  font-family: inherit; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.3px; color: var(--text-muted); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s;
+}
+.dua-view .dua-translit-toggle:hover { color: var(--gold); }
+.dua-view .dua-translit-toggle:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: 2px; border-radius: 6px; }
+.dua-view .dua-translit-toggle svg { width: 12px; height: 12px; transition: transform 0.2s ease; }
+.dua-view .dua-translit-open .dua-translit-toggle svg { transform: rotate(180deg); }
+.dua-view .dua-translit-block .dua-transliteration { display: none; margin: 6px 0 0; line-height: 1.5; }
+.dua-view .dua-translit-open .dua-transliteration { display: block; }
+
+/* Desktop — tiers scale up proportionally; card padding stays comfortable */
+@media (min-width: 768px) {
+  .dua-view .dua-today-card { padding: 24px 28px; }
+  .dua-view .dua-arabic.dua-arabic-short { font-size: 1.9rem; }
+  .dua-view .dua-arabic.dua-arabic-medium { font-size: 1.6rem; }
+  .dua-view .dua-arabic.dua-arabic-long { font-size: 1.35rem; }
+}
+
+    /* ========== Fix round: Jummah fixes (city groups) (merged from _agent_css/jummah-fixes.css) ========== */
+/* ============================================
+   Jummah Times fixes: city grouping + bayan notes
+   Appended after the merged Jummah CSS in index.html, so rules here win
+   at equal specificity. Theme variables only - works in light/dark/night.
+   ============================================ */
+
+/* Groups manage their own spacing now; the flat-list flex gap no longer applies */
+.jummah-list { display: block; }
+
+.jummah-city-group { margin-bottom: 26px; }
+.jummah-city-group:last-child { margin-bottom: 0; }
+
+/* Sticky-ish city header - mirrors the month-view group header styling
+   (gold uppercase label, gold-tint underline). Solid per-theme background
+   (same variable as the sticky month table header) so cards scrolling
+   underneath and the stars/dust motes never show through. */
+.jummah-city-header {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin: 0; padding: 10px 4px 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--gold);
+  background: var(--month-header-bg, #182B31);
+  border-bottom: 2px solid var(--gold-tint-30);
+}
+.jummah-city-header-name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.jummah-city-header-count {
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--text-muted); text-transform: none; white-space: nowrap;
+}
+
+.jummah-city-cards {
+  display: flex; flex-direction: column; gap: 12px;
+  padding-top: 12px;
+}
+
+/* Bayan/khutbah offset note under the time pills,
+   e.g. "Bayan 30 mins before jama'at" */
+.jummah-card-note {
+  font-size: 0.7rem; color: var(--text-muted);
+  font-style: italic; margin-top: 6px;
+}
+/* When both a note and the raw string render, tighten the gap between them */
+.jummah-card-note + .jummah-card-raw { margin-top: 4px; }
+
+/* Desktop: the fixed top nav is 48px tall, so stick below it */
+@media (min-width: 768px) {
+  .jummah-city-header { top: 48px; }
+}
+
+
+    /* ========== Fix round 3: Home: Other Masjids section, chevron removal (merged from _agent_css/home-round3.css) ========== */
+/* Home round 3 — Other Masjids section + chevron removal (appended after
+   index.html styles, so these later rules win). */
+
+/* Card bottom rows no longer hold a chevron. When a card has no next-prayer
+   content, home.js sets [hidden] on the row so it doesn't sit as an empty
+   strip under its top divider. The base rule's display:flex would otherwise
+   defeat the hidden attribute. */
+.masjid-card-bottom[hidden] { display: none; }
+
+/* With the chevron gone the bottom row has a single child; no space needs
+   reserving for the old 28px chevron button. */
+.masjid-card-bottom { justify-content: flex-start; }
+
+/* Dua of the Day card: the top row only carries the badge now. */
+.home-dua-top { justify-content: flex-start; }
+
+    /* ========== Fix round 3: Tasbih: harakat ink clearance (merged from _agent_css/tasbih-clearance.css) ========== */
+/* ============================================
+   TASBIH — real clearance between the transliteration and the Arabic
+   (follow-up to the earlier "tasbih-dua-fixes" round, which raised
+   line-height to 1.9 and declared the overlap fixed from element-box
+   metrics).
+
+   Why that fix could not work: Amiri's font bounding box is ~1.74em
+   (ascent 41px + descent 23px at 2.3rem), so a 1.9 line-height leaves
+   under 3px of half-leading above the content area. Worse, the stacked
+   harakat (shadda + superscript alef on Allah's lam, dammas on the
+   seen) are INK overflow: measured actualBoundingBoxAscent is 54.4px
+   at 2.3rem, 13.4px ABOVE the font's own ascent. Glyph ink paints
+   outside the line box no matter the line-height, so the harakat
+   painted ~8px above the element's top edge, straight over the
+   transliteration. Element boxes never overlapped — only ink did —
+   which is exactly what a computed-metrics check misses.
+
+   The fix gives the ink real, dedicated room: padding-top on the
+   Arabic element sized to swallow the ink overshoot, plus a small
+   margin under the transliteration. Three-class selectors beat the
+   earlier round's two-class overrides at any source order.
+   ============================================ */
+
+.tasbih-view .tasbih-dhikr .tasbih-translit { margin-bottom: 4px; }
+
+.tasbih-view .tasbih-dhikr .tasbih-arabic {
+  /* Ink tops out ~10.5px above the box at 2.3rem/1.9 with no padding;
+     16px puts ~5.5px of true daylight above the tallest harakat stack,
+     ~9.5px to the transliteration's border box once the margin lands. */
+  padding-top: 16px;
+  padding-bottom: 2px; /* descent ink stays inside the 1.9 line box */
+}
+
+/* Short phones (the 700px tier re-declares font metrics, so restate
+   the clearance: ink overshoot is ~9px at 1.9rem/1.85 with no padding) */
+@media (max-height: 700px) {
+  .tasbih-view .tasbih-dhikr .tasbih-arabic { padding-top: 14px; }
+}
+
+    /* ========== Fix round 3: Jummah: full-bleed city headers (merged from _agent_css/jummah-headers.css) ========== */
+/* ============================================
+   JUMMAH — full-bleed city group headers
+   The view sits in a centred, padded column (body 16px padding ->
+   #app max-width 1200px -> .jummah-view max-width 600px with 16px
+   padding). The headers previously stopped at the column edge; these
+   rules stretch each sticky header band across the full screen width
+   while keeping its text aligned with the column content.
+
+   Technique: width 100vw + margin-left calc(50% - 50vw). Every
+   wrapper in the chain is symmetrically centred, so the band's left
+   edge lands on the screen edge at any viewport. On desktop with a
+   classic scrollbar, 100vw overshoots by the scrollbar width; body's
+   existing overflow-x: hidden clips it (body propagates its overflow
+   to the viewport, so position: sticky keeps working).
+
+   Text realignment: the original header text sat at
+   16px (body) + 16px (view) + 4px (header padding) = 36px on mobile,
+   and at column-content + 4px = 50vw - 280px once the viewport
+   exceeds 632px (600px column + 32px body padding) - the max() picks
+   the right one with a crossover exactly at that width. Both the
+   band offset and the padding use vw, so the scrollbar-width error
+   cancels and the text stays flush with the cards below.
+
+   Two-class selectors beat the original single-class rules at any
+   source order; sticky offsets (top: 0 / top: 48px desktop) are
+   untouched, and the solid var(--month-header-bg) band now covers
+   the whole row, so cards never peek through while sliding under.
+   ============================================ */
+
+.jummah-list .jummah-city-header {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding-left: max(36px, calc(50vw - 280px));
+  padding-right: max(36px, calc(50vw - 280px));
+}
+
+    /* ============================================
+       WHAT'S NEW SHEET (js/utils/whats-new.js)
+       Update-discoverability dialog fed by data/changelog.json.
+       Bottom sheet on mobile, centred dialog at >=768px. Visually
+       matches the .ctx-* context-menu sheet: solid var(--nav-bg)
+       surface (opaque in all three themes, so stars / dust motes
+       never show through), safe-area padding, gold accents, Lato.
+       ============================================ */
+    .wn-backdrop {
+      position: fixed; inset: 0; z-index: 1300;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0; transition: opacity 0.25s ease;
+    }
+    .wn-backdrop.visible { opacity: 1; }
+
+    .wn-sheet {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 1301;
+      display: flex; flex-direction: column;
+      max-height: 82vh;
+      background: var(--nav-bg);
+      border-top: 1px solid var(--card-border);
+      border-radius: 18px 18px 0 0;
+      padding: 10px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -8px 30px var(--card-shadow);
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0.3, 1);
+      outline: none;
+    }
+    .wn-sheet.visible { transform: translateY(0); }
+
+    .wn-grabber {
+      flex-shrink: 0;
+      width: 36px; height: 4px; border-radius: 2px;
+      background: var(--divider-footer); margin: 0 auto 12px;
+    }
+
+    .wn-title {
+      flex-shrink: 0;
+      font-size: 1.15rem; font-weight: 800; color: var(--text-primary);
+      margin: 0 0 4px; padding: 0 2px;
+    }
+
+    .wn-body { overflow-y: auto; min-height: 0; padding: 2px; }
+
+    .wn-release { padding: 10px 0 4px; }
+    .wn-release + .wn-release { border-top: 1px solid var(--divider-subtle); }
+    .wn-release-head {
+      display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+      padding: 0 2px 6px;
+    }
+    .wn-release-title { font-size: 0.95rem; font-weight: 700; color: var(--gold); }
+    .wn-release-meta {
+      font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+      letter-spacing: 0.3px;
+    }
+
+    .wn-item {
+      display: flex; align-items: flex-start; gap: 12px; width: 100%;
+      padding: 10px 8px; border: none; background: transparent;
+      font-family: inherit; text-align: left; border-radius: 10px;
+      color: var(--text-primary);
+    }
+    button.wn-item-link {
+      cursor: pointer;
+      -webkit-tap-highlight-color: var(--gold-tint-10);
+      transition: background 0.15s ease;
+    }
+    button.wn-item-link:hover { background: var(--gold-tint-08); }
+    button.wn-item-link:active { background: var(--card-active-bg); }
+    button.wn-item-link:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: -2px; }
+
+    .wn-item-dot {
+      flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); margin-top: 6px;
+      box-shadow: 0 0 6px var(--gold-shadow-light);
+    }
+    .wn-item-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .wn-item-title { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+    .wn-item-desc {
+      font-size: 0.8rem; color: var(--text-muted); line-height: 1.35;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .wn-item-chevron {
+      flex-shrink: 0; display: flex; align-items: center;
+      color: var(--text-muted); margin-top: 3px;
+    }
+    .wn-item-chevron svg { width: 14px; height: 14px; }
+
+    .wn-done {
+      flex-shrink: 0; width: 100%; margin-top: 12px;
+      padding: 12px; border-radius: 12px;
+      border: 1px solid var(--gold-tint-30); background: var(--gold-tint-10);
+      color: var(--gold); font-family: inherit; font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .wn-done:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-50); }
+    .wn-done:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: 2px; }
+
+    /* Centred dialog at >=768px */
+    @media (min-width: 768px) {
+      .wn-sheet {
+        left: 50%; right: auto; bottom: auto; top: 50%;
+        width: 440px; max-width: calc(100vw - 48px); max-height: 80vh;
+        border: 1px solid var(--card-border); border-radius: 18px;
+        padding: 18px 22px 20px;
+        opacity: 0; transform: translate(-50%, -50%) scale(0.96);
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        box-shadow: 0 10px 40px var(--card-shadow);
+      }
+      .wn-sheet.visible { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      .wn-grabber { display: none; }
+      :root[data-theme="light"] .wn-sheet { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18); }
+      :root[data-theme="dark"] .wn-sheet { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8); }
+    }
+
+    /* Settings > What's new row is a div, not an anchor — needs the pointer */
+    #whatsNewSetting { cursor: pointer; }
 
   </style>
 </head>

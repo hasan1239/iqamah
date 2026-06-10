@@ -23,7 +23,7 @@ import traceback
 from collections import Counter
 from pathlib import Path
 
-from providers import regenerate_index
+from providers import INDEX_FILENAMES, regenerate_index
 from providers.logos.fetch import fetch_one
 
 # Windows consoles default to cp1252; force UTF-8 so our checkmarks don't blow
@@ -45,7 +45,7 @@ def collect_candidates(mosques_dir, *, force, only):
     only_set = {s.strip() for s in only.split(",") if s.strip()} if only else None
     entries = []
     for path in sorted(mosques_dir.glob("*.json")):
-        if path.name == "index.json":
+        if path.name in INDEX_FILENAMES:
             continue
         slug = path.stem
         if only_set and slug not in only_set:
