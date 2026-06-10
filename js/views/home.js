@@ -3,9 +3,13 @@ import { navigate } from '../router.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
 import { parseCSV, getTodayRow, getTomorrowRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
-import { haversineDistance } from '../utils/geolocation.js';
+import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { getFollowed, getPrimary, unfollow } from '../utils/follow.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
+// Tracker data layer (no side effects on import — top level is constants and
+// function declarations only). Powers the "Today's Prayers" check-in card.
+import { readLog, setPrayerStatus, computeStreaks, localDateKey, PRAYERS, STATUSES } from './tracker.js';
+import { getTodayDua } from '../utils/duas.js';
 
 let cachedConfigs = [];
 let heroCountdownInterval = null;
@@ -13,6 +17,12 @@ let toastTimer = null;
 let masjidsModule = null;
 let seasonConfig = { season: 'ramadan', eid_date: '' };
 let showEidContent = false;
+
+// --- Feature-pack state (time-to-leave line + check-in card) ---
+let heroLeaveLoc = null;        // {lat, lon} | null — user location, resolved silently
+let heroLeaveLocPromise = null; // dedupes the silent location resolution per render
+let checkinPickerFor = null;    // prayer key | null — open status picker on the check-in card
+let checkinDocHandler = null;   // document-level capture handler that closes the picker
 
 function getCityPostcode(address) {
   if (!address) return '';
@@ -31,8 +41,17 @@ const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 const PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
+const WALK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4" r="1.8"/><path d="M13 7.5L11.5 13l2.5 3 .5 5"/><path d="M11.5 13L9 20.5"/><path d="M13 7.5l3 2 2 .5"/><path d="M13 7.5L10.5 9l-1 3"/></svg>';
+const FLAME_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+const HCK_CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+const HCK_DASH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="12" x2="18" y2="12"/></svg>';
 
 export function render(container) {
+  // Reset feature-pack state from any previous render
+  checkinPickerFor = null;
+  heroLeaveLoc = null;
+  heroLeaveLocPromise = null;
+
   const userName = localStorage.getItem('iqamah-user-name');
   let greetingHTML;
   if (userName) {
@@ -61,7 +80,11 @@ export function render(container) {
 
       <div id="yourMasjidsSection"></div>
 
+      <div id="checkInSection"></div>
+
       <div id="recentSection"></div>
+
+      <div id="duaSection"></div>
 
       <div class="home-browse-all">
         <a href="/masjids" class="home-browse-btn" data-link>
@@ -83,6 +106,8 @@ export function render(container) {
   setupHeroClicks();
   setupInstallBanner();
   loadDesktopMasjidList();
+  setupCheckInCard();
+  renderDuaCard();
 
   // Rebrand welcome is retired (showRebrand is always false). The call is kept
   // so showWelcomeScreen() stays as a working template for future overlays.
@@ -417,6 +442,7 @@ function renderHero() {
           <div class="skeleton-bone" style="width:80px;height:14px"></div>
         </div>
       </div>
+      <div class="hero-leave-line" id="heroLeaveLine" hidden></div>
     </a>`;
 
   loadHeroNextPrayer(pinnedConfig);
@@ -926,6 +952,10 @@ async function loadHeroNextPrayer(config) {
     }
 
     function renderHeroPanels() {
+      // Quiet "time to leave" line — recomputed on the same 60s tick as the
+      // countdowns (runs first; the body branches below early-return).
+      updateHeroLeaveLine(config, todayRow);
+
       const nextStart = getNextStartFromRow(todayRow);
       const nextJamaat = getNextJamaatFromRow(todayRow);
 
@@ -986,6 +1016,13 @@ async function loadHeroNextPrayer(config) {
 
     renderHeroPanels();
 
+    // Resolve the user's location silently (cached fix or already-granted
+    // permission only — never prompts) and refresh the leave line once
+    // available. The 60s tick keeps it updated after that.
+    resolveLeaveLocation().then(() => {
+      if (heroLeaveLoc) updateHeroLeaveLine(config, todayRow);
+    });
+
     if (heroCountdownInterval) clearInterval(heroCountdownInterval);
     heroCountdownInterval = setInterval(() => {
       const b = document.getElementById('heroNextPrayer');
@@ -995,6 +1032,91 @@ async function loadHeroNextPrayer(config) {
   } catch {
     body.innerHTML = '';
   }
+}
+
+// --- Time to leave (hero) ---
+// Shows "Leave by 7:05pm · 18 min walk" under the hero countdowns when the
+// primary masjid has coordinates, a user location is available silently and
+// the next jama'at is within ~3 hours. Zero-UI: never prompts, never adds
+// settings — the line is simply absent when any input is unavailable.
+
+const LEAVE_WINDOW_MS = 3 * 60 * 60 * 1000; // only show within ~3h of jama'at
+const WALK_MINS_PER_KM = 12;                // gentle walking pace
+const WALK_BUFFER_MINS = 2;                 // shoes-on buffer
+const MILES_TO_KM = 1.60934;                // haversineDistance returns miles
+const WALK_MIN_MINS = 3;                    // next door — not worth a line
+const WALK_MAX_MINS = 120;                  // beyond this it isn't a walk
+
+function resolveLeaveLocation() {
+  if (heroLeaveLocPromise) return heroLeaveLocPromise;
+  heroLeaveLocPromise = (async () => {
+    // 1) Cached fix from a previous Nearby/Qibla use — no permission involved
+    try {
+      const cached = JSON.parse(localStorage.getItem('iqamah-cached-location') || 'null');
+      if (cached && cached.lat != null && cached.lon != null) {
+        heroLeaveLoc = { lat: cached.lat, lon: cached.lon };
+        return heroLeaveLoc;
+      }
+    } catch { /* ignore */ }
+    // 2) Live read ONLY if permission is already granted — never prompt from Home
+    try {
+      if (!navigator.geolocation || !navigator.permissions || !navigator.permissions.query) return null;
+      const status = await navigator.permissions.query({ name: 'geolocation' });
+      if (status.state !== 'granted') return null;
+      const pos = await getCurrentPosition({ enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 });
+      heroLeaveLoc = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+      return heroLeaveLoc;
+    } catch { /* silent — the line simply stays hidden */ }
+    return null;
+  })();
+  return heroLeaveLocPromise;
+}
+
+function estimateWalkMins(miles) {
+  let mins = Math.round(miles * MILES_TO_KM * WALK_MINS_PER_KM + WALK_BUFFER_MINS);
+  if (mins >= 20) mins = Math.round(mins / 5) * 5; // round longer walks to 5 min
+  return mins;
+}
+
+function formatClockTime(d) {
+  const h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2, '0');
+  if (localStorage.getItem('iqamah-time-format') === '12') {
+    const h12 = h % 12 === 0 ? 12 : h % 12;
+    return `${h12}:${m}${h < 12 ? 'am' : 'pm'}`;
+  }
+  return `${String(h).padStart(2, '0')}:${m}`;
+}
+
+function updateHeroLeaveLine(config, todayRow) {
+  const el = document.getElementById('heroLeaveLine');
+  if (!el) return;
+  const hide = () => { el.hidden = true; el.innerHTML = ''; el.classList.remove('is-now'); };
+
+  const mLat = config.latitude != null ? config.latitude : config.lat;
+  const mLon = config.longitude != null ? config.longitude : config.lon;
+  if (mLat == null || mLon == null || !heroLeaveLoc) { hide(); return; }
+
+  // getNextJamaatFromRow only returns future jama'ats, so once a jama'at
+  // passes the line moves on to the next prayer (or hides after Esha).
+  const next = getNextJamaatFromRow(todayRow);
+  if (!next) { hide(); return; }
+  const jamaatDate = parseTimeTodayWithAMPM(next.time, next.isAM);
+  const now = new Date();
+  if (!jamaatDate || jamaatDate <= now) { hide(); return; }
+  if (jamaatDate.getTime() - now.getTime() > LEAVE_WINDOW_MS) { hide(); return; }
+
+  const walkMins = estimateWalkMins(haversineDistance(heroLeaveLoc.lat, heroLeaveLoc.lon, mLat, mLon));
+  if (walkMins < WALK_MIN_MINS || walkMins > WALK_MAX_MINS) { hide(); return; }
+
+  const leaveBy = new Date(jamaatDate.getTime() - walkMins * 60000);
+  const isNow = leaveBy <= now;
+  const label = isNow
+    ? `Leave now · ${walkMins} min walk`
+    : `Leave by <strong class="hero-leave-time">${formatClockTime(leaveBy)}</strong> · ${walkMins} min walk`;
+  el.innerHTML = `${WALK_SVG}<span>${label}</span>`;
+  el.classList.toggle('is-now', isNow);
+  el.hidden = false;
 }
 
 // --- Recent card prayers ---
@@ -1022,6 +1144,164 @@ async function loadRecentCardPrayers(configs) {
     } catch {
       el.innerHTML = '';
     }
+  }
+}
+
+// --- Today's prayers check-in (mini tracker card) ---
+// Visible ONLY when the tracker has ever been used: the existing
+// 'iqamah-tracker-log' key has at least one day entry, or the tracker meta
+// key exists (written on first log). Nothing new is stored just to decide
+// visibility — everyone else gets zero UI.
+
+function hasTrackerHistory() {
+  try {
+    const log = JSON.parse(localStorage.getItem('iqamah-tracker-log') || 'null');
+    if (log && typeof log === 'object' && !Array.isArray(log) && Object.keys(log).length > 0) {
+      return true;
+    }
+  } catch { /* malformed log — fall through to the meta check */ }
+  try {
+    return localStorage.getItem('iqamah-tracker-meta') !== null;
+  } catch {
+    return false;
+  }
+}
+
+function checkinStatusLabel(status) {
+  const s = STATUSES.find(x => x.key === status);
+  return s ? s.label : null;
+}
+
+function setupCheckInCard() {
+  renderCheckInCard();
+  const section = document.getElementById('checkInSection');
+  if (section) section.addEventListener('click', onCheckinClick);
+
+  // Close the status picker on taps outside the card (capture phase so it
+  // runs before navigation handlers). Removed in destroy().
+  checkinDocHandler = (e) => {
+    if (!checkinPickerFor) return;
+    if (e.target.closest('#homeCheckin')) return;
+    checkinPickerFor = null;
+    renderCheckInCard();
+  };
+  document.addEventListener('click', checkinDocHandler, true);
+}
+
+function renderCheckInCard() {
+  const section = document.getElementById('checkInSection');
+  if (!section) return;
+  if (!hasTrackerHistory()) { section.innerHTML = ''; return; }
+
+  const todayK = localDateKey(new Date());
+  const log = readLog();
+  const entry = log[todayK] || {};
+  const { current } = computeStreaks(log);
+
+  const chips = PRAYERS.map(p => {
+    const st = entry[p.key] || null;
+    const stClass = st ? `tr-st-${st}` : 'tr-st-none';
+    const icon = st ? (st === 'missed' ? HCK_DASH_SVG : HCK_CHECK_SVG) : '';
+    return `
+      <button type="button" class="hck-chip${checkinPickerFor === p.key ? ' is-open' : ''}"
+              data-prayer="${p.key}" aria-haspopup="menu"
+              aria-expanded="${checkinPickerFor === p.key}"
+              aria-label="${p.label} — ${checkinStatusLabel(st) || 'not logged yet'}">
+        <span class="hck-dot ${stClass}">${icon}</span>
+        <span class="hck-name">${p.label}</span>
+      </button>`;
+  }).join('');
+
+  let pickerHtml = '';
+  if (checkinPickerFor) {
+    const cur = entry[checkinPickerFor] || null;
+    const opts = STATUSES.map(s => `
+      <button type="button" class="hck-opt tr-st-${s.key}${cur === s.key ? ' active' : ''}"
+              data-status="${s.key}" role="menuitemradio"
+              aria-checked="${cur === s.key}">${s.label}</button>`).join('');
+    pickerHtml = `
+      <div class="hck-picker" role="menu">
+        ${opts}
+        <button type="button" class="hck-opt hck-opt-clear" data-status="">Clear</button>
+      </div>`;
+  }
+
+  const streakHtml = current > 0
+    ? `<span class="hck-streak">${FLAME_SVG}<span><strong>${current}</strong>-day streak</span></span>`
+    : `<span class="hck-streak hck-streak-zero">${FLAME_SVG}<span>Log all five to start a streak</span></span>`;
+
+  section.innerHTML = `
+    <div class="hck-card" id="homeCheckin" role="link" aria-label="Today's prayers — open Prayer Tracker">
+      <div class="hck-head">
+        <span class="hck-title">Today's Prayers</span>
+        <a href="/tracker" class="hck-viewall" data-link>View all ${CHEVRON_SVG}</a>
+      </div>
+      <div class="hck-row">${chips}</div>
+      ${pickerHtml}
+      <div class="hck-foot">${streakHtml}</div>
+    </div>`;
+}
+
+function onCheckinClick(e) {
+  // Status picker option — set (or clear) and close
+  const opt = e.target.closest('.hck-opt');
+  if (opt && checkinPickerFor) {
+    e.preventDefault();
+    e.stopPropagation();
+    setPrayerStatus(localDateKey(new Date()), checkinPickerFor, opt.dataset.status || null);
+    if (navigator.vibrate) navigator.vibrate(20);
+    checkinPickerFor = null;
+    renderCheckInCard();
+    return;
+  }
+
+  // Prayer chip — toggle the status picker
+  const chip = e.target.closest('.hck-chip');
+  if (chip) {
+    e.preventDefault();
+    e.stopPropagation();
+    checkinPickerFor = checkinPickerFor === chip.dataset.prayer ? null : chip.dataset.prayer;
+    renderCheckInCard();
+    return;
+  }
+
+  // "View all" link — let the router's data-link handling take it
+  if (e.target.closest('.hck-viewall')) return;
+
+  // Card background: close an open picker, otherwise go to the full tracker
+  if (e.target.closest('.hck-card')) {
+    if (checkinPickerFor) {
+      checkinPickerFor = null;
+      renderCheckInCard();
+      return;
+    }
+    navigate('/tracker');
+  }
+}
+
+// --- Dua of the day card ---
+
+async function renderDuaCard() {
+  const section = document.getElementById('duaSection');
+  if (!section) return;
+  try {
+    const dua = await getTodayDua();
+    const sec = document.getElementById('duaSection'); // re-check after await
+    if (!sec) return;
+    if (!dua) { sec.innerHTML = ''; return; }
+    sec.innerHTML = `
+      <a href="/dua" class="home-dua-card" data-link>
+        <div class="home-dua-top">
+          <span class="home-dua-badge">Dua of the Day</span>
+          <span class="home-dua-chevron">${CHEVRON_SVG}</span>
+        </div>
+        <div class="home-dua-occasion">${dua.occasion}</div>
+        <p class="home-dua-text">&ldquo;${dua.english}&rdquo;</p>
+      </a>`;
+  } catch {
+    // Dataset unavailable — quietly absent
+    const sec = document.getElementById('duaSection');
+    if (sec) sec.innerHTML = '';
   }
 }
 
@@ -1152,4 +1432,11 @@ export function destroy() {
   document.removeEventListener('click', handleHeroClick, true);
   window.removeEventListener('iqamah-pin-changed', onPinChanged);
   window.removeEventListener('iqamah-follow-changed', onFollowChanged);
+  if (checkinDocHandler) {
+    document.removeEventListener('click', checkinDocHandler, true);
+    checkinDocHandler = null;
+  }
+  checkinPickerFor = null;
+  heroLeaveLoc = null;
+  heroLeaveLocPromise = null;
 }
