@@ -784,7 +784,7 @@ function renderTodayView(target) {
   setupFlipCard();
   setupShareButton();
   setupInfoToggle();
-  setupDownloadTracking();
+  setupDownloadButton();
   updateDownloadLink();
   setupPrimaryButton();
 
@@ -1128,14 +1128,59 @@ function setupShareButton() {
   });
 }
 
-function setupDownloadTracking() {
+function setupDownloadButton() {
   const btn = document.getElementById('downloadBtn');
   if (!btn) return;
-  btn.addEventListener('click', () => {
+
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    if (btn.classList.contains('generating')) return;
     if (window.goatcounter) {
       window.goatcounter.count({ path: `/download/${masjidId}`, title: `Download - ${config.display_name}`, event: true });
     }
+
+    // Fallback URL: the CI-generated latest/ PNG, kept theme-aware by
+    // updateDownloadLink(). Used if client-side generation fails for any reason.
+    const fallbackHref = btn.getAttribute('href');
+    const label = btn.textContent;
+    btn.classList.add('generating');
+    btn.setAttribute('aria-busy', 'true');
+    btn.textContent = 'Generating…';
+    try {
+      const todayRow = getTodayRow();
+      if (!todayRow) throw new Error('No timetable row for today');
+      const { renderLockscreen } = await import('../utils/lockscreen-render.js');
+      const blob = await renderLockscreen({
+        config,
+        todayRow,
+        season,
+        light: getTheme() === 'light',
+      });
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const url = URL.createObjectURL(blob);
+      triggerDownload(url, `iqamah_lockscreen_${masjidId}_${dateStr}.png`);
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (err) {
+      // Any failure → fall back to the pre-generated PNG (may 404 for masjids
+      // without CI output, matching the previous behaviour).
+      if (fallbackHref) triggerDownload(fallbackHref, '');
+    } finally {
+      btn.classList.remove('generating');
+      btn.removeAttribute('aria-busy');
+      btn.textContent = label;
+    }
   });
+}
+
+function triggerDownload(href, filename) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = filename || '';
+  a.rel = 'noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 function updateDownloadLink() {
