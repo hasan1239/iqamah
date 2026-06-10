@@ -34,18 +34,24 @@ function formatOccasion(text) {
 }
 
 function duaBodyHTML(dua) {
-  return `
-    <div class="dua-arabic ${arabicSizeClass(dua.arabic)}" lang="ar" dir="rtl">${dua.arabic}</div>
+  // Entries whose transliteration could not be sourced ship with an empty
+  // string; skip the whole toggle block rather than showing an empty panel.
+  const translit = String(dua.transliteration || '').trim();
+  const translitHTML = translit ? `
     <div class="dua-translit-block">
       <button type="button" class="dua-translit-toggle" aria-expanded="false"><span class="dua-translit-toggle-label">Show transliteration</span>${CHEVRON_SVG}</button>
-      <p class="dua-transliteration">${dua.transliteration}</p>
-    </div>
+      <p class="dua-transliteration">${translit}</p>
+    </div>` : '';
+  return `
+    <div class="dua-arabic ${arabicSizeClass(dua.arabic)}" lang="ar" dir="rtl">${dua.arabic}</div>${translitHTML}
     <p class="dua-english">&ldquo;${dua.english}&rdquo;</p>
     <div class="dua-source-line"><span class="dua-source-chip">${dua.source}</span></div>`;
 }
 
 function shareText(dua) {
-  return `${dua.arabic}\n\n${dua.transliteration}\n\n"${dua.english}"\n(${dua.source})`;
+  const translit = String(dua.transliteration || '').trim();
+  return [dua.arabic, translit, `"${dua.english}"\n(${dua.source})`]
+    .filter(Boolean).join('\n\n');
 }
 
 function flashLabel(btn, label) {
