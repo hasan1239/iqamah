@@ -1,0 +1,291 @@
+[
+  {
+    "id": "sayyidul-istighfar",
+    "occasion": "Morning and evening, Sayyidul Istighfar",
+    "source": {
+      "kind": "hisn",
+      "number": 79
+    }
+  },
+  {
+    "id": "rabbana-dunya-akhirah",
+    "occasion": "Comprehensive good",
+    "source": {
+      "kind": "quran",
+      "ref": "2:201",
+      "from_word": "رَبَّنَآ"
+    }
+  },
+  {
+    "id": "dhikr-help",
+    "occasion": "After salah",
+    "source": {
+      "kind": "hisn",
+      "number": 59
+    }
+  },
+  {
+    "id": "increase-knowledge",
+    "occasion": "Seeking knowledge",
+    "source": {
+      "kind": "quran",
+      "ref": "20:114",
+      "from_word": "رَّبِّ"
+    }
+  },
+  {
+    "id": "morning-mulk",
+    "occasion": "Morning",
+    "source": {
+      "kind": "hisn",
+      "number": 77
+    }
+  },
+  {
+    "id": "yunus-distress",
+    "occasion": "Distress, dua of Yunus",
+    "source": {
+      "kind": "quran",
+      "ref": "21:87",
+      "from_word": "لَّآ"
+    }
+  },
+  {
+    "id": "leaving-home",
+    "occasion": "Leaving the house",
+    "source": {
+      "kind": "hisn",
+      "number": 16
+    }
+  },
+  {
+    "id": "parents-mercy",
+    "occasion": "For parents",
+    "source": {
+      "kind": "quran",
+      "ref": "17:24",
+      "from_word": "رَّبِّ"
+    }
+  },
+  {
+    "id": "rabbana-steadfast-hearts",
+    "occasion": "Steadfast hearts",
+    "source": {
+      "kind": "quran",
+      "ref": "3:8",
+      "from_word": "رَبَّنَا"
+    }
+  },
+  {
+    "id": "sleep-bismika",
+    "occasion": "Before sleeping",
+    "source": {
+      "kind": "hisn",
+      "number": 105
+    }
+  },
+  {
+    "id": "hasbiyallah",
+    "occasion": "Trust in Allah",
+    "source": {
+      "kind": "quran",
+      "ref": "9:129",
+      "from_word": "حَسْبِىَ"
+    }
+  },
+  {
+    "id": "enter-masjid",
+    "occasion": "Entering the masjid",
+    "source": {
+      "kind": "hisn",
+      "number": 20
+    }
+  },
+  {
+    "id": "musa-ease",
+    "occasion": "Ease and clarity",
+    "source": {
+      "kind": "quran",
+      "ref": "20:25-28",
+      "from_word": "رَبِّ"
+    }
+  },
+  {
+    "id": "anxiety-refuge",
+    "occasion": "Worry and sadness",
+    "source": {
+      "kind": "hisn",
+      "number": 137
+    }
+  },
+  {
+    "id": "family-coolness",
+    "occasion": "Family",
+    "source": {
+      "kind": "quran",
+      "ref": "25:74",
+      "from_word": "رَبَّنَا"
+    }
+  },
+  {
+    "id": "after-adhan",
+    "occasion": "After the adhan",
+    "source": {
+      "kind": "hisn",
+      "number": 25
+    }
+  },
+  {
+    "id": "adam-repentance",
+    "occasion": "Repentance, dua of Adam",
+    "source": {
+      "kind": "quran",
+      "ref": "7:23",
+      "from_word": "رَبَّنَا"
+    }
+  },
+  {
+    "id": "bismillah-protection",
+    "occasion": "Morning and evening",
+    "source": {
+      "kind": "hisn",
+      "number": 86
+    }
+  },
+  {
+    "id": "establish-salah",
+    "occasion": "Establishing salah",
+    "source": {
+      "kind": "quran",
+      "ref": "14:40"
+    }
+  },
+  {
+    "id": "waking-alhamdulillah",
+    "occasion": "Upon waking",
+    "source": {
+      "kind": "hisn",
+      "number": 1
+    }
+  },
+  {
+    "id": "rabbana-forgive-mistakes",
+    "occasion": "Forgiveness for mistakes",
+    "source": {
+      "kind": "quran",
+      "ref": "2:286",
+      "from_word": "رَبَّنَا",
+      "to_word": "أَخْطَأْنَا",
+      "en_to": "erred."
+    }
+  },
+  {
+    "id": "gratitude-saliheen",
+    "occasion": "Gratitude",
+    "source": {
+      "kind": "quran",
+      "ref": "27:19",
+      "from_word": "رَبِّ"
+    }
+  },
+  {
+    "id": "after-salah-salam",
+    "occasion": "After salah",
+    "source": {
+      "kind": "hisn",
+      "number": 66
+    }
+  },
+  {
+    "id": "patience-steadfastness",
+    "occasion": "Patience",
+    "source": {
+      "kind": "quran",
+      "ref": "2:250",
+      "from_word": "رَبَّنَآ"
+    }
+  },
+  {
+    "id": "kalimat-protection",
+    "occasion": "Evening protection",
+    "source": {
+      "kind": "hisn",
+      "number": 216
+    }
+  },
+  {
+    "id": "rabbana-forgive-sins",
+    "occasion": "Seeking forgiveness",
+    "source": {
+      "kind": "quran",
+      "ref": "3:16",
+      "from_word": "رَبَّنَآ"
+    }
+  },
+  {
+    "id": "beneficial-knowledge",
+    "occasion": "Beneficial knowledge",
+    "source": {
+      "kind": "hisn",
+      "number": 95,
+      "ref_label": "Ibn Majah 925"
+    }
+  },
+  {
+    "id": "travel-subhan",
+    "occasion": "Travelling",
+    "source": {
+      "kind": "hisn",
+      "number": 207
+    }
+  },
+  {
+    "id": "rabbana-taqabbal",
+    "occasion": "Acceptance of deeds",
+    "source": {
+      "kind": "quran",
+      "ref": "2:127",
+      "from_word": "رَبَّنَا"
+    }
+  },
+  {
+    "id": "ease-sahla",
+    "occasion": "Facing difficulty",
+    "source": {
+      "kind": "hisn",
+      "number": 139
+    }
+  },
+  {
+    "id": "distress-tahlil",
+    "occasion": "Distress",
+    "source": {
+      "kind": "hisn",
+      "number": 122
+    }
+  },
+  {
+    "id": "leave-masjid",
+    "occasion": "Leaving the masjid",
+    "source": {
+      "kind": "hisn",
+      "number": 21
+    }
+  },
+  {
+    "id": "toilet-protection",
+    "occasion": "Entering the toilet",
+    "source": {
+      "kind": "hisn",
+      "number": 10
+    }
+  },
+  {
+    "id": "breaking-fast",
+    "occasion": "Breaking the fast",
+    "source": {
+      "kind": "hisn",
+      "number": 176
+    }
+  }
+]
