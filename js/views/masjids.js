@@ -35,7 +35,6 @@ function isCityListMode() {
 // SVG icons
 const STAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
 const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
 const KEBAB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
@@ -290,7 +289,6 @@ function buildSkeletonCards(count) {
           <div class="skeleton-bone" style="width:32px;height:8px;margin-bottom:4px"></div>
           <div class="skeleton-bone" style="width:52px;height:12px"></div>
         </div>
-        <div class="skeleton-bone" style="width:28px;height:28px;border-radius:8px"></div>
       </div>
     </div>`;
   }
@@ -410,7 +408,6 @@ function renderCityGrid() {
       </div>
       <div class="masjid-city-actions">
         <span class="masjid-city-map-btn" role="button" tabindex="0" aria-label="Show ${safeCity} on map">${MAP_PIN_SVG}</span>
-        <span class="masjid-city-chevron">${CHEVRON_SVG}</span>
       </div>
     </button>`;
   }).join('');
@@ -516,7 +513,6 @@ function renderMasjidGrid() {
           <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
           <div class="skeleton-bone" style="width:56px;height:12px"></div>
         </div>
-        <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
       </div>
     </a>`;
   }).join('');
