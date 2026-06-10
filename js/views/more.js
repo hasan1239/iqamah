@@ -4,10 +4,23 @@ import { navigate } from '../router.js';
 
 let clickHandler = null;
 
-function tileHTML(f) {
+// 'NEW' badges self-clear once a feature has been visited — app.js records
+// visits in localStorage 'iqamah-seen-features' (a JSON array of feature
+// ids). Only 'NEW' is suppressed; 'BETA'/'SOON' badges are permanent.
+function getSeenFeatures() {
+  try {
+    const seen = JSON.parse(localStorage.getItem('iqamah-seen-features') || '[]');
+    return Array.isArray(seen) ? seen : [];
+  } catch {
+    return [];
+  }
+}
+
+function tileHTML(f, seen) {
   const disabled = !f.enabled;
-  const badge = f.badge
-    ? `<span class="beta-badge more-tile-badge">${f.badge}</span>`
+  const badgeText = (f.badge === 'NEW' && seen.has(f.id)) ? null : f.badge;
+  const badge = badgeText
+    ? `<span class="beta-badge more-tile-badge">${badgeText}</span>`
     : '';
   const desc = f.desc ? `<span class="more-tile-desc">${f.desc}</span>` : '';
 
@@ -25,9 +38,10 @@ function tileHTML(f) {
 }
 
 export function render(container) {
+  const seen = new Set(getSeenFeatures());
   const tiles = FEATURES
     .filter(f => (typeof f.show === 'function' ? f.show() : true))
-    .map(tileHTML)
+    .map(f => tileHTML(f, seen))
     .join('');
 
   container.innerHTML = `

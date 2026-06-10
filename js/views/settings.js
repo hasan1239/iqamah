@@ -3,6 +3,7 @@ import { getTheme, setTheme, onThemeChange } from '../theme.js';
 import { isAdmin, clearAdminCache } from '../utils/admin.js';
 import { getOthers, getMyMasjid, setMyMasjid, clearMyMasjid, removeOther } from '../utils/follow.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
+import { openWhatsNew } from '../utils/whats-new.js';
 
 let unsubTheme = null;
 let masjidNames = {}; // slug -> display_name (from index.json)
@@ -161,6 +162,22 @@ export function render(container) {
           <span class="settings-value" id="settingsVersion">...</span>
         </div>
 
+        <div class="settings-item settings-link" id="whatsNewSetting" role="button" tabindex="0">
+          <div class="settings-item-left">
+            <span class="settings-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                <path d="M12 3l1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/>
+              </svg>
+            </span>
+            <span class="settings-label">What's new</span>
+          </div>
+          <span class="settings-chevron">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </span>
+        </div>
+
         <div class="settings-item" id="resetAppSetting">
           <div class="settings-item-left">
             <span class="settings-icon">
@@ -241,6 +258,16 @@ export function render(container) {
     seg.querySelectorAll('button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.theme === newTheme);
     });
+  });
+
+  // "What's new" — opens the changelog sheet (whats-new.js)
+  const whatsNewRow = document.getElementById('whatsNewSetting');
+  whatsNewRow.addEventListener('click', () => openWhatsNew());
+  whatsNewRow.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openWhatsNew();
+    }
   });
 
   // Time format toggle

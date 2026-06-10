@@ -4,6 +4,7 @@ import { initBackground } from './background.js';
 import { initRouter, navigate } from './router.js';
 import { initNav, updateActiveTab } from './nav.js';
 import { registerServiceWorker, initInstallPrompt } from './utils/pwa.js';
+import { checkWhatsNew } from './utils/whats-new.js';
 
 const viewModules = {};
 let currentViewModule = null;
@@ -41,7 +42,34 @@ async function loadView(viewName) {
   return mod;
 }
 
+// Self-clearing 'NEW' badges — visiting a feature view marks its feature id
+// as seen ('iqamah-seen-features'), so the More grid drops its NEW badge.
+// Keyed by view name (not route) so direct navigation that bypasses the More
+// grid still counts.
+const FEATURE_VIEW_IDS = {
+  tracker: 'tracker',
+  tasbih: 'tasbih',
+  dua: 'dua',
+  'jummah-times': 'jummah',
+  'eid-greeting': 'eid-card',
+  qibla: 'qibla',
+};
+
+function markFeatureSeen(viewName) {
+  const id = FEATURE_VIEW_IDS[viewName];
+  if (!id) return;
+  try {
+    const raw = JSON.parse(localStorage.getItem('iqamah-seen-features') || '[]');
+    const seen = Array.isArray(raw) ? raw : [];
+    if (seen.includes(id)) return;
+    seen.push(id);
+    localStorage.setItem('iqamah-seen-features', JSON.stringify(seen));
+  } catch { /* never block rendering */ }
+}
+
 async function renderView(viewName, params, direction) {
+  markFeatureSeen(viewName);
+
   appContainer = document.getElementById('app');
   if (!appContainer) return;
 
@@ -166,3 +194,7 @@ initNav();
 initInstallPrompt();
 registerServiceWorker();
 initRouter(renderView);
+
+// "What's new" sheet — shown at most once per app version, after a short
+// delay so it never fights the initial paint. Non-blocking; fails silently.
+checkWhatsNew();
