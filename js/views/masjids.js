@@ -7,6 +7,7 @@ import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
 import { getFollowed, isFollowed, getPrimary, follow, unfollow, setPrimary, FOLLOW_CAP } from '../utils/follow.js';
 import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
+import { parsePostcodeQuery, lookupPostcode } from '../utils/postcode.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -170,10 +171,25 @@ let viewMode = 'list'; // 'list' | 'map'
 let mapMounted = false;
 let mapReadyPromise = null;
 
+// Postcode search — a typed postcode/outcode becomes the location source
+// (no permission prompt needed), feeding the same distance-sort path as
+// the geolocation button.
+const POSTCODE_STORE_KEY = 'iqamah-postcode';
+const POSTCODE_DEBOUNCE_MS = 550;
+let postcodeActive = false;   // postcode is the current location source
+let postcodeInfo = null;      // { lat, lon, postcode, outcode }
+let postcodeHint = null;      // null | 'looking' | 'notfound'
+let postcodeHintLabel = '';
+let postcodeTimer = null;
+let postcodeGen = 0;          // cancels stale debounces / in-flight lookups
+
 const BACK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
 
 export function render(container) {
   selectedCity = null;
+  // Restore a persisted postcode sort before building markup — locationActive
+  // feeds isCityListMode(), so this must happen before data-mode is computed.
+  restorePostcodeState();
   container.innerHTML = `
     <div class="masjids-view" data-mode="${isCityListMode() ? 'cities' : 'list'}">
       <header class="masjids-header">
@@ -200,6 +216,14 @@ export function render(container) {
           </button>
         </div>
 
+        <div class="postcode-chip-row" id="postcodeChipRow" hidden>
+          <span class="postcode-chip">
+            ${MAP_PIN_SVG}
+            <span class="postcode-chip-text">Near <strong id="postcodeChipLabel"></strong></span>
+            <button type="button" class="postcode-chip-clear" id="postcodeChipClear" aria-label="Clear postcode sort">&times;</button>
+          </span>
+        </div>
+
         <div class="masjids-cities-actions" id="masjidsCitiesActions">
           <button class="masjids-nearby-pill" id="masjidsNearbyPill">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -208,6 +232,20 @@ export function render(container) {
             </svg>
             <span>Find masjids near me</span>
           </button>
+        </div>
+
+        <div class="postcode-cities-row" id="postcodeCitiesRow">
+          <button type="button" class="masjids-postcode-pill" id="postcodePill">
+            ${SEARCH_SVG}
+            <span>Search by postcode</span>
+          </button>
+          <form class="postcode-inline-form" id="postcodeInlineForm" hidden>
+            <input type="text" id="postcodeInlineInput" class="postcode-inline-input"
+              placeholder="e.g. B12 0XS or M14" autocomplete="postal-code"
+              autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="8">
+            <button type="submit" class="postcode-inline-go">Go</button>
+          </form>
+          <div class="postcode-inline-hint" id="postcodeInlineHint" hidden></div>
         </div>
 
         ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
@@ -248,6 +286,7 @@ export function render(container) {
   lastIsMobile = isMobile();
   masjidsLoadPromise = loadMasjids();
   setupSearch();
+  setupPostcodeUI();
   setupLocationBtn();
   setupGridClicks();
   setupLongPress();
@@ -305,9 +344,14 @@ function setupCityNav() {
     searchQuery = '';
     const input = viewContainer.querySelector('#masjidSearch');
     if (input) input.value = '';
+    // Cancel any pending/in-flight postcode lookup so it can't apply a
+    // distance sort after the user has returned to the cities list.
+    if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+    postcodeGen++;
     // Reset Nearby too — going back returns the user to the clean cities list,
     // which doesn't use distance sort.
     if (locationActive) {
+      if (postcodeActive) clearPostcodeMode(true);
       locationActive = false;
       userLocation = null;
       distanceMap = {};
@@ -377,6 +421,8 @@ async function loadMasjids() {
     cachedConfigs = (await loadMasjidIndex()).filter(c =>
       !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
+    // A restored postcode sort needs distances once configs are available.
+    if (locationActive && userLocation) computeDistances();
     renderCards();
   } catch (error) {
     console.error('Error loading masjids:', error);
@@ -536,7 +582,7 @@ function renderMasjidGrid() {
   });
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<div class="masjids-empty">No masjids found</div>`;
+    grid.innerHTML = buildEmptyStateHtml();
     return;
   }
 
@@ -724,6 +770,8 @@ function setupSearch() {
   input.addEventListener('input', () => {
     searchQuery = input.value.trim();
     renderCards();
+    // Postcode-shaped query with no masjid matches → debounced lookup.
+    schedulePostcodeLookup(searchQuery, 'search');
   });
 }
 
@@ -951,6 +999,280 @@ function showToast(html) {
   toastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
 }
 
+// --- Postcode search (Postcodes.io) ---
+// No-permission alternative to the geolocation button: a query shaped like a
+// UK postcode/outcode that matches no masjid names/addresses is looked up via
+// Postcodes.io, and the resulting coords feed the exact same distance-sort
+// path (userLocation / distanceMap / locationActive) as the Nearby button.
+
+function queryRoot() {
+  return (viewContainer && viewContainer.isConnected) ? viewContainer : document;
+}
+
+function getSearchInput() {
+  return queryRoot().querySelector('#masjidSearch');
+}
+
+function restorePostcodeState() {
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+  try {
+    const saved = JSON.parse(localStorage.getItem(POSTCODE_STORE_KEY) || 'null');
+    if (saved && saved.lat != null && saved.lon != null && saved.outcode) {
+      postcodeInfo = {
+        lat: saved.lat,
+        lon: saved.lon,
+        postcode: saved.postcode || saved.outcode,
+        outcode: saved.outcode,
+      };
+      postcodeActive = true;
+      // Coords were persisted alongside the postcode — no fetch needed.
+      userLocation = { lat: saved.lat, lon: saved.lon };
+      locationActive = true;
+    }
+  } catch { /* ignore corrupt storage */ }
+}
+
+// Shared by the geolocation and postcode paths.
+function computeDistances() {
+  distanceMap = {};
+  if (!userLocation) return;
+  cachedConfigs.forEach(config => {
+    const lat = config.lat != null ? config.lat : config.latitude;
+    const lon = config.lon != null ? config.lon : config.longitude;
+    if (lat != null && lon != null) {
+      distanceMap[config.slug] = haversineDistance(
+        userLocation.lat, userLocation.lon, lat, lon
+      );
+    }
+  });
+}
+
+// How many masjids the normal text filter would show for this query —
+// postcode lookup only kicks in when the answer is zero.
+function countQueryMatches(q) {
+  const ql = q.toLowerCase();
+  let list = cachedConfigs;
+  if (selectedCity && isMobile()) list = list.filter(c => deriveCity(c) === selectedCity);
+  return list.filter(c =>
+    c.display_name.toLowerCase().includes(ql) ||
+    (c.address && c.address.toLowerCase().includes(ql))
+  ).length;
+}
+
+function buildEmptyStateHtml() {
+  if (postcodeHint === 'looking') {
+    return `<div class="masjids-empty postcode-status"><span class="postcode-spinner" aria-hidden="true"></span>Finding masjids near <strong>${postcodeHintLabel}</strong>&hellip;</div>`;
+  }
+  if (postcodeHint === 'notfound') {
+    return `<div class="masjids-empty postcode-status">Postcode not found &mdash; check it and try again</div>`;
+  }
+  return `<div class="masjids-empty">No masjids found</div>`;
+}
+
+// source: 'search' (main search input — requires zero masjid matches) or
+// 'inline' (the dedicated postcode field on the cities screen).
+function schedulePostcodeLookup(raw, source) {
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  const parsed = parsePostcodeQuery(raw);
+  if (!parsed || (source === 'search' && countQueryMatches(raw) > 0)) {
+    if (postcodeHint) setPostcodeHint(null);
+    return;
+  }
+  const gen = postcodeGen;
+  postcodeTimer = setTimeout(() => {
+    postcodeTimer = null;
+    if (gen !== postcodeGen) return;
+    runPostcodeLookup(parsed, gen);
+  }, POSTCODE_DEBOUNCE_MS);
+}
+
+async function runPostcodeLookup(parsed, gen) {
+  setPostcodeHint('looking', parsed.display);
+  let result;
+  try {
+    result = await lookupPostcode(parsed);
+  } catch (err) {
+    if (gen !== postcodeGen) return;
+    if (err && err.notFound) {
+      setPostcodeHint('notfound', parsed.display);
+    } else {
+      // Network error / timeout — degrade silently to normal search.
+      setPostcodeHint(null);
+    }
+    return;
+  }
+  if (gen !== postcodeGen) return;
+  applyPostcodeLocation(result);
+}
+
+function applyPostcodeLocation(result) {
+  postcodeActive = true;
+  postcodeInfo = result;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+
+  // The postcode coords become the active location source — same path as
+  // the geolocation button.
+  userLocation = { lat: result.lat, lon: result.lon };
+  locationActive = true;
+  computeDistances();
+
+  try {
+    localStorage.setItem(POSTCODE_STORE_KEY, JSON.stringify({
+      postcode: result.postcode,
+      outcode: result.outcode,
+      lat: result.lat,
+      lon: result.lon,
+      ts: Date.now(),
+    }));
+  } catch { /* storage full / private mode */ }
+
+  // The query was consumed as a location, not a text filter.
+  searchQuery = '';
+  const input = getSearchInput();
+  if (input) input.value = '';
+  collapseInlineForm();
+  updateInlineHint();
+
+  // The Nearby (GPS) button is not the source any more — chip communicates it.
+  const locBtn = queryRoot().querySelector('#masjidsLocationBtn');
+  if (locBtn) {
+    locBtn.classList.remove('active', 'loading', 'error');
+    const txt = locBtn.querySelector('.location-btn-text');
+    if (txt) txt.textContent = 'Nearby';
+  }
+
+  updatePostcodeChip();
+  updateHeaderState();
+  renderCards();
+
+  // If the map is already mounted, recentre it on the postcode.
+  if (mapMounted) focusBounds([[result.lat, result.lon]], { maxZoom: 13 });
+}
+
+// Clears postcode state (and optionally the persisted record) without
+// touching the location-sort variables — callers decide those.
+function clearPostcodeMode(forget) {
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
+  if (forget) {
+    try { localStorage.removeItem(POSTCODE_STORE_KEY); } catch { /* ignore */ }
+  }
+  updatePostcodeChip();
+  updateInlineHint();
+}
+
+// Chip dismissed — back to default (alphabetical) ordering.
+function dismissPostcode() {
+  clearPostcodeMode(true);
+  locationActive = false;
+  userLocation = null;
+  distanceMap = {};
+  updateHeaderState();
+  renderCards();
+}
+
+function setPostcodeHint(state, label) {
+  postcodeHint = state;
+  postcodeHintLabel = label || '';
+  updateInlineHint();
+  renderCards();
+}
+
+function updateInlineHint() {
+  const el = queryRoot().querySelector('#postcodeInlineHint');
+  if (!el) return;
+  if (postcodeHint === 'looking') {
+    el.textContent = `Finding masjids near ${postcodeHintLabel}…`;
+  } else if (postcodeHint === 'notfound') {
+    el.textContent = 'Postcode not found — check it and try again';
+  } else {
+    el.textContent = '';
+  }
+  el.hidden = !postcodeHint;
+}
+
+function updatePostcodeChip() {
+  const row = queryRoot().querySelector('#postcodeChipRow');
+  if (!row) return;
+  if (postcodeActive && postcodeInfo) {
+    const label = row.querySelector('#postcodeChipLabel');
+    if (label) label.textContent = postcodeInfo.outcode;
+    const chip = row.querySelector('.postcode-chip');
+    if (chip) chip.title = `Sorted by distance from ${postcodeInfo.postcode}`;
+    row.hidden = false;
+  } else {
+    row.hidden = true;
+  }
+}
+
+function collapseInlineForm() {
+  const root = queryRoot();
+  const form = root.querySelector('#postcodeInlineForm');
+  const pill = root.querySelector('#postcodePill');
+  if (form) {
+    form.hidden = true;
+    const input = form.querySelector('#postcodeInlineInput');
+    if (input) input.value = '';
+  }
+  if (pill) pill.hidden = false;
+}
+
+function setupPostcodeUI() {
+  if (!viewContainer) return;
+
+  // Dismissible "Near {OUTCODE}" chip.
+  const chipClear = viewContainer.querySelector('#postcodeChipClear');
+  if (chipClear) chipClear.addEventListener('click', dismissPostcode);
+  updatePostcodeChip();
+
+  // Cities screen (mobile landing) has no search input, so it gets a compact
+  // pill that expands into a postcode field.
+  const pill = viewContainer.querySelector('#postcodePill');
+  const form = viewContainer.querySelector('#postcodeInlineForm');
+  const input = viewContainer.querySelector('#postcodeInlineInput');
+  if (!pill || !form || !input) return;
+
+  pill.addEventListener('click', () => {
+    pill.hidden = true;
+    form.hidden = false;
+    input.focus();
+  });
+
+  input.addEventListener('input', () => {
+    schedulePostcodeLookup(input.value.trim(), 'inline');
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      // Cancel any pending/in-flight lookup before collapsing.
+      if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+      postcodeGen++;
+      collapseInlineForm();
+      setPostcodeHint(null);
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+    const parsed = parsePostcodeQuery(input.value.trim());
+    if (!parsed) {
+      setPostcodeHint('notfound', input.value.trim());
+      return;
+    }
+    runPostcodeLookup(parsed, ++postcodeGen);
+  });
+}
+
 // --- Location ---
 
 function setupLocationBtn() {
@@ -960,7 +1282,9 @@ function setupLocationBtn() {
   btn.addEventListener('click', async () => {
     const textEl = btn.querySelector('.location-btn-text');
 
-    if (locationActive) {
+    // Toggle off — but if a postcode is the current source, fall through and
+    // let GPS replace it instead.
+    if (locationActive && !postcodeActive) {
       locationActive = false;
       userLocation = null;
       distanceMap = {};
@@ -987,16 +1311,10 @@ function setupLocationBtn() {
         await loadMasjids();
       }
 
-      distanceMap = {};
-      cachedConfigs.forEach(config => {
-        const lat = config.lat != null ? config.lat : config.latitude;
-        const lon = config.lon != null ? config.lon : config.longitude;
-        if (lat != null && lon != null) {
-          distanceMap[config.slug] = haversineDistance(
-            userLocation.lat, userLocation.lon, lat, lon
-          );
-        }
-      });
+      // GPS replaces any active postcode as the location source.
+      if (postcodeActive) clearPostcodeMode(true);
+
+      computeDistances();
 
       locationActive = true;
       btn.classList.add('active');
@@ -1014,6 +1332,10 @@ function setupLocationBtn() {
         btn.classList.remove('error');
         textEl.textContent = 'Nearby';
       }, 3000);
+      // Permission denied — point at the no-permission alternative.
+      if (err.code === 1 && !postcodeActive) {
+        showToast('Tip: type your postcode to sort by distance');
+      }
     }
   });
 }
@@ -1125,6 +1447,12 @@ async function loadTodayForPopup(slug) {
 export function destroy() {
   if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
   if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  if (postcodeTimer) { clearTimeout(postcodeTimer); postcodeTimer = null; }
+  postcodeGen++;
+  postcodeActive = false;
+  postcodeInfo = null;
+  postcodeHint = null;
+  postcodeHintLabel = '';
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
   if (resizeListener) { window.removeEventListener('resize', resizeListener); resizeListener = null; }
   document.removeEventListener('click', handlePinClick, true);
