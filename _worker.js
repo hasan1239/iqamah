@@ -1,6 +1,7 @@
 // ============================================================
 // Prayerly — Cloudflare Pages Worker
-// Handles clean URL routing + Add Your Masjid API endpoints
+// Handles clean URL routing, per-masjid Open Graph injection
+// + Add Your Masjid API endpoints
 // ============================================================
 
 // --- Admin check ---
@@ -243,7 +244,7 @@ async function deduplicateSlug(slug, address, env) {
     if (resp.ok) {
       const files = await resp.json();
       for (const f of files) {
-        if (f.name.endsWith('.json') && f.name !== 'index.json') {
+        if (f.name.endsWith('.json') && f.name !== 'index.json' && f.name !== 'index-slim.json') {
           existingSlugs.add(f.name.replace('.json', ''));
         }
       }
@@ -490,6 +491,49 @@ async function githubCommitFiles(files, message, env) {
   }
 }
 
+// --- Slim index companion (data/mosques/index-slim.json) ---
+
+// Lightweight companion to index.json — same array order, but each entry is
+// cut down to only the fields the list/map/home/eid views actually read.
+// Mirrors SLIM_INDEX_FIELDS + slim_config() in providers/__init__.py (the
+// reference implementation) — keep the two in sync.
+const SLIM_INDEX_FIELDS = [
+  'slug', 'display_name', 'address', 'city', 'logo', 'csv', 'approved',
+  'eid_salah', 'jummah_times', 'test_masjid', 'hidden',
+  'latitude', 'longitude', 'lat', 'lon',
+];
+
+function slimIndexEntry(config) {
+  if (!config || typeof config !== 'object') return config;
+  const slim = {};
+  for (const field of SLIM_INDEX_FIELDS) {
+    if (field in config) slim[field] = config[field];
+  }
+  if (config.quality && typeof config.quality === 'object' && 'status' in config.quality) {
+    slim.quality = { status: config.quality.status };
+  }
+  if (config.provider && typeof config.provider === 'object' && 'type' in config.provider) {
+    slim.provider = { type: config.provider.type };
+  }
+  return slim;
+}
+
+// Add data/mosques/index-slim.json to a pending githubCommitFiles batch,
+// derived from the same up-to-date index array as index.json (so both land
+// in one atomic commit and can never diverge). Built defensively: if the
+// slim array can't be produced we log and skip it rather than fail the
+// user-facing request — the next workflow index regeneration self-heals it.
+function pushSlimIndexFile(files, configs) {
+  try {
+    files.push({
+      path: 'data/mosques/index-slim.json',
+      content: JSON.stringify(configs.map(slimIndexEntry), null, 2),
+    });
+  } catch (e) {
+    console.error('Failed to build index-slim.json (skipping; next index regeneration self-heals):', e);
+  }
+}
+
 // --- GitHub Issue notifications ---
 
 async function createNotificationIssue(slug, mosqueName, imageExt, env) {
@@ -671,6 +715,231 @@ async function serveStaticPage(pageName, request, env) {
   });
 }
 
+// ============================================================
+// Open Graph injection for masjid pages (rich link unfurls)
+// ============================================================
+
+const CANONICAL_ORIGIN = 'https://iqamah.co.uk';
+
+// SPA routes that are never masjid slugs — skip the config lookup entirely
+const NON_MASJID_ROUTES = new Set(['masjids', 'more', 'qibla', 'add', 'settings', 'times', 'eid', 'update', 'tracker', 'tasbih', 'dua', 'jummah-times', 'jummah', 'eid-card', 'admin']);
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// Today's date in Europe/London — link previews must reflect UK local time,
+// not the UTC date of whichever edge colo handles the request.
+function londonToday() {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const get = (type) => parts.find((p) => p.type === type).value;
+  return { year: parseInt(get('year'), 10), month: parseInt(get('month'), 10), day: parseInt(get('day'), 10) };
+}
+
+// Cache TTL: up to 1 hour, but never past London midnight so a cached
+// preview can't show yesterday's times.
+function ogCacheTtl() {
+  try {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23',
+    }).formatToParts(new Date());
+    const get = (type) => parseInt(parts.find((p) => p.type === type).value, 10);
+    const secsToMidnight = 86400 - (get('hour') * 3600 + get('minute') * 60 + get('second'));
+    return Math.max(60, Math.min(3600, secsToMidnight));
+  } catch {
+    return 3600;
+  }
+}
+
+// Minimal CSV today-row lookup — mirrors js/utils/csv.js. Two header styles
+// coexist (Mawaqit snake_case and legacy Title-Case) and two date formats
+// (ISO "2026-05-19" and legacy "18 Feb", which assumes 2026).
+const OG_HEADER_ALIASES = {
+  'date': 'Date', 'day': 'Day', 'islamic_day': 'Islamic Day',
+  'sehri_ends': 'Sehri Ends', 'fajr_start': 'Fajr Start',
+  'sunrise': 'Sunrise', 'zawal': 'Zawal', 'zohr': 'Zohr', 'asr': 'Asr', 'esha': 'Esha',
+  'fajr_jamaat': "Fajr Jama'at", 'zohar_jamaat': "Zohar Jama'at",
+  'asr_jamaat': "Asr Jama'at", 'maghrib_iftari': 'Maghrib Iftari',
+  'maghrib_jamaat': "Maghrib Jama'at", 'esha_jamaat': "Esha Jama'at",
+};
+
+const OG_MONTHS = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
+
+function ogParseDate(dateStr) {
+  if (!dateStr) return null;
+  const trimmed = dateStr.trim();
+  const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoMatch) {
+    return { year: parseInt(isoMatch[1], 10), month: parseInt(isoMatch[2], 10), day: parseInt(isoMatch[3], 10) };
+  }
+  // Legacy image-extraction format "18 Feb" — csv.js pins these to 2026
+  const parts = trimmed.split(/\s+/);
+  if (parts.length < 2) return null;
+  const day = parseInt(parts[0], 10);
+  const month = OG_MONTHS[parts[1]];
+  if (isNaN(day) || !month) return null;
+  return { year: 2026, month, day };
+}
+
+function findTodayRowForOg(csvText) {
+  const today = londonToday();
+  const lines = csvText.trim().split('\n');
+  if (lines.length < 2) return null;
+  const headers = lines[0].split(',').map((h) => {
+    const trimmed = h.trim();
+    return OG_HEADER_ALIASES[trimmed] || trimmed;
+  });
+  const dateIdx = headers.indexOf('Date');
+  if (dateIdx === -1) return null;
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(',').map((v) => v.trim());
+    if (vals.length < headers.length) continue;
+    const d = ogParseDate(vals[dateIdx] || '');
+    if (d && d.year === today.year && d.month === today.month && d.day === today.day) {
+      const row = {};
+      headers.forEach((h, idx) => { row[h] = vals[idx] || ''; });
+      return row;
+    }
+  }
+  return null;
+}
+
+// Compact 12-hour time for the description ("18:30" → "6:30", "06:45" → "6:45")
+function formatOgTime(t) {
+  const m = (t || '').trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  let h = parseInt(m[1], 10);
+  if (h === 0) h = 12;
+  if (h > 12) h -= 12;
+  return `${h}:${m[2]}`;
+}
+
+// "Fajr 4:15 · Zuhr 1:30 · …" — jama'at times preferred, start times when
+// jama'at is missing (mirrors the fallbacks in js/views/prayer-times.js)
+function buildTodayTimesLine(row) {
+  const prayers = [
+    { label: 'Fajr', jamaat: "Fajr Jama'at", start: 'Fajr Start' },
+    { label: 'Zuhr', jamaat: "Zohar Jama'at", start: 'Zohr' },
+    { label: 'Asr', jamaat: "Asr Jama'at", start: 'Asr' },
+    { label: 'Maghrib', jamaat: "Maghrib Jama'at", start: 'Maghrib Iftari' },
+    { label: 'Esha', jamaat: "Esha Jama'at", start: 'Esha' },
+  ];
+  const segments = [];
+  let usedJamaat = false;
+  for (const p of prayers) {
+    const jamaatVal = formatOgTime(row[p.jamaat]);
+    const val = jamaatVal || formatOgTime(row[p.start]);
+    if (!val) continue;
+    if (jamaatVal) usedJamaat = true;
+    segments.push(`${p.label} ${val}`);
+  }
+  if (segments.length < 3) return null; // too sparse for a useful preview
+  return { line: segments.join(' · '), usedJamaat };
+}
+
+// Fetch the masjid config + CSV (both edge-local ASSETS fetches) and build
+// the meta tags. Returns null when the slug isn't a masjid.
+async function buildMasjidOgMeta(slug, request, env) {
+  const cfgRes = await env.ASSETS.fetch(new URL(`/data/mosques/${slug}.json`, request.url).toString());
+  if (!cfgRes.ok) return null;
+  let config;
+  try {
+    config = await cfgRes.json();
+  } catch {
+    return null;
+  }
+  if (!config || !config.display_name) return null;
+
+  const name = config.display_name;
+  let description = `Daily prayer and jama'at times for ${name} on Iqamah.`;
+  if (config.csv) {
+    try {
+      const csvRes = await env.ASSETS.fetch(new URL(`/data/${config.csv}`, request.url).toString());
+      if (csvRes.ok) {
+        const row = findTodayRowForOg(await csvRes.text());
+        const times = row ? buildTodayTimesLine(row) : null;
+        if (times) {
+          description = `Today: ${times.line} — ${times.usedJamaat ? "jama'at times" : 'start times'}`;
+        }
+      }
+    } catch {
+      // CSV problems never block the preview — keep the generic description
+    }
+  }
+
+  const title = `${name} — Prayer Times | Iqamah`;
+  const e = escapeHtml;
+  const tags = [
+    `<meta name="description" content="${e(description)}">`,
+    `<meta property="og:title" content="${e(title)}">`,
+    `<meta property="og:description" content="${e(description)}">`,
+    `<meta property="og:url" content="${e(`${CANONICAL_ORIGIN}/${slug}`)}">`,
+    '<meta property="og:type" content="website">',
+    '<meta property="og:site_name" content="Iqamah">',
+    `<meta property="og:image" content="${e(`${CANONICAL_ORIGIN}/iqamah-logo.png`)}">`,
+    '<meta name="twitter:card" content="summary">',
+  ].join('\n  ');
+  return { title, tags };
+}
+
+// Serve the SPA shell for a masjid slug with per-masjid Open Graph tags
+// injected into <head>. Any failure falls back to the untouched shell.
+async function serveMasjidShell(slug, request, env, ctx) {
+  try {
+    // Edge cache (per colo), keyed per slug, short TTL
+    let cache = null;
+    const cacheKey = new Request(`${CANONICAL_ORIGIN}/__og-shell/${slug}`);
+    try {
+      cache = caches.default;
+      const cached = await cache.match(cacheKey);
+      if (cached) {
+        const headers = new Headers(cached.headers);
+        // The stored Cache-Control is an edge TTL — don't let browsers cache the shell
+        headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+        return new Response(cached.body, { status: 200, headers });
+      }
+    } catch {
+      // Cache API unavailable — render fresh
+    }
+
+    const [shellRes, meta] = await Promise.all([
+      serveStaticPage('index.html', request, env),
+      buildMasjidOgMeta(slug, request, env),
+    ]);
+    if (!meta) return shellRes; // not a masjid (or no usable config) — shell unchanged
+
+    const transformed = new HTMLRewriter()
+      .on('title', { element(el) { el.setInnerContent(meta.title); } })
+      // Remove any existing generic description so we never emit duplicates
+      .on('meta[name="description"]', { element(el) { el.remove(); } })
+      .on('head', { element(el) { el.append(`\n  ${meta.tags}\n`, { html: true }); } })
+      .transform(shellRes);
+
+    const html = await transformed.text();
+    const headers = new Headers(transformed.headers);
+    headers.delete('Content-Length');
+
+    if (cache) {
+      const cacheHeaders = new Headers(headers);
+      cacheHeaders.set('Cache-Control', `max-age=${ogCacheTtl()}`);
+      const putPromise = cache.put(cacheKey, new Response(html, { status: 200, headers: cacheHeaders })).catch(() => {});
+      if (ctx && ctx.waitUntil) ctx.waitUntil(putPromise);
+    }
+
+    return new Response(html, { status: 200, headers });
+  } catch (e) {
+    // Never break the page — serve the untouched shell
+    return serveStaticPage('index.html', request, env);
+  }
+}
+
 // --- JSON response helpers ---
 
 function jsonResponse(data, status = 200) {
@@ -689,7 +958,7 @@ function errorResponse(message, status = 400) {
 // ============================================================
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -753,6 +1022,10 @@ export default {
     }
 
     if (segment && !segment.includes('.') && !segment.includes('/')) {
+      // Masjid pages get per-masjid Open Graph tags injected for link unfurls
+      if ((request.method === 'GET' || request.method === 'HEAD') && !NON_MASJID_ROUTES.has(segment)) {
+        return serveMasjidShell(segment, request, env, ctx);
+      }
       return serveStaticPage('index.html', request, env);
     }
 
@@ -1186,6 +1459,7 @@ async function handleSubmit(request, env) {
     existingConfigs.push(config);
     existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
     files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
+    pushSlimIndexFile(files, existingConfigs);
 
     // Single commit for all files
     await githubCommitFiles(files, `Add ${mosqueName}`, env);
@@ -1452,6 +1726,7 @@ async function handleUpdate(request, env) {
     }
     existingConfigs.sort((a, b) => a.display_name.localeCompare(b.display_name, undefined, { sensitivity: 'base', ignorePunctuation: true }));
     files.push({ path: 'data/mosques/index.json', content: JSON.stringify(existingConfigs) });
+    pushSlimIndexFile(files, existingConfigs);
 
     // Single commit
     await githubCommitFiles(files, `Update timetable: ${existingConfig.display_name}`, env);
@@ -1547,6 +1822,7 @@ async function handleAdminDelete(request, env) {
 
     // Update index.json
     files.push({ path: 'data/mosques/index.json', content: JSON.stringify(newIndex, null, 2) });
+    pushSlimIndexFile(files, newIndex);
 
     await githubCommitFiles(files, `Delete ${config.display_name || slug}`, env);
 
@@ -1604,6 +1880,7 @@ async function handleAdminApprove(request, env) {
       { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
       { path: 'data/mosques/index.json', content: JSON.stringify(updatedIndex, null, 2) },
     ];
+    pushSlimIndexFile(files, updatedIndex);
 
     await githubCommitFiles(files, `Approve: ${config.display_name || slug}`, env);
 
@@ -1664,6 +1941,7 @@ async function handleAdminRename(request, env) {
       { path: `data/mosques/${slug}.json`, content: JSON.stringify(config, null, 2) },
       { path: 'data/mosques/index.json', content: JSON.stringify(updatedIndex, null, 2) },
     ];
+    pushSlimIndexFile(files, updatedIndex);
 
     await githubCommitFiles(files, `Rename ${slug} to ${newName}`, env);
 
