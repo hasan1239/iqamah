@@ -3335,6 +3335,307 @@
   50% { opacity: 0.55; }
 }
 
+
+    /* ========== Feature: Postcode Search (merged from _agent_css/postcode.css) ========== */
+/* ========== Feature: Postcode Search (Masjids view) ==========
+   No-permission alternative to geolocation — a typed UK postcode/outcode
+   becomes the active location source for distance sorting.
+   Uses existing theme variables so all three themes (light/dark/night)
+   are covered automatically. Font is inherited (Lato). */
+
+/* --- "Near {OUTCODE}" indicator chip (below the search bar) --- */
+.postcode-chip-row {
+  display: flex;
+  margin: -4px 0 14px;
+}
+/* JS toggles visibility via the hidden attribute — make sure it always wins
+   over the display rules above/below. */
+.postcode-chip-row[hidden],
+.masjids-postcode-pill[hidden],
+.postcode-inline-hint[hidden] { display: none !important; }
+.postcode-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 6px 5px 10px; border-radius: 999px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-25);
+  backdrop-filter: blur(12px);
+  color: var(--gold); font-size: 0.72rem; font-weight: 700;
+  line-height: 1; white-space: nowrap;
+}
+.postcode-chip svg { width: 12px; height: 12px; flex-shrink: 0; }
+.postcode-chip-text strong { font-weight: 800; letter-spacing: 0.3px; }
+.postcode-chip-clear {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+  background: var(--gold-tint-10); border: none;
+  color: var(--gold); font-family: inherit; font-size: 0.85rem;
+  line-height: 1; padding: 0; cursor: pointer;
+  transition: background 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.postcode-chip-clear:hover { background: var(--gold-tint-25); }
+.postcode-chip-clear:active { transform: scale(0.92); }
+
+/* --- Cities screen (mobile landing) postcode affordance ---
+   The search bar is hidden in cities mode, so this compact pill (expanding
+   into an inline postcode field) is the entry point there. Hidden everywhere
+   else; desktop always shows the full search bar instead. */
+.postcode-cities-row { display: none; }
+.masjids-view[data-mode="cities"] .postcode-cities-row {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  margin: 0 0 14px;
+}
+@media (min-width: 768px) {
+  .masjids-view .postcode-cities-row { display: none !important; }
+}
+
+/* Pill matches .masjids-nearby-pill */
+.masjids-postcode-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
+  color: var(--gold); font-family: inherit; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.masjids-postcode-pill:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
+.masjids-postcode-pill:active { transform: scale(0.97); }
+.masjids-postcode-pill svg { width: 16px; height: 16px; }
+
+/* Expanded inline postcode form — styled like the search bar */
+.postcode-inline-form {
+  display: flex; align-items: center; gap: 8px; width: 100%; max-width: 320px;
+  padding: 6px 6px 6px 14px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 12px; backdrop-filter: blur(12px);
+  transition: border-color 0.2s;
+}
+.postcode-inline-form[hidden] { display: none; }
+.postcode-inline-form:focus-within { border-color: var(--gold-tint-50); }
+.postcode-inline-input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  color: var(--text-primary); font-size: 0.85rem; font-family: inherit;
+  text-transform: uppercase;
+}
+.postcode-inline-input::placeholder {
+  color: var(--text-muted); text-transform: none;
+}
+.postcode-inline-go {
+  flex-shrink: 0; padding: 7px 14px; border-radius: 8px;
+  background: var(--gold-tint-10); border: 1px solid var(--gold-tint-25);
+  color: var(--gold); font-family: inherit; font-size: 0.78rem; font-weight: 700;
+  cursor: pointer; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+}
+.postcode-inline-go:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-40); }
+.postcode-inline-go:active { transform: scale(0.96); }
+.postcode-inline-hint {
+  font-size: 0.72rem; color: var(--text-muted); padding-left: 4px;
+}
+
+/* --- Lookup status shown in the (empty) results area --- */
+.masjids-empty.postcode-status {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  flex-wrap: wrap;
+}
+.masjids-empty.postcode-status strong { color: var(--text-secondary); font-weight: 700; }
+.postcode-spinner {
+  display: inline-block; width: 14px; height: 14px; flex-shrink: 0;
+  border: 2px solid var(--gold-tint-25); border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: postcode-spin 0.7s linear infinite;
+}
+@keyframes postcode-spin { to { transform: rotate(360deg); } }
+
+    /* ========== Feature: Home Extras: leave-by, check-in, dua (merged from _agent_css/home-extras.css) ========== */
+/* ============================================================
+   HOME EXTRAS (feature pack) — styles for the three Home additions
+   rendered by js/views/home.js:
+
+   1. .hero-leave-line  — quiet "time to leave" line on the hero card
+   2. .hck-*            — "Today's Prayers" check-in mini card
+   3. .home-dua-*       — "Dua of the day" card
+
+   Loaded at runtime via a <link> injected by home.js; merge into the
+   index.html <style> block (like previous _agent_css features) and
+   remove the injection when ready.
+
+   All colours come from existing theme variables (--card-bg,
+   --card-border, --gold, --gold-tint-*, --text-*, --divider*, and the
+   tracker's --tr-* / --trc status hooks already merged into
+   index.html), so light / night / dark themes are handled by the
+   variable cascade. Font is inherited Lato throughout.
+   ============================================================ */
+
+/* ---------- 1. Hero "time to leave" line ---------- */
+
+.hero-leave-line {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 10px; padding-top: 9px;
+  border-top: 1px solid var(--divider-subtle);
+  font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+  letter-spacing: 0.2px;
+}
+.hero-leave-line[hidden] { display: none; }
+.hero-leave-line svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--gold-tint-70); }
+.hero-leave-line .hero-leave-time { color: var(--text-secondary); font-weight: 700; }
+.hero-leave-line.is-now { color: var(--gold); }
+.hero-leave-line.is-now svg { color: var(--gold); }
+
+/* ---------- 2. "Today's Prayers" check-in card ---------- */
+
+.hck-card {
+  position: relative; display: block;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 12px 14px 10px; margin-bottom: 20px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+  transition: border-color 0.2s;
+}
+.hck-card:hover { border-color: var(--gold-tint-40); }
+
+.hck-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.hck-title {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.4px;
+  font-weight: 700; color: var(--gold);
+}
+.hck-viewall {
+  display: inline-flex; align-items: center; gap: 2px;
+  font-size: 0.72rem; font-weight: 600; color: var(--text-muted);
+  text-decoration: none;
+}
+.hck-viewall svg { width: 12px; height: 12px; }
+.hck-viewall:hover { color: var(--gold); }
+
+.hck-row { display: flex; }
+.hck-chip {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; padding: 5px 2px 6px;
+  font-family: inherit; border-radius: 10px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s;
+}
+.hck-chip:hover, .hck-chip.is-open { background: var(--gold-tint-08); }
+.hck-chip:active { transform: scale(0.96); }
+.hck-name { font-size: 0.62rem; font-weight: 700; color: var(--text-secondary); }
+
+/* Status dot — colour comes from the global .tr-st-* → --trc hook
+   (merged tracker CSS in index.html) */
+.hck-dot {
+  display: flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px dashed var(--tr-empty); color: var(--tr-on-status);
+  background: transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+.hck-dot svg { width: 12px; height: 12px; }
+.hck-dot.tr-st-jamaah, .hck-dot.tr-st-ontime, .hck-dot.tr-st-late {
+  background: var(--trc); border: none;
+}
+.hck-dot.tr-st-jamaah { box-shadow: 0 0 10px var(--gold-shadow-light); }
+.hck-dot.tr-st-missed {
+  background: var(--tr-missed-tint); border: 1.5px solid var(--tr-missed);
+  color: var(--text-muted);
+}
+
+/* Inline status picker (Jama'ah / On time / Late / Missed / Clear) */
+.hck-picker {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 8px 2px 4px; margin-top: 4px;
+  border-top: 1px solid var(--divider-subtle);
+  animation: hckPopIn 0.15s ease-out;
+}
+@keyframes hckPopIn {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hck-opt {
+  flex: 1; min-width: 0; padding: 7px 4px; border-radius: 8px;
+  background: none; border: 1px solid var(--divider);
+  color: var(--text-muted); font-family: inherit;
+  font-size: 0.66rem; font-weight: 600; white-space: nowrap;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.hck-opt:hover { border-color: var(--gold-tint-40); color: var(--text-secondary); }
+.hck-opt.active {
+  font-weight: 700; border-color: var(--trc); color: var(--trc);
+  background: var(--gold-tint-08);
+}
+.hck-opt.active.tr-st-missed { color: var(--text-secondary); }
+.hck-opt-clear { flex: 0 0 auto; padding: 7px 10px; }
+
+.hck-foot { display: flex; align-items: center; margin-top: 7px; padding: 0 2px; }
+.hck-streak {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.72rem; font-weight: 600; color: var(--text-secondary);
+}
+.hck-streak svg { width: 14px; height: 14px; color: var(--gold); flex-shrink: 0; }
+.hck-streak strong { color: var(--gold); font-weight: 700; }
+.hck-streak-zero { color: var(--text-muted); }
+.hck-streak-zero svg { color: var(--text-muted); }
+
+/* ---------- 3. "Dua of the day" card ---------- */
+
+.home-dua-card {
+  display: block;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 14px;
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  padding: 13px 16px 14px; margin: 8px 0 24px;
+  text-decoration: none; color: inherit; cursor: pointer;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
+  transition: border-color 0.2s;
+}
+.home-dua-card:hover { border-color: var(--gold-tint-40); }
+.home-dua-top {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-bottom: 6px;
+}
+.home-dua-badge {
+  font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.4px;
+  font-weight: 700; color: var(--gold);
+}
+.home-dua-chevron { display: flex; color: var(--text-muted); flex-shrink: 0; }
+.home-dua-chevron svg { width: 14px; height: 14px; }
+.home-dua-occasion {
+  font-size: 0.8rem; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.home-dua-text {
+  margin: 0; font-size: 0.78rem; line-height: 1.55;
+  color: var(--text-secondary); font-style: italic;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Desktop ---------- */
+
+@media (min-width: 768px) {
+  .hero-leave-line { font-size: 0.78rem; }
+  .hck-dot { width: 34px; height: 34px; }
+  .hck-dot svg { width: 14px; height: 14px; }
+  .hck-name { font-size: 0.7rem; }
+  .hck-opt { font-size: 0.72rem; }
+  .home-dua-text { font-size: 0.82rem; }
+}
+
+    /* ========== Feature: Share Times Card (merged from _agent_css/share-card.css) ========== */
+/* Share-card generation — share button states.
+   Injected on demand by js/views/prayer-times.js (not linked from index.html). */
+
+.share-icon-btn.generating {
+  pointer-events: none;
+  cursor: progress;
+  animation: share-card-btn-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes share-card-btn-pulse {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 0.45; }
+}
+
   </style>
 </head>
 <body>

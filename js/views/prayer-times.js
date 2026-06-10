@@ -1110,22 +1110,73 @@ function setupShareButton() {
   const btn = document.getElementById('shareBtn');
   if (!btn) return;
   btn.addEventListener('click', async () => {
-    const shareUrl = window.location.href;
+    if (btn.classList.contains('generating')) return;
     if (window.goatcounter) {
       window.goatcounter.count({ path: `/share/${masjidId}`, title: `Share - ${config.display_name}`, event: true });
     }
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${config.display_name} - Iqamah`, text: `Prayer times for ${config.display_name} on Iqamah`, url: shareUrl });
-      } catch (err) { /* user cancelled */ }
-    } else if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`);
-        btn.textContent = 'Copied!';
-        setTimeout(() => { btn.textContent = 'Share'; }, 2000);
-      } catch (err) { /* fallback failed */ }
+    btn.classList.add('generating');
+    btn.setAttribute('aria-busy', 'true');
+    try {
+      // Render today's times as a branded image card — UK masjid WhatsApp
+      // groups forward timetable images, not links.
+      const todayRow = getTodayRow();
+      if (!todayRow) throw new Error('No timetable row for today');
+      const { renderShareCard } = await import('../utils/share-card.js');
+      const blob = await renderShareCard({ config, todayRow, season });
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const filename = `iqamah_times_${masjidId}_${dateStr}.png`;
+      const file = new File([blob], filename, { type: 'image/png' });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+        // Files-only payload: adding title/text/url alongside files makes
+        // WhatsApp attach the link instead of the image on some versions.
+        try {
+          await navigator.share({ files: [file] });
+        } catch (err) {
+          if (err && err.name === 'AbortError') return; // user cancelled — done
+          throw err; // real failure → link-share fallback below
+        }
+      } else {
+        // No file-share support (e.g. desktop Firefox) → download the PNG
+        const url = URL.createObjectURL(blob);
+        triggerDownload(url, filename);
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+      if (window.goatcounter) {
+        window.goatcounter.count({ path: `/share-card/${masjidId}`, title: `Share card - ${config.display_name}`, event: true });
+      }
+    } catch (err) {
+      // Any failure → the previous link-share behaviour; never a dead button.
+      await shareLinkFallback(btn);
+    } finally {
+      btn.classList.remove('generating');
+      btn.removeAttribute('aria-busy');
     }
   });
+}
+
+// Previous share behaviour, kept as the final fallback chain:
+// native link share → clipboard copy with "Copied!" feedback.
+async function shareLinkFallback(btn) {
+  const shareUrl = window.location.href;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `${config.display_name} - Iqamah`, text: `Prayer times for ${config.display_name} on Iqamah`, url: shareUrl });
+      return;
+    } catch (err) {
+      if (err && err.name === 'AbortError') return; // user cancelled
+      // fall through to clipboard
+    }
+  }
+  if (navigator.clipboard) {
+    try {
+      await navigator.clipboard.writeText(`Prayer times for ${config.display_name} on Iqamah\n${shareUrl}`);
+      const original = btn.innerHTML;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.innerHTML = original; }, 2000);
+    } catch (err) { /* fallback failed */ }
+  }
 }
 
 function setupDownloadButton() {
