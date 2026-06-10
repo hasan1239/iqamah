@@ -4,6 +4,9 @@ import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { parseCSV, getTodayRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
+import { getFollowed, isFollowed, getPrimary, follow, unfollow, setPrimary, FOLLOW_CAP } from '../utils/follow.js';
+import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
+import { loadMasjidIndex } from '../utils/masjid-index.js';
 
 let cachedConfigs = [];
 let userLocation = null;
@@ -155,6 +158,8 @@ const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="cu
 const CHEVRON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
 const MOSQUE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c-.4.6-.8 1.3-.6 2 .1.4.6.6.6.6s.5-.2.6-.6c.2-.7-.2-1.4-.6-2z"/><path d="M12 4.5C9.5 6.5 7 9 7 11.5c0 0 0 .5.2.5H16.8c.2 0 .2-.5.2-.5 0-2.5-2.5-5-5-7z"/><rect x="5" y="12" width="14" height="9"/><path d="M12 21v-5a2.5 2.5 0 0 0-2.5-2.5h0A2.5 2.5 0 0 0 7 16v5"/><rect x="2" y="10" width="3" height="11" rx=".5"/><rect x="19" y="10" width="3" height="11" rx=".5"/><line x1="3.5" y1="8" x2="3.5" y2="10"/><line x1="20.5" y1="8" x2="20.5" y2="10"/></svg>';
 const SEARCH_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
+const KEBAB_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
+const CLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
 const MAP_PIN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
 
 let searchQuery = '';
@@ -206,7 +211,7 @@ export function render(container) {
         </div>
 
         ${!localStorage.getItem('iqamah-pin-hint-dismissed') ? `<div class="pin-hint" id="pinHint">
-          <span>Tip: Long press a masjid to set it as My Masjid</span>
+          <span>Tip: Long press a masjid to follow it or set it as My Masjid</span>
           <button class="pin-hint-dismiss" aria-label="Dismiss">&times;</button>
         </div>` : ''}
 
@@ -252,6 +257,16 @@ export function render(container) {
   setupResizeListener();
   setupModeToggle();
   updateHeaderState();
+
+  // Re-render when the follow set / primary changes anywhere (settings, home
+  // hero, prayer-times set-primary). Defensive remove first — render() can be
+  // called again (embedded desktop list) before destroy().
+  window.removeEventListener('iqamah-follow-changed', onFollowChanged);
+  window.addEventListener('iqamah-follow-changed', onFollowChanged);
+}
+
+function onFollowChanged() {
+  renderCards();
 }
 
 function buildCitySkeletons(count) {
@@ -359,9 +374,7 @@ function buildSkeletonCards(count) {
 
 async function loadMasjids() {
   try {
-    const res = await fetch('/data/mosques/index.json');
-    if (!res.ok) return;
-    cachedConfigs = (await res.json()).filter(c =>
+    cachedConfigs = (await loadMasjidIndex()).filter(c =>
       !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     renderCards();
@@ -401,7 +414,7 @@ function renderCityGrid() {
   });
 
   // Auto-surface the city of the pinned masjid (My Masjid) to the top.
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedSlug = getPrimary();
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
   const pinnedCity = pinnedConfig ? deriveCity(pinnedConfig) : null;
 
@@ -480,7 +493,8 @@ function renderMasjidGrid() {
   const grid = viewContainer.querySelector('#masjidsGrid');
   if (!grid) return;
 
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const followedSet = new Set(getFollowed());
+  const primarySlug = getPrimary();
 
   let filtered = cachedConfigs.slice();
 
@@ -530,9 +544,10 @@ function renderMasjidGrid() {
     const distText = getDistText(config.slug);
     const shortAddr = getCityPostcode(config.address);
     const fullAddr = config.address || '';
-    const isPinned = config.slug === pinnedSlug;
-    const pinIcon = isPinned ? STAR_FILLED_SVG : STAR_SVG;
-    const pinClass = isPinned ? ' pinned' : '';
+    const isFollowedCard = followedSet.has(config.slug);
+    const isPrimary = config.slug === primarySlug;
+    const pinIcon = isFollowedCard ? STAR_FILLED_SVG : STAR_SVG;
+    const pinClass = isFollowedCard ? ' pinned followed' : '';
     const isPending = config.approved === false;
 
     let subHtml = '';
@@ -544,6 +559,9 @@ function renderMasjidGrid() {
       subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
     }
 
+    const primaryChip = isPrimary
+      ? `<div class="my-masjid-chip-row"><span class="my-masjid-chip">★ My Masjid</span></div>`
+      : '';
     const thumbContent = config.logo
       ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
       : MOSQUE_SVG;
@@ -554,10 +572,14 @@ function renderMasjidGrid() {
         <div class="masjid-card-info">
           <div class="masjid-name-row">
             <div class="masjid-name">${config.display_name}</div>
-            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="Set ${config.display_name} as My Masjid" title="Set as My Masjid">
+            <button class="pin-btn${pinClass}" data-slug="${config.slug}" aria-label="${isFollowedCard ? 'Unfollow' : 'Follow'} ${config.display_name}" title="${isFollowedCard ? 'Unfollow' : 'Follow'}">
               ${pinIcon}
             </button>
+            <button class="kebab-btn" data-slug="${config.slug}" aria-label="More options for ${config.display_name}" title="More options">
+              ${KEBAB_SVG}
+            </button>
           </div>
+          ${primaryChip}
           ${subHtml}
         </div>
       </div>
@@ -758,15 +780,24 @@ async function focusCityOnMap(city) {
 }
 
 function handlePinClick(e) {
-  const pinBtn = e.target.closest('.pin-btn');
-  if (!pinBtn) return;
   const masjidsView = e.target.closest('.masjids-view');
   if (!masjidsView) return;
 
+  // ⋯ kebab (non-touch) → context menu anchored to the button
+  const kebabBtn = e.target.closest('.kebab-btn');
+  if (kebabBtn) {
+    e.preventDefault();
+    e.stopPropagation();
+    openMasjidMenu(kebabBtn.dataset.slug, kebabBtn);
+    return;
+  }
+
+  // Star → follow / unfollow
+  const pinBtn = e.target.closest('.pin-btn');
+  if (!pinBtn) return;
   e.preventDefault();
   e.stopPropagation();
-  const slug = pinBtn.dataset.slug;
-  togglePin(slug);
+  toggleFollowFor(pinBtn.dataset.slug);
 }
 
 function setupLongPress() {
@@ -786,7 +817,8 @@ function setupLongPress() {
       didLongPress = true;
       card.classList.add('long-pressing');
       if (navigator.vibrate) navigator.vibrate(30);
-      togglePin(card.dataset.slug);
+      openMasjidMenu(card.dataset.slug, card);
+      dismissPinHint();
       setTimeout(() => card.classList.remove('long-pressing'), 200);
     }, 500);
   };
@@ -823,20 +855,79 @@ function setupLongPress() {
   };
 }
 
-function togglePin(slug) {
-  const current = localStorage.getItem('iqamah-pinned-masjid');
-  if (current === slug) {
-    localStorage.removeItem('iqamah-pinned-masjid');
-    showToast('Removed from My Masjid');
+function masjidName(slug) {
+  const config = cachedConfigs.find(c => c.slug === slug);
+  return config ? config.display_name : 'Masjid';
+}
+
+// Star action \u2014 follow / unfollow. First follow auto-becomes primary;
+// unfollowing the primary auto-promotes the next followed masjid.
+// Re-renders happen via the iqamah-follow-changed listener.
+function toggleFollowFor(slug) {
+  const name = masjidName(slug);
+  if (isFollowed(slug)) {
+    const r = unfollow(slug);
+    if (r.removedPrimary && r.newPrimary) {
+      // Auto-promotion: the toast announces the new primary (.pin-toast is
+      // nowrap, so keep it compact)
+      showToast(`<span class="toast-star">\u2605</span> ${masjidName(r.newPrimary)} is now My Masjid`);
+    } else {
+      showToast(`Unfollowed ${name}`);
+    }
   } else {
-    localStorage.setItem('iqamah-pinned-masjid', slug);
-    const config = cachedConfigs.find(c => c.slug === slug);
-    const name = config ? config.display_name : 'Masjid';
-    showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
+    const r = follow(slug);
+    if (!r.ok && r.reason === 'cap') {
+      showToast(`You can follow up to ${FOLLOW_CAP} masjids`);
+      return;
+    }
+    showToast(r.becamePrimary
+      ? `<span class="toast-star">\u2605</span> ${name} set as My Masjid`
+      : `<span class="toast-star">\u2605</span> Following ${name}`);
     dismissPinHint();
   }
-  renderCards();
-  window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
+}
+
+// Promote to primary (follows first if needed).
+function setPrimaryFor(slug) {
+  const name = masjidName(slug);
+  const r = setPrimary(slug);
+  if (!r.ok && r.reason === 'cap') {
+    showToast(`You can follow up to ${FOLLOW_CAP} masjids`);
+    return;
+  }
+  showToast(`<span class="toast-star">\u2605</span> ${name} set as My Masjid`);
+  dismissPinHint();
+}
+
+// Context menu \u2014 opened by long-press (touch) or the \u22ef kebab (non-touch).
+function openMasjidMenu(slug, anchor) {
+  const name = masjidName(slug);
+  const followed = isFollowed(slug);
+  const primary = getPrimary() === slug;
+
+  openContextMenu({
+    title: name,
+    anchor,
+    items: [
+      {
+        icon: STAR_FILLED_SVG,
+        label: 'Set as My Masjid',
+        checked: primary,
+        disabled: primary,
+        onSelect: () => setPrimaryFor(slug),
+      },
+      {
+        icon: followed ? STAR_SVG : STAR_FILLED_SVG,
+        label: followed ? 'Unfollow' : 'Follow',
+        onSelect: () => toggleFollowFor(slug),
+      },
+      {
+        icon: CLOCK_SVG,
+        label: 'View times',
+        onSelect: () => navigate('/' + slug),
+      },
+    ],
+  });
 }
 
 function setupPinHint() {
@@ -1037,6 +1128,8 @@ export function destroy() {
   if (longPressCleanup) { longPressCleanup(); longPressCleanup = null; }
   if (resizeListener) { window.removeEventListener('resize', resizeListener); resizeListener = null; }
   document.removeEventListener('click', handlePinClick, true);
+  window.removeEventListener('iqamah-follow-changed', onFollowChanged);
+  closeContextMenu();
   unmountMap();
   mapMounted = false;
   mapReadyPromise = null;

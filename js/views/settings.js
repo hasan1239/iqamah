@@ -1,13 +1,18 @@
 // Settings view — preferences and app info
 import { getTheme, setTheme, onThemeChange } from '../theme.js';
 import { isAdmin, clearAdminCache } from '../utils/admin.js';
+import { getFollowed, getPrimary, setPrimary, unfollow } from '../utils/follow.js';
+import { loadMasjidIndex } from '../utils/masjid-index.js';
 
 let unsubTheme = null;
+let masjidNames = {}; // slug -> display_name (from index.json)
+
+const CROWN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 11H4.8L3 8z"/></svg>';
+const REMOVE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
 export function render(container) {
   const theme = getTheme();
   const timeFormat = localStorage.getItem('iqamah-time-format') || '24';
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
   const userName = localStorage.getItem('iqamah-user-name') || '';
 
   container.innerHTML = `
@@ -71,27 +76,9 @@ export function render(container) {
         </div>
       </div>
 
-      <div class="settings-group">
-        <div class="settings-group-title">My Masjid</div>
-
-        <div class="settings-item" id="pinnedMasjidSetting">
-          <div class="settings-item-left">
-            <span class="settings-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-                <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
-              </svg>
-            </span>
-            <span class="settings-label">${pinnedSlug ? 'My Masjid' : 'No masjid selected'}</span>
-          </div>
-          <div class="settings-pinned-right">
-            <span class="settings-value" id="pinnedMasjidName">${pinnedSlug || 'None'}</span>
-            ${pinnedSlug ? `<button class="settings-remove-btn" id="removePinnedBtn" aria-label="Remove My Masjid">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>` : ''}
-          </div>
-        </div>
+      <div class="settings-group" id="yourMasjidsGroup">
+        <div class="settings-group-title">Your Masjids</div>
+        <div id="yourMasjidsList"></div>
       </div>
 
       <div class="settings-group">
@@ -197,22 +184,35 @@ export function render(container) {
     if (el) el.textContent = 'v' + d.version;
   }).catch(() => {});
 
-  // Load masjid count
-  fetch('/data/mosques/index.json').then(r => r.json()).then(configs => {
+  // Load masjid count + display names for the Your Masjids list
+  loadMasjidIndex().then(configs => {
     const visible = configs.filter(c =>
       !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     const el = document.getElementById('settingsMasjidCount');
     if (el) el.textContent = visible.length.toString();
+    masjidNames = {};
+    configs.forEach(c => { masjidNames[c.slug] = c.display_name; });
+    renderYourMasjidsList();
   }).catch(() => {});
 
-  // Load pinned masjid display name
-  if (pinnedSlug) {
-    fetch(`/data/mosques/${pinnedSlug}.json`).then(r => r.json()).then(config => {
-      const el = document.getElementById('pinnedMasjidName');
-      if (el) el.textContent = config.display_name || pinnedSlug;
-    }).catch(() => {});
-  }
+  // Your Masjids — initial render (slugs upgrade to display names once
+  // index.json arrives above)
+  renderYourMasjidsList();
+  const yourMasjidsGroup = document.getElementById('yourMasjidsGroup');
+  yourMasjidsGroup.addEventListener('click', (e) => {
+    const crown = e.target.closest('.crown-btn');
+    if (crown && !crown.classList.contains('is-primary')) {
+      setPrimary(crown.dataset.slug);
+      renderYourMasjidsList();
+      return;
+    }
+    const removeBtn = e.target.closest('.your-masjid-remove');
+    if (removeBtn) {
+      unfollow(removeBtn.dataset.slug);
+      renderYourMasjidsList();
+    }
+  });
 
   // Theme segmented control
   const segmented = document.getElementById('themeSegmented');
@@ -236,20 +236,6 @@ export function render(container) {
   document.getElementById('timeFormatToggle').addEventListener('change', (e) => {
     localStorage.setItem('iqamah-time-format', e.target.checked ? '24' : '12');
   });
-
-  // Remove pinned masjid
-  const removeBtn = document.getElementById('removePinnedBtn');
-  if (removeBtn) {
-    removeBtn.addEventListener('click', () => {
-      localStorage.removeItem('iqamah-pinned-masjid');
-      const nameEl = document.getElementById('pinnedMasjidName');
-      const labelEl = document.querySelector('#pinnedMasjidSetting .settings-label');
-      if (nameEl) nameEl.textContent = 'None';
-      if (labelEl) labelEl.textContent = 'No masjid selected';
-      removeBtn.remove();
-      window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
-    });
-  }
 
   // Name input — save on change
   const nameInput = document.getElementById('userNameInput');
@@ -301,6 +287,54 @@ export function render(container) {
       }
     }, 3000);
   });
+}
+
+// --- Your Masjids group ---
+
+function renderYourMasjidsList() {
+  const wrap = document.getElementById('yourMasjidsList');
+  if (!wrap) return;
+
+  const followed = getFollowed();
+  const primary = getPrimary();
+
+  if (followed.length === 0) {
+    wrap.innerHTML = `
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <span class="settings-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+              <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
+            </svg>
+          </span>
+          <span class="settings-label">No masjids followed</span>
+        </div>
+        <a href="/masjids" class="settings-value settings-browse-link" data-link>Browse</a>
+      </div>`;
+    return;
+  }
+
+  // Primary first, then follow order
+  const ordered = primary && followed.includes(primary)
+    ? [primary, ...followed.filter(s => s !== primary)]
+    : [...followed];
+
+  wrap.innerHTML = ordered.map(slug => {
+    const name = masjidNames[slug] || slug;
+    const isPrimary = slug === primary;
+    return `<div class="settings-item your-masjid-row">
+      <div class="settings-item-left">
+        <button class="crown-btn${isPrimary ? ' is-primary' : ''}" data-slug="${slug}" role="radio" aria-checked="${isPrimary}" aria-label="Set ${name} as My Masjid" title="${isPrimary ? 'My Masjid' : 'Set as My Masjid'}">
+          ${CROWN_SVG}
+        </button>
+        <span class="settings-label your-masjid-name">${name}</span>
+        ${isPrimary ? '<span class="my-masjid-chip">My Masjid</span>' : ''}
+      </div>
+      <button class="settings-remove-btn your-masjid-remove" data-slug="${slug}" aria-label="Unfollow ${name}" title="Unfollow">
+        ${REMOVE_SVG}
+      </button>
+    </div>`;
+  }).join('');
 }
 
 export function destroy() {
