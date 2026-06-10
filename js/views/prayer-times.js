@@ -2,6 +2,8 @@
 import { onThemeChange, getTheme } from '../theme.js';
 import { gregorianToHijri, formatHijriDate } from '../utils/hijri.js';
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+import { getMyMasjid, setMyMasjid, clearMyMasjid, isOther, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
+import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
 
 let config = null;
 let csvData = [];
@@ -210,6 +212,8 @@ export function destroy() {
   if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
   if (eshaRerenderId) { clearTimeout(eshaRerenderId); eshaRerenderId = null; }
   if (unsubTheme) { unsubTheme(); unsubTheme = null; }
+  closeContextMenu();
+  removePinToast();
   document.title = 'Iqamah';
 }
 
@@ -1336,29 +1340,114 @@ function renderInfoSection() {
 }
 
 
+// --- "Set as" button + saved-masjid context menu ---
+// Opens the same context menu the masjids list shows on long-press/kebab.
+// All mutations go through follow.js so both iqamah-follow-changed and
+// iqamah-pin-changed fire (hero/nav listeners stay in sync) and the
+// self-healing invariants hold. Icons match js/views/masjids.js.
+
+const STAR_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const STAR_OUTLINE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+const BOOKMARK_FILLED_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
+
+let pinToastTimer = null;
+
+function showPinToast(html) {
+  let toast = document.getElementById('ptPinToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'ptPinToast';
+    toast.className = 'pin-toast';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = html;
+  toast.classList.add('visible');
+  if (pinToastTimer) clearTimeout(pinToastTimer);
+  pinToastTimer = setTimeout(() => toast.classList.remove('visible'), 2500);
+}
+
+function removePinToast() {
+  if (pinToastTimer) { clearTimeout(pinToastTimer); pinToastTimer = null; }
+  const toast = document.getElementById('ptPinToast');
+  if (toast) toast.remove();
+}
+
 function renderPrimaryButton() {
-  const current = localStorage.getItem('iqamah-pinned-masjid');
-  const isPrimary = current === masjidId;
-  const starSvg = '<svg viewBox="0 0 24 24" fill="' + (isPrimary ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
-  const label = isPrimary ? 'My Masjid' : 'Set as My Masjid';
-  const cls = isPrimary ? ' is-primary' : '';
-  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn">${starSvg} ${label}</button>`;
+  const isMine = getMyMasjid() === masjidId;
+  const starSvg = isMine ? STAR_FILLED_SVG : STAR_OUTLINE_SVG;
+  const cls = isMine ? ' is-primary' : '';
+  return `<button class="set-primary-btn${cls}" id="setPrimaryBtn" aria-haspopup="menu" aria-label="Set as My Masjid or save to Other Masjids">${starSvg} Set as</button>`;
+}
+
+function refreshPrimaryButton() {
+  const btn = document.getElementById('setPrimaryBtn');
+  if (!btn) return;
+  btn.outerHTML = renderPrimaryButton();
+  setupPrimaryButton();
 }
 
 function setupPrimaryButton() {
   const btn = document.getElementById('setPrimaryBtn');
   if (!btn) return;
-  btn.addEventListener('click', () => {
-    const current = localStorage.getItem('iqamah-pinned-masjid');
-    if (current === masjidId) {
-      localStorage.removeItem('iqamah-pinned-masjid');
-    } else {
-      localStorage.setItem('iqamah-pinned-masjid', masjidId);
-    }
-    // Re-render button
-    btn.outerHTML = renderPrimaryButton();
-    setupPrimaryButton();
+  btn.addEventListener('click', () => openSetAsMenu(btn));
+}
+
+function openSetAsMenu(anchor) {
+  const name = (config && config.display_name) || 'Masjid';
+  const isMine = getMyMasjid() === masjidId;
+  const saved = isOther(masjidId);
+
+  const items = [
+    {
+      icon: STAR_FILLED_SVG,
+      label: 'Set as My Masjid',
+      checked: isMine,
+      disabled: isMine,
+      onSelect: () => {
+        const r = setMyMasjid(masjidId);
+        if (!r.ok) return;
+        showPinToast(`<span class="toast-star">★</span> ${name} set as My Masjid`);
+        refreshPrimaryButton();
+      },
+    },
+  ];
+
+  if (isMine) {
+    items.push({
+      icon: STAR_OUTLINE_SVG,
+      label: 'Remove My Masjid',
+      onSelect: () => {
+        clearMyMasjid();
+        showPinToast(`${name} is no longer My Masjid`);
+        refreshPrimaryButton();
+      },
+    });
+  }
+
+  items.push({
+    icon: saved ? BOOKMARK_SVG : BOOKMARK_FILLED_SVG,
+    label: saved ? 'Remove from Other Masjids' : 'Save to Other Masjids',
+    disabled: isMine, // the My Masjid can't also be an "other"
+    onSelect: () => {
+      if (isOther(masjidId)) {
+        removeOther(masjidId);
+        showPinToast(`Removed ${name} from Other Masjids`);
+        refreshPrimaryButton();
+        return;
+      }
+      const r = saveOther(masjidId);
+      if (!r.ok) {
+        if (r.reason === 'cap') showPinToast(`You can save up to ${OTHERS_CAP} other masjids`);
+        else if (r.reason === 'is_my_masjid') showPinToast(`${name} is already My Masjid`);
+        return;
+      }
+      showPinToast(`Saved ${name} to Other Masjids`);
+      refreshPrimaryButton();
+    },
   });
+
+  openContextMenu({ title: name, anchor, items });
 }
 
 async function renderAdminControls(container) {
@@ -1489,9 +1578,8 @@ async function renderAdminControls(container) {
       });
       const result = await resp.json();
       if (!resp.ok || !result.success) throw new Error(result.error || 'Failed');
-      if (localStorage.getItem('iqamah-pinned-masjid') === masjidId) {
-        localStorage.removeItem('iqamah-pinned-masjid');
-      }
+      if (getMyMasjid() === masjidId) clearMyMasjid();
+      removeOther(masjidId);
       try {
         let recent = JSON.parse(localStorage.getItem('iqamah-recent-masjids') || '[]');
         recent = recent.filter(s => s !== masjidId);
