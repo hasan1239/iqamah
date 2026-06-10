@@ -440,15 +440,12 @@ function renderToday(log) {
   const segs = PRAYERS.map(p => {
     const st = entry[p.key];
     const stClass = st ? `tr-st-${st}` : 'tr-st-none';
-    // No "Log" placeholder under unlogged prayers — the + dot says it already.
-    // The status line keeps its slot so the row doesn't jump when one is set.
-    const stText = statusLabel(st) || '&nbsp;';
+    // Status is conveyed by the dot's colour/icon alone — no text row.
     return `
       <button class="tracker-seg" data-prayer="${p.key}" aria-haspopup="menu"
               aria-label="${p.label}: ${statusLabel(st) || 'not logged yet'}">
         <span class="tracker-seg-name">${p.label}</span>
         <span class="tracker-seg-dot ${stClass}">${statusIcon(st)}</span>
-        <span class="tracker-seg-status ${stClass}">${stText}</span>
       </button>`;
   }).join('');
 
@@ -557,7 +554,7 @@ function renderStats(log) {
       <div class="tracker-stat-sub">prayed</div>
     </div>
     <div class="tracker-stat">
-      <div class="tracker-stat-value">${jamaahPct === null ? 'n/a' : jamaahPct + '%'}</div>
+      <div class="tracker-stat-value">${jamaahPct === null ? '-' : jamaahPct + '%'}</div>
       <div class="tracker-stat-label">Jama'ah</div>
       <div class="tracker-stat-sub">prayed</div>
     </div>`;
