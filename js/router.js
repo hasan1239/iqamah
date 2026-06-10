@@ -16,7 +16,9 @@ const TAB_INDEX = {
   tasbih: 3,
   dua: 3,
   'jummah-times': 3,
+  'eid-greeting': 3,
   settings: 4,
+  'admin-dashboard': 4,
 };
 
 function getTabIndex(viewName) {
@@ -37,6 +39,24 @@ export function resolvePath(path) {
   }
   if (clean === 'qibla') {
     return { view: 'qibla', params: {} };
+  }
+  if (clean === 'tracker') {
+    return { view: 'tracker', params: {} };
+  }
+  if (clean === 'tasbih') {
+    return { view: 'tasbih', params: {} };
+  }
+  if (clean === 'dua') {
+    return { view: 'dua', params: {} };
+  }
+  if (clean === 'jummah-times' || clean === 'jummah') {
+    return { view: 'jummah-times', params: {} };
+  }
+  if (clean === 'eid-card') {
+    return { view: 'eid-greeting', params: {} };
+  }
+  if (clean === 'admin') {
+    return { view: 'admin-dashboard', params: {} };
   }
   if (clean === 'add') {
     return { view: 'add-masjid', params: {} };
