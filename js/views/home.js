@@ -4,6 +4,8 @@ import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/p
 import { parseCSV, getTodayRow, getTomorrowRow } from '../utils/csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { haversineDistance } from '../utils/geolocation.js';
+import { getFollowed, getPrimary, unfollow } from '../utils/follow.js';
+import { loadMasjidIndex } from '../utils/masjid-index.js';
 
 let cachedConfigs = [];
 let heroCountdownInterval = null;
@@ -57,6 +59,8 @@ export function render(container) {
 
       <div id="eidBrowseSlot"></div>
 
+      <div id="yourMasjidsSection"></div>
+
       <div id="recentSection"></div>
 
       <div class="home-browse-all">
@@ -88,6 +92,7 @@ export function render(container) {
     showWelcomeScreen();
   }
   window.addEventListener('iqamah-pin-changed', onPinChanged);
+  window.addEventListener('iqamah-follow-changed', onFollowChanged);
 }
 
 function showWelcomeScreen() {
@@ -335,12 +340,11 @@ function updateGreetingForSeason() {
 
 async function loadMasjids() {
   try {
-    const [masjidRes, seasonRes] = await Promise.all([
-      fetch('/data/mosques/index.json'),
+    const [masjidIndex, seasonRes] = await Promise.all([
+      loadMasjidIndex(),
       fetch('/data/season.json').catch(() => null),
     ]);
-    if (!masjidRes.ok) return;
-    cachedConfigs = (await masjidRes.json()).filter(c =>
+    cachedConfigs = masjidIndex.filter(c =>
       !c.test_masjid && !c.hidden && !(c.quality && c.quality.status === 'needs_review')
     );
     if (seasonRes && seasonRes.ok) {
@@ -354,6 +358,7 @@ async function loadMasjids() {
     }
 
     renderHero();
+    renderYourMasjids();
     renderRecentlyViewed();
     renderEidBrowseButton();
     updateGreetingForSeason();
@@ -368,7 +373,7 @@ function renderHero() {
   const heroContainer = document.getElementById('heroContainer');
   if (!heroContainer) return;
 
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedSlug = getPrimary();
   const pinnedConfig = pinnedSlug ? cachedConfigs.find(c => c.slug === pinnedSlug) : null;
 
   if (!pinnedConfig) {
@@ -399,7 +404,7 @@ function renderHero() {
         <span class="hero-badge hero-badge-primary">My Masjid</span>
         <div class="hero-header-right">
           ${heroPendingBadge}
-          <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Remove from My Masjid" title="Remove from My Masjid">
+          <button class="hero-unpin-btn" data-slug="${pinnedConfig.slug}" data-hero="true" aria-label="Unfollow ${pinnedConfig.display_name}" title="Unfollow">
             ${STAR_FILLED_SVG}
           </button>
         </div>
@@ -639,6 +644,81 @@ async function loadSuggestedNextPrayer(config) {
   }
 }
 
+// --- Your Masjids (followed) ---
+
+function renderYourMasjids() {
+  const section = document.getElementById('yourMasjidsSection');
+  if (!section) return;
+
+  const followed = getFollowed();
+  const primary = getPrimary();
+
+  // Primary first, then follow order
+  const ordered = primary && followed.includes(primary)
+    ? [primary, ...followed.filter(s => s !== primary)]
+    : followed;
+  const configs = ordered
+    .map(s => cachedConfigs.find(c => c.slug === s))
+    .filter(Boolean);
+
+  // Zero-UI: section only appears once the user follows >= 1 masjid
+  if (configs.length === 0) {
+    section.innerHTML = '';
+    return;
+  }
+
+  section.innerHTML = `
+    <div class="recent-section your-masjids-section">
+      <div class="masjid-scroll-header">
+        <span class="masjid-scroll-title">Your Masjids</span>
+        <a href="/settings" class="your-masjids-edit" data-link>Edit ${CHEVRON_SVG}</a>
+      </div>
+      <div class="masjid-grid horizontal">
+        ${configs.map(config => {
+          const shortAddr = getCityPostcode(config.address);
+          const fullAddr = config.address || '';
+          const isPrimary = config.slug === primary;
+          const isPending = config.approved === false;
+          let subHtml = '';
+          if (isPending) {
+            subHtml = `<div class="masjid-card-sub"><span class="pending-badge">Pending Review</span></div>`;
+          } else if (config.address) {
+            subHtml = `<div class="masjid-card-sub"><span class="addr-short">${shortAddr}</span><span class="addr-full">${fullAddr}</span></div>`;
+          }
+          const primaryChip = isPrimary
+            ? `<div class="my-masjid-chip-row"><span class="my-masjid-chip">★ My Masjid</span></div>`
+            : '';
+          const thumbContent = config.logo
+            ? `<img src="${config.logo}" alt="" loading="lazy" decoding="async">`
+            : MOSQUE_SVG;
+          const cityAttr = config.city ? ` data-city="${config.city}"` : '';
+          return `<a href="/${config.slug}" class="masjid-card" data-link${cityAttr}>
+            <div class="masjid-card-top">
+              <div class="masjid-card-thumb${config.logo ? ' has-logo' : ''}">${thumbContent}</div>
+              <div class="masjid-card-info">
+                <div class="masjid-name">${config.display_name}</div>
+                ${primaryChip}
+                ${subHtml}
+              </div>
+            </div>
+            <div class="masjid-card-bottom">
+              <div class="masjid-card-next" data-recent-next="${config.slug}">
+                <div class="skeleton-bone" style="width:40px;height:8px;margin-bottom:4px"></div>
+                <div class="skeleton-bone" style="width:56px;height:12px"></div>
+              </div>
+              <div class="masjid-card-chevron">${CHEVRON_SVG}</div>
+            </div>
+          </a>`;
+        }).join('')}
+      </div>
+    </div>`;
+
+  // Reuse the recently-viewed prayer loader (cards share the
+  // data-recent-next attribute; followed slugs are excluded from
+  // Recently Viewed so there are no duplicate attributes).
+  loadRecentCardPrayers(configs);
+}
+
 // --- Recently viewed ---
 
 function renderRecentlyViewed() {
@@ -646,11 +726,13 @@ function renderRecentlyViewed() {
   if (!section) return;
 
   const recentSlugs = getRecentSlugs();
-  const pinnedSlug = localStorage.getItem('iqamah-pinned-masjid');
+  const pinnedSlug = getPrimary();
+  const followedSet = new Set(getFollowed());
 
-  // Filter out pinned masjid and only show ones that exist in configs
+  // Filter out pinned + followed masjids (they live in Your Masjids) and
+  // only show ones that exist in configs
   const recentConfigs = recentSlugs
-    .filter(s => s !== pinnedSlug)
+    .filter(s => s !== pinnedSlug && !followedSet.has(s))
     .map(s => cachedConfigs.find(c => c.slug === s))
     .filter(Boolean)
     .slice(0, 3);
@@ -957,11 +1039,16 @@ function handleHeroClick(e) {
 
   e.preventDefault();
   e.stopPropagation();
-  localStorage.removeItem('iqamah-pinned-masjid');
-  showToast('Removed from My Masjid');
-  renderHero();
-  renderRecentlyViewed();
-  if (masjidsModule && masjidsModule.renderCards) masjidsModule.renderCards();
+  // Unfollow the primary — auto-promotes the next followed masjid (or clears
+  // the primary if none remain). Events from follow.js re-render the hero,
+  // sections and the embedded masjids list.
+  const r = unfollow(unpinBtn.dataset.slug);
+  if (r.newPrimary) {
+    const next = cachedConfigs.find(c => c.slug === r.newPrimary);
+    showToast(`<span class="toast-star">★</span> ${next ? next.display_name : r.newPrimary} is now My Masjid`);
+  } else {
+    showToast('Removed from Your Masjids');
+  }
 }
 
 function showToast(html) {
@@ -1021,10 +1108,16 @@ function setupInstallBanner() {
   }
 }
 
-// --- Pin sync (from embedded masjid list) ---
+// --- Pin/follow sync (from embedded masjid list, settings, prayer-times) ---
 
 function onPinChanged() {
   renderHero();
+  renderYourMasjids();
+  renderRecentlyViewed();
+}
+
+function onFollowChanged() {
+  renderYourMasjids();
   renderRecentlyViewed();
 }
 
@@ -1058,4 +1151,5 @@ export function destroy() {
   }
   document.removeEventListener('click', handleHeroClick, true);
   window.removeEventListener('iqamah-pin-changed', onPinChanged);
+  window.removeEventListener('iqamah-follow-changed', onFollowChanged);
 }

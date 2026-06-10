@@ -154,6 +154,13 @@ if (!localStorage.getItem('iqamah-migrated')) {
   localStorage.setItem('iqamah-migrated', '1');
 }
 
+// Seed the followed-masjids set from an existing pinned masjid (one-time).
+// Runs after the prayerly->iqamah migration so a legacy pinned key counts.
+if (!localStorage.getItem('iqamah-followed-masjids')) {
+  const pinned = localStorage.getItem('iqamah-pinned-masjid');
+  if (pinned) localStorage.setItem('iqamah-followed-masjids', JSON.stringify([pinned]));
+}
+
 // Init
 initTheme();
 initBackground();
