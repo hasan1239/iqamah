@@ -3177,14 +3177,25 @@
 
     /* ========== Feature: Follow Multiple Masjids (merged from _agent_css/follow.css) ========== */
 /* ============================================
-   Follow Multiple Masjids
-   (Your Masjids section, follow star states, kebab,
-   crown/primary badge, context menu, settings rows.
+   My Masjid + Other Masjids
+   (Your Masjids section, star = My Masjid, bookmark = save
+   to Other Masjids, kebab, context menu, settings rows.
    Theme variables only — light / night / dark all work.)
    ============================================ */
 
 /* --- Home "Your Masjids" section (clone of .recent-section) --- */
 .your-masjids-section { margin-bottom: 12px; }
+
+/* Mobile scroller cards: hug their own content instead of stretching to the
+   tallest sibling, with tighter vertical rhythm. The next-jama'at line still
+   grows the card slightly when it loads — that's expected. Desktop keeps its
+   own single-row card layout (rules in the desktop media block). */
+@media (max-width: 767.98px) {
+  .masjid-grid.horizontal { align-items: flex-start; }
+  .masjid-grid.horizontal .masjid-card { padding: 12px 14px; }
+  .masjid-grid.horizontal .masjid-card-top { margin-bottom: 8px; }
+  .masjid-grid.horizontal .masjid-card-bottom { padding-top: 8px; }
+}
 .your-masjids-edit {
   display: inline-flex; align-items: center; gap: 2px;
   font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px;
@@ -3202,13 +3213,31 @@
   background: var(--gold); color: #0a1210; white-space: nowrap;
 }
 
-/* --- Followed star state --- */
-/* Filled gold star (reuses .pin-btn.pinned for colour). On mobile the star
-   button is normally hidden — show it for followed masjids so the filled
-   star doubles as the followed indicator (tap = unfollow). */
+/* --- Star (My Masjid) + bookmark (Other Masjids) buttons --- */
+/* The star (.pin-btn, base styles above) sets/unsets My Masjid. The bookmark
+   (.save-btn) saves/removes an Other Masjid — deliberately a different shape
+   so the two actions read as distinct. On mobile both buttons are normally
+   hidden (long-press menu is the entry point) — the active states stay
+   visible as indicators (tap = undo). */
+.save-btn {
+  display: none; width: 20px; height: 20px; flex-shrink: 0; margin-left: 4px;
+  border: none; background: transparent; cursor: pointer; padding: 0;
+  align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.2s ease;
+}
+.save-btn svg { width: 13px; height: 13px; color: var(--text-muted); transition: color 0.2s ease; }
+@media (min-width: 768px) {
+  .save-btn { display: inline-flex; position: relative; top: -2px; }
+  .masjid-card:hover .save-btn { opacity: 0.6; }
+}
+.save-btn:hover { opacity: 1 !important; }
+.save-btn:hover svg { color: var(--gold); }
+.save-btn.saved { opacity: 1; }
+.save-btn.saved svg { color: var(--gold); }
 @media (max-width: 767.98px) {
-  .pin-btn.followed { display: inline-flex; opacity: 1; position: relative; top: -2px; }
-  .pin-btn.followed svg { color: var(--gold); }
+  .pin-btn.pinned { display: inline-flex; opacity: 1; position: relative; top: -2px; }
+  .pin-btn.pinned svg { color: var(--gold); }
+  .save-btn.saved { display: inline-flex; position: relative; top: -2px; }
 }
 
 /* --- Kebab (non-touch context-menu trigger) --- */
@@ -3297,26 +3326,27 @@
 .ctx-item-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ctx-check { display: flex; align-items: center; margin-left: auto; color: var(--gold); flex-shrink: 0; }
 
-/* --- Settings "Your Masjids" rows --- */
+/* --- Settings "My Masjid" / "Other Masjids" rows --- */
+.settings-group-title-inner { margin-top: 18px; }
 .your-masjid-row .settings-item-left { flex: 1; min-width: 0; }
 .your-masjid-row .your-masjid-name {
   flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.your-masjid-row .my-masjid-chip { flex-shrink: 0; margin-right: 8px; }
-.crown-btn {
-  display: flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%;
-  border: 1px solid var(--card-border); background: transparent;
-  color: var(--text-muted); cursor: pointer; padding: 0;
-  transition: all 0.2s ease;
+.settings-icon-muted { color: var(--text-muted); opacity: 0.7; }
+.settings-label-muted { color: var(--text-muted); }
+.your-masjid-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: 10px; }
+.set-my-btn {
+  flex-shrink: 0; display: inline-flex; align-items: center;
+  padding: 6px 10px; border-radius: 999px;
+  background: transparent; border: 1px solid var(--gold-tint-30);
+  color: var(--gold); font-family: inherit; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+  -webkit-tap-highlight-color: var(--gold-tint-10);
 }
-.crown-btn svg { width: 16px; height: 16px; }
-.crown-btn:hover { border-color: var(--gold-tint-40); color: var(--gold); }
-.crown-btn.is-primary {
-  background: var(--gold-tint-10); border-color: var(--gold); color: var(--gold);
-  cursor: default;
-}
+.set-my-btn:hover { background: var(--gold-tint-10); border-color: var(--gold); }
+.set-my-btn:active { transform: scale(0.97); }
 .settings-browse-link { color: var(--gold); text-decoration: none; font-weight: 600; }
 .settings-browse-link:hover { text-decoration: underline; }
 
@@ -3376,34 +3406,37 @@
 .postcode-chip-clear:active { transform: scale(0.92); }
 
 /* --- Cities screen (mobile landing) postcode affordance ---
-   The search bar is hidden in cities mode, so this compact pill (expanding
-   into an inline postcode field) is the entry point there. Hidden everywhere
-   else; desktop always shows the full search bar instead. */
+   The search bar is hidden in cities mode, so this full-width search-style
+   row (expanding into an inline postcode field) is the entry point there.
+   Hidden everywhere else; desktop always shows the full search bar instead. */
 .postcode-cities-row { display: none; }
 .masjids-view[data-mode="cities"] .postcode-cities-row {
-  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  display: flex; flex-direction: column; gap: 8px;
   margin: 0 0 14px;
 }
 @media (min-width: 768px) {
   .masjids-view .postcode-cities-row { display: none !important; }
 }
 
-/* Pill matches .masjids-nearby-pill */
+/* Full-width search-style row — matches the width and vertical rhythm of the
+   List/Map toggle above it and the search bar used on the list screen. */
 .masjids-postcode-pill {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 10px 16px; border-radius: 999px;
-  background: var(--gold-tint-08); border: 1px solid var(--gold-tint-15);
-  color: var(--gold); font-family: inherit; font-size: 0.82rem; font-weight: 600;
-  cursor: pointer; transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 13px 14px; border-radius: 12px;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  backdrop-filter: blur(12px);
+  color: var(--text-muted); font-family: inherit; font-size: 0.85rem; font-weight: 500;
+  text-align: left; cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease;
   -webkit-tap-highlight-color: var(--gold-tint-10);
 }
-.masjids-postcode-pill:hover { background: var(--gold-tint-15); border-color: var(--gold-tint-25); }
-.masjids-postcode-pill:active { transform: scale(0.97); }
-.masjids-postcode-pill svg { width: 16px; height: 16px; }
+.masjids-postcode-pill:hover { border-color: var(--gold-tint-40); }
+.masjids-postcode-pill:active { background: var(--card-active-bg); }
+.masjids-postcode-pill svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--gold); opacity: 0.8; }
 
-/* Expanded inline postcode form — styled like the search bar */
+/* Expanded inline postcode form — same full-width search-bar styling so the
+   pill-to-form swap doesn't shift the layout */
 .postcode-inline-form {
-  display: flex; align-items: center; gap: 8px; width: 100%; max-width: 320px;
+  display: flex; align-items: center; gap: 8px; width: 100%;
   padding: 6px 6px 6px 14px;
   background: var(--card-bg); border: 1px solid var(--card-border);
   border-radius: 12px; backdrop-filter: blur(12px);
@@ -3634,6 +3667,169 @@
 @keyframes share-card-btn-pulse {
   0%, 100% { opacity: 0.85; }
   50% { opacity: 0.45; }
+}
+
+
+    /* ========== Fix round: Tracker fixes (picker portal, hint) (merged from _agent_css/tracker-fixes.css) ========== */
+/* Tracker fixes — override rules appended AFTER the merged tracker CSS in
+   index.html. Two-class selectors out-specify the originals' single class,
+   and equal-specificity rules win here by source order. */
+
+/* 1. Status picker portal.
+   The popover used to be position:absolute inside .tracker-today-card, but
+   every tracker card has backdrop-filter (a stacking context per card), so
+   the stats cards below — later in DOM order — always painted over it,
+   whatever its z-index. js/views/tracker.js now appends the popover to
+   document.body and anchors it to the tapped segment with inline fixed
+   coords (re-clamped on scroll/resize, flips above when short of space).
+   These rules supply the body-level positioning; the visual chrome
+   (background, border, shadow, pop-in animation) still comes from the
+   existing .tracker-picker rule, which the portalled element keeps. */
+.tracker-picker.tracker-picker-portal {
+  position: fixed;
+  z-index: 1200; /* above all backdrop-filter cards; below full-screen overlays (10000) */
+}
+
+/* 3. Edit-window hint on its own line below the storage note */
+.tracker-note .tracker-note-edit {
+  display: block;
+  margin-top: 3px;
+}
+
+    /* ========== Fix round: Tasbih/Dua fixes (Arabic sizing, tiers, toggle) (merged from _agent_css/tasbih-dua-fixes.css) ========== */
+/* Tasbih + Daily Dua fixes — override rules appended AFTER the merged
+   feature CSS in index.html. Two-class selectors out-specify the originals'
+   single class (including their media-query re-declarations), and
+   equal-specificity rules win here by source order. */
+
+/* ============================================
+   1. TASBIH — un-squash the Arabic dhikr line
+   Root cause: .tasbih-arabic used line-height 1.5, but Amiri's vertical
+   metrics plus harakat extend well beyond a 1.5 line box, so the glyphs
+   overlapped the transliteration above and the meaning below (diacritics
+   looked clipped). Amiri with harakat needs roughly 1.8-2x line-height.
+   The fixed min-height on .tasbih-dhikr was sized for the cramped layout,
+   so it grows too; the flexible ring stage below absorbs the difference.
+   ============================================ */
+.tasbih-view .tasbih-dhikr { min-height: 150px; margin-bottom: 6px; }
+.tasbih-view .tasbih-translit { margin-bottom: 2px; }
+.tasbih-view .tasbih-arabic {
+  font-size: 2.3rem;
+  line-height: 1.9;     /* room for Amiri ascenders + harakat */
+  min-height: 1.9em;    /* keeps free mode (empty Arabic) from jumping */
+  padding: 2px 0;
+}
+.tasbih-view .tasbih-meaning { margin-top: 2px; line-height: 1.45; }
+
+/* Short phones — keep the whole counter on one screen, never below ~1.85 lh */
+@media (max-height: 700px) {
+  .tasbih-view .tasbih-dhikr { min-height: 126px; }
+  .tasbih-view .tasbih-arabic { font-size: 1.9rem; line-height: 1.85; }
+}
+
+/* ============================================
+   2. DAILY DUA — tighter density + length-aware Arabic sizing
+   ============================================ */
+
+/* Tighter card padding / margins / line spacing */
+.dua-view .dua-header { margin-bottom: 14px; }
+.dua-view .dua-today-card { padding: 18px 16px; margin-bottom: 20px; }
+.dua-view .dua-today-top { margin-bottom: 12px; }
+.dua-view .dua-arabic { margin-bottom: 10px; }
+.dua-view .dua-english { line-height: 1.5; margin-bottom: 10px; }
+.dua-view .dua-actions { margin-top: 14px; }
+.dua-view .dua-item-full { margin-top: 10px; padding-top: 10px; }
+
+/* Length-aware Arabic tiers — class set by js/views/dua.js from the
+   diacritic-stripped character count (short <= 75, medium 76-140, long 141+).
+   Every tier keeps an Amiri-safe line-height so harakat never clip. */
+.dua-view .dua-arabic.dua-arabic-short { font-size: 1.65rem; line-height: 2.05; }
+.dua-view .dua-arabic.dua-arabic-medium { font-size: 1.4rem; line-height: 1.95; }
+.dua-view .dua-arabic.dua-arabic-long { font-size: 1.2rem; line-height: 1.9; }
+
+/* A step smaller again inside expanded collection items */
+.dua-view .dua-item-full .dua-arabic.dua-arabic-short { font-size: 1.35rem; line-height: 2; }
+.dua-view .dua-item-full .dua-arabic.dua-arabic-medium { font-size: 1.2rem; line-height: 1.95; }
+.dua-view .dua-item-full .dua-arabic.dua-arabic-long { font-size: 1.1rem; line-height: 1.9; }
+
+/* Collapsible transliteration — quiet toggle, collapsed by default */
+.dua-view .dua-translit-block { margin: 0 0 10px; }
+.dua-view .dua-translit-toggle {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: none; border: none; padding: 2px 8px;
+  font-family: inherit; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.3px; color: var(--text-muted); cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s;
+}
+.dua-view .dua-translit-toggle:hover { color: var(--gold); }
+.dua-view .dua-translit-toggle:focus-visible { outline: 2px solid var(--gold-tint-50); outline-offset: 2px; border-radius: 6px; }
+.dua-view .dua-translit-toggle svg { width: 12px; height: 12px; transition: transform 0.2s ease; }
+.dua-view .dua-translit-open .dua-translit-toggle svg { transform: rotate(180deg); }
+.dua-view .dua-translit-block .dua-transliteration { display: none; margin: 6px 0 0; line-height: 1.5; }
+.dua-view .dua-translit-open .dua-transliteration { display: block; }
+
+/* Desktop — tiers scale up proportionally; card padding stays comfortable */
+@media (min-width: 768px) {
+  .dua-view .dua-today-card { padding: 24px 28px; }
+  .dua-view .dua-arabic.dua-arabic-short { font-size: 1.9rem; }
+  .dua-view .dua-arabic.dua-arabic-medium { font-size: 1.6rem; }
+  .dua-view .dua-arabic.dua-arabic-long { font-size: 1.35rem; }
+}
+
+    /* ========== Fix round: Jummah fixes (city groups) (merged from _agent_css/jummah-fixes.css) ========== */
+/* ============================================
+   Jummah Times fixes: city grouping + bayan notes
+   Appended after the merged Jummah CSS in index.html, so rules here win
+   at equal specificity. Theme variables only - works in light/dark/night.
+   ============================================ */
+
+/* Groups manage their own spacing now; the flat-list flex gap no longer applies */
+.jummah-list { display: block; }
+
+.jummah-city-group { margin-bottom: 26px; }
+.jummah-city-group:last-child { margin-bottom: 0; }
+
+/* Sticky-ish city header - mirrors the month-view group header styling
+   (gold uppercase label, gold-tint underline). Solid per-theme background
+   (same variable as the sticky month table header) so cards scrolling
+   underneath and the stars/dust motes never show through. */
+.jummah-city-header {
+  position: sticky; top: 0; z-index: 5;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin: 0; padding: 10px 4px 8px;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.78rem; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--gold);
+  background: var(--month-header-bg, #182B31);
+  border-bottom: 2px solid var(--gold-tint-30);
+}
+.jummah-city-header-name {
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.jummah-city-header-count {
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.5px;
+  color: var(--text-muted); text-transform: none; white-space: nowrap;
+}
+
+.jummah-city-cards {
+  display: flex; flex-direction: column; gap: 12px;
+  padding-top: 12px;
+}
+
+/* Bayan/khutbah offset note under the time pills,
+   e.g. "Bayan 30 mins before jama'at" */
+.jummah-card-note {
+  font-size: 0.7rem; color: var(--text-muted);
+  font-style: italic; margin-top: 6px;
+}
+/* When both a note and the raw string render, tighten the gap between them */
+.jummah-card-note + .jummah-card-raw { margin-top: 4px; }
+
+/* Desktop: the fixed top nav is 48px tall, so stick below it */
+@media (min-width: 768px) {
+  .jummah-city-header { top: 48px; }
 }
 
   </style>

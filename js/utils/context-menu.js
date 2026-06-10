@@ -9,7 +9,7 @@
 //     anchor: kebabButtonEl,        // optional — popover anchors to this on desktop
 //     items: [
 //       { icon: SVG_STRING, label: 'Set as My Masjid', checked: true, disabled: true, onSelect: fn },
-//       { icon: SVG_STRING, label: 'Unfollow', onSelect: fn },
+//       { icon: SVG_STRING, label: 'Save to Other Masjids', onSelect: fn },
 //     ],
 //   });
 

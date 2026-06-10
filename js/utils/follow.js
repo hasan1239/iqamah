@@ -1,31 +1,38 @@
-// Follow Multiple Masjids — followed set + primary helpers
+// My Masjid + Other Masjids — two distinct saved-masjid concepts.
 //
-// localStorage keys:
-//   iqamah-followed-masjids : JSON array of slugs (ordered, max FOLLOW_CAP)
-//   iqamah-pinned-masjid    : the primary ("My Masjid") slug — unchanged key so
-//                             the hero card, Times tab and existing
-//                             iqamah-pin-changed listeners keep working.
+//   My Masjid     — the single local masjid the user attends regularly.
+//                   localStorage key iqamah-pinned-masjid (unchanged so the
+//                   hero card, nav and existing iqamah-pin-changed listeners
+//                   keep working; the prayer-times page's "Set as My Masjid"
+//                   button writes this key directly).
+//   Other Masjids — a separate saved list (work masjid, occasional ones).
+//                   localStorage key iqamah-followed-masjids (kept from the
+//                   old follow model) but it now EXCLUDES the pinned slug.
+//                   Ordered, capped at OTHERS_CAP.
 //
-// Invariants (enforced here):
-//   - pinned ∈ followed (self-healed on read — the primary can be written
-//     outside this module, e.g. the prayer-times page's "Set as My Masjid"
-//     button writes the pinned key directly)
-//   - no duplicates, cap at FOLLOW_CAP
-//   - first follow auto-becomes primary
-//   - unfollowing the primary auto-promotes the next followed masjid
+// Invariants (self-healed on read, which also migrates old-model users who
+// had the pinned masjid inside the followed array):
+//   - the My Masjid slug is stripped from the others list
+//   - no duplicates, cap at OTHERS_CAP
 //
-// Events: every mutation dispatches BOTH `iqamah-follow-changed` (new) and
-// `iqamah-pin-changed` (kept for back-compat) so every view re-renders
-// consistently.
+// Promotion swap: setMyMasjid() on a saved other masjid removes it from the
+// others list and moves the old My Masjid into Other Masjids, so nothing is
+// lost. If others are somehow at cap during the swap, the oldest other is
+// dropped. Setting an unsaved masjid simply replaces the old My Masjid
+// (original star semantics — nothing is auto-saved).
+//
+// Events: every mutation dispatches BOTH `iqamah-follow-changed` (carries
+// { myMasjid, others } detail) and `iqamah-pin-changed` (kept for back-compat)
+// so every view re-renders consistently.
 
-export const FOLLOW_CAP = 5;
+export const OTHERS_CAP = 5;
 
-const FOLLOWED_KEY = 'iqamah-followed-masjids';
-const PRIMARY_KEY = 'iqamah-pinned-masjid';
+const OTHERS_KEY = 'iqamah-followed-masjids';
+const MY_KEY = 'iqamah-pinned-masjid';
 
-function readFollowedRaw() {
+function readOthersRaw() {
   try {
-    const raw = JSON.parse(localStorage.getItem(FOLLOWED_KEY) || '[]');
+    const raw = JSON.parse(localStorage.getItem(OTHERS_KEY) || '[]');
     if (!Array.isArray(raw)) return [];
     return raw.filter(s => typeof s === 'string' && s);
   } catch {
@@ -33,145 +40,145 @@ function readFollowedRaw() {
   }
 }
 
-function writeFollowed(list) {
-  try { localStorage.setItem(FOLLOWED_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+function writeOthers(list) {
+  try { localStorage.setItem(OTHERS_KEY, JSON.stringify(list)); } catch { /* ignore */ }
 }
 
-function readPrimary() {
-  return localStorage.getItem(PRIMARY_KEY) || null;
+function readMy() {
+  return localStorage.getItem(MY_KEY) || null;
 }
 
-function writePrimary(slug) {
-  if (slug) localStorage.setItem(PRIMARY_KEY, slug);
-  else localStorage.removeItem(PRIMARY_KEY);
+function writeMy(slug) {
+  if (slug) localStorage.setItem(MY_KEY, slug);
+  else localStorage.removeItem(MY_KEY);
 }
 
-// Read both keys and silently repair invariants (dedupe, pinned ∈ followed,
-// cap). Never creates the followed key for a fresh user with nothing stored.
+// Read both keys and silently repair invariants (dedupe, strip the My Masjid
+// slug, cap). Never creates the others key for a fresh user with nothing
+// stored.
 function normalise() {
-  const raw = readFollowedRaw();
-  const primary = readPrimary();
+  const raw = readOthersRaw();
+  const my = readMy();
 
   const seen = new Set();
-  let list = [];
+  let others = [];
   for (const s of raw) {
-    if (!seen.has(s)) { seen.add(s); list.push(s); }
+    if (s !== my && !seen.has(s)) { seen.add(s); others.push(s); }
   }
-  // pinned ∈ followed — prepend so it can never be dropped by the cap below
-  if (primary && !seen.has(primary)) list.unshift(primary);
-  if (list.length > FOLLOW_CAP) list = list.slice(0, FOLLOW_CAP);
+  if (others.length > OTHERS_CAP) others = others.slice(0, OTHERS_CAP);
 
-  const changed = list.length !== raw.length || list.some((s, i) => s !== raw[i]);
-  if (changed && (list.length > 0 || localStorage.getItem(FOLLOWED_KEY) !== null)) {
-    writeFollowed(list);
+  const changed = others.length !== raw.length || others.some((s, i) => s !== raw[i]);
+  if (changed && (others.length > 0 || localStorage.getItem(OTHERS_KEY) !== null)) {
+    writeOthers(others);
   }
-  return { followed: list, primary };
+  return { others, my };
 }
 
 function dispatchChanged() {
-  const detail = { followed: normalise().followed, primary: readPrimary() };
-  window.dispatchEvent(new CustomEvent('iqamah-follow-changed', { detail }));
+  const { others, my } = normalise();
+  window.dispatchEvent(new CustomEvent('iqamah-follow-changed', { detail: { myMasjid: my, others } }));
   window.dispatchEvent(new CustomEvent('iqamah-pin-changed'));
 }
 
-/** Ordered list of followed slugs (invariants repaired on read). */
-export function getFollowed() {
-  return normalise().followed;
+/** The My Masjid slug, or null. */
+export function getMyMasjid() {
+  return readMy();
 }
 
-/** Is this slug in the followed set? */
-export function isFollowed(slug) {
-  return getFollowed().includes(slug);
+/** Ordered list of Other Masjid slugs (invariants repaired on read). */
+export function getOthers() {
+  return normalise().others;
 }
 
-/** The primary ("My Masjid") slug, or null. */
-export function getPrimary() {
-  return readPrimary();
+/** Is this slug saved in Other Masjids? */
+export function isOther(slug) {
+  return getOthers().includes(slug);
 }
 
 /**
- * Follow a masjid.
- * Returns { ok, reason?, becamePrimary }.
- *   ok=false, reason='cap'   → cap reached, blocked
- *   ok=true,  reason='already' → no-op, already followed
- *   becamePrimary=true       → this was the first follow, auto-promoted
+ * Set My Masjid. If the slug was saved in Other Masjids it is promoted: it
+ * leaves the others list and the old My Masjid takes its place there (oldest
+ * other dropped if the list is somehow at cap). Setting an unsaved masjid
+ * simply replaces the old My Masjid.
+ * Returns { ok, reason?, changed, demoted } — demoted is the old My Masjid
+ * slug when it was moved into Other Masjids, else null.
  */
-export function follow(slug) {
-  if (!slug) return { ok: false, reason: 'invalid', becamePrimary: false };
-  const { followed, primary } = normalise();
-  if (followed.includes(slug)) return { ok: true, reason: 'already', becamePrimary: false };
-  if (followed.length >= FOLLOW_CAP) return { ok: false, reason: 'cap', becamePrimary: false };
+export function setMyMasjid(slug) {
+  if (!slug) return { ok: false, reason: 'invalid', changed: false, demoted: null };
+  const { others, my } = normalise();
+  if (my === slug) return { ok: true, changed: false, demoted: null };
 
-  followed.push(slug);
-  writeFollowed(followed);
-
-  let becamePrimary = false;
-  if (!primary) {
-    writePrimary(slug); // first follow auto-becomes primary
-    becamePrimary = true;
+  let demoted = null;
+  const idx = others.indexOf(slug);
+  if (idx !== -1) {
+    others.splice(idx, 1);
+    if (my) {
+      others.push(my);
+      demoted = my;
+      while (others.length > OTHERS_CAP) others.shift(); // defensive: drop oldest
+    }
+    writeOthers(others);
   }
+  writeMy(slug);
   dispatchChanged();
-  return { ok: true, becamePrimary };
+  return { ok: true, changed: true, demoted };
 }
 
 /**
- * Unfollow a masjid. If it was the primary, the next followed masjid is
- * auto-promoted (or the primary is cleared if none remain).
- * Returns { ok, removed, removedPrimary, newPrimary }.
+ * Unset My Masjid. No auto-promotion from Other Masjids.
+ * Returns { ok, changed, cleared } — cleared is the slug that was unset.
  */
-export function unfollow(slug) {
-  const { followed, primary } = normalise();
-  const idx = followed.indexOf(slug);
-  if (idx === -1) return { ok: true, removed: false, removedPrimary: false, newPrimary: primary };
-
-  followed.splice(idx, 1);
-  writeFollowed(followed);
-
-  let removedPrimary = false;
-  let newPrimary = primary;
-  if (primary === slug) {
-    removedPrimary = true;
-    newPrimary = followed[0] || null; // auto-promote next followed
-    writePrimary(newPrimary);
-  }
+export function clearMyMasjid() {
+  const my = readMy();
+  if (!my) return { ok: true, changed: false, cleared: null };
+  writeMy(null);
   dispatchChanged();
-  return { ok: true, removed: true, removedPrimary, newPrimary };
+  return { ok: true, changed: true, cleared: my };
 }
 
 /**
- * Follow if not followed, unfollow if followed.
- * Returns the underlying follow()/unfollow() result plus
- * action: 'followed' | 'unfollowed' | 'blocked'.
+ * Save a masjid to Other Masjids.
+ * Returns { ok, reason? }.
+ *   ok=false, reason='cap'          → cap reached, blocked
+ *   ok=false, reason='is_my_masjid' → slug is the current My Masjid, blocked
+ *   ok=true,  reason='already'      → no-op, already saved
  */
-export function toggleFollow(slug) {
-  if (isFollowed(slug)) {
-    const r = unfollow(slug);
-    return { ...r, action: 'unfollowed' };
-  }
-  const r = follow(slug);
-  return { ...r, action: r.ok ? 'followed' : 'blocked' };
-}
-
-/**
- * Set the primary ("My Masjid"). Follows the masjid first if needed
- * (respecting the cap).
- * Returns { ok, reason?, changed, followedAdded }.
- */
-export function setPrimary(slug) {
-  if (!slug) return { ok: false, reason: 'invalid', changed: false, followedAdded: false };
-  const { followed, primary } = normalise();
-
-  let followedAdded = false;
-  if (!followed.includes(slug)) {
-    if (followed.length >= FOLLOW_CAP) return { ok: false, reason: 'cap', changed: false, followedAdded: false };
-    followed.push(slug);
-    writeFollowed(followed);
-    followedAdded = true;
-  }
-  if (primary === slug && !followedAdded) {
-    return { ok: true, changed: false, followedAdded: false };
-  }
-  writePrimary(slug);
+export function saveOther(slug) {
+  if (!slug) return { ok: false, reason: 'invalid' };
+  const { others, my } = normalise();
+  if (slug === my) return { ok: false, reason: 'is_my_masjid' };
+  if (others.includes(slug)) return { ok: true, reason: 'already' };
+  if (others.length >= OTHERS_CAP) return { ok: false, reason: 'cap' };
+  others.push(slug);
+  writeOthers(others);
   dispatchChanged();
-  return { ok: true, changed: true, followedAdded };
+  return { ok: true };
+}
+
+/**
+ * Remove a masjid from Other Masjids.
+ * Returns { ok, removed }.
+ */
+export function removeOther(slug) {
+  const { others } = normalise();
+  const idx = others.indexOf(slug);
+  if (idx === -1) return { ok: true, removed: false };
+  others.splice(idx, 1);
+  writeOthers(others);
+  dispatchChanged();
+  return { ok: true, removed: true };
+}
+
+/**
+ * Save if not saved, remove if saved.
+ * Returns the underlying saveOther()/removeOther() result plus
+ * action: 'saved' | 'removed' | 'blocked'.
+ */
+export function toggleOther(slug) {
+  if (isOther(slug)) {
+    const r = removeOther(slug);
+    return { ...r, action: 'removed' };
+  }
+  const r = saveOther(slug);
+  return { ...r, action: r.ok ? 'saved' : 'blocked' };
 }

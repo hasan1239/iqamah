@@ -1,13 +1,14 @@
 // Settings view — preferences and app info
 import { getTheme, setTheme, onThemeChange } from '../theme.js';
 import { isAdmin, clearAdminCache } from '../utils/admin.js';
-import { getFollowed, getPrimary, setPrimary, unfollow } from '../utils/follow.js';
+import { getOthers, getMyMasjid, setMyMasjid, clearMyMasjid, removeOther } from '../utils/follow.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
 
 let unsubTheme = null;
 let masjidNames = {}; // slug -> display_name (from index.json)
 
-const CROWN_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 11H4.8L3 8z"/></svg>';
+const STAR_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/></svg>';
+const BOOKMARK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>';
 const REMOVE_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
 
 export function render(container) {
@@ -77,8 +78,10 @@ export function render(container) {
       </div>
 
       <div class="settings-group" id="yourMasjidsGroup">
-        <div class="settings-group-title">Your Masjids</div>
-        <div id="yourMasjidsList"></div>
+        <div class="settings-group-title">My Masjid</div>
+        <div id="myMasjidRow"></div>
+        <div class="settings-group-title settings-group-title-inner">Other Masjids</div>
+        <div id="otherMasjidsList"></div>
       </div>
 
       <div class="settings-group">
@@ -193,24 +196,32 @@ export function render(container) {
     if (el) el.textContent = visible.length.toString();
     masjidNames = {};
     configs.forEach(c => { masjidNames[c.slug] = c.display_name; });
-    renderYourMasjidsList();
+    renderMasjidLists();
   }).catch(() => {});
 
-  // Your Masjids — initial render (slugs upgrade to display names once
-  // index.json arrives above)
-  renderYourMasjidsList();
+  // My Masjid + Other Masjids — initial render (slugs upgrade to display
+  // names once index.json arrives above)
+  renderMasjidLists();
   const yourMasjidsGroup = document.getElementById('yourMasjidsGroup');
   yourMasjidsGroup.addEventListener('click', (e) => {
-    const crown = e.target.closest('.crown-btn');
-    if (crown && !crown.classList.contains('is-primary')) {
-      setPrimary(crown.dataset.slug);
-      renderYourMasjidsList();
+    // "Set as My Masjid" on an other — promotion swap: the old My Masjid
+    // moves into Other Masjids (handled by follow.js)
+    const promoteBtn = e.target.closest('.set-my-btn');
+    if (promoteBtn) {
+      setMyMasjid(promoteBtn.dataset.slug);
+      renderMasjidLists();
       return;
     }
-    const removeBtn = e.target.closest('.your-masjid-remove');
-    if (removeBtn) {
-      unfollow(removeBtn.dataset.slug);
-      renderYourMasjidsList();
+    const removeMyBtn = e.target.closest('.my-masjid-remove');
+    if (removeMyBtn) {
+      clearMyMasjid();
+      renderMasjidLists();
+      return;
+    }
+    const removeOtherBtn = e.target.closest('.other-masjid-remove');
+    if (removeOtherBtn) {
+      removeOther(removeOtherBtn.dataset.slug);
+      renderMasjidLists();
     }
   });
 
@@ -289,50 +300,73 @@ export function render(container) {
   });
 }
 
-// --- Your Masjids group ---
+// --- My Masjid + Other Masjids group ---
 
-function renderYourMasjidsList() {
-  const wrap = document.getElementById('yourMasjidsList');
+function renderMasjidLists() {
+  renderMyMasjidRow();
+  renderOtherMasjidsList();
+}
+
+function renderMyMasjidRow() {
+  const wrap = document.getElementById('myMasjidRow');
   if (!wrap) return;
 
-  const followed = getFollowed();
-  const primary = getPrimary();
+  const myMasjid = getMyMasjid();
 
-  if (followed.length === 0) {
+  if (!myMasjid) {
     wrap.innerHTML = `
       <div class="settings-item">
         <div class="settings-item-left">
-          <span class="settings-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-              <path d="M12 2l2.09 6.26L21 9.27l-5 4.87L17.18 21 12 17.27 6.82 21 8 14.14l-5-4.87 6.91-1.01z"/>
-            </svg>
-          </span>
-          <span class="settings-label">No masjids followed</span>
+          <span class="settings-icon settings-icon-muted">${STAR_SVG}</span>
+          <span class="settings-label settings-label-muted">No My Masjid set</span>
         </div>
         <a href="/masjids" class="settings-value settings-browse-link" data-link>Browse</a>
       </div>`;
     return;
   }
 
-  // Primary first, then follow order
-  const ordered = primary && followed.includes(primary)
-    ? [primary, ...followed.filter(s => s !== primary)]
-    : [...followed];
-
-  wrap.innerHTML = ordered.map(slug => {
-    const name = masjidNames[slug] || slug;
-    const isPrimary = slug === primary;
-    return `<div class="settings-item your-masjid-row">
+  const name = masjidNames[myMasjid] || myMasjid;
+  wrap.innerHTML = `
+    <div class="settings-item your-masjid-row">
       <div class="settings-item-left">
-        <button class="crown-btn${isPrimary ? ' is-primary' : ''}" data-slug="${slug}" role="radio" aria-checked="${isPrimary}" aria-label="Set ${name} as My Masjid" title="${isPrimary ? 'My Masjid' : 'Set as My Masjid'}">
-          ${CROWN_SVG}
-        </button>
+        <span class="settings-icon">${STAR_SVG}</span>
         <span class="settings-label your-masjid-name">${name}</span>
-        ${isPrimary ? '<span class="my-masjid-chip">My Masjid</span>' : ''}
       </div>
-      <button class="settings-remove-btn your-masjid-remove" data-slug="${slug}" aria-label="Unfollow ${name}" title="Unfollow">
+      <button class="settings-remove-btn my-masjid-remove" data-slug="${myMasjid}" aria-label="Remove ${name} as My Masjid" title="Remove My Masjid">
         ${REMOVE_SVG}
       </button>
+    </div>`;
+}
+
+function renderOtherMasjidsList() {
+  const wrap = document.getElementById('otherMasjidsList');
+  if (!wrap) return;
+
+  const others = getOthers();
+
+  if (others.length === 0) {
+    wrap.innerHTML = `
+      <div class="settings-item">
+        <div class="settings-item-left">
+          <span class="settings-icon settings-icon-muted">${BOOKMARK_SVG}</span>
+          <span class="settings-label settings-label-muted">No other masjids saved</span>
+        </div>
+      </div>`;
+    return;
+  }
+
+  wrap.innerHTML = others.map(slug => {
+    const name = masjidNames[slug] || slug;
+    return `<div class="settings-item your-masjid-row">
+      <div class="settings-item-left">
+        <span class="settings-label your-masjid-name">${name}</span>
+      </div>
+      <div class="your-masjid-actions">
+        <button class="set-my-btn" data-slug="${slug}" aria-label="Set ${name} as My Masjid">Set as My Masjid</button>
+        <button class="settings-remove-btn other-masjid-remove" data-slug="${slug}" aria-label="Remove ${name} from Other Masjids" title="Remove">
+          ${REMOVE_SVG}
+        </button>
+      </div>
     </div>`;
   }).join('');
 }
