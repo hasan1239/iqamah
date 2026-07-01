@@ -1248,8 +1248,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -1423,8 +1423,8 @@
     ],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -2965,7 +2965,7 @@
     "notes": "Zuhr Jama'at 2PM daily. Jummah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
     "source_image": "sources/faizul.jpg",
     "approved": true,
-    "pending_update": true,
+    "pending_update": false,
     "provider": {
       "type": "image",
       "ref": {
@@ -3210,8 +3210,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -3280,8 +3280,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -3786,8 +3786,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -4364,8 +4364,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -6037,8 +6037,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
@@ -7563,7 +7563,7 @@
     "source_image": "sources/raufbarzenji.jpg",
     "lat": 53.4608698,
     "lon": -2.2513595,
-    "pending_update": true,
+    "pending_update": false,
     "provider": {
       "type": "image",
       "ref": {
@@ -8590,8 +8590,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-06-29",
-      "row_count": 42,
+      "checked_at": "2026-07-01",
+      "row_count": 44,
       "warnings": [],
       "issues": []
     },
