@@ -153,13 +153,16 @@ export async function render(container, { slug }) {
       fetch(`/data/mosques/${slug}.json`),
       fetch('/data/season.json').catch(() => null),
     ]);
-    if (!configRes.ok) {
+    if (configRes.status === 404) {
       container.innerHTML = `<div class="not-found">
         <div class="not-found-code">404</div>
         <p class="not-found-message">Masjid not found.<br>It may not have been added yet.</p>
         <a href="/" class="not-found-link" data-link>Go Home</a>
       </div>`;
       return;
+    }
+    if (!configRes.ok) {
+      throw new Error(`Couldn't load masjid data (error ${configRes.status}). Please try again.`);
     }
     config = await configRes.json();
     if (seasonRes && seasonRes.ok) {

@@ -356,15 +356,42 @@ function generateCsvString(rows) {
 
 const GITHUB_REPO = 'hasan1239/iqamah';
 
+// Thrown when a GitHub API call fails for any reason OTHER than the file
+// genuinely not existing (404). Callers must not report these as "not found" -
+// an expired PAT (401) or a renamed repo (3xx) is a server problem, not
+// missing data.
+class GitHubApiError extends Error {
+  constructor(status, path) {
+    const detail =
+      status === 401 ? "the server's GitHub token is invalid or expired"
+      : status === 403 ? 'GitHub refused the request (token permissions or rate limit)'
+      : (status >= 300 && status < 400) ? 'the GitHub repository reference is out of date (repo moved or renamed)'
+      : `GitHub returned an unexpected error (${status})`;
+    super(`${detail} [${status} on ${path}]`);
+    this.name = 'GitHubApiError';
+    this.status = status;
+    this.detail = detail;
+  }
+}
+
+function githubApiErrorResponse(e) {
+  console.error('GitHub API failure:', e.message);
+  return errorResponse(`Something went wrong on our side: ${e.detail}. Please try again later or contact the site admin.`, 502);
+}
+
 async function githubGetFile(path, env) {
+  // redirect: 'manual' so a renamed repo surfaces as a loud 3xx here instead
+  // of GETs silently following while writes break
   const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
     headers: {
       'Authorization': `token ${env.GITHUB_PAT}`,
       'User-Agent': 'Prayerly-Worker/1.0',
       'Accept': 'application/vnd.github.v3+json',
     },
+    redirect: 'manual',
   });
-  if (!resp.ok) return null;
+  if (resp.status === 404) return null;
+  if (!resp.ok) throw new GitHubApiError(resp.status, path);
   return resp.json();
 }
 
@@ -1375,7 +1402,11 @@ async function handleSubmit(request, env) {
       existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
     }
   } catch (e) {
-    // If index fetch fails, skip duplicate check and proceed
+    // GitHub being unreachable is a server problem - abort rather than
+    // proceeding with an empty list (which skips duplicate detection and
+    // later overwrites index.json with a single entry)
+    if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
+    // Corrupt index JSON: skip duplicate check and proceed
   }
 
   // Duplicate detection (skip if user confirmed)
@@ -1601,7 +1632,13 @@ async function handleUpdate(request, env) {
   }
 
   // Fetch existing config
-  const configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+  let configFile;
+  try {
+    configFile = await githubGetFile(`data/mosques/${slug}.json`, env);
+  } catch (e) {
+    if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
+    throw e;
+  }
   if (!configFile) {
     return errorResponse('Masjid not found', 404);
   }
@@ -1643,8 +1680,16 @@ async function handleUpdate(request, env) {
     if (data[field]) data[field] = data[field].substring(0, max);
   }
 
-  // Fetch existing CSV
-  const csvFile = await githubGetFile(`data/${existingConfig.csv || slug + '.csv'}`, env);
+  // Fetch existing CSV. A GitHub error must not fall through to the
+  // no-CSV branch - that would silently replace the merged history with
+  // only the newly uploaded rows.
+  let csvFile;
+  try {
+    csvFile = await githubGetFile(`data/${existingConfig.csv || slug + '.csv'}`, env);
+  } catch (e) {
+    if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
+    throw e;
+  }
   let mergedCsv;
   if (csvFile) {
     const existingCsvText = atob(csvFile.content.replace(/\n/g, ''));
@@ -1715,7 +1760,12 @@ async function handleUpdate(request, env) {
       if (indexFile) {
         existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
       }
-    } catch (e) { /* proceed */ }
+    } catch (e) {
+      // A GitHub error here must abort - proceeding with an empty list
+      // would overwrite index.json with just this one masjid
+      if (e instanceof GitHubApiError) throw e;
+      /* corrupt index JSON - proceed and rebuild the entry */
+    }
 
     // Replace the config in the index
     const cfgIdx = existingConfigs.findIndex(c => c.slug === slug);
@@ -1746,6 +1796,7 @@ async function handleUpdate(request, env) {
     });
   } catch (e) {
     console.error('Update error:', e);
+    if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
     return errorResponse('Failed to update timetable: ' + e.message, 500);
   }
 }
