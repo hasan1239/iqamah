@@ -4,11 +4,11 @@
   "csv": "aisha.csv",
   "lat": 52.5233,
   "lon": -1.9279,
-  "notes": "Jumu'ah Salaah is at 1:30pm. No Salah to be performed 10 minutes before Zohr Start time. Programmes: Mon: Dars of Quran after Maghrib; Sun: Inspirations after Zohr; Thu: Durood prog after Maghrib; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Programme for Women after Zohr. Jama'at times are subject to change, therefore you are requested to check at the masjid.",
-  "address": "The Grange, Handsworth Wood, Birmingham, B20 1BH",
-  "phone": "0121 554 0200 / 07791 965 736",
-  "month": "May 2026",
-  "islamic_month": "Dhul Qa'dah / Dhul-Hijjah 1447",
+  "notes": "Jumu'ah Salaah is at 1:30pm. No Salah to be performed 10 minutes before Zohr Start time. Programmes: Mon: Dars of Quran after Maghrib; Sun: Inspirations after Zohr; Thur: Durood prog after Maghrib; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Program for Women after Zohr. Jama'at times are subject to change, therefore you are requested to check at the masjid.",
+  "address": "The Grange, Birmingham. B20 1BH",
+  "phone": "0121 554 0200 / 07791 965736",
+  "month": "July 2026",
+  "islamic_month": "Muharram/Safar 1448",
   "eid_salah": "9:00am (one jama'at only)",
   "sadaqatul_fitr": "Â£5.00 per person",
   "radio_frequency": "460.375",
@@ -16,5 +16,12 @@
   "source_image": "sources/aisha.jpg",
   "jummah_times": "1:30pm",
   "approved": true,
-  "pending_update": false
+  "pending_update": false,
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/aisha.jpg"
+    },
+    "source_url": "/data/sources/aisha.jpg"
+  }
 }

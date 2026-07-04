@@ -1797,13 +1797,16 @@
   {
     "slug": "aisha",
     "display_name": "Masjid Aisha",
-    "address": "The Grange, Handsworth Wood, Birmingham, B20 1BH",
+    "address": "The Grange, Birmingham. B20 1BH",
     "csv": "aisha.csv",
     "approved": true,
     "eid_salah": "9:00am (one jama'at only)",
     "jummah_times": "1:30pm",
     "lat": 52.5233,
-    "lon": -1.9279
+    "lon": -1.9279,
+    "provider": {
+      "type": "image"
+    }
   },
   {
     "slug": "masjid_aisha",
@@ -1916,7 +1919,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
+    "jummah_times": "BayÃÂÃÂn: 12:15pm, AzÃÂÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
