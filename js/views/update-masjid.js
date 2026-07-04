@@ -82,7 +82,7 @@ export async function render(container, { slug }) {
   // Fetch existing config
   try {
     const configRes = await fetch(`/data/mosques/${slug}.json`);
-    if (!configRes.ok) {
+    if (configRes.status === 404) {
       container.innerHTML = `<div class="not-found">
         <div class="not-found-code">404</div>
         <p class="not-found-message">Masjid not found.</p>
@@ -90,6 +90,7 @@ export async function render(container, { slug }) {
       </div>`;
       return;
     }
+    if (!configRes.ok) throw new Error(`Config fetch failed (${configRes.status})`);
     masjidConfig = await configRes.json();
   } catch (e) {
     container.innerHTML = `<div class="error">Failed to load masjid data.</div>`;
