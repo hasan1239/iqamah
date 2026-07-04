@@ -1916,7 +1916,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
@@ -2233,7 +2233,7 @@
     "csv": "quba.csv",
     "approved": true,
     "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-    "jummah_times": "Jumuah Sermon: 1:10pm",
+    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
     "lat": 52.5127,
     "lon": -1.9206,
     "provider": {
