@@ -233,7 +233,7 @@ function sanitiseMasjidName(name) {
 async function deduplicateSlug(slug, address, env) {
   const existingSlugs = new Set();
   try {
-    const indexUrl = `https://api.github.com/repos/hasan1239/ramadan-lockscreen/contents/data/mosques`;
+    const indexUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/data/mosques`;
     const resp = await fetch(indexUrl, {
       headers: {
         'Authorization': `token ${env.GITHUB_PAT}`,
@@ -354,7 +354,7 @@ function generateCsvString(rows) {
 
 // --- GitHub API helpers ---
 
-const GITHUB_REPO = 'hasan1239/ramadan-lockscreen';
+const GITHUB_REPO = 'hasan1239/iqamah';
 
 async function githubGetFile(path, env) {
   const resp = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`, {
