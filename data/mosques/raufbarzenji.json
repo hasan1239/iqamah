@@ -4,24 +4,24 @@
   "csv": "raufbarzenji.csv",
   "address": "Parsonage Street, Manchester, M15 5WD",
   "phone": "07918551688",
-  "month": "June 2026",
+  "month": "July 2026",
   "islamic_month": "",
-  "jummah_times": "First Khutba in Kurdish & English at 01:00, Second Khutba in Arabic at 02:00",
+  "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
   "approved": true,
   "is_stale": false,
-  "notes": "Isha prayer will be joined with Maghrib. On Fridays (5, 12, 19, 26 Jun), Dhuhr Jamat is 01:00 and 02:00. On Saturdays and Sundays, Dhuhr Jamat is closed. Mosque contact: info@mkcc-uk.org, www.mkcc-uk.org. Operated by Mawlawi Kurdish Cultural Centre.",
-  "source_image": "sources/raufbarzenji.jpg",
+  "notes": "Isha prayer will be joined with Maghrib. Maghrib Jama'at is at 6:00 for all days. On Fridays, Dhuhr Jama'at has two times: 1:00 and 2:00.",
+  "source_image": "sources/raufbarzenji.png",
   "lat": 53.4608698,
   "lon": -2.2513595,
-  "pending_update": false,
+  "pending_update": true,
   "provider": {
     "type": "image",
     "ref": {
-      "source_image": "sources/raufbarzenji.jpg"
+      "source_image": "sources/raufbarzenji.png"
     },
-    "source_url": "/data/sources/raufbarzenji.jpg"
+    "source_url": "/data/sources/raufbarzenji.png"
   }
 }
