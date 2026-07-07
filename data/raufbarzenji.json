@@ -5,11 +5,11 @@
   "year": 2026,
   "month": "July 2026",
   "islamic_month": "",
-  "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
+  "jummah_times": "First Khutba in Kurdish & English at 01:00, Second Khutba in Arabic at 02:00",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
-  "notes": "Isha prayer will be joined with Maghrib. Maghrib Jama'at is at 6:00 for all days. On Fridays, Dhuhr Jama'at has two times: 1:00 and 2:00.",
+  "notes": "On Fridays (3, 10, 17, 24, 31 Jul), Dhuhr Jamat shows two times: 1:00 and 2:00. Isha prayer will be joined with Maghrib (as noted in vertical text on the right side of the timetable).",
   "rows": [
     {
       "date": "1 Jul",
@@ -19,15 +19,15 @@
       "sunrise": "04:45",
       "zohr": "01:18",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:44",
+      "maghrib_iftari": "09:44",
       "fajr_jamaat": "3:45",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:44",
       "esha_jamaat": "10:59",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "2 Jul",
@@ -37,15 +37,15 @@
       "sunrise": "04:46",
       "zohr": "01:18",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:43",
+      "maghrib_iftari": "09:43",
       "fajr_jamaat": "3:45",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:43",
       "esha_jamaat": "10:58",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "3 Jul",
@@ -55,15 +55,15 @@
       "sunrise": "04:46",
       "zohr": "01:18",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:43",
+      "maghrib_iftari": "09:43",
       "fajr_jamaat": "4:00",
-      "zohar_jamaat": "1:00",
+      "zohar_jamaat": "1:00 / 2:00",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:43",
       "esha_jamaat": "10:58",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "4 Jul",
@@ -73,15 +73,15 @@
       "sunrise": "04:47",
       "zohr": "01:18",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:42",
+      "maghrib_iftari": "09:42",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:42",
       "esha_jamaat": "10:57",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "5 Jul",
@@ -91,15 +91,15 @@
       "sunrise": "04:48",
       "zohr": "01:19",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:42",
+      "maghrib_iftari": "09:42",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:42",
       "esha_jamaat": "10:57",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "6 Jul",
@@ -109,15 +109,15 @@
       "sunrise": "04:49",
       "zohr": "01:19",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:41",
+      "maghrib_iftari": "09:41",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:41",
       "esha_jamaat": "10:56",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "7 Jul",
@@ -127,15 +127,15 @@
       "sunrise": "04:50",
       "zohr": "01:19",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:41",
+      "maghrib_iftari": "09:41",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:41",
       "esha_jamaat": "10:56",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "8 Jul",
@@ -145,15 +145,15 @@
       "sunrise": "04:51",
       "zohr": "01:19",
       "asr": "05:39",
-      "maghrib_iftari": "6:00",
-      "esha": "09:40",
+      "maghrib_iftari": "09:40",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:40",
       "esha_jamaat": "10:55",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "9 Jul",
@@ -163,15 +163,15 @@
       "sunrise": "04:52",
       "zohr": "01:19",
       "asr": "05:38",
-      "maghrib_iftari": "6:00",
-      "esha": "09:39",
+      "maghrib_iftari": "09:39",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:39",
       "esha_jamaat": "10:54",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "10 Jul",
@@ -181,15 +181,15 @@
       "sunrise": "04:53",
       "zohr": "01:19",
       "asr": "05:38",
-      "maghrib_iftari": "6:00",
-      "esha": "09:38",
+      "maghrib_iftari": "09:38",
       "fajr_jamaat": "4:00",
-      "zohar_jamaat": "1:00",
+      "zohar_jamaat": "1:00 / 2:00",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:38",
       "esha_jamaat": "10:53",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "11 Jul",
@@ -199,15 +199,15 @@
       "sunrise": "04:54",
       "zohr": "01:20",
       "asr": "05:38",
-      "maghrib_iftari": "6:00",
-      "esha": "09:37",
+      "maghrib_iftari": "09:37",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:37",
       "esha_jamaat": "10:52",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "12 Jul",
@@ -217,15 +217,15 @@
       "sunrise": "04:56",
       "zohr": "01:20",
       "asr": "05:38",
-      "maghrib_iftari": "6:00",
-      "esha": "09:36",
+      "maghrib_iftari": "09:36",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:36",
       "esha_jamaat": "10:51",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "13 Jul",
@@ -235,15 +235,15 @@
       "sunrise": "04:57",
       "zohr": "01:20",
       "asr": "05:37",
-      "maghrib_iftari": "6:00",
-      "esha": "09:35",
+      "maghrib_iftari": "09:35",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:35",
       "esha_jamaat": "10:50",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "14 Jul",
@@ -253,15 +253,15 @@
       "sunrise": "04:58",
       "zohr": "01:20",
       "asr": "05:37",
-      "maghrib_iftari": "6:00",
-      "esha": "09:34",
+      "maghrib_iftari": "09:34",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:34",
       "esha_jamaat": "10:49",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "15 Jul",
@@ -271,15 +271,15 @@
       "sunrise": "04:59",
       "zohr": "01:20",
       "asr": "05:37",
-      "maghrib_iftari": "6:00",
-      "esha": "09:33",
+      "maghrib_iftari": "09:33",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:33",
       "esha_jamaat": "10:48",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "16 Jul",
@@ -289,15 +289,15 @@
       "sunrise": "05:01",
       "zohr": "01:20",
       "asr": "05:37",
-      "maghrib_iftari": "6:00",
-      "esha": "09:32",
+      "maghrib_iftari": "09:32",
       "fajr_jamaat": "4:00",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:32",
       "esha_jamaat": "10:47",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "17 Jul",
@@ -307,15 +307,15 @@
       "sunrise": "05:02",
       "zohr": "01:20",
       "asr": "05:36",
-      "maghrib_iftari": "6:00",
-      "esha": "09:31",
+      "maghrib_iftari": "09:31",
       "fajr_jamaat": "4:15",
-      "zohar_jamaat": "1:00",
+      "zohar_jamaat": "1:00 / 2:00",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:31",
       "esha_jamaat": "10:46",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "18 Jul",
@@ -325,15 +325,15 @@
       "sunrise": "05:03",
       "zohr": "01:20",
       "asr": "05:36",
-      "maghrib_iftari": "6:00",
-      "esha": "09:30",
+      "maghrib_iftari": "09:30",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:30",
       "esha_jamaat": "10:45",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "19 Jul",
@@ -343,15 +343,15 @@
       "sunrise": "05:05",
       "zohr": "01:20",
       "asr": "05:35",
-      "maghrib_iftari": "6:00",
-      "esha": "09:28",
+      "maghrib_iftari": "09:28",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:28",
       "esha_jamaat": "10:43",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "20 Jul",
@@ -361,15 +361,15 @@
       "sunrise": "05:06",
       "zohr": "01:20",
       "asr": "05:35",
-      "maghrib_iftari": "6:00",
-      "esha": "09:27",
+      "maghrib_iftari": "09:27",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:27",
       "esha_jamaat": "10:42",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "21 Jul",
@@ -379,15 +379,15 @@
       "sunrise": "05:08",
       "zohr": "01:20",
       "asr": "05:34",
-      "maghrib_iftari": "6:00",
-      "esha": "09:26",
+      "maghrib_iftari": "09:26",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:26",
       "esha_jamaat": "10:41",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "22 Jul",
@@ -397,15 +397,15 @@
       "sunrise": "05:09",
       "zohr": "01:20",
       "asr": "05:34",
-      "maghrib_iftari": "6:00",
-      "esha": "09:24",
+      "maghrib_iftari": "09:24",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:24",
       "esha_jamaat": "10:39",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "23 Jul",
@@ -415,15 +415,15 @@
       "sunrise": "05:11",
       "zohr": "01:21",
       "asr": "05:33",
-      "maghrib_iftari": "6:00",
-      "esha": "09:23",
+      "maghrib_iftari": "09:23",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:23",
       "esha_jamaat": "10:38",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "24 Jul",
@@ -433,15 +433,15 @@
       "sunrise": "05:12",
       "zohr": "01:21",
       "asr": "05:33",
-      "maghrib_iftari": "6:00",
-      "esha": "09:21",
+      "maghrib_iftari": "09:21",
       "fajr_jamaat": "4:15",
-      "zohar_jamaat": "1:00",
+      "zohar_jamaat": "1:00 / 2:00",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:21",
       "esha_jamaat": "10:36",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "25 Jul",
@@ -451,15 +451,15 @@
       "sunrise": "05:14",
       "zohr": "01:21",
       "asr": "05:32",
-      "maghrib_iftari": "6:00",
-      "esha": "09:20",
+      "maghrib_iftari": "09:20",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:20",
       "esha_jamaat": "10:35",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "26 Jul",
@@ -469,15 +469,15 @@
       "sunrise": "05:15",
       "zohr": "01:21",
       "asr": "05:32",
-      "maghrib_iftari": "6:00",
-      "esha": "09:18",
+      "maghrib_iftari": "09:18",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:18",
       "esha_jamaat": "10:33",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "27 Jul",
@@ -487,15 +487,15 @@
       "sunrise": "05:17",
       "zohr": "01:21",
       "asr": "05:31",
-      "maghrib_iftari": "6:00",
-      "esha": "09:17",
+      "maghrib_iftari": "09:17",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:17",
       "esha_jamaat": "10:32",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "28 Jul",
@@ -505,15 +505,15 @@
       "sunrise": "05:18",
       "zohr": "01:21",
       "asr": "05:30",
-      "maghrib_iftari": "6:00",
-      "esha": "09:15",
+      "maghrib_iftari": "09:15",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:15",
       "esha_jamaat": "10:30",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "29 Jul",
@@ -523,15 +523,15 @@
       "sunrise": "05:20",
       "zohr": "01:21",
       "asr": "05:30",
-      "maghrib_iftari": "6:00",
-      "esha": "09:13",
+      "maghrib_iftari": "09:13",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:13",
       "esha_jamaat": "10:28",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "30 Jul",
@@ -541,15 +541,15 @@
       "sunrise": "05:22",
       "zohr": "01:20",
       "asr": "05:29",
-      "maghrib_iftari": "6:00",
-      "esha": "09:12",
+      "maghrib_iftari": "09:12",
       "fajr_jamaat": "4:15",
       "zohar_jamaat": "1:30",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:12",
       "esha_jamaat": "10:27",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     },
     {
       "date": "31 Jul",
@@ -559,15 +559,15 @@
       "sunrise": "05:23",
       "zohr": "1:20",
       "asr": "05:28",
-      "maghrib_iftari": "6:00",
-      "esha": "09:10",
+      "maghrib_iftari": "09:10",
       "fajr_jamaat": "4:30",
-      "zohar_jamaat": "1:00",
+      "zohar_jamaat": "1:00 / 2:00",
       "asr_jamaat": "6:00",
-      "maghrib_jamaat": "09:10",
       "esha_jamaat": "10:25",
       "sehri_ends": "",
-      "zawal": ""
+      "zawal": "",
+      "esha": "",
+      "maghrib_jamaat": ""
     }
   ]
 }

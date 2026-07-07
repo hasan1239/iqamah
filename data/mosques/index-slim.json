@@ -1919,7 +1919,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
@@ -2267,7 +2267,7 @@
     "csv": "raufbarzenji.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
+    "jummah_times": "First Khutba in Kurdish & English at 01:00, Second Khutba in Arabic at 02:00",
     "lat": 53.4608698,
     "lon": -2.2513595,
     "provider": {
