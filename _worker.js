@@ -12,33 +12,54 @@ function isAdminRequest(request, env) {
 }
 
 // --- Rate limiting (persistent via Cloudflare KV) ---
+// Two-phase: checkRateLimit() is a read-only gate at the top of a handler;
+// recordRateLimitUse() increments only after the request has passed validation
+// (Turnstile, form checks), so failed attempts don't silently burn quota.
 const RATE_LIMITS_CONFIG = {
-  extract: { max: 5, windowSecs: 30 * 24 * 60 * 60 }, // 5 per month
-  submit: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
-  update: { max: 5, windowSecs: 30 * 24 * 60 * 60 },  // 5 per month
+  extract: { max: 10, windowSecs: 30 * 24 * 60 * 60 }, // per rolling 30 days
+  submit: { max: 5, windowSecs: 30 * 24 * 60 * 60 },   // new masjids - keep tight
+  update: { max: 10, windowSecs: 30 * 24 * 60 * 60 },  // paired with extract
 };
 
-async function isRateLimited(ip, action, env, request) {
-  if (!env.RATE_LIMITS) return false;
-  if (isAdminRequest(request, env)) return false;
+// IPv6 devices rotate their full /128 address (privacy extensions), so bucket
+// by the /64 prefix - one bucket per connection, matching how a NAT'd IPv4
+// household already behaves. IPv4 (and 'unknown') pass through unchanged.
+function rateLimitBucket(ip) {
+  if (!ip || !ip.includes(':')) return ip;
+  const left = ip.split('::')[0].split(':').filter(Boolean);
+  while (left.length < 4) left.push('0');
+  return left.slice(0, 4).join(':') + '::/64';
+}
+
+// Returns null if allowed, or { resetsAt: Date } if the bucket is full.
+async function checkRateLimit(ip, action, env, request) {
+  if (!env.RATE_LIMITS) return null;
+  if (isAdminRequest(request, env)) return null;
   const config = RATE_LIMITS_CONFIG[action];
-  if (!config) return false;
-  const key = `${action}:${ip}`;
+  if (!config) return null;
+  const key = `${action}:${rateLimitBucket(ip)}`;
   const data = await env.RATE_LIMITS.get(key, 'json');
+  if (!data || data.count < config.max) return null;
+  return { resetsAt: new Date(data.start + config.windowSecs * 1000), max: config.max };
+}
+
+async function recordRateLimitUse(ip, action, env, request) {
+  if (!env.RATE_LIMITS) return;
+  if (isAdminRequest(request, env)) return;
+  const config = RATE_LIMITS_CONFIG[action];
+  if (!config) return;
+  const key = `${action}:${rateLimitBucket(ip)}`;
   const now = Date.now();
-
-  if (!data) {
-    await env.RATE_LIMITS.put(key, JSON.stringify({ count: 1, start: now }), { expirationTtl: config.windowSecs });
-    return false;
-  }
-
-  if (data.count >= config.max) return true;
-
+  const data = (await env.RATE_LIMITS.get(key, 'json')) || { count: 0, start: now };
   data.count++;
   const elapsed = Math.floor((now - data.start) / 1000);
   const remaining = Math.max(config.windowSecs - elapsed, 60);
   await env.RATE_LIMITS.put(key, JSON.stringify(data), { expirationTtl: remaining });
-  return false;
+}
+
+function rateLimitResponse(what, limited) {
+  const dateStr = limited.resetsAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+  return errorResponse(`You've reached the limit of ${limited.max} ${what} in 30 days on this connection. Please try again after ${dateStr}.`, 429);
 }
 
 // --- Turnstile verification ---
@@ -1071,10 +1092,11 @@ async function handleExtract(request, env) {
     return errorResponse('Server configuration error: missing API key', 500);
   }
 
-  // Rate limit
+  // Rate limit (read-only check; quota is consumed after validation passes)
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'extract', env, request)) {
-    return errorResponse('You\'ve reached the limit of 5 extractions per month. Please try again next month.', 429);
+  const extractLimited = await checkRateLimit(ip, 'extract', env, request);
+  if (extractLimited) {
+    return rateLimitResponse('extractions', extractLimited);
   }
 
   let formData;
@@ -1130,6 +1152,9 @@ async function handleExtract(request, env) {
     console.error('Failed to load extraction prompt:', e);
     return errorResponse('Server configuration error: missing extraction prompt', 500);
   }
+
+  // Validation passed - this attempt now counts against the quota
+  await recordRateLimitUse(ip, 'extract', env, request);
 
   // Call Claude API
   try {
@@ -1346,10 +1371,11 @@ async function handleSubmit(request, env) {
     return errorResponse('Server configuration error: missing GitHub token', 500);
   }
 
-  // Rate limit
+  // Rate limit (read-only check; quota is consumed after validation passes)
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'submit', env, request)) {
-    return errorResponse('You\'ve reached the limit of 5 submissions per month. Please try again next month.', 429);
+  const submitLimited = await checkRateLimit(ip, 'submit', env, request);
+  if (submitLimited) {
+    return rateLimitResponse('submissions', submitLimited);
   }
 
   let body;
@@ -1420,6 +1446,9 @@ async function handleSubmit(request, env) {
       }, 409);
     }
   }
+
+  // Validation passed - this attempt now counts against the quota
+  await recordRateLimitUse(ip, 'submit', env, request);
 
   // Generate slug
   let slug = data.suggested_slug || slugify(mosqueName);
@@ -1608,10 +1637,11 @@ async function handleUpdate(request, env) {
     return errorResponse('Server configuration error: missing GitHub token', 500);
   }
 
-  // Rate limit
+  // Rate limit (read-only check; quota is consumed after validation passes)
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
-  if (await isRateLimited(ip, 'update', env, request)) {
-    return errorResponse('You\'ve reached the limit of 5 timetable updates per month. Please try again next month.', 429);
+  const updateLimited = await checkRateLimit(ip, 'update', env, request);
+  if (updateLimited) {
+    return rateLimitResponse('timetable updates', updateLimited);
   }
 
   let body;
@@ -1669,6 +1699,9 @@ async function handleUpdate(request, env) {
   if (dateError) {
     return errorResponse(dateError);
   }
+
+  // Validation passed - this attempt now counts against the quota
+  await recordRateLimitUse(ip, 'update', env, request);
 
   // Apply validation fixes on new rows
   const notes = data.notes || existingConfig.notes || '';
