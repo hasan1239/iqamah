@@ -125,15 +125,9 @@ def stop_wrangler(proc):
             proc.kill()
 
 
-# The test context blocks service workers (so Playwright route interception
-# sees every request), which makes the SW registration in js/utils/pwa.js
-# reject with this error. Expected in tests only - not an app bug.
-SW_BLOCKED_ERROR = "reading 'waiting'"
-
-
 def setup_page(context, captured, errors):
     page = context.new_page()
-    page.on("pageerror", lambda e: errors.append(f"pageerror: {e}") if SW_BLOCKED_ERROR not in str(e) else None)
+    page.on("pageerror", lambda e: errors.append(f"pageerror: {e}"))
     page.on("console", lambda m: errors.append(f"console.error: {m.text}") if m.type == "error" else None)
 
     def turnstile_handler(route):
