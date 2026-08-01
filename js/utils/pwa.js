@@ -6,6 +6,10 @@ export function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
 
   navigator.serviceWorker.register('/sw.js').then(registration => {
+    // Registration can be unavailable even when the API exists
+    // (private browsing modes, embedded webviews, test browsers)
+    if (!registration) return;
+
     // Check for updates every 30 minutes
     setInterval(() => registration.update(), 30 * 60 * 1000);
 
@@ -25,6 +29,8 @@ export function registerServiceWorker() {
         }
       });
     });
+  }).catch(e => {
+    console.warn('Service worker registration failed:', e);
   });
 
   // When a new SW takes control, reload for fresh content
