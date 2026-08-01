@@ -1220,8 +1220,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-07-30",
-      "row_count": 73,
+      "checked_at": "2026-08-01",
+      "row_count": 75,
       "warnings": [],
       "issues": []
     },
@@ -2322,8 +2322,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-07-30",
-      "row_count": 73,
+      "checked_at": "2026-08-01",
+      "row_count": 75,
       "warnings": [],
       "issues": []
     },
@@ -3252,8 +3252,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-07-30",
-      "row_count": 73,
+      "checked_at": "2026-08-01",
+      "row_count": 75,
       "warnings": [],
       "issues": []
     },
@@ -6635,8 +6635,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-07-30",
-      "row_count": 73,
+      "checked_at": "2026-08-01",
+      "row_count": 75,
       "warnings": [],
       "issues": []
     },
@@ -7570,7 +7570,7 @@
     "source_image": "sources/raufbarzenji.png",
     "lat": 53.4608698,
     "lon": -2.2513595,
-    "pending_update": true,
+    "pending_update": false,
     "provider": {
       "type": "image",
       "ref": {
@@ -8634,8 +8634,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-07-30",
-      "row_count": 73,
+      "checked_at": "2026-08-01",
+      "row_count": 75,
       "warnings": [],
       "issues": []
     },
