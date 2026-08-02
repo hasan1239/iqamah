@@ -2,26 +2,26 @@
   "display_name": "Masjid Sheikh Rauf Barzenji",
   "slug": "raufbarzenji",
   "csv": "raufbarzenji.csv",
-  "address": "Parsonage Street, Manchester, M15 5WD",
+  "address": "Mawlawi Kurdish Cultural Centre, Parsonage Street, Manchester, M15 5WD",
   "phone": "07918551688",
-  "month": "July 2026",
+  "month": "August 2026",
   "islamic_month": "",
-  "jummah_times": "First Khutba in Kurdish & English at 01:00, Second Khutba in Arabic at 02:00",
+  "jummah_times": "First Khutbah in Kurdish & English at 01:00, Second Khutbah in Arabic at 02:00",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
   "approved": true,
   "is_stale": false,
-  "notes": "On Fridays (3, 10, 17, 24, 31 Jul), Dhuhr Jamat shows two times: 1:00 and 2:00. Isha prayer will be joined with Maghrib (as noted in vertical text on the right side of the timetable).",
-  "source_image": "sources/raufbarzenji.png",
+  "notes": "Isha prayer will be joined with Maghrib (rows 1-13, vertical note on right side of table). On Fridays (7, 14, 21, 28), Dhuhr Jamat is 1:00 and 2:00. Maghrib Jama'at not listed separately — no dedicated Maghrib Jama'at column present.",
+  "source_image": "sources/raufbarzenji.jpg",
   "lat": 53.4608698,
   "lon": -2.2513595,
-  "pending_update": false,
+  "pending_update": true,
   "provider": {
     "type": "image",
     "ref": {
-      "source_image": "sources/raufbarzenji.png"
+      "source_image": "sources/raufbarzenji.jpg"
     },
-    "source_url": "/data/sources/raufbarzenji.png"
+    "source_url": "/data/sources/raufbarzenji.jpg"
   }
 }
