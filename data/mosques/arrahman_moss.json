@@ -1,0 +1,26 @@
+{
+  "display_name": "Arrahman Manchester Islamic Cultural Association",
+  "slug": "arrahman_moss",
+  "csv": "arrahman_moss.csv",
+  "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
+  "phone": "0161 470 2010",
+  "month": "August 2026",
+  "islamic_month": "Safar - Rabi' al-Awwal 1448",
+  "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Jumuah begins 1:15PM, Jama'ah 1:30PM. Mosque also known as Moss Side Islamic & Community Centre. Email: info@masjid-arrahman.com. Website: masjid-arrahman.com. Charity No. 1134915. Mortuary Expansion Project fundraising appeal noted.",
+  "source_image": "sources/arrahman_moss.png",
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/arrahman_moss.png"
+    },
+    "source_url": "/data/sources/arrahman_moss.png"
+  },
+  "lat": 53.4544139,
+  "lon": -2.2485425
+}
