@@ -376,6 +376,20 @@
     }
   },
   {
+    "slug": "arrahman_moss",
+    "display_name": "Arrahman Manchester Islamic Cultural Association",
+    "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
+    "csv": "arrahman_moss.csv",
+    "approved": false,
+    "eid_salah": "",
+    "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
+    "lat": 53.4544139,
+    "lon": -2.2485425,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
     "slug": "arrahman",
     "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
     "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
@@ -1933,7 +1947,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
