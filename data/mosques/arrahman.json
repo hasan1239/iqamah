@@ -1,0 +1,26 @@
+{
+  "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
+  "slug": "arrahman",
+  "csv": "arrahman.csv",
+  "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
+  "phone": "0161 470 2010",
+  "month": "September 2026",
+  "islamic_month": "19 Rabi' al-Awwal - 19 Rabi' al-Thaani 1448",
+  "jummah_times": "Begins 1:15PM, Jama'ah 1:30PM",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Isha time will be 10:00 until 12th September, then will be 9:15. Charity No. 1134915. Email: info@masjid-arrahman.com. Website: masjid-arrahman.com. The MAGHRIB column under JAMA'AT TIMES contains the Maghrib jama'at time (which equals the Maghrib beginning time as no separate Maghrib start column exists in the beginning times section). Ishraq column ignored as it is not a standard prayer time field.",
+  "source_image": "sources/arrahman.jpg",
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/arrahman.jpg"
+    },
+    "source_url": "/data/sources/arrahman.jpg"
+  },
+  "lat": 53.4544139,
+  "lon": -2.2485425
+}
