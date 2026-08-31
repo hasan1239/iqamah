@@ -17,23 +17,6 @@
     }
   },
   {
-    "slug": "ad_duha_institute",
-    "display_name": "Ad-Duha Institute",
-    "address": "1164 Stratford Road, Hall Green North, Birmingham, B28 8AF",
-    "city": "",
-    "logo": "",
-    "csv": "ad_duha_institute.csv",
-    "jummah_times": "13:00",
-    "latitude": 54.0,
-    "longitude": -2.0,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mymasjid"
-    }
-  },
-  {
     "slug": "adam_mosque_dawah_academy",
     "display_name": "Adam Mosque & Dawah Academy",
     "address": "15 Brunswick Road, Sparkbrook & Balsall Heath East, Birmingham, B12 8NP",
@@ -51,6 +34,23 @@
     }
   },
   {
+    "slug": "ad_duha_institute",
+    "display_name": "Ad-Duha Institute",
+    "address": "1164 Stratford Road, Hall Green North, Birmingham, B28 8AF",
+    "city": "",
+    "logo": "",
+    "csv": "ad_duha_institute.csv",
+    "jummah_times": "13:00",
+    "latitude": 54,
+    "longitude": -2,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mymasjid"
+    }
+  },
+  {
     "slug": "afghan_islamic_cultural_centre",
     "display_name": "Afghan Islamic Cultural Centre",
     "address": "Church Road, Harlesden, Greater London, NW10 9NP",
@@ -65,20 +65,6 @@
     },
     "provider": {
       "type": "mawaqit"
-    }
-  },
-  {
-    "slug": "aisha",
-    "display_name": "Masjid Aisha",
-    "address": "The Grange, Birmingham. B20 1BH",
-    "csv": "aisha.csv",
-    "approved": true,
-    "eid_salah": "9:00am (one jama'at only)",
-    "jummah_times": "1:30pm",
-    "lat": 52.5233,
-    "lon": -1.9279,
-    "provider": {
-      "type": "image"
     }
   },
   {
@@ -108,6 +94,23 @@
     "jummah_times": "13:30, 14:15",
     "latitude": 51.526,
     "longitude": -0.1,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "alberr",
+    "display_name": "Alberr",
+    "address": "Shadsworth Road, Blackburn South East, Blackburn with Darwen, BB1 2HU",
+    "city": "Blackburn",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1f826680-2465-465b-9020-da38be1595ac/mosque/1f114b4c-e688-6e1a-a6a9-0a58a9feac02.jpeg",
+    "csv": "alberr.csv",
+    "jummah_times": "13:30",
+    "latitude": 53.7359052,
+    "longitude": -2.4546096,
     "quality": {
       "status": "warnings"
     },
@@ -337,51 +340,6 @@
     }
   },
   {
-    "slug": "alberr",
-    "display_name": "Alberr",
-    "address": "Shadsworth Road, Blackburn South East, Blackburn with Darwen, BB1 2HU",
-    "city": "Blackburn",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1f826680-2465-465b-9020-da38be1595ac/mosque/1f114b4c-e688-6e1a-a6a9-0a58a9feac02.jpeg",
-    "csv": "alberr.csv",
-    "jummah_times": "13:30",
-    "latitude": 53.7359052,
-    "longitude": -2.4546096,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
-    "slug": "aman",
-    "display_name": "Masjid-E-Aman",
-    "address": "232 Witton Road, Aston, Birmingham, B6 6LB",
-    "csv": "aman.csv",
-    "approved": true,
-    "eid_salah": "Eid salah 9:30am. Bayaan 30 mins before",
-    "jummah_times": "Jumu'ah Jamat @ 2:00pm",
-    "lat": 52.5086688,
-    "lon": -1.8909605
-  },
-  {
-    "slug": "aman_foundation_uk",
-    "display_name": "Aman Foundation Uk",
-    "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
-    "city": "London",
-    "logo": "",
-    "csv": "aman_foundation_uk.csv",
-    "jummah_times": "13:15",
-    "latitude": 51.494869815242,
-    "longitude": -0.20621285099564,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
     "slug": "amanah_masjid",
     "display_name": "Amanah Masjid",
     "address": "29-33 Henley Street, Birmingham, B11 1JB",
@@ -401,28 +359,20 @@
     }
   },
   {
-    "slug": "annoor",
-    "display_name": "Masjid An Noor",
-    "address": "146 Berners Street, Leicester, LE2 0FU",
-    "csv": "annoor.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "Bayān: 12:15pm, Azān: 12:50pm",
-    "lat": 52.6342653,
-    "lon": -1.1101507
-  },
-  {
-    "slug": "arrahman",
-    "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
-    "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
-    "csv": "arrahman.csv",
-    "approved": false,
-    "eid_salah": "",
-    "jummah_times": "Begins 1:15PM, Jama'ah 1:30PM",
-    "lat": 53.4544139,
-    "lon": -2.2485425,
+    "slug": "aman_foundation_uk",
+    "display_name": "Aman Foundation Uk",
+    "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
+    "city": "London",
+    "logo": "",
+    "csv": "aman_foundation_uk.csv",
+    "jummah_times": "13:15",
+    "latitude": 51.494869815242,
+    "longitude": -0.20621285099564,
+    "quality": {
+      "status": "warnings"
+    },
     "provider": {
-      "type": "image"
+      "type": "mawaqit"
     }
   },
   {
@@ -433,6 +383,20 @@
     "approved": false,
     "eid_salah": "",
     "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
+    "lat": 53.4544139,
+    "lon": -2.2485425,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
+    "slug": "arrahman",
+    "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
+    "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
+    "csv": "arrahman.csv",
+    "approved": false,
+    "eid_salah": "",
+    "jummah_times": "Begins 1:15PM, Jama'ah 1:30PM",
     "lat": 53.4544139,
     "lon": -2.2485425,
     "provider": {
@@ -515,8 +479,8 @@
     "logo": "",
     "csv": "bilal.csv",
     "jummah_times": "13:00",
-    "latitude": 54.0,
-    "longitude": -2.0,
+    "latitude": 54,
+    "longitude": -2,
     "quality": {
       "status": "warnings"
     },
@@ -540,6 +504,17 @@
     "provider": {
       "type": "masjidbox"
     }
+  },
+  {
+    "slug": "central",
+    "display_name": "Birmingham Central Mosque",
+    "address": "180 Belgrave Middleway, Birmingham, B12 0XS",
+    "csv": "central.csv",
+    "approved": true,
+    "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
+    "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
+    "lat": 52.4646458,
+    "lon": -1.8905789
   },
   {
     "slug": "bishopbriggs_islamic_community_centre",
@@ -661,17 +636,6 @@
     }
   },
   {
-    "slug": "central",
-    "display_name": "Birmingham Central Mosque",
-    "address": "180 Belgrave Middleway, Birmingham, B12 0XS",
-    "csv": "central.csv",
-    "approved": true,
-    "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
-    "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
-    "lat": 52.4646458,
-    "lon": -1.8905789
-  },
-  {
     "slug": "chelsea_muslim_community_hub",
     "display_name": "Chelsea Muslim Community Hub",
     "address": "Blantyre Street, Chelsea Riverside, Kensington and Chelsea, SW10 0DS",
@@ -723,23 +687,6 @@
     }
   },
   {
-    "slug": "dar_us_salam",
-    "display_name": "Dar Us-Salam",
-    "address": "26 Wells Street, Riverside, Cardiff, CF11 6DX",
-    "city": "",
-    "logo": "",
-    "csv": "dar_us_salam.csv",
-    "jummah_times": "13:30",
-    "latitude": 51.478871700102,
-    "longitude": -3.1961933474659,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
     "slug": "darul_quran_london_masjid",
     "display_name": "Darul Quran London Masjid",
     "address": "Purchese Street, Somers Town, Camden, NW1 1HW",
@@ -783,6 +730,23 @@
     "jummah_times": "13:30, 14:20",
     "latitude": 51.5778716,
     "longitude": 0.0640834,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "dar_us_salam",
+    "display_name": "Dar Us-Salam",
+    "address": "26 Wells Street, Riverside, Cardiff, CF11 6DX",
+    "city": "",
+    "logo": "",
+    "csv": "dar_us_salam.csv",
+    "jummah_times": "13:30",
+    "latitude": 51.478871700102,
+    "longitude": -3.1961933474659,
     "quality": {
       "status": "warnings"
     },
@@ -946,23 +910,6 @@
     }
   },
   {
-    "slug": "faizan_e_madina_burnley",
-    "display_name": "Faizan E Madina Burnley",
-    "address": "Briercliffe Road, Bank Hall, Burnley, BB10 1XA",
-    "city": "Burnley",
-    "logo": "",
-    "csv": "faizan_e_madina_burnley.csv",
-    "jummah_times": "13:30, 14:30, 15:40",
-    "latitude": 53.802840812126,
-    "longitude": -2.2322139531316,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
     "slug": "faizan_e_madina_hx1",
     "display_name": "Faizan E Madina",
     "address": "Gibbet Street, Park, Calderdale, HX1 4JX",
@@ -980,15 +927,15 @@
     }
   },
   {
-    "slug": "faizan_e_madina_stechford",
-    "display_name": "Faizan E Madina Stechford",
-    "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
-    "city": "",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
-    "csv": "faizan_e_madina_stechford.csv",
-    "jummah_times": "13:30, 14:30, 16:00",
-    "latitude": 52.4783958,
-    "longitude": -1.814082,
+    "slug": "faizan_e_madina_burnley",
+    "display_name": "Faizan E Madina Burnley",
+    "address": "Briercliffe Road, Bank Hall, Burnley, BB10 1XA",
+    "city": "Burnley",
+    "logo": "",
+    "csv": "faizan_e_madina_burnley.csv",
+    "jummah_times": "13:30, 14:30, 15:40",
+    "latitude": 53.802840812126,
+    "longitude": -2.2322139531316,
     "quality": {
       "status": "warnings"
     },
@@ -1014,6 +961,23 @@
     }
   },
   {
+    "slug": "faizan_e_madina_stechford",
+    "display_name": "Faizan E Madina Stechford",
+    "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
+    "city": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
+    "csv": "faizan_e_madina_stechford.csv",
+    "jummah_times": "13:30, 14:30, 16:00",
+    "latitude": 52.4783958,
+    "longitude": -1.814082,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
     "slug": "faizan_e_makkah",
     "display_name": "Faizan-e-Makkah",
     "address": "Lilycroft Walk, Toller, Bradford, BD9 5AB",
@@ -1029,30 +993,6 @@
     "provider": {
       "type": "mawaqit"
     }
-  },
-  {
-    "slug": "faizul",
-    "display_name": "Masjid Faizul Islam",
-    "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
-    "csv": "faizul.csv",
-    "approved": true,
-    "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-    "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
-    "lat": 52.5106,
-    "lon": -1.8912,
-    "provider": {
-      "type": "image"
-    }
-  },
-  {
-    "slug": "falaah",
-    "display_name": "Masjid Al Falaah",
-    "address": "32 Trinity Road, Handsworth, Birmingham, B6 6AL",
-    "csv": "falaah.csv",
-    "eid_salah": "7:30am & 9:00am",
-    "jummah_times": "12:30pm & 1:40pm",
-    "lat": 52.5084,
-    "lon": -1.8997
   },
   {
     "slug": "finsbury_park_mosque",
@@ -1089,17 +1029,6 @@
     }
   },
   {
-    "slug": "gbmf",
-    "display_name": "Great Barr Muslim Foundation",
-    "address": "394 Walsall Road, Great Barr, Birmingham, B42 2LX",
-    "csv": "gbmf.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "1st Jumma Salah: Speech 1pm, Khutbah 1:30pm; 2nd Jumma Salah: Speech 2pm, Khutbah 2:30pm",
-    "lat": 52.5310268,
-    "lon": -1.9131514
-  },
-  {
     "slug": "globe_town_mosque",
     "display_name": "Globe Town Mosque",
     "address": "Roman Road, Bethnal Green, Tower Hamlets, E2 0RN",
@@ -1132,6 +1061,17 @@
     "provider": {
       "type": "mawaqit"
     }
+  },
+  {
+    "slug": "gbmf",
+    "display_name": "Great Barr Muslim Foundation",
+    "address": "394 Walsall Road, Great Barr, Birmingham, B42 2LX",
+    "csv": "gbmf.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "1st Jumma Salah: Speech 1pm, Khutbah 1:30pm; 2nd Jumma Salah: Speech 2pm, Khutbah 2:30pm",
+    "lat": 52.5310268,
+    "lon": -1.9131514
   },
   {
     "slug": "green_lane",
@@ -1184,17 +1124,6 @@
     "provider": {
       "type": "masjidbox"
     }
-  },
-  {
-    "slug": "hamza",
-    "display_name": "Masjid Hamza",
-    "address": "90 Church Road, Moseley, Birmingham, B13 9AE",
-    "csv": "hamza.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "Winter Time: Bayaan starts 12:20pm, Jamat 1:10pm; Summer Time: Bayaan starts 12:50pm, Jamaah 1:40pm",
-    "lat": 52.4493645,
-    "lon": -1.8828855
   },
   {
     "slug": "hillside_islamic_cultural_centre",
@@ -1344,23 +1273,6 @@
     "lon": -1.902
   },
   {
-    "slug": "jami_mosque_birmingham",
-    "display_name": "Jami Mosque and Islamic Centre Birmingham",
-    "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
-    "city": "",
-    "logo": "",
-    "csv": "jami_mosque_birmingham.csv",
-    "jummah_times": "",
-    "latitude": null,
-    "longitude": null,
-    "quality": {
-      "status": "ok"
-    },
-    "provider": {
-      "type": "masjidbox"
-    }
-  },
-  {
     "slug": "jamia_masjid_bilal",
     "display_name": "Jamia Masjid Bilal",
     "address": "Sweetman Street, Park, Wolverhampton, WV6 0RU",
@@ -1460,6 +1372,34 @@
     },
     "provider": {
       "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "smethwick",
+    "display_name": "Jami Masjid",
+    "address": "10-13 Lewisham Road, Smethwick, West Midlands, B66 2BP",
+    "csv": "smethwick.csv",
+    "approved": true,
+    "eid_salah": "1st Jamat 8:00am, 2nd Jamat 10:00am",
+    "jummah_times": "Jumu'ah Jamat 1:05",
+    "lat": 52.5007274,
+    "lon": -1.9661248
+  },
+  {
+    "slug": "jami_mosque_birmingham",
+    "display_name": "Jami Mosque and Islamic Centre Birmingham",
+    "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
+    "city": "",
+    "logo": "",
+    "csv": "jami_mosque_birmingham.csv",
+    "jummah_times": "",
+    "latitude": null,
+    "longitude": null,
+    "quality": {
+      "status": "ok"
+    },
+    "provider": {
+      "type": "masjidbox"
     }
   },
   {
@@ -1720,16 +1660,6 @@
     }
   },
   {
-    "slug": "makki",
-    "display_name": "Makki Masjid & Education Centre",
-    "address": "110 Eskrick Street, Bolton, BL1 3EN",
-    "city": "Bolton",
-    "csv": "makki.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": ""
-  },
-  {
     "slug": "makki_masjid",
     "display_name": "Makki Masjid",
     "address": "Hermon Avenue, King Cross, Calderdale, HX1 3XN",
@@ -1747,21 +1677,14 @@
     }
   },
   {
-    "slug": "markaz_mu_aadh_bin_jabal",
-    "display_name": "Markaz Mu'aadh Bin Jabal",
-    "address": "Spackmans Way, Chalvey, Slough, SL1 2SA",
-    "city": "Slough",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/65806698-b191-491e-acf6-44c875b6314a/mosque/1eea8edb-8125-6c52-9b2b-066ed47a7584.png",
-    "csv": "markaz_mu_aadh_bin_jabal.csv",
-    "jummah_times": "12:30",
-    "latitude": 51.5043821,
-    "longitude": -0.6090463,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
+    "slug": "makki",
+    "display_name": "Makki Masjid & Education Centre",
+    "address": "110 Eskrick Street, Bolton, BL1 3EN",
+    "city": "Bolton",
+    "csv": "makki.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": ""
   },
   {
     "slug": "markazi_jamia_masjid_ghausia",
@@ -1773,6 +1696,23 @@
     "jummah_times": "12:30, 13:30",
     "latitude": 53.6372984,
     "longitude": -1.7918438,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "markaz_mu_aadh_bin_jabal",
+    "display_name": "Markaz Mu'aadh Bin Jabal",
+    "address": "Spackmans Way, Chalvey, Slough, SL1 2SA",
+    "city": "Slough",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/65806698-b191-491e-acf6-44c875b6314a/mosque/1eea8edb-8125-6c52-9b2b-066ed47a7584.png",
+    "csv": "markaz_mu_aadh_bin_jabal.csv",
+    "jummah_times": "12:30",
+    "latitude": 51.5043821,
+    "longitude": -0.6090463,
     "quality": {
       "status": "warnings"
     },
@@ -1883,6 +1823,20 @@
     }
   },
   {
+    "slug": "aisha",
+    "display_name": "Masjid Aisha",
+    "address": "The Grange, Birmingham. B20 1BH",
+    "csv": "aisha.csv",
+    "approved": true,
+    "eid_salah": "9:00am (one jama'at only)",
+    "jummah_times": "1:30pm",
+    "lat": 52.5233,
+    "lon": -1.9279,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
     "slug": "masjid_aisha",
     "display_name": "Masjid Aisha",
     "address": "22-28 Cork Street, Spinney Hills, Leicester, LE5 5AN",
@@ -1892,6 +1846,59 @@
     "jummah_times": "13:00",
     "latitude": 52.6309431,
     "longitude": -1.1097167,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "falaah",
+    "display_name": "Masjid Al Falaah",
+    "address": "32 Trinity Road, Handsworth, Birmingham, B6 6AL",
+    "csv": "falaah.csv",
+    "eid_salah": "7:30am & 9:00am",
+    "jummah_times": "12:30pm & 1:40pm",
+    "lat": 52.5084,
+    "lon": -1.8997
+  },
+  {
+    "slug": "masjid_alfalah",
+    "display_name": "Masjid Alfalah",
+    "address": "Kensington Gardens, Gants Hill, Greater London, IG1 3EN",
+    "city": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/df9ca896-4473-4fa3-af6d-15244e5cc50e/mosque/1eea8dcd-ff72-64fc-a748-066ed47a7584.png",
+    "csv": "masjid_alfalah.csv",
+    "jummah_times": "13:30, 14:10",
+    "latitude": 51.5638231,
+    "longitude": 0.0573474,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "northilford",
+    "display_name": "Masjid Al Falah",
+    "address": "97 Kensington Gardens, Ilford, Essex, IG1 3EN",
+    "csv": "northilford.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "1:30pm"
+  },
+  {
+    "slug": "masjid_ali",
+    "display_name": "Masjid Ali",
+    "address": "557 Beechdale Road, Leen Valley, Nottingham, NG8 3LH",
+    "city": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7d5f0c87-135a-409c-9bcd-8398cf663bfc/mosque/1f066c43-5735-6e72-9f6c-0a3327cef9b5.jpg",
+    "csv": "masjid_ali.csv",
+    "jummah_times": "14:00",
+    "latitude": 52.961282562526,
+    "longitude": -1.1916253501761,
     "quality": {
       "status": "warnings"
     },
@@ -1934,38 +1941,15 @@
     }
   },
   {
-    "slug": "masjid_alfalah",
-    "display_name": "Masjid Alfalah",
-    "address": "Kensington Gardens, Gants Hill, Greater London, IG1 3EN",
-    "city": "",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/df9ca896-4473-4fa3-af6d-15244e5cc50e/mosque/1eea8dcd-ff72-64fc-a748-066ed47a7584.png",
-    "csv": "masjid_alfalah.csv",
-    "jummah_times": "13:30, 14:10",
-    "latitude": 51.5638231,
-    "longitude": 0.0573474,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
-    "slug": "masjid_ali",
-    "display_name": "Masjid Ali",
-    "address": "557 Beechdale Road, Leen Valley, Nottingham, NG8 3LH",
-    "city": "",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7d5f0c87-135a-409c-9bcd-8398cf663bfc/mosque/1f066c43-5735-6e72-9f6c-0a3327cef9b5.jpg",
-    "csv": "masjid_ali.csv",
-    "jummah_times": "14:00",
-    "latitude": 52.961282562526,
-    "longitude": -1.1916253501761,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
+    "slug": "annoor",
+    "display_name": "Masjid An Noor",
+    "address": "146 Berners Street, Leicester, LE2 0FU",
+    "csv": "annoor.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "lat": 52.6342653,
+    "lon": -1.1101507
   },
   {
     "slug": "masjid_ansar",
@@ -2053,6 +2037,17 @@
     }
   },
   {
+    "slug": "aman",
+    "display_name": "Masjid-E-Aman",
+    "address": "232 Witton Road, Aston, Birmingham, B6 6LB",
+    "csv": "aman.csv",
+    "approved": true,
+    "eid_salah": "Eid salah 9:30am. Bayaan 30 mins before",
+    "jummah_times": "Jumu'ah Jamat @ 2:00pm",
+    "lat": 52.5086688,
+    "lon": -1.8909605
+  },
+  {
     "slug": "masjid_e_bilaal",
     "display_name": "Masjid E Bilaal",
     "address": "Lois Avenue, Lenton, Nottingham, NG7 2ET",
@@ -2102,6 +2097,51 @@
     "provider": {
       "type": "mawaqit"
     }
+  },
+  {
+    "slug": "noor",
+    "display_name": "Masjid-E-Noor",
+    "address": "Ryecroft Street, Gloucester, GL1 4LY",
+    "csv": "noor.csv",
+    "eid_salah": "",
+    "jummah_times": "",
+    "lat": 51.8576307,
+    "lon": -2.2367226
+  },
+  {
+    "slug": "vali",
+    "display_name": "Masjid E Vali",
+    "address": "Preston New Road, Blackburn, BB2 6PS",
+    "csv": "vali.csv",
+    "eid_salah": "",
+    "jummah_times": "Jumu'ah Bayan: 12:40pm, Jumu'ah Khutbah: 1:00pm",
+    "lat": 53.7516084,
+    "lon": -2.5086968
+  },
+  {
+    "slug": "faizul",
+    "display_name": "Masjid Faizul Islam",
+    "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
+    "csv": "faizul.csv",
+    "approved": true,
+    "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
+    "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
+    "lat": 52.5106,
+    "lon": -1.8912,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
+    "slug": "hamza",
+    "display_name": "Masjid Hamza",
+    "address": "90 Church Road, Moseley, Birmingham, B13 9AE",
+    "csv": "hamza.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "Winter Time: Bayaan starts 12:20pm, Jamat 1:10pm; Summer Time: Bayaan starts 12:50pm, Jamaah 1:40pm",
+    "lat": 52.4493645,
+    "lon": -1.8828855
   },
   {
     "slug": "masjid_ibn_salah",
@@ -2207,6 +2247,31 @@
     }
   },
   {
+    "slug": "naqeebul",
+    "display_name": "Masjid Naqeebul Islam",
+    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD",
+    "csv": "naqeebul.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "Bayaan starts at 1:00pm, Khutbah at 1:30pm",
+    "lat": 52.4924826,
+    "lon": -1.8582255
+  },
+  {
+    "slug": "quba",
+    "display_name": "Masjid Quba Trust",
+    "address": "316 Hamstead Road, Handsworth, Birmingham, B20 2RA",
+    "csv": "quba.csv",
+    "approved": true,
+    "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
+    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
+    "lat": 52.5127,
+    "lon": -1.9206,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
     "slug": "masjid_ramadan",
     "display_name": "Masjid Ramadan",
     "address": "Shacklewell Lane, Shacklewell, Greater London, E8 2BY",
@@ -2224,6 +2289,20 @@
     }
   },
   {
+    "slug": "raufbarzenji",
+    "display_name": "Masjid Sheikh Rauf Barzenji",
+    "address": "Mawlawi Kurdish Cultural Centre, Parsonage Street, Manchester, M15 5WD",
+    "csv": "raufbarzenji.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "First khotba in Kurdish at 1:00, Second khotba in Arabic at 2:00",
+    "lat": 53.4608698,
+    "lon": -2.2513595,
+    "provider": {
+      "type": "image"
+    }
+  },
+  {
     "slug": "masjid_umar",
     "display_name": "Masjid Umar",
     "address": "68-70 Connaught Road, Plasnewydd, Cardiff, CF24 3PX",
@@ -2238,6 +2317,18 @@
     },
     "provider": {
       "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "usman",
+    "display_name": "Masjid Usman",
+    "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
+    "csv": "usman.csv",
+    "approved": true,
+    "eid_salah": "",
+    "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
+    "provider": {
+      "type": "image"
     }
   },
   {
@@ -2343,23 +2434,6 @@
     }
   },
   {
-    "slug": "msh",
-    "display_name": "Muslim Students House Masjid",
-    "address": "Moseley Road, Moseley, Birmingham, B12 9BX",
-    "city": "Birmingham",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-    "csv": "msh.csv",
-    "jummah_times": "13:30, 14:15",
-    "latitude": 52.457245026083,
-    "longitude": -1.885866522789,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
     "slug": "muradiye_camii",
     "display_name": "Muradiye Camii",
     "address": "16 Green Lanes, Highbury, Greater London, N16 9ND",
@@ -2386,6 +2460,23 @@
     "jummah_times": "12:30, 13:30",
     "latitude": 52.9564886,
     "longitude": -1.1938555,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "msh",
+    "display_name": "Muslim Students House Masjid",
+    "address": "Moseley Road, Moseley, Birmingham, B12 9BX",
+    "city": "Birmingham",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
+    "csv": "msh.csv",
+    "jummah_times": "13:30, 14:15",
+    "latitude": 52.457245026083,
+    "longitude": -1.885866522789,
     "quality": {
       "status": "warnings"
     },
@@ -2462,17 +2553,6 @@
     }
   },
   {
-    "slug": "naqeebul",
-    "display_name": "Masjid Naqeebul Islam",
-    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD",
-    "csv": "naqeebul.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "Bayaan starts at 1:00pm, Khutbah at 1:30pm",
-    "lat": 52.4924826,
-    "lon": -1.8582255
-  },
-  {
     "slug": "newport_central_jam_e_masjid_ncjm",
     "display_name": "Newport Central Jam'e Masjid (Ncjm)",
     "address": "65 Stow Hill, Stow Hill, Newport, NP20 4DX",
@@ -2541,16 +2621,6 @@
     }
   },
   {
-    "slug": "noor",
-    "display_name": "Masjid-E-Noor",
-    "address": "Ryecroft Street, Gloucester, GL1 4LY",
-    "csv": "noor.csv",
-    "eid_salah": "",
-    "jummah_times": "",
-    "lat": 51.8576307,
-    "lon": -2.2367226
-  },
-  {
     "slug": "noor_el_islam_masjid",
     "display_name": "Noor-El-Islam Masjid",
     "address": "Canal Parade, Butetown, Cardiff, CF10 5HH",
@@ -2566,15 +2636,6 @@
     "provider": {
       "type": "mawaqit"
     }
-  },
-  {
-    "slug": "northilford",
-    "display_name": "Masjid Al Falah",
-    "address": "97 Kensington Gardens, Ilford, Essex, IG1 3EN",
-    "csv": "northilford.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "1:30pm"
   },
   {
     "slug": "old_hill_masjid",
@@ -2628,20 +2689,6 @@
     }
   },
   {
-    "slug": "quba",
-    "display_name": "Masjid Quba Trust",
-    "address": "316 Hamstead Road, Handsworth, Birmingham, B20 2RA",
-    "csv": "quba.csv",
-    "approved": true,
-    "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
-    "lat": 52.5127,
-    "lon": -1.9206,
-    "provider": {
-      "type": "image"
-    }
-  },
-  {
     "slug": "quba_aston",
     "display_name": "Quba Islamic Centre",
     "address": "Oliver Street, Nechells, Birmingham, B7 4NY",
@@ -2676,20 +2723,6 @@
     }
   },
   {
-    "slug": "raufbarzenji",
-    "display_name": "Masjid Sheikh Rauf Barzenji",
-    "address": "Mawlawi Kurdish Cultural Centre, Parsonage Street, Manchester, M15 5WD",
-    "csv": "raufbarzenji.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "First Khutbah in Kurdish & English at 01:00, Second Khutbah in Arabic at 02:00",
-    "lat": 53.4608698,
-    "lon": -2.2513595,
-    "provider": {
-      "type": "image"
-    }
-  },
-  {
     "slug": "redbridge_muslim_community_centre",
     "display_name": "Redbridge Muslim Community Centre",
     "address": "Eastern Avenue, Newbury Park, Redbridge, IG2 6PE",
@@ -2716,6 +2749,23 @@
     "jummah_times": "13:30",
     "latitude": 55.947553214504,
     "longitude": -3.1830538105799,
+    "quality": {
+      "status": "warnings"
+    },
+    "provider": {
+      "type": "mawaqit"
+    }
+  },
+  {
+    "slug": "shahjalal_jame_mosque",
+    "display_name": "Shahjalal Jame Mosque",
+    "address": "Redding Road, Eastville, Bristol, BS5 6PE",
+    "city": "Bristol",
+    "logo": "",
+    "csv": "shahjalal_jame_mosque.csv",
+    "jummah_times": "13:30, 14:00",
+    "latitude": 51.470711155886,
+    "longitude": -2.5638484954834,
     "quality": {
       "status": "warnings"
     },
@@ -2758,23 +2808,6 @@
     }
   },
   {
-    "slug": "shahjalal_jame_mosque",
-    "display_name": "Shahjalal Jame Mosque",
-    "address": "Redding Road, Eastville, Bristol, BS5 6PE",
-    "city": "Bristol",
-    "logo": "",
-    "csv": "shahjalal_jame_mosque.csv",
-    "jummah_times": "13:30, 14:00",
-    "latitude": 51.470711155886,
-    "longitude": -2.5638484954834,
-    "quality": {
-      "status": "warnings"
-    },
-    "provider": {
-      "type": "mawaqit"
-    }
-  },
-  {
     "slug": "sketty_mosque_community_centre",
     "display_name": "Sketty Mosque & Community Centre",
     "address": "Sketty Park Road, Sketty, Swansea, SA2 9AS",
@@ -2790,17 +2823,6 @@
     "provider": {
       "type": "mawaqit"
     }
-  },
-  {
-    "slug": "smethwick",
-    "display_name": "Jami Masjid",
-    "address": "10-13 Lewisham Road, Smethwick, West Midlands, B66 2BP",
-    "csv": "smethwick.csv",
-    "approved": true,
-    "eid_salah": "1st Jamat 8:00am, 2nd Jamat 10:00am",
-    "jummah_times": "Jumu'ah Jamat 1:05",
-    "lat": 52.5007274,
-    "lon": -1.9661248
   },
   {
     "slug": "south_birmingham_central_masjid",
@@ -3101,28 +3123,6 @@
     "provider": {
       "type": "mawaqit"
     }
-  },
-  {
-    "slug": "usman",
-    "display_name": "Masjid Usman",
-    "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
-    "csv": "usman.csv",
-    "approved": true,
-    "eid_salah": "",
-    "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
-    "provider": {
-      "type": "image"
-    }
-  },
-  {
-    "slug": "vali",
-    "display_name": "Masjid E Vali",
-    "address": "Preston New Road, Blackburn, BB2 6PS",
-    "csv": "vali.csv",
-    "eid_salah": "",
-    "jummah_times": "Jumu'ah Bayan: 12:40pm, Jumu'ah Khutbah: 1:00pm",
-    "lat": 53.7516084,
-    "lon": -2.5086968
   },
   {
     "slug": "wimbledon_masjid",
