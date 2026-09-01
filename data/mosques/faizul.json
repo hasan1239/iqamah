@@ -6,21 +6,22 @@
   "lat": 52.5106,
   "lon": -1.8912,
   "phone": "07812372352",
-  "month": "August 2026",
-  "islamic_month": "Safar - Rabi' al-Awwal 1448 AH",
-  "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
+  "month": "September 2026",
+  "islamic_month": "Rabi' al-Awwal / al-Thani 1448 AH",
+  "jummah_times": "Jummah 1:30pm, 2nd Jummah 4:10pm",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
   "sadaqatul_fitr": "Minimum ÃÂ£6.00 for adults & children",
   "radio_frequency": "453.7000",
   "is_stale": false,
-  "notes": "Zuhr Jama'at: 2:00PM daily. Jummah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu. The Sunset column is present in the timetable but is not mapped to any output field as it is distinct from Maghrib Jama'at. The Maghrib Jama'at column contains the Maghrib times (labelled 'Magrib' under Jama'at Times). No separate Maghrib start/azan column exists â the Magrib Jama'at column is used for maghrib_iftari. No separate Esha start column exists",
-  "source_image": "sources/faizul.jpg",
+  "notes": "Zuhr 2PM. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu. Maghrib Jama'at times shown in table are the Sunset/Maghrib times used as Jama'at.",
+  "source_image": "sources/faizul.webp",
   "approved": true,
   "provider": {
     "type": "image",
     "ref": {
-      "source_image": "sources/faizul.jpg"
+      "source_image": "sources/faizul.webp"
     },
-    "source_url": "/data/sources/faizul.jpg"
-  }
+    "source_url": "/data/sources/faizul.webp"
+  },
+  "pending_update": false
 }
