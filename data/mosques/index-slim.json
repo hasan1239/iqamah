@@ -1947,7 +1947,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
@@ -2125,7 +2125,7 @@
     "csv": "faizul.csv",
     "approved": true,
     "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-    "jummah_times": "Jummah 1:30PM, 2nd Jummah 4:10PM",
+    "jummah_times": "Jummah 1:30pm, 2nd Jummah 4:10pm",
     "lat": 52.5106,
     "lon": -1.8912,
     "provider": {
