@@ -1,0 +1,26 @@
+{
+  "display_name": "Masjid Al-Furqaan",
+  "slug": "furqaan",
+  "csv": "furqaan.csv",
+  "address": "Bradford Road, Shipley, BD18 3DL",
+  "phone": "07438082359",
+  "month": "September 2026",
+  "islamic_month": "1448 AH",
+  "jummah_times": "Jumu'ah Khutbah: 1:30pm, Jumu'ah Salaah: 2:00pm",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Recommended days of fasting: Mondays & Thursdays. Website: www.markazalfurqaan.org. Email: Alfurqaanshipley@gmail.com.",
+  "source_image": "sources/furqaan.jpg",
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/furqaan.jpg"
+    },
+    "source_url": "/data/sources/furqaan.jpg"
+  },
+  "lat": 53.8312554,
+  "lon": -1.7835753
+}
