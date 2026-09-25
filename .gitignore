@@ -9,3 +9,7 @@ data/*_raw.json
 # Claude Code files
 CLAUDE.md
 .claude/
+
+# Lockscreen PNGs (CI generation paused: GENERATE_LOCKSCREENS in generate.yml)
+output/
+latest/
