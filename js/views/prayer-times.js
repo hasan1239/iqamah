@@ -15,6 +15,11 @@ let unsubTheme = null;
 let masjidId = null;
 let season = 'ramadan';
 
+// CI-generated lockscreen PNGs in /latest/ are paused (repo size), so Download
+// relies solely on on-device rendering. Set true to restore the /latest/
+// fallback once CI generation is back (see GENERATE_LOCKSCREENS in generate.yml).
+const LOCKSCREEN_CI_FALLBACK = false;
+
 function use24h() {
   return localStorage.getItem('iqamah-time-format') !== '12';
 }
@@ -760,7 +765,7 @@ function renderTodayView(target) {
       ${renderInfoSection()}
 
       <div class="btn-row">
-        <a href="/latest/ramadan_lockscreen_${masjidId}_latest.png" class="download-btn" id="downloadBtn" download>Download</a>
+        <a href="${LOCKSCREEN_CI_FALLBACK ? `/latest/ramadan_lockscreen_${masjidId}_latest.png` : '#'}" class="download-btn" id="downloadBtn" download>Download</a>
         ${renderPrimaryButton()}
       </div>
     </div>
@@ -1199,8 +1204,9 @@ function setupDownloadButton() {
 
     // Fallback URL: the CI-generated latest/ PNG, kept theme-aware by
     // updateDownloadLink(). Used if client-side generation fails for any reason.
-    const fallbackHref = btn.getAttribute('href');
+    const fallbackHref = LOCKSCREEN_CI_FALLBACK ? btn.getAttribute('href') : null;
     const label = btn.textContent;
+    let failed = false;
     btn.classList.add('generating');
     btn.setAttribute('aria-busy', 'true');
     btn.textContent = 'Generating…';
@@ -1223,10 +1229,12 @@ function setupDownloadButton() {
       // Any failure → fall back to the pre-generated PNG (may 404 for masjids
       // without CI output, matching the previous behaviour).
       if (fallbackHref) triggerDownload(fallbackHref, '');
+      else { console.error('Lockscreen generation failed:', err); failed = true; }
     } finally {
       btn.classList.remove('generating');
       btn.removeAttribute('aria-busy');
-      btn.textContent = label;
+      btn.textContent = failed ? 'Download failed' : label;
+      if (failed) setTimeout(() => { btn.textContent = label; }, 2500);
     }
   });
 }
@@ -1243,7 +1251,7 @@ function triggerDownload(href, filename) {
 
 function updateDownloadLink() {
   const btn = document.getElementById('downloadBtn');
-  if (!btn) return;
+  if (!btn || !LOCKSCREEN_CI_FALLBACK) return;
   const isLight = getTheme() === 'light';
   const darkUrl = `/latest/ramadan_lockscreen_${masjidId}_latest.png`;
   const lightUrl = `/latest/ramadan_lockscreen_${masjidId}_light_latest.png`;

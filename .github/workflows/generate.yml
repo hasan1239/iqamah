@@ -31,6 +31,16 @@ on:
 permissions:
   contents: write
 
+env:
+  # Lockscreen PNG generation is PAUSED: committing a PNG per masjid per day grew
+  # the repo past GitHub's size limit, so output/ and latest/ are gitignored and
+  # untracked. The data refresh steps below still run daily. The site's Download
+  # button renders lockscreens on-device (js/utils/lockscreen-render.js).
+  # To resume: set this to 'true', flip LOCKSCREEN_CI_ENABLED in _worker.js and
+  # LOCKSCREEN_CI_FALLBACK in js/views/prayer-times.js, and decide where the PNGs
+  # live first. Committing them to git again will regrow the repo.
+  GENERATE_LOCKSCREENS: 'false'
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -100,6 +110,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
+        if: env.GENERATE_LOCKSCREENS == 'true'
         run: |
           pip install playwright Pillow
           playwright install --with-deps chromium
@@ -128,6 +139,7 @@ jobs:
           fi
 
       - name: Determine date, mosque, and template
+        if: env.GENERATE_LOCKSCREENS == 'true'
         id: params
         run: |
           if [ -n "${{ github.event.inputs.date }}" ]; then
@@ -141,11 +153,13 @@ jobs:
           echo "template=${TEMPLATE}" >> $GITHUB_OUTPUT
 
       - name: List available templates
+        if: env.GENERATE_LOCKSCREENS == 'true'
         run: |
           echo "📋 Available templates:"
           ls -1 templates/lockscreen_*.html | sed 's/templates\/lockscreen_/  - /' | sed 's/\.html//'
 
       - name: Generate lockscreen(s)
+        if: env.GENERATE_LOCKSCREENS == 'true'
         env:
           OUTPUT_DIR: ${{ github.workspace }}/output
         run: |
@@ -157,6 +171,7 @@ jobs:
           fi
 
       - name: Clean up old lockscreens
+        if: env.GENERATE_LOCKSCREENS == 'true'
         run: |
           # Compute the 3 dates to keep (today, -1d, -2d) in ddmmm format
           KEEP_DATES=""
@@ -188,7 +203,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add output/ latest/ data/mosques/ data/*.csv data/raw/
-          git commit -m "🌙 Lockscreen for ${{ steps.params.outputs.date }}" || echo "No changes to commit"
+          git add data/mosques/ data/*.csv data/raw/
+          if [ "$GENERATE_LOCKSCREENS" = "true" ]; then
+            # -f: output/ and latest/ are gitignored while generation is paused
+            git add -f output/ latest/
+            MSG="🌙 Lockscreen for ${{ steps.params.outputs.date }}"
+          else
+            MSG="🔄 Data refresh for $(TZ='Europe/London' date +%Y-%m-%d)"
+          fi
+          git commit -m "$MSG" || echo "No changes to commit"
           git pull --rebase
           git push
