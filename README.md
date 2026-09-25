@@ -28,7 +28,7 @@ Live at [iqamah.co.uk](https://iqamah.co.uk)
 2. **Masjid configs** (`data/mosques/*.json`) store display name, slug, CSV reference, and metadata
 3. **The SPA** (`index.html`) fetches `data/mosques/index.json` to discover all masjids, then loads each config dynamically
 4. **Clean URLs** (`/aisha`, `/quba`) are handled by a Cloudflare Pages Worker (`_worker.js`) that routes requests to the SPA
-5. **Daily at 2am GMT**, a GitHub Actions workflow generates lockscreen PNGs from HTML templates using Playwright, commits them to `output/` (date-stamped) and `latest/` (stable URLs)
+5. **Daily just after midnight UK time**, a GitHub Actions workflow refreshes masjid data (index, pending flags, MasjidBox and Masjidal times). CI lockscreen PNG generation is paused (`GENERATE_LOCKSCREENS` in `generate.yml`); the Download button renders lockscreens on-device (`js/utils/lockscreen-render.js`)
 6. **Cloudflare Pages** auto-deploys on every push to main
 
 ## Adding a New Masjid
@@ -51,10 +51,8 @@ Live at [iqamah.co.uk](https://iqamah.co.uk)
 pip install playwright Pillow anthropic
 playwright install --with-deps chromium
 
-# Generate lockscreens for all masjids (today's date)
+# Generate lockscreens locally (CI generation is paused)
 python generate.py
-
-# Generate for a specific masjid and date
 python generate.py faizul 2026-02-22
 
 ```
@@ -65,7 +63,7 @@ For the website, serve the repo root with any static server (e.g. `npx serve .`)
 
 ```
 .github/workflows/
-  generate.yml            Daily lockscreen generation (2am GMT cron)
+  generate.yml            Daily data refresh (lockscreen generation paused)
   add_masjid.yml          Add masjid from self-service submission
   update_masjid.yml       Update existing timetable
   approve_masjid.yml      Approve pending masjid submissions

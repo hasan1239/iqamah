@@ -102,8 +102,10 @@ client-side rendering.**
 
 ### Android Tasker / automation guide
 Documented recipe (Tasker / MacroDroid / iOS Shortcuts) for auto-setting the wallpaper
-daily from the stable `latest/` URLs. Long-standing future-plan item in CLAUDE.md;
-mostly a docs task. **Effort: tiny.**
+daily. The stable `latest/` PNG URLs this relied on are paused as of Sep 2026 (repo size;
+see `GENERATE_LOCKSCREENS` in `generate.yml`), so this needs an image source first:
+resume CI generation with storage outside git, or a Worker endpoint that renders
+today's lockscreen. **Effort: medium (was tiny).**
 
 ## Discovery & growth
 

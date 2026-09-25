@@ -377,6 +377,11 @@ function generateCsvString(rows) {
 
 const GITHUB_REPO = 'hasan1239/iqamah';
 
+// CI lockscreen PNG generation is paused (repo size). While false, submit/
+// update/approve don't dispatch generate.yml. Flip together with
+// GENERATE_LOCKSCREENS in generate.yml and LOCKSCREEN_CI_FALLBACK in prayer-times.js.
+const LOCKSCREEN_CI_ENABLED = false;
+
 // Thrown when a GitHub API call fails for any reason OTHER than the file
 // genuinely not existing (404). Callers must not report these as "not found" -
 // an expired PAT (401) or a renamed repo (3xx) is a server problem, not
@@ -611,6 +616,7 @@ async function createNotificationIssue(slug, mosqueName, imageExt, env) {
 }
 
 async function triggerLockscreenGeneration(slug, env) {
+  if (!LOCKSCREEN_CI_ENABLED) return;
   try {
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/generate.yml/dispatches`, {
       method: 'POST',
