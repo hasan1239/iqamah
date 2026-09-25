@@ -765,7 +765,7 @@ function renderTodayView(target) {
       ${renderInfoSection()}
 
       <div class="btn-row">
-        <a href="${LOCKSCREEN_CI_FALLBACK ? `/latest/ramadan_lockscreen_${masjidId}_latest.png` : '#'}" class="download-btn" id="downloadBtn" download>Download</a>
+        <a href="${LOCKSCREEN_CI_FALLBACK ? `/latest/ramadan_lockscreen_${masjidId}_latest.png` : '#'}" class="download-btn" id="downloadBtn"${LOCKSCREEN_CI_FALLBACK ? ' download' : ' role="button"'}>Download</a>
         ${renderPrimaryButton()}
       </div>
     </div>
