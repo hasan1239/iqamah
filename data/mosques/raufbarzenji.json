@@ -2,26 +2,26 @@
   "display_name": "Masjid Sheikh Rauf Barzenji",
   "slug": "raufbarzenji",
   "csv": "raufbarzenji.csv",
-  "address": "Mawlawi Kurdish Cultural Centre, Parsonage Street, Manchester, M15 5WD",
+  "address": "Parsonage Street, Manchester, M15 5WD",
   "phone": "07918551688",
-  "month": "September 2026",
+  "month": "October 2026",
   "islamic_month": "",
-  "jummah_times": "First khotba in Kurdish at 1:00, Second khotba in Arabic at 2:00",
+  "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
   "approved": true,
   "is_stale": false,
-  "notes": "Saturday and Sunday Dhuhr Jamat is closed. Friday Dhuhr Jamat: 1:00 (Kurdish khotba) and 2:00 (Arabic khotba). Contact: info@mkcc-uk.org, www.mkcc-uk.org. Social media: @MKCC.UK",
-  "source_image": "sources/raufbarzenji.jpg",
+  "notes": "Dhuhr is closed on Saturdays and Sundays. Friday Jumu'ah: 1st Jamat at 1:00, 2nd Jamat at 2:00. Contact: info@mkcc-uk.org, www.mkcc-uk.org. Social: @MKCC (YouTube), @MKCC_UK (Telegram), @MKCC.UK (Facebook/Instagram/TikTok).",
+  "source_image": "sources/raufbarzenji.png",
   "lat": 53.4608698,
   "lon": -2.2513595,
-  "pending_update": false,
+  "pending_update": true,
   "provider": {
     "type": "image",
     "ref": {
-      "source_image": "sources/raufbarzenji.jpg"
+      "source_image": "sources/raufbarzenji.png"
     },
-    "source_url": "/data/sources/raufbarzenji.jpg"
+    "source_url": "/data/sources/raufbarzenji.png"
   }
 }
