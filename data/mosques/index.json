@@ -29,7 +29,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -37,6 +37,50 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "ad_duha_institute",
+    "display_name": "Ad-Duha Institute",
+    "city": "",
+    "latitude": 54.0,
+    "longitude": -2.0,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "1164 Stratford Road, Hall Green North, Birmingham, B28 8AF",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "",
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "ad_duha_institute.csv",
+    "provider": {
+      "type": "mymasjid",
+      "ref": {
+        "guidId": "60fe0a65-de8d-447f-8ffd-05e6c4e3b683",
+        "masjid_id": 22673
+      },
+      "source_url": "https://time.my-masjid.com/timingsInfoScreen/60fe0a65-de8d-447f-8ffd-05e6c4e3b683"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start",
+          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -72,7 +116,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -80,50 +124,6 @@
           "severity": "medium",
           "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "ad_duha_institute",
-    "display_name": "Ad-Duha Institute",
-    "city": "",
-    "latitude": 54,
-    "longitude": -2,
-    "country_code": "GB",
-    "website": "",
-    "logo": "",
-    "address": "1164 Stratford Road, Hall Green North, Birmingham, B28 8AF",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "",
-    "timezone": "Europe/London",
-    "jummah_times": "13:00",
-    "csv": "ad_duha_institute.csv",
-    "provider": {
-      "type": "mymasjid",
-      "ref": {
-        "guidId": "60fe0a65-de8d-447f-8ffd-05e6c4e3b683",
-        "masjid_id": 22673
-      },
-      "source_url": "https://time.my-masjid.com/timingsInfoScreen/60fe0a65-de8d-447f-8ffd-05e6c4e3b683"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-20",
-      "row_count": 365,
-      "warnings": [
-        "My-Masjid has no Suhoor field Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start",
-          "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
         }
       ]
     },
@@ -159,8 +159,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-04-16 to 2026-04-16). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-04-16 to 2026-04-16). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -179,7 +179,7 @@
             "2026-04-16"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -187,6 +187,33 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
+  },
+  {
+    "display_name": "Masjid Aisha",
+    "slug": "aisha",
+    "csv": "aisha.csv",
+    "lat": 52.5233,
+    "lon": -1.9279,
+    "notes": "Jumu'ah Salaah is at 1:30pm. No Salah to be performed 10 minutes before Zohr Start time. Programmes: Mon: Dars of Quran after Maghrib; Sun: Inspirations after Zohr; Thur: Durood prog after Maghrib; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Program for Women after Zohr. Jama'at times are subject to change, therefore you are requested to check at the masjid.",
+    "address": "The Grange, Birmingham. B20 1BH",
+    "phone": "0121 554 0200 / 07791 965736",
+    "month": "July 2026",
+    "islamic_month": "Muharram/Safar 1448",
+    "eid_salah": "9:00am (one jama'at only)",
+    "sadaqatul_fitr": "Â£5.00 per person",
+    "radio_frequency": "460.375",
+    "is_stale": false,
+    "source_image": "sources/aisha.jpg",
+    "jummah_times": "1:30pm",
+    "approved": true,
+    "pending_update": false,
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/aisha.jpg"
+      },
+      "source_url": "/data/sources/aisha.jpg"
+    }
   },
   {
     "slug": "al_baseera_bristol_centre",
@@ -218,7 +245,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -261,8 +288,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-02-22 to 2026-02-26). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-02-22 to 2026-02-26). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -285,7 +312,7 @@
             "2026-02-26"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -293,49 +320,6 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
-  },
-  {
-    "slug": "alberr",
-    "display_name": "Alberr",
-    "city": "Blackburn",
-    "latitude": 53.7359052,
-    "longitude": -2.4546096,
-    "country_code": "GB",
-    "website": "https://alberr.org/masjid-alberr/",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1f826680-2465-465b-9020-da38be1595ac/mosque/1f114b4c-e688-6e1a-a6a9-0a58a9feac02.jpeg",
-    "address": "Shadsworth Road, Blackburn South East, Blackburn with Darwen, BB1 2HU",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "ALBERR",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30",
-    "csv": "alberr.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "alberr-blackburn-bb1-2hu-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/alberr-blackburn-bb1-2hu-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-20",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
   },
   {
     "slug": "al_falah_community_support_centre",
@@ -367,7 +351,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -410,7 +394,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -437,7 +421,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ³ÃÂ¬ÃÂ¯ ÃÂ§ÃÂÃÂÃÂ±ÃÂÃÂ§ÃÂ",
+    "association": "مسجد الفرقان",
     "timezone": "Europe/London",
     "jummah_times": "13:50, 14:30",
     "csv": "al_furqan_mosque.csv",
@@ -453,7 +437,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -496,7 +480,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -539,8 +523,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 31 days (2026-08-01 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 31 days (2026-08-01 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -589,7 +573,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -628,7 +612,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -671,7 +655,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -714,7 +698,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -741,7 +725,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂÃÂÃÂ±ÃÂÃÂÃÂÃÂ² ÃÂ§ÃÂÃÂ±ÃÂ­ÃÂÃÂ© ÃÂÃÂÃÂ±ÃÂ­ÃÂÃÂÃÂ¨ ÃÂ¨ÃÂÃÂÃÂÃÂ",
+    "association": "مــركــز الرحمة يـرحــب بـكـم",
     "timezone": "Europe/London",
     "jummah_times": "13:30, 14:30",
     "csv": "al_rahmah_centre.csv",
@@ -757,7 +741,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -800,7 +784,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -843,7 +827,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -886,7 +870,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -929,7 +913,113 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "alberr",
+    "display_name": "Alberr",
+    "city": "Blackburn",
+    "latitude": 53.7359052,
+    "longitude": -2.4546096,
+    "country_code": "GB",
+    "website": "https://alberr.org/masjid-alberr/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/1f826680-2465-465b-9020-da38be1595ac/mosque/1f114b4c-e688-6e1a-a6a9-0a58a9feac02.jpeg",
+    "address": "Shadsworth Road, Blackburn South East, Blackburn with Darwen, BB1 2HU",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "ALBERR",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30",
+    "csv": "alberr.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "alberr-blackburn-bb1-2hu-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/alberr-blackburn-bb1-2hu-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-20",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid-E-Aman",
+    "slug": "aman",
+    "csv": "aman.csv",
+    "address": "232 Witton Road, Aston, Birmingham, B6 6LB",
+    "phone": "0121 523 4265 / 07980463270",
+    "month": "May 2026",
+    "islamic_month": "Dhul Qa'dah / Dhul Hijjah 1447 AH",
+    "jummah_times": "Jumu'ah Jamat @ 2:00pm",
+    "eid_salah": "Eid salah 9:30am. Bayaan 30 mins before",
+    "sadaqatul_fitr": "£6.50 per person",
+    "radio_frequency": "447-6250",
+    "is_stale": false,
+    "notes": "Dhuhr Jamat @ 1:45pm - Jumu'ah Jamat @ 2:00pm. Listen to Live broadcast of Adhaan and Talks from Masjid on 447-6250. Jamat times may be changed according to circumstances. The 'Azan & Jamat' column under Maghrib appears to be a combined Azan and Jama'at time (a few minutes after Sunset).",
+    "lat": 52.5086688,
+    "lon": -1.8909605,
+    "source_image": "sources/aman.jpg",
+    "pending_update": false,
+    "approved": true
+  },
+  {
+    "slug": "aman_foundation_uk",
+    "display_name": "Aman Foundation Uk",
+    "city": "London",
+    "latitude": 51.494869815242,
+    "longitude": -0.20621285099564,
+    "country_code": "GB",
+    "website": "http://www.amanfoundationuk.com",
+    "logo": "",
+    "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Aman Foundation UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:15",
+    "csv": "aman_foundation_uk.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "iaman-foundation-uk-london-w14-8xp-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/iaman-foundation-uk-london-w14-8xp-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -973,7 +1063,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 75 days (2026-05-17 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1084,73 +1174,23 @@
     "approved": true
   },
   {
-    "slug": "aman_foundation_uk",
-    "display_name": "Aman Foundation Uk",
-    "city": "London",
-    "latitude": 51.494869815242,
-    "longitude": -0.20621285099564,
-    "country_code": "GB",
-    "website": "http://www.amanfoundationuk.com",
-    "logo": "",
-    "address": "Avonmore Road, Avonmore, Hammersmith and Fulham, W14 8XP",
-    "address_source": "geocoded",
+    "display_name": "Masjid An Noor",
+    "slug": "annoor",
+    "csv": "annoor.csv",
+    "address": "146 Berners Street, Leicester, LE2 0FU",
     "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Aman Foundation UK",
-    "timezone": "Europe/London",
-    "jummah_times": "13:15",
-    "csv": "aman_foundation_uk.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "iaman-foundation-uk-london-w14-8xp-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/iaman-foundation-uk-london-w14-8xp-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "display_name": "Arrahman Manchester Islamic Cultural Association",
-    "slug": "arrahman_moss",
-    "csv": "arrahman_moss.csv",
-    "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
-    "phone": "0161 470 2010",
-    "month": "August 2026",
-    "islamic_month": "Safar - Rabi' al-Awwal 1448",
-    "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "Bayān: 12:15pm, Azān: 12:50pm",
     "eid_salah": "",
     "sadaqatul_fitr": "",
-    "radio_frequency": "",
+    "radio_frequency": "454.300 MHZ",
     "approved": true,
     "is_stale": false,
-    "notes": "Jumuah begins 1:15PM, Jama'ah 1:30PM. Mosque also known as Moss Side Islamic & Community Centre. Email: info@masjid-arrahman.com. Website: masjid-arrahman.com. Charity No. 1134915. Mortuary Expansion Project fundraising appeal noted.",
-    "source_image": "sources/arrahman_moss.png",
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/arrahman_moss.png"
-      },
-      "source_url": "/data/sources/arrahman_moss.png"
-    },
-    "lat": 53.4544139,
-    "lon": -2.2485425
+    "notes": "It is advisable to stop eating and drinking at least 5 minutes before Sub'h Sādiq. Salāt should not be performed during the 10 minutes before Zawāl. Programmes in the Masjid during Ramadhān: Dars e Qur'ān (Urdu/English) - see notice board for details; Short Lesson on Hadīth (English) after Fajr. Programmes via the receiver only: Urdu after Zuhr, English after Maghrib.",
+    "source_image": "sources/annoor.png",
+    "lat": 52.6342653,
+    "lon": -1.1101507
   },
   {
     "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
@@ -1178,6 +1218,32 @@
     "lat": 53.4544139,
     "lon": -2.2485425,
     "pending_update": true
+  },
+  {
+    "display_name": "Arrahman Manchester Islamic Cultural Association",
+    "slug": "arrahman_moss",
+    "csv": "arrahman_moss.csv",
+    "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
+    "phone": "0161 470 2010",
+    "month": "August 2026",
+    "islamic_month": "Safar - Rabi' al-Awwal 1448",
+    "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Jumuah begins 1:15PM, Jama'ah 1:30PM. Mosque also known as Moss Side Islamic & Community Centre. Email: info@masjid-arrahman.com. Website: masjid-arrahman.com. Charity No. 1134915. Mortuary Expansion Project fundraising appeal noted.",
+    "source_image": "sources/arrahman_moss.png",
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/arrahman_moss.png"
+      },
+      "source_url": "/data/sources/arrahman_moss.png"
+    },
+    "lat": 53.4544139,
+    "lon": -2.2485425
   },
   {
     "slug": "aston_university_prayer_room",
@@ -1279,8 +1345,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-25 to 2026-03-25). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-25 to 2026-03-25). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -1299,7 +1365,7 @@
             "2026-03-25"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -1346,8 +1412,8 @@
     "slug": "bilal",
     "display_name": "Bilal",
     "city": "",
-    "latitude": 54,
-    "longitude": -2,
+    "latitude": 54.0,
+    "longitude": -2.0,
     "country_code": "GB",
     "website": "",
     "logo": "",
@@ -1373,7 +1439,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "My-Masjid has no Suhoor field Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+        "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
       ],
       "issues": [
         {
@@ -1425,25 +1491,6 @@
     "acknowledged_issues": []
   },
   {
-    "display_name": "Birmingham Central Mosque",
-    "slug": "central",
-    "csv": "central.csv",
-    "address": "180 Belgrave Middleway, Birmingham, B12 0XS",
-    "phone": "0121 440 5355",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
-    "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
-    "sadaqatul_fitr": "ÃÂ£5 per person",
-    "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Suhur Ends column is labelled 'Suhur Ends'. Maghrib Adhan column is the Sunset Adhan. Isha Jamat column shown. Friday Prayers: Urdu & English Speech at 12.45pm | Main Arabic Khutba at 1.15pm. Islamic dates are tentative and subject to change as per crescent moon sighting. Eid services will be in different languages; Imams will be announced closer to the Day of Eid.",
-    "source_image": "sources/central.jpg",
-    "lat": 52.4646458,
-    "lon": -1.8905789
-  },
-  {
     "slug": "bishopbriggs_islamic_community_centre",
     "display_name": "Bishopbriggs Islamic Community Centre",
     "city": "Glasgow",
@@ -1473,7 +1520,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1516,8 +1563,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 25 days (2026-04-03 to 2026-04-27). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 25 days (2026-04-03 to 2026-04-27). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -1560,7 +1607,7 @@
             "2026-04-27"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -1634,7 +1681,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 78 days (2026-05-17 to 2026-08-07). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1766,7 +1813,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1810,7 +1857,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 60 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1924,7 +1971,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -1936,6 +1983,25 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Birmingham Central Mosque",
+    "slug": "central",
+    "csv": "central.csv",
+    "address": "180 Belgrave Middleway, Birmingham, B12 0XS",
+    "phone": "0121 440 5355",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "Urdu & English Speech at 12:45pm, Main Arabic Khutba at 1:15pm",
+    "eid_salah": "1st Jamat: 7AM, 2nd Jamat: 8AM, 3rd Jamat: 9AM, 4th Jamat: 10AM, 5th Jamat: 11AM",
+    "sadaqatul_fitr": "£5 per person",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Suhur Ends column is labelled 'Suhur Ends'. Maghrib Adhan column is the Sunset Adhan. Isha Jamat column shown. Friday Prayers: Urdu & English Speech at 12.45pm | Main Arabic Khutba at 1.15pm. Islamic dates are tentative and subject to change as per crescent moon sighting. Eid services will be in different languages; Imams will be announced closer to the Day of Eid.",
+    "source_image": "sources/central.jpg",
+    "lat": 52.4646458,
+    "lon": -1.8905789
   },
   {
     "slug": "chelsea_muslim_community_hub",
@@ -1967,7 +2033,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2010,7 +2076,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2053,136 +2119,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "darul_quran_london_masjid",
-    "display_name": "Darul Quran London Masjid",
-    "city": "London",
-    "latitude": 51.532212609059,
-    "longitude": -0.12978146795223,
-    "country_code": "GB",
-    "website": "https://www.darulquranlondon.org",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/f2194685-ac92-4e54-b88d-7fa5b78d4f00/mosque/1eea8e47-c03d-6a8c-8427-066ed47a7584.png",
-    "address": "Purchese Street, Somers Town, Camden, NW1 1HW",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Darul Quran London Masjid",
-    "timezone": "UTC",
-    "jummah_times": "13:30",
-    "csv": "darul_quran_london_masjid.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "dar-ul-quran-london-london-nw1-1hw-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/dar-ul-quran-london-london-nw1-1hw-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "darul_ummah_hornchurch",
-    "display_name": "Darul Ummah Hornchurch",
-    "city": "",
-    "latitude": 51.5453391,
-    "longitude": 0.2031487,
-    "country_code": "GB",
-    "website": "",
-    "logo": "",
-    "address": "Maybank Avenue, Hacton, Havering, RM12 5SA",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": null,
-    "timezone": "Europe/London",
-    "jummah_times": "13:00",
-    "csv": "darul_ummah_hornchurch.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "darul_ummah_redbridge",
-    "display_name": "Darul Ummah Redbridge",
-    "city": "",
-    "latitude": 51.5778716,
-    "longitude": 0.0640834,
-    "country_code": "GB",
-    "website": "http://www.duredbridge.org",
-    "logo": "",
-    "address": "Woodford Avenue, Barkingside, Redbridge, IG2 6UH",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Darul Ummah Redbridge",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:20",
-    "csv": "darul_ummah_redbridge.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2225,7 +2162,136 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_quran_london_masjid",
+    "display_name": "Darul Quran London Masjid",
+    "city": "London",
+    "latitude": 51.532212609059,
+    "longitude": -0.12978146795223,
+    "country_code": "GB",
+    "website": "https://www.darulquranlondon.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/f2194685-ac92-4e54-b88d-7fa5b78d4f00/mosque/1eea8e47-c03d-6a8c-8427-066ed47a7584.png",
+    "address": "Purchese Street, Somers Town, Camden, NW1 1HW",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Darul Quran London Masjid",
+    "timezone": "UTC",
+    "jummah_times": "13:30",
+    "csv": "darul_quran_london_masjid.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "dar-ul-quran-london-london-nw1-1hw-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/dar-ul-quran-london-london-nw1-1hw-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_ummah_hornchurch",
+    "display_name": "Darul Ummah Hornchurch",
+    "city": "",
+    "latitude": 51.5453391,
+    "longitude": 0.2031487,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "Maybank Avenue, Hacton, Havering, RM12 5SA",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:00",
+    "csv": "darul_ummah_hornchurch.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/darul-ummah-hornchurch-london-rm12-5sa-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "darul_ummah_redbridge",
+    "display_name": "Darul Ummah Redbridge",
+    "city": "",
+    "latitude": 51.5778716,
+    "longitude": 0.0640834,
+    "country_code": "GB",
+    "website": "http://www.duredbridge.org",
+    "logo": "",
+    "address": "Woodford Avenue, Barkingside, Redbridge, IG2 6UH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Darul Ummah Redbridge",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:20",
+    "csv": "darul_ummah_redbridge.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/darul-ummah-redbridge-ilford-ig2-6uh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2252,7 +2318,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ³ÃÂ¬ÃÂ¯ ÃÂ¯ÃÂ¹ÃÂÃÂ© ÃÂ§ÃÂÃÂ§ÃÂ³ÃÂÃÂ§ÃÂ",
+    "association": "مسجد دعوة الاسلام",
     "timezone": "Europe/London",
     "jummah_times": "13:45",
     "csv": "dawatul_islam.csv",
@@ -2268,7 +2334,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2345,7 +2411,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "London Unified Prayer Timetable Ã¢ÂÂ shared across all London masjids that follow it."
+        "London Unified Prayer Timetable — shared across all London masjids that follow it."
       ],
       "issues": []
     },
@@ -2385,7 +2451,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2428,7 +2494,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2471,7 +2537,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2514,7 +2580,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2557,7 +2623,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2600,8 +2666,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -2680,7 +2746,7 @@
             "2026-07-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -2688,49 +2754,6 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
-  },
-  {
-    "slug": "faizan_e_madina_hx1",
-    "display_name": "Faizan E Madina",
-    "city": "Halifax",
-    "latitude": 53.7224783,
-    "longitude": -1.8812652,
-    "country_code": "GB",
-    "website": "https://www.dawateislami.net/",
-    "logo": "",
-    "address": "Gibbet Street, Park, Calderdale, HX1 4JX",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Dawat E Islami UK",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:30",
-    "csv": "faizan_e_madina_hx1.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "faizan-e-madina-halifax-hx1-4jx-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-halifax-hx1-4jx-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
   },
   {
     "slug": "faizan_e_madina_burnley",
@@ -2762,7 +2785,93 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "faizan_e_madina_hx1",
+    "display_name": "Faizan E Madina",
+    "city": "Halifax",
+    "latitude": 53.7224783,
+    "longitude": -1.8812652,
+    "country_code": "GB",
+    "website": "https://www.dawateislami.net/",
+    "logo": "",
+    "address": "Gibbet Street, Park, Calderdale, HX1 4JX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat E Islami UK",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30",
+    "csv": "faizan_e_madina_hx1.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-madina-halifax-hx1-4jx-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-halifax-hx1-4jx-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "faizan_e_madina_stechford",
+    "display_name": "Faizan E Madina Stechford",
+    "city": "",
+    "latitude": 52.4783958,
+    "longitude": -1.814082,
+    "country_code": "GB",
+    "website": "https://dawateislamimidlands.net",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
+    "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Dawat e Islami",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:30, 16:00",
+    "csv": "faizan_e_madina_stechford.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "faizan-e-madina-stechford"
+      },
+      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2805,8 +2914,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 22 days (2026-04-01 to 2026-04-22). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 22 days (2026-04-01 to 2026-04-22). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -2846,7 +2955,7 @@
             "2026-04-22"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -2854,49 +2963,6 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
-  },
-  {
-    "slug": "faizan_e_madina_stechford",
-    "display_name": "Faizan E Madina Stechford",
-    "city": "",
-    "latitude": 52.4783958,
-    "longitude": -1.814082,
-    "country_code": "GB",
-    "website": "https://dawateislamimidlands.net",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/mosque/1efa2788-f032-63fc-8da8-0e9d077f5bb1.png",
-    "address": "Richmond Road, Yardley, Birmingham, B33 8TN",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Dawat e Islami",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:30, 16:00",
-    "csv": "faizan_e_madina_stechford.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "faizan-e-madina-stechford"
-      },
-      "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
   },
   {
     "slug": "faizan_e_makkah",
@@ -2928,7 +2994,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2940,6 +3006,50 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Faizul Islam",
+    "slug": "faizul",
+    "csv": "faizul.csv",
+    "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
+    "lat": 52.5106,
+    "lon": -1.8912,
+    "phone": "07812372352",
+    "month": "October 2026",
+    "islamic_month": "Rabi' al-Thani - Jumada al-Ula 1448 AH",
+    "jummah_times": "1st Jumu'ah: 1:30PM, 2nd Jumu'ah: 4PM (2nd & 9th Second Jummah will be at 3:50PM)",
+    "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
+    "sadaqatul_fitr": "Minimum £6.00 for adults & children",
+    "radio_frequency": "453.7000",
+    "is_stale": false,
+    "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct, please put clocks one hour back. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
+    "source_image": "sources/faizul.jpg",
+    "approved": true,
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/faizul.jpg"
+      },
+      "source_url": "/data/sources/faizul.jpg"
+    },
+    "pending_update": false
+  },
+  {
+    "display_name": "Masjid Al Falaah",
+    "slug": "falaah",
+    "address": "32 Trinity Road, Handsworth, Birmingham, B6 6AL",
+    "lat": 52.5084,
+    "lon": -1.8997,
+    "phone": "0121 630 1325",
+    "csv": "falaah.csv",
+    "notes": "Zuhr Jamaat 12:40pm. Jumu'ah at 12:30pm & 1:40pm. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight. Fidya/Kaffarah £1.50 per fast. Pay Fitrana by 25th Ramadan. 100% of all Zakat funds will be distributed to the needy. Bank: Lloyds Bank, S/C: 30-93-09, A/C: 01195888. Taraweeh recitation of Surah/Ayah listed per night. Pay Your Zakat.",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "12:30pm & 1:40pm",
+    "eid_salah": "7:30am & 9:00am",
+    "sadaqatul_fitr": "£6 per person (min)",
+    "is_stale": false,
+    "source_image": "sources/falaah.jpg"
   },
   {
     "slug": "finsbury_park_mosque",
@@ -2971,7 +3081,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -2983,6 +3093,32 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Al-Furqaan",
+    "slug": "furqaan",
+    "csv": "furqaan.csv",
+    "address": "Bradford Road, Shipley, BD18 3DL",
+    "phone": "07438082359",
+    "month": "September 2026",
+    "islamic_month": "1448 AH",
+    "jummah_times": "Jumu'ah Khutbah: 1:30pm, Jumu'ah Salaah: 2:00pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Recommended days of fasting: Mondays & Thursdays. Website: www.markazalfurqaan.org. Email: Alfurqaanshipley@gmail.com.",
+    "source_image": "sources/furqaan.jpg",
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/furqaan.jpg"
+      },
+      "source_url": "/data/sources/furqaan.jpg"
+    },
+    "lat": 53.8312554,
+    "lon": -1.7835753
   },
   {
     "slug": "gambian_islamic_community_centre",
@@ -3014,7 +3150,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3026,6 +3162,25 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Great Barr Muslim Foundation",
+    "slug": "gbmf",
+    "csv": "gbmf.csv",
+    "address": "394 Walsall Road, Great Barr, Birmingham, B42 2LX",
+    "phone": "0121 250 4981",
+    "month": "May 2026",
+    "islamic_month": "Dhul-Qa'dah - Dhul-Hijjah 1447AH",
+    "jummah_times": "1st Jumma Salah: Speech 1pm, Khutbah 1:30pm; 2nd Jumma Salah: Speech 2pm, Khutbah 2:30pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "461.2375",
+    "is_stale": false,
+    "notes": "Bank: Al Rayan | Account Name: GBMF | S/C: 30-00-83 | A/C: 01364401. Website: gbmf.uk | gbmf.mixlr.com. Please continue to donate to the masjid.",
+    "source_image": "sources/gbmf.jpg",
+    "lat": 52.5310268,
+    "lon": -1.9131514,
+    "approved": true
   },
   {
     "slug": "globe_town_mosque",
@@ -3057,7 +3212,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3100,7 +3255,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3112,25 +3267,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Great Barr Muslim Foundation",
-    "slug": "gbmf",
-    "csv": "gbmf.csv",
-    "address": "394 Walsall Road, Great Barr, Birmingham, B42 2LX",
-    "phone": "0121 250 4981",
-    "month": "May 2026",
-    "islamic_month": "Dhul-Qa'dah - Dhul-Hijjah 1447AH",
-    "jummah_times": "1st Jumma Salah: Speech 1pm, Khutbah 1:30pm; 2nd Jumma Salah: Speech 2pm, Khutbah 2:30pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "461.2375",
-    "is_stale": false,
-    "notes": "Bank: Al Rayan | Account Name: GBMF | S/C: 30-00-83 | A/C: 01364401. Website: gbmf.uk | gbmf.mixlr.com. Please continue to donate to the masjid.",
-    "source_image": "sources/gbmf.jpg",
-    "lat": 52.5310268,
-    "lon": -1.9131514,
-    "approved": true
   },
   {
     "slug": "green_lane",
@@ -3237,7 +3373,26 @@
     },
     "acknowledged_issues": [],
     "hidden": true,
-    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:37) Ã¢ÂÂ not the masjid's real times."
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:37) — not the masjid's real times."
+  },
+  {
+    "display_name": "Masjid Hamza",
+    "slug": "hamza",
+    "csv": "hamza.csv",
+    "address": "90 Church Road, Moseley, Birmingham, B13 9AE",
+    "phone": "",
+    "month": "March 2026",
+    "islamic_month": "",
+    "jummah_times": "Winter Time: Bayaan starts 12:20pm, Jamat 1:10pm; Summer Time: Bayaan starts 12:50pm, Jamaah 1:40pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "454.775",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Jummah Salaah: Winter Time - Bayaan will start at 12:20pm and jamat time 1:10pm; Summer Time - Bayaan will start at 12:50pm and Jamaah will begin at 1:40pm.",
+    "source_image": "sources/hamza.png",
+    "lat": 52.4493645,
+    "lon": -1.8828855
   },
   {
     "slug": "hillside_islamic_cultural_centre",
@@ -3269,7 +3424,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3312,7 +3467,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3356,7 +3511,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 74 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3484,7 +3639,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3527,7 +3682,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3570,7 +3725,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 ÃÂ¢ÃÂÃÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 â sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3613,7 +3768,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3656,7 +3811,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3681,13 +3836,48 @@
     "islamic_month": "1447 Dhu al-Qadah / Dhu al-Hijjah",
     "jummah_times": "2:00pm",
     "eid_salah": "6:30am & 8:00am",
-    "sadaqatul_fitr": "ÃÂ£7 per person",
+    "sadaqatul_fitr": "£7 per person",
     "radio_frequency": "454.1500",
     "is_stale": false,
-    "notes": "Zohar and Jumma Jamat at 2:00pm. Eid Al Adha Salah at 6:30am & 8:00am. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to serve as both the Maghrib Azan time and Jama'at time combined into one column Ã¢ÂÂ no separate Maghrib Jama'at column exists. Masjid Frequency: 454.1500.",
+    "notes": "Zohar and Jumma Jamat at 2:00pm. Eid Al Adha Salah at 6:30am & 8:00am. Jamat times may be changed according to circumstances. Live programmes streamed on www.youtube.com/c/Birmingham Jame Masjid. The 'MAGRIB AZAN & JAMAT' column appears to serve as both the Maghrib Azan time and Jama'at time combined into one column — no separate Maghrib Jama'at column exists. Masjid Frequency: 454.1500.",
     "source_image": "sources/jame.jpg",
     "approved": true,
     "pending_update": false
+  },
+  {
+    "slug": "jami_mosque_birmingham",
+    "display_name": "Jami Mosque and Islamic Centre Birmingham",
+    "city": "",
+    "latitude": null,
+    "longitude": null,
+    "country_code": "GB",
+    "website": "",
+    "logo": "",
+    "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
+    "address_source": "masjidbox",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "timezone": "Europe/London",
+    "jummah_times": "",
+    "csv": "jami_mosque_birmingham.csv",
+    "provider": {
+      "type": "masjidbox",
+      "ref": {
+        "slug": "jmic"
+      },
+      "source_url": "https://masjidbox.com/prayer-times/jmic"
+    },
+    "today_only": true,
+    "suppress_times": [],
+    "quality": {
+      "status": "ok",
+      "checked_at": "2026-10-01",
+      "row_count": 134,
+      "warnings": [],
+      "issues": []
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "jamia_masjid_bilal",
@@ -3719,8 +3909,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-27 to 2026-03-27). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-27 to 2026-03-27). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -3739,7 +3929,7 @@
             "2026-03-27"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -3778,7 +3968,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3821,7 +4011,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3864,7 +4054,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3907,7 +4097,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3950,7 +4140,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -3960,60 +4150,6 @@
           "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
         }
       ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "display_name": "Jami Masjid",
-    "slug": "smethwick",
-    "csv": "smethwick.csv",
-    "address": "10-13 Lewisham Road, Smethwick, West Midlands, B66 2BP",
-    "phone": "0121 558 8204 / 07943745332",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "Jumu'ah Jamat 1:05",
-    "eid_salah": "1st Jamat 8:00am, 2nd Jamat 10:00am",
-    "sadaqatul_fitr": "ÃÂ£7",
-    "radio_frequency": "453.5625 Mhz",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Late night Taraweeh will take place (Sun-Thu) 12:15am / (Fri-Sat) 1:15am. Annual Community Iftar will take place on Mon 9th March 2026, programme will start after Asr salah. Ramadan Appeal: ÃÂ£150K remaining to complete the Masjid Extension works.",
-    "source_image": "sources/smethwick.jpg",
-    "lat": 52.5007274,
-    "lon": -1.9661248
-  },
-  {
-    "slug": "jami_mosque_birmingham",
-    "display_name": "Jami Mosque and Islamic Centre Birmingham",
-    "city": "",
-    "latitude": null,
-    "longitude": null,
-    "country_code": "GB",
-    "website": "",
-    "logo": "",
-    "address": "521-527 Coventry Road, Small Heath, Birmingham, B10 0LL",
-    "address_source": "masjidbox",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "timezone": "Europe/London",
-    "jummah_times": "",
-    "csv": "jami_mosque_birmingham.csv",
-    "provider": {
-      "type": "masjidbox",
-      "ref": {
-        "slug": "jmic"
-      },
-      "source_url": "https://masjidbox.com/prayer-times/jmic"
-    },
-    "today_only": true,
-    "suppress_times": [],
-    "quality": {
-      "status": "ok",
-      "checked_at": "2026-10-01",
-      "row_count": 134,
-      "warnings": [],
-      "issues": []
     },
     "acknowledged_issues": []
   },
@@ -4047,7 +4183,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4090,7 +4226,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4133,7 +4269,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4160,7 +4296,7 @@
     "radio_frequency": "454.3500",
     "approved": true,
     "is_stale": false,
-    "notes": "English Taleem after Maghrib on Monday, Tuesday and Thursday. Tafseer for sisters (English): Monday 1:20pm-1:50pm. Zuhr Jama'ah on Fridays (3, 10, 17, 24) shows 'SEE BELOW' Ã¢ÂÂ Jumu'ah times apply instead.",
+    "notes": "English Taleem after Maghrib on Monday, Tuesday and Thursday. Tafseer for sisters (English): Monday 1:20pm-1:50pm. Zuhr Jama'ah on Fridays (3, 10, 17, 24) shows 'SEE BELOW' — Jumu'ah times apply instead.",
     "source_image": "sources/kingsheath.jpg",
     "lat": 52.4359412,
     "lon": -1.8967673
@@ -4195,7 +4331,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4238,7 +4374,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4321,7 +4457,7 @@
     },
     "acknowledged_issues": [],
     "hidden": true,
-    "hidden_reason": "Unconfigured MasjidBox: flat +15 iqamah on every prayer + Dhuhr start 13:45 (36min off) Ã¢ÂÂ not the masjid's real config."
+    "hidden_reason": "Unconfigured MasjidBox: flat +15 iqamah on every prayer + Dhuhr start 13:45 (36min off) — not the masjid's real config."
   },
   {
     "display_name": "Madani Masjid",
@@ -4333,7 +4469,7 @@
     "islamic_month": "Dhul Hijjah 1447",
     "jummah_times": "Sutherland St: Speech 12:45, Khutba 1:25; Conduit St: Speech 12:45, Khutba 1:25; 2nd Jamaat (Sutherl",
     "eid_salah": "1st Jamaat: lecture after fajr jamaat, eid salah at 6:25am. 2nd Jamaat: lecture at 8:30, eid salah a",
-    "sadaqatul_fitr": "ÃÂ£5.00 per head",
+    "sadaqatul_fitr": "£5.00 per head",
     "radio_frequency": "454.100",
     "approved": true,
     "is_stale": false,
@@ -4380,7 +4516,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4423,7 +4559,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4466,7 +4602,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4489,10 +4625,10 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "",
     "eid_salah": "1st Eid Salaah: 8:00am, 2nd Eid Salaah: 9:15am",
-    "sadaqatul_fitr": "ÃÂ£7 per person (adult & child)",
+    "sadaqatul_fitr": "£7 per person (adult & child)",
     "radio_frequency": "459.5750",
     "is_stale": false,
-    "notes": "Taraweeh Jamaat times vary Ã¢ÂÂ see timetable. There will be a second Taraweeh Jamaat at 12:30am. To protect your fast, please stop eating 5 minutes before Sehri End time. Maghrib/Iftar column is labelled 'Maghrib Iftar' under Jama'at Times Ã¢ÂÂ this is the Iftar time. No separate Maghrib Jama'at column exists.",
+    "notes": "Taraweeh Jamaat times vary — see timetable. There will be a second Taraweeh Jamaat at 12:30am. To protect your fast, please stop eating 5 minutes before Sehri End time. Maghrib/Iftar column is labelled 'Maghrib Iftar' under Jama'at Times — this is the Iftar time. No separate Maghrib Jama'at column exists.",
     "source_image": "sources/madinatul.jpg",
     "lat": 52.5059662,
     "lon": -1.896682
@@ -4527,7 +4663,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4570,8 +4706,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4594,7 +4730,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4633,50 +4769,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "makki_masjid",
-    "display_name": "Makki Masjid",
-    "city": "Halifax",
-    "latitude": 53.718834,
-    "longitude": -1.878147,
-    "country_code": "GB",
-    "website": "",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e0f3a4eb-1f7b-4a73-b4bd-4b4a2dd8605c/mosque/1eea8dfd-5e96-6b2a-9588-066ed47a7584.png",
-    "address": "Hermon Avenue, King Cross, Calderdale, HX1 3XN",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": null,
-    "timezone": "Europe/London",
-    "jummah_times": "13:30",
-    "csv": "makki_masjid.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "makki-masjid-halifax"
-      },
-      "source_url": "https://mawaqit.net/en/m/makki-masjid-halifax"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4709,36 +4802,36 @@
     "source_image": "sources/makki.jpg"
   },
   {
-    "slug": "markazi_jamia_masjid_ghausia",
-    "display_name": "Markazi Jamia Masjid Ghausia",
-    "city": "",
-    "latitude": 53.6372984,
-    "longitude": -1.7918438,
+    "slug": "makki_masjid",
+    "display_name": "Makki Masjid",
+    "city": "Halifax",
+    "latitude": 53.718834,
+    "longitude": -1.878147,
     "country_code": "GB",
-    "website": "http://MasjidGhausia.org",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/99c104f9-f595-46f4-84be-deeadaf9e2fe/mosque/1eea8ec9-1303-6eac-a23c-066ed47a7584.png",
-    "address": "St Stephens Road, Newsome, Kirklees, HD1 3RT",
+    "website": "",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/e0f3a4eb-1f7b-4a73-b4bd-4b4a2dd8605c/mosque/1eea8dfd-5e96-6b2a-9588-066ed47a7584.png",
+    "address": "Hermon Avenue, King Cross, Calderdale, HX1 3XN",
     "address_source": "geocoded",
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "Markazi Jamia Masjid Ghausia",
+    "association": null,
     "timezone": "Europe/London",
-    "jummah_times": "12:30, 13:30",
-    "csv": "markazi_jamia_masjid_ghausia.csv",
+    "jummah_times": "13:30",
+    "csv": "makki_masjid.csv",
     "provider": {
       "type": "mawaqit",
       "ref": {
-        "path": "markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
+        "path": "makki-masjid-halifax"
       },
-      "source_url": "https://mawaqit.net/en/m/markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
+      "source_url": "https://mawaqit.net/en/m/makki-masjid-halifax"
     },
     "quality": {
       "status": "warnings",
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4781,7 +4874,50 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "markazi_jamia_masjid_ghausia",
+    "display_name": "Markazi Jamia Masjid Ghausia",
+    "city": "",
+    "latitude": 53.6372984,
+    "longitude": -1.7918438,
+    "country_code": "GB",
+    "website": "http://MasjidGhausia.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/99c104f9-f595-46f4-84be-deeadaf9e2fe/mosque/1eea8ec9-1303-6eac-a23c-066ed47a7584.png",
+    "address": "St Stephens Road, Newsome, Kirklees, HD1 3RT",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Markazi Jamia Masjid Ghausia",
+    "timezone": "Europe/London",
+    "jummah_times": "12:30, 13:30",
+    "csv": "markazi_jamia_masjid_ghausia.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/markazi-jamia-masjid-ghausia-huddersfield-hd1-3rt-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4824,8 +4960,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-10-26 to 2026-10-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-10-26 to 2026-10-30). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -4848,7 +4984,7 @@
             "2026-10-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -4887,7 +5023,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4930,7 +5066,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -4973,7 +5109,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5016,7 +5152,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5059,7 +5195,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5071,33 +5207,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid Aisha",
-    "slug": "aisha",
-    "csv": "aisha.csv",
-    "lat": 52.5233,
-    "lon": -1.9279,
-    "notes": "Jumu'ah Salaah is at 1:30pm. No Salah to be performed 10 minutes before Zohr Start time. Programmes: Mon: Dars of Quran after Maghrib; Sun: Inspirations after Zohr; Thur: Durood prog after Maghrib; Fri: Weekly dars of Hadeeth after Fajr; 2nd Sunday of the month: Program for Women after Zohr. Jama'at times are subject to change, therefore you are requested to check at the masjid.",
-    "address": "The Grange, Birmingham. B20 1BH",
-    "phone": "0121 554 0200 / 07791 965736",
-    "month": "July 2026",
-    "islamic_month": "Muharram/Safar 1448",
-    "eid_salah": "9:00am (one jama'at only)",
-    "sadaqatul_fitr": "ÃÂÃÂ£5.00 per person",
-    "radio_frequency": "460.375",
-    "is_stale": false,
-    "source_image": "sources/aisha.jpg",
-    "jummah_times": "1:30pm",
-    "approved": true,
-    "pending_update": false,
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/aisha.jpg"
-      },
-      "source_url": "/data/sources/aisha.jpg"
-    }
   },
   {
     "slug": "masjid_aisha",
@@ -5129,8 +5238,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 23 days (2026-04-01 to 2026-04-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 23 days (2026-04-01 to 2026-04-30). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5171,173 +5280,7 @@
             "2026-04-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
-          "acknowledged": true
-        }
-      ]
-    },
-    "acknowledged_issues": [
-      "fajr_after_sunrise"
-    ]
-  },
-  {
-    "display_name": "Masjid Al Falaah",
-    "slug": "falaah",
-    "address": "32 Trinity Road, Handsworth, Birmingham, B6 6AL",
-    "lat": 52.5084,
-    "lon": -1.8997,
-    "phone": "0121 630 1325",
-    "csv": "falaah.csv",
-    "notes": "Zuhr Jamaat 12:40pm. Jumu'ah at 12:30pm & 1:40pm. Eid Salaah 7:30am & 9:00am. Last ten nights Qiyam-ul-Layl at midnight. Fidya/Kaffarah ÃÂ£1.50 per fast. Pay Fitrana by 25th Ramadan. 100% of all Zakat funds will be distributed to the needy. Bank: Lloyds Bank, S/C: 30-93-09, A/C: 01195888. Taraweeh recitation of Surah/Ayah listed per night. Pay Your Zakat.",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "12:30pm & 1:40pm",
-    "eid_salah": "7:30am & 9:00am",
-    "sadaqatul_fitr": "ÃÂ£6 per person (min)",
-    "is_stale": false,
-    "source_image": "sources/falaah.jpg"
-  },
-  {
-    "slug": "masjid_alfalah",
-    "display_name": "Masjid Alfalah",
-    "city": "",
-    "latitude": 51.5638231,
-    "longitude": 0.0573474,
-    "country_code": "GB",
-    "website": "http://masjid-alfalah.org.uk/",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/df9ca896-4473-4fa3-af6d-15244e5cc50e/mosque/1eea8dcd-ff72-64fc-a748-066ed47a7584.png",
-    "address": "Kensington Gardens, Gants Hill, Greater London, IG1 3EN",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "North Ilford Islamic Centre",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:10",
-    "csv": "masjid_alfalah.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "alfalah-london"
-      },
-      "source_url": "https://mawaqit.net/en/m/alfalah-london"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid Al Falah",
-    "slug": "northilford",
-    "csv": "northilford.csv",
-    "address": "97 Kensington Gardens, Ilford, Essex, IG1 3EN",
-    "phone": "",
-    "month": "April 2026",
-    "islamic_month": "Shaw'waal / Dhul Qa'dah 1447 AH",
-    "jummah_times": "1:30pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "454.793.75",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Jumu'ah (Friday) prayer times: 1st Summer 1:30pm, 2nd Summer 2:15pm; 1st Winter 12:45pm, 2nd Winter 1:30pm. End of Sehri 5 minutes before Subah-Sadiq. Zawaal time is 10 minutes before Dhur beginning time. Jama'at times are subject to changes at short notice to allow for exceptional circumstances. Charity Trust No: 1062761. Bankers: Lloyds 102-104 High Road, Ilford. Sorting Code 30-94-51, A/C No. 01807188 & 01807285.",
-    "source_image": "sources/northilford.jpg"
-  },
-  {
-    "display_name": "Masjid Al-Furqaan",
-    "slug": "furqaan",
-    "csv": "furqaan.csv",
-    "address": "Bradford Road, Shipley, BD18 3DL",
-    "phone": "07438082359",
-    "month": "September 2026",
-    "islamic_month": "1448 AH",
-    "jummah_times": "Jumu'ah Khutbah: 1:30pm, Jumu'ah Salaah: 2:00pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Recommended days of fasting: Mondays & Thursdays. Website: www.markazalfurqaan.org. Email: Alfurqaanshipley@gmail.com.",
-    "source_image": "sources/furqaan.jpg",
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/furqaan.jpg"
-      },
-      "source_url": "/data/sources/furqaan.jpg"
-    },
-    "lat": 53.8312554,
-    "lon": -1.7835753
-  },
-  {
-    "slug": "masjid_ali",
-    "display_name": "Masjid Ali",
-    "city": "",
-    "latitude": 52.961282562526,
-    "longitude": -1.1916253501761,
-    "country_code": "GB",
-    "website": "http://madnitrust.co.uk",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7d5f0c87-135a-409c-9bcd-8398cf663bfc/mosque/1f066c43-5735-6e72-9f6c-0a3327cef9b5.jpg",
-    "address": "557 Beechdale Road, Leen Valley, Nottingham, NG8 3LH",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Madni Trust",
-    "timezone": "Europe/London",
-    "jummah_times": "14:00",
-    "csv": "masjid_ali.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "masjid-ali-nottingham-ng8-3lh-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/masjid-ali-nottingham-ng8-3lh-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        },
-        {
-          "type": "fajr_after_sunrise",
-          "severity": "high",
-          "count": 5,
-          "first_date": "2026-08-07",
-          "last_date": "2026-08-31",
-          "affected_dates": [
-            "2026-08-07",
-            "2026-08-28",
-            "2026-08-29",
-            "2026-08-30",
-            "2026-08-31"
-          ],
-          "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5376,8 +5319,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 50 days (2026-01-01 to 2026-12-12). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5445,7 +5388,7 @@
             "2026-12-12"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5485,7 +5428,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 61 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5571,23 +5514,110 @@
     "acknowledged_issues": []
   },
   {
-    "display_name": "Masjid An Noor",
-    "slug": "annoor",
-    "csv": "annoor.csv",
-    "address": "146 Berners Street, Leicester, LE2 0FU",
+    "slug": "masjid_alfalah",
+    "display_name": "Masjid Alfalah",
+    "city": "",
+    "latitude": 51.5638231,
+    "longitude": 0.0573474,
+    "country_code": "GB",
+    "website": "http://masjid-alfalah.org.uk/",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/df9ca896-4473-4fa3-af6d-15244e5cc50e/mosque/1eea8dcd-ff72-64fc-a748-066ed47a7584.png",
+    "address": "Kensington Gardens, Gants Hill, Greater London, IG1 3EN",
+    "address_source": "geocoded",
     "phone": "",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "454.300 MHZ",
-    "approved": true,
-    "is_stale": false,
-    "notes": "It is advisable to stop eating and drinking at least 5 minutes before Sub'h SÃÂdiq. SalÃÂt should not be performed during the 10 minutes before ZawÃÂl. Programmes in the Masjid during RamadhÃÂn: Dars e Qur'ÃÂn (Urdu/English) - see notice board for details; Short Lesson on HadÃÂ«th (English) after Fajr. Programmes via the receiver only: Urdu after Zuhr, English after Maghrib.",
-    "source_image": "sources/annoor.png",
-    "lat": 52.6342653,
-    "lon": -1.1101507
+    "email": "",
+    "notes": "",
+    "association": "North Ilford Islamic Centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:10",
+    "csv": "masjid_alfalah.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "alfalah-london"
+      },
+      "source_url": "https://mawaqit.net/en/m/alfalah-london"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
+    "slug": "masjid_ali",
+    "display_name": "Masjid Ali",
+    "city": "",
+    "latitude": 52.961282562526,
+    "longitude": -1.1916253501761,
+    "country_code": "GB",
+    "website": "http://madnitrust.co.uk",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/7d5f0c87-135a-409c-9bcd-8398cf663bfc/mosque/1f066c43-5735-6e72-9f6c-0a3327cef9b5.jpg",
+    "address": "557 Beechdale Road, Leen Valley, Nottingham, NG8 3LH",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Madni Trust",
+    "timezone": "Europe/London",
+    "jummah_times": "14:00",
+    "csv": "masjid_ali.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "masjid-ali-nottingham-ng8-3lh-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/masjid-ali-nottingham-ng8-3lh-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        },
+        {
+          "type": "fajr_after_sunrise",
+          "severity": "high",
+          "count": 5,
+          "first_date": "2026-08-07",
+          "last_date": "2026-08-31",
+          "affected_dates": [
+            "2026-08-07",
+            "2026-08-28",
+            "2026-08-29",
+            "2026-08-30",
+            "2026-08-31"
+          ],
+          "action_taken": "none",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
+          "acknowledged": true
+        }
+      ]
+    },
+    "acknowledged_issues": [
+      "fajr_after_sunrise"
+    ]
   },
   {
     "slug": "masjid_ansar",
@@ -5619,7 +5649,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5662,8 +5692,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5761,7 +5791,7 @@
             "2026-07-28"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5800,7 +5830,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -5843,8 +5873,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5867,7 +5897,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5906,8 +5936,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 2 days (2026-04-08 to 2026-04-09). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 2 days (2026-04-08 to 2026-04-09). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -5927,7 +5957,7 @@
             "2026-04-09"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -5935,26 +5965,6 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
-  },
-  {
-    "display_name": "Masjid-E-Aman",
-    "slug": "aman",
-    "csv": "aman.csv",
-    "address": "232 Witton Road, Aston, Birmingham, B6 6LB",
-    "phone": "0121 523 4265 / 07980463270",
-    "month": "May 2026",
-    "islamic_month": "Dhul Qa'dah / Dhul Hijjah 1447 AH",
-    "jummah_times": "Jumu'ah Jamat @ 2:00pm",
-    "eid_salah": "Eid salah 9:30am. Bayaan 30 mins before",
-    "sadaqatul_fitr": "ÃÂ£6.50 per person",
-    "radio_frequency": "447-6250",
-    "is_stale": false,
-    "notes": "Dhuhr Jamat @ 1:45pm - Jumu'ah Jamat @ 2:00pm. Listen to Live broadcast of Adhaan and Talks from Masjid on 447-6250. Jamat times may be changed according to circumstances. The 'Azan & Jamat' column under Maghrib appears to be a combined Azan and Jama'at time (a few minutes after Sunset).",
-    "lat": 52.5086688,
-    "lon": -1.8909605,
-    "source_image": "sources/aman.jpg",
-    "pending_update": false,
-    "approved": true
   },
   {
     "slug": "masjid_e_bilaal",
@@ -5986,7 +5996,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6029,7 +6039,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6072,7 +6082,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6084,114 +6094,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid-E-Noor",
-    "slug": "noor",
-    "csv": "noor.csv",
-    "address": "Ryecroft Street, Gloucester, GL1 4LY",
-    "phone": "01452416830",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "",
-    "eid_salah": "",
-    "sadaqatul_fitr": "ÃÂ£5 per person",
-    "radio_frequency": "454.700",
-    "is_stale": false,
-    "notes": "Maghrib Jamat will commence six minutes after Iftar time. For Brothers: Daily after Taraweeh Salaah. For Sisters: Saturday's 1:45pm Urdu Lecture, Sunday's 1:45pm English Lecture.",
-    "lat": 51.8576307,
-    "lon": -2.2367226,
-    "source_image": "sources/noor.jpg"
-  },
-  {
-    "display_name": "Masjid E Vali",
-    "slug": "vali",
-    "csv": "vali.csv",
-    "address": "Preston New Road, Blackburn, BB2 6PS",
-    "phone": "",
-    "month": "February-March 2026",
-    "islamic_month": "Ramadan 1447",
-    "jummah_times": "Jumu'ah Bayan: 12:40pm, Jumu'ah Khutbah: 1:00pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "",
-    "is_stale": false,
-    "notes": "Jama'at times are subject to changes. Changes will be displayed on display screens. Maghrib Jama'at times are shown in the Maghrib Jama'at column. Listen live by visiting emasjid.live/masjidevali.",
-    "lat": 53.7516084,
-    "lon": -2.5086968,
-    "source_image": "sources/vali.jpg"
-  },
-  {
-    "display_name": "Masjid Faizul Islam",
-    "slug": "faizul",
-    "csv": "faizul.csv",
-    "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
-    "lat": 52.5106,
-    "lon": -1.8912,
-    "phone": "07812372352",
-    "month": "September 2026",
-    "islamic_month": "Rabi' al-Awwal / al-Thani 1448 AH",
-    "jummah_times": "Jummah 1:30pm, 2nd Jummah 4:10pm",
-    "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
-    "sadaqatul_fitr": "Minimum ÃÂÃÂÃÂÃÂ£6.00 for adults & children",
-    "radio_frequency": "453.7000",
-    "is_stale": false,
-    "notes": "Zuhr 2PM. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu. Maghrib Jama'at times shown in table are the Sunset/Maghrib times used as Jama'at.",
-    "source_image": "sources/faizul.webp",
-    "approved": true,
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/faizul.webp"
-      },
-      "source_url": "/data/sources/faizul.webp"
-    },
-    "pending_update": false
-  },
-  {
-    "display_name": "Masjid Faizul Islam",
-    "slug": "faizul_perry",
-    "csv": "faizul_perry.csv",
-    "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
-    "phone": "07812372352",
-    "month": "October 2026",
-    "islamic_month": "Rabi' al-Thani - Jumada al-Ula 1448 AH",
-    "jummah_times": "1st Jumu'ah: 1:30PM, 2nd Jumu'ah: 4PM (2nd & 9th Second Jummah will be at 3:50PM)",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "453.7000",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct â please put clock one hour back. Jumuah Bayaan starts half an hour before Khutbah. The Sunset column is present in the timetable but is not mapped to any output field; the Maghrib Jama'at column contains the Maghrib time (labelled 'Magrib' under Jama'at Times). There is no separate Maghrib start/iftari column â the Jama'at Magrib column is used for maghrib_iftari. No separate maghrib_jamaat column exists.",
-    "source_image": "sources/faizul_perry.jpg",
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/faizul_perry.jpg"
-      },
-      "source_url": "/data/sources/faizul_perry.jpg"
-    },
-    "lat": 52.5123854,
-    "lon": -1.8945269
-  },
-  {
-    "display_name": "Masjid Hamza",
-    "slug": "hamza",
-    "csv": "hamza.csv",
-    "address": "90 Church Road, Moseley, Birmingham, B13 9AE",
-    "phone": "",
-    "month": "March 2026",
-    "islamic_month": "",
-    "jummah_times": "Winter Time: Bayaan starts 12:20pm, Jamat 1:10pm; Summer Time: Bayaan starts 12:50pm, Jamaah 1:40pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "454.775",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Jummah Salaah: Winter Time - Bayaan will start at 12:20pm and jamat time 1:10pm; Summer Time - Bayaan will start at 12:50pm and Jamaah will begin at 1:40pm.",
-    "source_image": "sources/hamza.png",
-    "lat": 52.4493645,
-    "lon": -1.8828855
   },
   {
     "slug": "masjid_ibn_salah",
@@ -6228,7 +6130,7 @@
     },
     "acknowledged_issues": [],
     "hidden": true,
-    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:38) Ã¢ÂÂ not the masjid's real times."
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat after midnight (00:38) — not the masjid's real times."
   },
   {
     "slug": "masjid_ibraheem_education_centre",
@@ -6260,7 +6162,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6303,7 +6205,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6346,8 +6248,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 5 days (2026-08-07 to 2026-08-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -6370,7 +6272,7 @@
             "2026-08-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -6393,7 +6295,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "Masjid Millat Ibrahim  ÃÂÃÂ²ÃÂ¯ÃÂÃÂÃÂªÃÂ ÃÂÃÂÃÂ© ÃÂ§ÃÂ¨ÃÂ±ÃÂ§ÃÂÃÂÃÂ",
+    "association": "Masjid Millat Ibrahim  مزگەوتی ملة ابراهیم",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
     "csv": "masjid_millat_ibrahim.csv",
@@ -6409,7 +6311,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6452,7 +6354,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6464,52 +6366,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid Naqeebul Islam",
-    "slug": "naqeebul",
-    "csv": "naqeebul.csv",
-    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD",
-    "phone": "",
-    "month": "April 2026",
-    "islamic_month": "Shawwaal - Dhul Qa'dah 1447",
-    "jummah_times": "Bayaan starts at 1:00pm, Khutbah at 1:30pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Jumu'ah Bayaan starts at 1:00pm, Khutbah at 1:30pm. The timetable header column is labelled 'FAJR & SEHRI' for the pre-dawn column. Sunset column exists separately from Maghrib & Iftari column ÃÂ¢ÃÂÃÂ Sunset values ignored. No Maghrib Jama'at column present.",
-    "source_image": "sources/naqeebul.jpg",
-    "lat": 52.4924826,
-    "lon": -1.8582255
-  },
-  {
-    "display_name": "Masjid Quba Trust",
-    "slug": "quba",
-    "csv": "quba.csv",
-    "lat": 52.5127,
-    "lon": -1.9206,
-    "notes": "Daily Zuhr Jama'at = 2:00pm. Jumuah Sermon = 1:10pm, Jumuah Jama'at = 1:45pm. No separate Zuhr Jama'at column in table Ã¢ÂÂ applied from footnote. No Maghrib Jama'at column in table Ã¢ÂÂ maghrib_jamaat left empty.",
-    "address": "316 Hamstead Road, Handsworth, Birmingham, B20 2RA",
-    "phone": "07377 985866",
-    "month": "September 2026",
-    "islamic_month": "Rabi ul Awwal - Rabi uthani 1448",
-    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
-    "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
-    "sadaqatul_fitr": "ÃÂ£4.50",
-    "radio_frequency": "454.3500",
-    "is_stale": false,
-    "source_image": "sources/quba.webp",
-    "approved": true,
-    "pending_update": false,
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/quba.webp"
-      },
-      "source_url": "/data/sources/quba.webp"
-    }
   },
   {
     "slug": "masjid_ramadan",
@@ -6541,7 +6397,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6553,33 +6409,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid Sheikh Rauf Barzenji",
-    "slug": "raufbarzenji",
-    "csv": "raufbarzenji.csv",
-    "address": "Parsonage Street, Manchester, M15 5WD",
-    "phone": "07918551688",
-    "month": "October 2026",
-    "islamic_month": "",
-    "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Dhuhr is closed on Saturdays and Sundays. Friday Jumu'ah: 1st Jamat at 1:00, 2nd Jamat at 2:00. Contact: info@mkcc-uk.org, www.mkcc-uk.org. Social: @MKCC (YouTube), @MKCC_UK (Telegram), @MKCC.UK (Facebook/Instagram/TikTok).",
-    "source_image": "sources/raufbarzenji.png",
-    "lat": 53.4608698,
-    "lon": -2.2513595,
-    "pending_update": true,
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/raufbarzenji.png"
-      },
-      "source_url": "/data/sources/raufbarzenji.png"
-    }
   },
   {
     "slug": "masjid_umar",
@@ -6611,7 +6440,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6623,30 +6452,6 @@
       ]
     },
     "acknowledged_issues": []
-  },
-  {
-    "display_name": "Masjid Usman",
-    "slug": "usman",
-    "csv": "usman.csv",
-    "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
-    "phone": "01215655767",
-    "month": "May 2026",
-    "islamic_month": "Dhul Qadah 1447",
-    "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
-    "eid_salah": "",
-    "sadaqatul_fitr": "",
-    "radio_frequency": "",
-    "approved": true,
-    "is_stale": false,
-    "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable Ã¢ÂÂ only beginning times are listed.",
-    "source_image": "sources/usman.jpg",
-    "provider": {
-      "type": "image",
-      "ref": {
-        "source_image": "sources/usman.jpg"
-      },
-      "source_url": "/data/sources/usman.jpg"
-    }
   },
   {
     "slug": "masjid_usman_ar_rahmantrust",
@@ -6678,7 +6483,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6721,8 +6526,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 3 days (2026-03-29 to 2026-03-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 3 days (2026-03-29 to 2026-03-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -6743,7 +6548,7 @@
             "2026-03-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -6782,7 +6587,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6825,7 +6630,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6852,7 +6657,7 @@
     "phone": "",
     "email": "",
     "notes": "",
-    "association": "ÃÂÃÂ±ÃÂÃÂ² ÃÂÃÂÃÂ ÃÂ§ÃÂÃÂªÃÂ¹ÃÂÃÂÃÂÃÂ",
+    "association": "مركز منى التعليمي",
     "timezone": "Europe/London",
     "jummah_times": "13:30",
     "csv": "mena_trust.csv",
@@ -6868,7 +6673,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6917,6 +6722,49 @@
     "acknowledged_issues": []
   },
   {
+    "slug": "msh",
+    "display_name": "Muslim Students House Masjid",
+    "city": "Birmingham",
+    "latitude": 52.457245026083,
+    "longitude": -1.885866522789,
+    "country_code": "GB",
+    "website": "https://www.mshuk.org",
+    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
+    "address": "Moseley Road, Moseley, Birmingham, B12 9BX",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": "Muslim Students House Masjid and community centre",
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:15",
+    "csv": "msh.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "msh-birmingham"
+      },
+      "source_url": "https://mawaqit.net/en/m/msh-birmingham"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
+  },
+  {
     "slug": "muradiye_camii",
     "display_name": "Muradiye Camii",
     "city": "London",
@@ -6946,7 +6794,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -6989,50 +6837,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "msh",
-    "display_name": "Muslim Students House Masjid",
-    "city": "Birmingham",
-    "latitude": 52.457245026083,
-    "longitude": -1.885866522789,
-    "country_code": "GB",
-    "website": "https://www.mshuk.org",
-    "logo": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/mosque/1eea8dbc-c123-6c2a-b57e-066ed47a7584.png",
-    "address": "Moseley Road, Moseley, Birmingham, B12 9BX",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": "Muslim Students House Masjid and community centre",
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:15",
-    "csv": "msh.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "msh-birmingham"
-      },
-      "source_url": "https://mawaqit.net/en/m/msh-birmingham"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7075,7 +6880,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7119,8 +6924,8 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 1 days (2026-07-31 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-07-31 to 2026-07-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-07-31 to 2026-07-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7151,7 +6956,7 @@
             "2026-07-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7190,8 +6995,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7263,7 +7068,7 @@
             "2026-07-14"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7302,7 +7107,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7314,6 +7119,25 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Naqeebul Islam",
+    "slug": "naqeebul",
+    "csv": "naqeebul.csv",
+    "address": "78-82 Washwood Heath Road, Birmingham, B8 1RD",
+    "phone": "",
+    "month": "April 2026",
+    "islamic_month": "Shawwaal - Dhul Qa'dah 1447",
+    "jummah_times": "Bayaan starts at 1:00pm, Khutbah at 1:30pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Jumu'ah Bayaan starts at 1:00pm, Khutbah at 1:30pm. The timetable header column is labelled 'FAJR & SEHRI' for the pre-dawn column. Sunset column exists separately from Maghrib & Iftari column â Sunset values ignored. No Maghrib Jama'at column present.",
+    "source_image": "sources/naqeebul.jpg",
+    "lat": 52.4924826,
+    "lon": -1.8582255
   },
   {
     "slug": "newport_central_jam_e_masjid_ncjm",
@@ -7345,7 +7169,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7388,7 +7212,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7431,7 +7255,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7474,7 +7298,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7486,6 +7310,24 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid-E-Noor",
+    "slug": "noor",
+    "csv": "noor.csv",
+    "address": "Ryecroft Street, Gloucester, GL1 4LY",
+    "phone": "01452416830",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "",
+    "eid_salah": "",
+    "sadaqatul_fitr": "£5 per person",
+    "radio_frequency": "454.700",
+    "is_stale": false,
+    "notes": "Maghrib Jamat will commence six minutes after Iftar time. For Brothers: Daily after Taraweeh Salaah. For Sisters: Saturday's 1:45pm Urdu Lecture, Sunday's 1:45pm English Lecture.",
+    "lat": 51.8576307,
+    "lon": -2.2367226,
+    "source_image": "sources/noor.jpg"
   },
   {
     "slug": "noor_el_islam_masjid",
@@ -7517,7 +7359,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7529,6 +7371,23 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Al Falah",
+    "slug": "northilford",
+    "csv": "northilford.csv",
+    "address": "97 Kensington Gardens, Ilford, Essex, IG1 3EN",
+    "phone": "",
+    "month": "April 2026",
+    "islamic_month": "Shaw'waal / Dhul Qa'dah 1447 AH",
+    "jummah_times": "1:30pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "454.793.75",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Jumu'ah (Friday) prayer times: 1st Summer 1:30pm, 2nd Summer 2:15pm; 1st Winter 12:45pm, 2nd Winter 1:30pm. End of Sehri 5 minutes before Subah-Sadiq. Zawaal time is 10 minutes before Dhur beginning time. Jama'at times are subject to changes at short notice to allow for exceptional circumstances. Charity Trust No: 1062761. Bankers: Lloyds 102-104 High Road, Ilford. Sorting Code 30-94-51, A/C No. 01807188 & 01807285.",
+    "source_image": "sources/northilford.jpg"
   },
   {
     "slug": "old_hill_masjid",
@@ -7560,7 +7419,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7603,7 +7462,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7646,7 +7505,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7658,6 +7517,33 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Quba Trust",
+    "slug": "quba",
+    "csv": "quba.csv",
+    "lat": 52.5127,
+    "lon": -1.9206,
+    "notes": "Daily Zuhr Jama'at = 2:00pm. Jumuah Sermon = 1:10pm, Jumuah Jama'at = 1:45pm. No separate Zuhr Jama'at column in table — applied from footnote. No Maghrib Jama'at column in table — maghrib_jamaat left empty.",
+    "address": "316 Hamstead Road, Handsworth, Birmingham, B20 2RA",
+    "phone": "07377 985866",
+    "month": "September 2026",
+    "islamic_month": "Rabi ul Awwal - Rabi uthani 1448",
+    "jummah_times": "Jumuah Sermon: 1:10pm, Jumuah Jama'at: 1:45pm",
+    "eid_salah": "7:30am & 9:00am. English sermons will start 30 mins before salah",
+    "sadaqatul_fitr": "£4.50",
+    "radio_frequency": "454.3500",
+    "is_stale": false,
+    "source_image": "sources/quba.webp",
+    "approved": true,
+    "pending_update": false,
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/quba.webp"
+      },
+      "source_url": "/data/sources/quba.webp"
+    }
   },
   {
     "slug": "quba_aston",
@@ -7689,7 +7575,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7732,7 +7618,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7744,6 +7630,33 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Sheikh Rauf Barzenji",
+    "slug": "raufbarzenji",
+    "csv": "raufbarzenji.csv",
+    "address": "Parsonage Street, Manchester, M15 5WD",
+    "phone": "07918551688",
+    "month": "October 2026",
+    "islamic_month": "",
+    "jummah_times": "1st Khutbah in Kurdish & English at 1:00, 2nd Khutbah in Arabic at 2:00",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Dhuhr is closed on Saturdays and Sundays. Friday Jumu'ah: 1st Jamat at 1:00, 2nd Jamat at 2:00. Contact: info@mkcc-uk.org, www.mkcc-uk.org. Social: @MKCC (YouTube), @MKCC_UK (Telegram), @MKCC.UK (Facebook/Instagram/TikTok).",
+    "source_image": "sources/raufbarzenji.png",
+    "lat": 53.4608698,
+    "lon": -2.2513595,
+    "pending_update": true,
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/raufbarzenji.png"
+      },
+      "source_url": "/data/sources/raufbarzenji.png"
+    }
   },
   {
     "slug": "redbridge_muslim_community_centre",
@@ -7775,8 +7688,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 29 days (2026-09-02 to 2026-09-30). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -7823,7 +7736,7 @@
             "2026-09-30"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -7862,50 +7775,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
-      ],
-      "issues": [
-        {
-          "type": "sehri_unconfigured",
-          "severity": "medium",
-          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
-          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-        }
-      ]
-    },
-    "acknowledged_issues": []
-  },
-  {
-    "slug": "shahjalal_jame_mosque",
-    "display_name": "Shahjalal Jame Mosque",
-    "city": "Bristol",
-    "latitude": 51.470711155886,
-    "longitude": -2.5638484954834,
-    "country_code": "GB",
-    "website": "https://shahjalalmosquebristol.co.uk/",
-    "logo": "",
-    "address": "Redding Road, Eastville, Bristol, BS5 6PE",
-    "address_source": "geocoded",
-    "phone": "",
-    "email": "",
-    "notes": "",
-    "association": null,
-    "timezone": "Europe/London",
-    "jummah_times": "13:30, 14:00",
-    "csv": "shahjalal_jame_mosque.csv",
-    "provider": {
-      "type": "mawaqit",
-      "ref": {
-        "path": "shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
-      },
-      "source_url": "https://mawaqit.net/en/m/shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
-    },
-    "quality": {
-      "status": "warnings",
-      "checked_at": "2026-05-19",
-      "row_count": 365,
-      "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7948,7 +7818,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -7991,8 +7861,8 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 12 days (2026-09-21 to 2026-10-31). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 12 days (2026-09-21 to 2026-10-31). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -8022,7 +7892,7 @@
             "2026-10-31"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -8030,6 +7900,49 @@
     "acknowledged_issues": [
       "fajr_after_sunrise"
     ]
+  },
+  {
+    "slug": "shahjalal_jame_mosque",
+    "display_name": "Shahjalal Jame Mosque",
+    "city": "Bristol",
+    "latitude": 51.470711155886,
+    "longitude": -2.5638484954834,
+    "country_code": "GB",
+    "website": "https://shahjalalmosquebristol.co.uk/",
+    "logo": "",
+    "address": "Redding Road, Eastville, Bristol, BS5 6PE",
+    "address_source": "geocoded",
+    "phone": "",
+    "email": "",
+    "notes": "",
+    "association": null,
+    "timezone": "Europe/London",
+    "jummah_times": "13:30, 14:00",
+    "csv": "shahjalal_jame_mosque.csv",
+    "provider": {
+      "type": "mawaqit",
+      "ref": {
+        "path": "shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
+      },
+      "source_url": "https://mawaqit.net/en/m/shahjalal-jame-mosque-bristol-bs5-6pe-united-kingdom"
+    },
+    "quality": {
+      "status": "warnings",
+      "checked_at": "2026-05-19",
+      "row_count": 365,
+      "warnings": [
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+      ],
+      "issues": [
+        {
+          "type": "sehri_unconfigured",
+          "severity": "medium",
+          "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
+          "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
+        }
+      ]
+    },
+    "acknowledged_issues": []
   },
   {
     "slug": "sketty_mosque_community_centre",
@@ -8061,7 +7974,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8073,6 +7986,25 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Jami Masjid",
+    "slug": "smethwick",
+    "csv": "smethwick.csv",
+    "address": "10-13 Lewisham Road, Smethwick, West Midlands, B66 2BP",
+    "phone": "0121 558 8204 / 07943745332",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "Jumu'ah Jamat 1:05",
+    "eid_salah": "1st Jamat 8:00am, 2nd Jamat 10:00am",
+    "sadaqatul_fitr": "£7",
+    "radio_frequency": "453.5625 Mhz",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Late night Taraweeh will take place (Sun-Thu) 12:15am / (Fri-Sat) 1:15am. Annual Community Iftar will take place on Mon 9th March 2026, programme will start after Asr salah. Ramadan Appeal: £150K remaining to complete the Masjid Extension works.",
+    "source_image": "sources/smethwick.jpg",
+    "lat": 52.5007274,
+    "lon": -1.9661248
   },
   {
     "slug": "south_birmingham_central_masjid",
@@ -8104,7 +8036,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8147,7 +8079,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8190,7 +8122,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8233,7 +8165,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8276,7 +8208,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8319,7 +8251,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8362,7 +8294,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8405,7 +8337,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8448,7 +8380,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8491,7 +8423,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8534,7 +8466,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8577,7 +8509,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8620,8 +8552,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 8 days (2026-04-03 to 2026-05-23). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 8 days (2026-04-03 to 2026-05-23). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -8647,7 +8579,7 @@
             "2026-05-23"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -8666,7 +8598,7 @@
     "islamic_month": "Ramadan 1447",
     "jummah_times": "1:00pm & 1:30pm",
     "eid_salah": "7:30am & 9:00am",
-    "sadaqatul_fitr": "ÃÂ£5.00",
+    "sadaqatul_fitr": "£5.00",
     "radio_frequency": "",
     "approved": true,
     "test_masjid": true,
@@ -8703,7 +8635,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8751,7 +8683,7 @@
     },
     "acknowledged_issues": [],
     "hidden": true,
-    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat 23:34 Ã¢ÂÂ not the masjid's real times."
+    "hidden_reason": "Unconfigured MasjidBox: high-angle calc + flat +10 iqamah, Isha jamaat 23:34 — not the masjid's real times."
   },
   {
     "slug": "ukim_sparkbrook",
@@ -8818,7 +8750,7 @@
       "checked_at": "2026-05-20",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8830,6 +8762,48 @@
       ]
     },
     "acknowledged_issues": []
+  },
+  {
+    "display_name": "Masjid Usman",
+    "slug": "usman",
+    "csv": "usman.csv",
+    "address": "53, 56 Shireland Rd, Smethwick B66 4RG",
+    "phone": "01215655767",
+    "month": "May 2026",
+    "islamic_month": "Dhul Qadah 1447",
+    "jummah_times": "1st: 1:30pm, 2nd: 2:30pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "approved": true,
+    "is_stale": false,
+    "notes": "Salatul Jumuah: 1st Jamaat 1:30pm, 2nd Jamaat 2:30pm. No separate jama'at time columns shown in timetable — only beginning times are listed.",
+    "source_image": "sources/usman.jpg",
+    "provider": {
+      "type": "image",
+      "ref": {
+        "source_image": "sources/usman.jpg"
+      },
+      "source_url": "/data/sources/usman.jpg"
+    }
+  },
+  {
+    "display_name": "Masjid E Vali",
+    "slug": "vali",
+    "csv": "vali.csv",
+    "address": "Preston New Road, Blackburn, BB2 6PS",
+    "phone": "",
+    "month": "February-March 2026",
+    "islamic_month": "Ramadan 1447",
+    "jummah_times": "Jumu'ah Bayan: 12:40pm, Jumu'ah Khutbah: 1:00pm",
+    "eid_salah": "",
+    "sadaqatul_fitr": "",
+    "radio_frequency": "",
+    "is_stale": false,
+    "notes": "Jama'at times are subject to changes. Changes will be displayed on display screens. Maghrib Jama'at times are shown in the Maghrib Jama'at column. Listen live by visiting emasjid.live/masjidevali.",
+    "lat": 53.7516084,
+    "lon": -2.5086968,
+    "source_image": "sources/vali.jpg"
   },
   {
     "slug": "wimbledon_masjid",
@@ -8861,7 +8835,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -8904,8 +8878,8 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Fajr jamaat is at or after sunrise on 1 days (2026-03-28 to 2026-03-28). Indicates a data error Ã¢ÂÂ Fajr jamaat must always be before sunrise."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
+        "Fajr jamaat is at or after sunrise on 1 days (2026-03-28 to 2026-03-28). Indicates a data error — Fajr jamaat must always be before sunrise."
       ],
       "issues": [
         {
@@ -8924,7 +8898,7 @@
             "2026-03-28"
           ],
           "action_taken": "none",
-          "fix": "Investigate Ã¢ÂÂ likely a Mawaqit data bug for this masjid",
+          "fix": "Investigate — likely a Mawaqit data bug for this masjid",
           "acknowledged": true
         }
       ]
@@ -8963,7 +8937,7 @@
       "checked_at": "2026-05-19",
       "row_count": 365,
       "warnings": [
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -9007,7 +8981,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 56 days (2026-06-01 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
@@ -9118,7 +9092,7 @@
       "row_count": 365,
       "warnings": [
         "Isha clamped to Maghrib on 75 days (2026-05-18 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",
-        "imsakNbMinBeforeFajr is 0 Ã¢ÂÂ sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
+        "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
       ],
       "issues": [
         {
