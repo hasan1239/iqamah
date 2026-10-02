@@ -544,15 +544,25 @@ async function githubCommitFiles(files, message, env) {
   }
 }
 
-// --- Slim index companion (data/mosques/index-slim.json) ---
+// GitHub's Contents API returns base64 of the file's UTF-8 bytes. atob() alone
+// gives one character per byte, so non-ASCII text ("£", "—", "ā") was read
+// garbled and then re-encoded garbled on every write, compounding mojibake
+// in index.json and configs. Decode the bytes as UTF-8 instead.
+function decodeGitHubContent(content) {
+  const bin = atob((content || '').replace(/\n/g, ''));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
 
-// Lightweight companion to index.json — same array order, but each entry is
-// cut down to only the fields the list/map/home/eid views actually read.
 // Providers whose times come from a live feed refreshed by provider scripts.
 // Uploads for these masjids are stored as a backup (data/backup/{slug}.csv)
 // rather than replacing the feed - see handleUpdate.
 const LIVE_FEED_PROVIDERS = new Set(['mawaqit', 'masjidbox', 'mymasjid', 'masjidal', 'londonprayertimes']);
 
+// --- Slim index companion (data/mosques/index-slim.json) ---
+
+// Lightweight companion to index.json — same array order, but each entry is
+// cut down to only the fields the list/map/home/eid views actually read.
 // Mirrors SLIM_INDEX_FIELDS + slim_config() in providers/__init__.py (the
 // reference implementation) — keep the two in sync.
 const SLIM_INDEX_FIELDS = [
@@ -1452,7 +1462,7 @@ async function handleSubmit(request, env) {
   try {
     indexFile = await githubGetFile('data/mosques/index.json', env);
     if (indexFile) {
-      existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+      existingConfigs = JSON.parse(decodeGitHubContent(indexFile.content));
     }
   } catch (e) {
     // GitHub being unreachable is a server problem - abort rather than
@@ -1710,7 +1720,7 @@ async function handleUpdate(request, env) {
 
   let existingConfig;
   try {
-    existingConfig = JSON.parse(atob(configFile.content.replace(/\n/g, '')));
+    existingConfig = JSON.parse(decodeGitHubContent(configFile.content));
   } catch (e) {
     return errorResponse('Failed to read existing masjid config', 500);
   }
@@ -1771,7 +1781,7 @@ async function handleUpdate(request, env) {
   }
   let mergedCsv;
   if (csvFile) {
-    const existingCsvText = atob(csvFile.content.replace(/\n/g, ''));
+    const existingCsvText = decodeGitHubContent(csvFile.content);
     mergedCsv = mergeCsvRows(existingCsvText, fixedRows);
   } else {
     mergedCsv = generateCsvString(fixedRows);
@@ -1842,7 +1852,7 @@ async function handleUpdate(request, env) {
     try {
       indexFile = await githubGetFile('data/mosques/index.json', env);
       if (indexFile) {
-        existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+        existingConfigs = JSON.parse(decodeGitHubContent(indexFile.content));
       }
     } catch (e) {
       // A GitHub error here must abort - proceeding with an empty list
@@ -1918,14 +1928,14 @@ async function handleAdminDelete(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
 
     // Get index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
     if (!indexFile) {
       return errorResponse('Index file not found', 500);
     }
-    const indexList = JSON.parse(atob(indexFile.content));
+    const indexList = JSON.parse(decodeGitHubContent(indexFile.content));
     const newIndex = indexList.filter(entry => {
       const entrySlug = typeof entry === 'string' ? entry : entry.slug;
       return entrySlug !== slug;
@@ -2001,13 +2011,13 @@ async function handleAdminApprove(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
     config.approved = true;
     delete config.pending_update;
 
     // Get index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
-    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const indexList = indexFile ? JSON.parse(decodeGitHubContent(indexFile.content)) : [];
     const updatedIndex = indexList.map(entry => {
       const entrySlug = typeof entry === 'string' ? entry : entry.slug;
       if (entrySlug === slug) {
@@ -2066,12 +2076,12 @@ async function handleAdminRename(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
     config.display_name = newName;
 
     // Get index.json and update the entry
     const indexFile = await githubGetFile('data/mosques/index.json', env);
-    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const indexList = indexFile ? JSON.parse(decodeGitHubContent(indexFile.content)) : [];
     const updatedIndex = indexList.map(entry => {
       if (typeof entry === 'object' && entry.slug === slug) {
         return { ...entry, display_name: newName };

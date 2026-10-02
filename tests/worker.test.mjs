@@ -573,6 +573,29 @@ test('update: merging keeps existing rows from a snake_case/ISO CSV and dedupes 
   assert.ok(!lines.some(l => l.startsWith(isoDate(1) + ',')), 'overlapping date replaced by the upload, not duplicated');
 });
 
+test('update: non-ASCII text in the config and index survives a round trip unchanged', async () => {
+  // GitHub serves base64 of UTF-8 bytes; decoding with atob() alone garbled
+  // "£"/"—"/"ā" and re-encoded the garbage on every write.
+  const cfg = { ...EXISTING_CONFIG, sadaqatul_fitr: 'Minimum £6.00', notes: 'Sub’h Ṣādiq — 5 min' };
+  const other = { display_name: 'Ānnoor', slug: 'annoor', notes: 'Ṣādiq', csv: 'annoor.csv' };
+  const b64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64');
+  installFetch({
+    'contents/data/mosques/testmasjid.json': () => j({ content: b64(cfg), sha: 'cfgsha' }),
+    'contents/data/testmasjid.csv': () => j({ content: btoa(EXISTING_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: b64([other, cfg]), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const files = committedFiles();
+  const saved = JSON.parse(files['data/mosques/testmasjid.json']);
+  assert.equal(saved.sadaqatul_fitr, 'Minimum £6.00');
+  assert.equal(saved.notes, cfg.notes);
+  const index = JSON.parse(files['data/mosques/index.json']);
+  assert.equal(index.find(c => c.slug === 'annoor').notes, 'Ṣādiq', 'untouched index entries keep their text');
+  assert.equal(index.find(c => c.slug === 'annoor').display_name, 'Ānnoor');
+});
+
 test('update: image masjid still replaces provider and source_image as before', async () => {
   installFetch(updateOverrides());
   const { rows, year } = sampleRows();
