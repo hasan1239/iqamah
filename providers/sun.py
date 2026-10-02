@@ -25,11 +25,13 @@ from datetime import date, timedelta
 THRESHOLD_MIN = 15      # beyond normal precaution offsets and minute rounding
 WINDOW_DAYS = 60        # only the upcoming period matters for what users see
 SHIFT_MIN = 45          # a whole-calendar shift (clock-change error) either way
-HIDE_DAYS = 14          # hide only when the unsafe days are this close; every feed
-                        # is re-checked at least weekly, so it's hidden before they arrive
-MIN_DAYS_FOR_HIGH = 3   # one or two odd days are a typo, not a broken feed
-                        # (capped at the number of upcoming days a short-window
-                        # feed like MasjidBox actually has)
+HIDE_DAYS = 3           # hide only while an unsafe day is today or in the next 2
+                        # days (providers/requalify.py re-runs this daily), so a
+                        # calendar that's wrong for 6 days isn't hidden for 3 weeks
+LOOKBACK_DAYS = 2       # recent days also count towards MIN_DAYS_FOR_HIGH, so a
+                        # MasjidBox feed with only today's row behaves like one
+                        # with two rows
+MIN_DAYS_FOR_HIGH = 2   # a single odd day is a typo: notice only, never hidden
 
 
 def _last_sunday(year: int, month: int) -> date:
@@ -107,9 +109,11 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
       the wrong time. That's a LATE sunrise (Fajr shown as still valid after
       the real sunrise), an EARLY Maghrib (fast broken / Maghrib prayed before
       sunset), or a shift of SHIFT_MIN+ in either direction (a clock-change
-      error makes every start time wrong). High severity
-      (masjid hidden) when it hits enough days within the next HIDE_DAYS;
-      otherwise medium, and the masjid page shows a per-day notice.
+      error makes every start time wrong). High severity (masjid hidden)
+      while an unsafe day falls within the next HIDE_DAYS and there are at
+      least MIN_DAYS_FOR_HIGH unsafe days (counting the last LOOKBACK_DAYS);
+      otherwise medium. The masjid page shows a per-day notice either way,
+      using that day's offset from `affected_offsets`.
     - sun_times_off: 15+ min off only in the harmless direction (early
       sunrise, late Maghrib). Medium.
     """
@@ -119,15 +123,16 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
     today = today or date.today()
     end = today + timedelta(days=WINDOW_DAYS)
     hide_end = today + timedelta(days=HIDE_DAYS)
+    lookback_start = today - timedelta(days=LOOKBACK_DAYS)
 
-    unsafe, off = [], []          # (iso date, signed worst offset)
-    checked_soon = 0
+    unsafe, off = [], []          # upcoming (iso date, signed offset)
+    recent_unsafe = 0             # unsafe days in the lookback period
     for row in rows:
         try:
             d = date.fromisoformat(row.get("date", ""))
         except ValueError:
             continue
-        if not today <= d < end:
+        if not lookback_start <= d < end:
             continue
         sun = sunrise_sunset_local(d, lat, lon)
         if sun is None:
@@ -141,16 +146,20 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
             diffs["maghrib"] = set_got - sun[1]
         if not diffs:
             continue
-        if d < hide_end:
-            checked_soon += 1
         worst = max(diffs.values(), key=abs)
-        is_unsafe = (
-            diffs.get("sunrise", 0) >= THRESHOLD_MIN
-            or diffs.get("maghrib", 0) <= -THRESHOLD_MIN
-            or abs(worst) >= SHIFT_MIN
-        )
-        if is_unsafe:
-            unsafe.append((row["date"], worst))
+        # Report the field that makes the day unsafe, not just the largest
+        if diffs.get("sunrise", 0) >= THRESHOLD_MIN:
+            unsafe_offset = diffs["sunrise"]
+        elif diffs.get("maghrib", 0) <= -THRESHOLD_MIN:
+            unsafe_offset = diffs["maghrib"]
+        elif abs(worst) >= SHIFT_MIN:
+            unsafe_offset = worst
+        else:
+            unsafe_offset = None
+        if d < today:
+            recent_unsafe += unsafe_offset is not None
+        elif unsafe_offset is not None:
+            unsafe.append((row["date"], unsafe_offset))
         elif abs(worst) >= THRESHOLD_MIN:
             off.append((row["date"], worst))
 
@@ -161,8 +170,8 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
     issues = []
     if unsafe:
         dates = [d for d, _ in unsafe]
-        soon = [d for d in dates if d < hide_end.isoformat()]
-        high = len(soon) >= max(1, min(MIN_DAYS_FOR_HIGH, checked_soon))
+        imminent = any(d < hide_end.isoformat() for d in dates)
+        high = imminent and recent_unsafe + len(dates) >= MIN_DAYS_FOR_HIGH
         typical = median([o for _, o in unsafe])
         issues.append({
             "type": "sun_times_unsafe",
@@ -172,6 +181,7 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
             "last_date": dates[-1],
             "typical_offset_min": typical,
             "affected_dates": dates,
+            "affected_offsets": [round(o) for _, o in unsafe],
             "action_taken": "none" if high else "none (per-day notice on the masjid page)",
             "fix": (f"Sunrise/Maghrib are typically {typical:+d} min from the sun at this "
                     "location, in a direction that could make users pray at the wrong "

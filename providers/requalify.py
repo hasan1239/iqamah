@@ -33,14 +33,19 @@ def requalify(config: dict, rows: list[dict], today=None) -> dict:
     lon = config.get("longitude") if config.get("longitude") is not None else config.get("lon")
     acknowledged = set(config.get("acknowledged_issues") or [])
 
-    issues = [i for i in q.get("issues", []) if i.get("type") not in SUN_TYPES]
+    issues = [dict(i) for i in q.get("issues", []) if i.get("type") not in SUN_TYPES]
     warnings = [w for w in q.get("warnings", []) if not w.startswith("Sunrise/Maghrib")]
     fresh = sun_time_issues(rows, lat, lon, today=today)
-    for issue in fresh:
-        if issue["type"] in acknowledged:
-            issue["acknowledged"] = True
     issues += fresh
     warnings += sun_time_warnings(fresh)
+    # Re-apply acknowledged_issues to every issue, so a maintainer adding (or
+    # removing) an acknowledgement by hand takes effect on the next daily run
+    # rather than at the feed's next fetch (up to a year for LondonPrayerTimes)
+    for issue in issues:
+        if issue.get("type") in acknowledged:
+            issue["acknowledged"] = True
+        else:
+            issue.pop("acknowledged", None)
 
     unacked = [i for i in issues if not i.get("acknowledged")]
     if not unacked:

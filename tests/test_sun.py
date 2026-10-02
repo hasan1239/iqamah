@@ -94,9 +94,38 @@ class SunTimes(unittest.TestCase):
         issues = sun_time_issues(rows, *BIRMINGHAM, today=TODAY)
         self.assertEqual([(i["type"], i["severity"], i["count"]) for i in issues],
                          [("sun_times_unsafe", "medium", 30)])
-        # ...and is hidden once those days are within two weeks
-        issues = sun_time_issues(rows, *BIRMINGHAM, today=TODAY + timedelta(days=10))
+        # ...and is hidden once those days are within the next 3 days
+        issues = sun_time_issues(rows, *BIRMINGHAM, today=TODAY + timedelta(days=18))
         self.assertEqual(issues[0]["severity"], "high")
+
+    def test_hide_window_boundary_is_today_plus_two(self):
+        rows = rows_for(3) + rows_for(10, shift=-60, start=TODAY + timedelta(days=3))
+        self.assertEqual(sun_time_issues(rows, *BIRMINGHAM, today=TODAY)[0]["severity"], "medium")
+        rows = rows_for(2) + rows_for(10, shift=-60, start=TODAY + timedelta(days=2))
+        self.assertEqual(sun_time_issues(rows, *BIRMINGHAM, today=TODAY)[0]["severity"], "high")
+
+    def test_single_imminent_bad_day_is_notice_only(self):
+        rows = rows_for(10)
+        rows[0]["maghrib_iftari"] = hhmm(sunrise_sunset_local(TODAY, *BIRMINGHAM)[1] - 60)
+        issue = sun_time_issues(rows, *BIRMINGHAM, today=TODAY)[0]
+        self.assertEqual((issue["severity"], issue["affected_offsets"]), ("medium", [-60]))
+
+    def test_recent_bad_days_count_for_a_one_row_feed(self):
+        # MasjidBox off-shard day: only today's row upcoming, yesterday's was bad too
+        rows = rows_for(1, shift=60, start=TODAY - timedelta(days=1)) + rows_for(1, shift=60)
+        self.assertEqual(sun_time_issues(rows, *BIRMINGHAM, today=TODAY)[0]["severity"], "high")
+        # ...but a bad day in the past alone never hides it
+        rows = rows_for(1, shift=60, start=TODAY - timedelta(days=1)) + rows_for(1)
+        self.assertEqual(sun_time_issues(rows, *BIRMINGHAM, today=TODAY), [])
+
+    def test_offset_reported_is_the_unsafe_field(self):
+        rows = rows_for(5)
+        for r in rows:
+            d = date.fromisoformat(r["date"])
+            rise, sset = sunrise_sunset_local(d, *BIRMINGHAM)
+            r["sunrise"], r["maghrib_iftari"] = hhmm(rise - 30), hhmm(sset - 16)
+        issue = sun_time_issues(rows, *BIRMINGHAM, today=TODAY)[0]
+        self.assertEqual(issue["affected_offsets"], [-16] * 5)
 
     def test_only_upcoming_window_counts(self):
         past = rows_for(30, shift=60, start=TODAY - timedelta(days=40))

@@ -724,8 +724,15 @@ function renderTodayView(target) {
   const sunIssue = !todayRow._backup && ((config.quality && config.quality.issues) || []).find(i =>
     i.type === 'sun_times_unsafe' && !i.acknowledged &&
     Array.isArray(i.affected_dates) && i.affected_dates.includes(todayIso));
-  const sunOffset = sunIssue ? Math.abs(sunIssue.typical_offset_min || 0) : 0;
-  const sunDirection = sunIssue && sunIssue.typical_offset_min > 0 ? 'later' : 'earlier';
+  // Today's own offset (affected_offsets parallels affected_dates); older
+  // quality blocks only have the window's typical offset
+  const sunIdx = sunIssue ? sunIssue.affected_dates.indexOf(todayIso) : -1;
+  const sunToday = sunIssue
+    ? ((Array.isArray(sunIssue.affected_offsets) && sunIssue.affected_offsets[sunIdx] != null)
+      ? sunIssue.affected_offsets[sunIdx] : (sunIssue.typical_offset_min || 0))
+    : 0;
+  const sunOffset = Math.abs(sunToday);
+  const sunDirection = sunToday > 0 ? 'later' : 'earlier';
   const sunFootnoteHtml = !sunIssue ? '' : (sunOffset >= 45 && sunOffset <= 75)
     ? `<div class="esha-combined-note">Today's times look about an hour ${sunDirection} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
     : `<div class="esha-combined-note">Some of today's times don't match sunrise and sunset at this masjid's location. Please check with the masjid.</div>`;

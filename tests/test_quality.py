@@ -102,12 +102,22 @@ class Requalify(unittest.TestCase):
         self.assertEqual(q["warnings"], ["other warning"])
         self.assertEqual(q["status"], "warnings")
 
+    def test_reapplies_hand_edited_acknowledgements_to_all_issues(self):
+        base = {"latitude": BIRMINGHAM[0], "longitude": BIRMINGHAM[1], "quality": {
+            "status": "needs_review", "issues": [{"type": "time_glitch", "severity": "high"}]}}
+        rows = [row(TODAY)]
+        acked = requalify({**base, "acknowledged_issues": ["time_glitch"]}, rows, today=TODAY)
+        self.assertEqual((acked["status"], acked["issues"][0].get("acknowledged")), ("ok", True))
+        # Removing the acknowledgement re-hides it
+        unacked = requalify({**base, "quality": acked}, rows, today=TODAY)
+        self.assertEqual((unacked["status"], unacked["issues"][0].get("acknowledged")), ("needs_review", None))
+
     def test_hides_when_unsafe_days_come_into_the_window(self):
-        # An hour out from day 20: visible now, hidden once within 14 days
+        # An hour out from day 20: visible now, hidden once within 3 days
         rows = [row(TODAY + timedelta(days=n), -60) for n in range(20, 40)]
         cfg = {"latitude": BIRMINGHAM[0], "longitude": BIRMINGHAM[1], "quality": {"issues": []}}
         self.assertEqual(requalify(cfg, rows, today=TODAY)["status"], "warnings")
-        self.assertEqual(requalify(cfg, rows, today=TODAY + timedelta(days=10))["status"], "needs_review")
+        self.assertEqual(requalify(cfg, rows, today=TODAY + timedelta(days=18))["status"], "needs_review")
 
 
 DAY_BLOCK = """<div class="carousel-item"><p>{date}</p><table>

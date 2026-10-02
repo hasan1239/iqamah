@@ -49,6 +49,10 @@
           "2026-10-30",
           "2026-10-31"
         ],
+        "affected_offsets": [
+          -64,
+          -64
+        ],
         "action_taken": "none (per-day notice on the masjid page)",
         "fix": "Sunrise/Maghrib are typically -64 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
