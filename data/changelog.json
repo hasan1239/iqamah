@@ -1,5 +1,24 @@
 [
   {
+    "version": "2.6.0",
+    "date": "2026-10-02",
+    "title": "More reliable times",
+    "items": [
+      {
+        "title": "Times checked against the sun",
+        "desc": "Every masjid's times are checked against sunrise and sunset, and days that look wrong are flagged or held back"
+      },
+      {
+        "title": "Backup timetables",
+        "desc": "Upload a timetable for any masjid. If its live times are ever missing, yours fill the gap"
+      },
+      {
+        "title": "Update an existing masjid",
+        "desc": "Adding a masjid that's already listed now takes you straight to updating its timetable"
+      }
+    ]
+  },
+  {
     "version": "2.5.0",
     "date": "2026-06-10",
     "title": "Feature pack",
