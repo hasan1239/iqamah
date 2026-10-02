@@ -538,6 +538,52 @@ test('update: live-feed masjid stores the upload as a backup and leaves the feed
   assert.match(JSON.parse(commit.body).message, /^Backup timetable: /);
 });
 
+test('update: a non-admin backup is marked pending review and raises a backup issue', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const cfg = JSON.parse(committedFiles()['data/mosques/testfeed.json']);
+  assert.equal(cfg.backup_pending, true);
+  const issue = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/issues'));
+  assert.ok(issue, 'notification issue created');
+  const { title, body } = JSON.parse(issue.body);
+  assert.match(title, /^Backup timetable: /);
+  assert.match(body, /saved as a \*\*backup\*\*/);
+  assert.match(body, /data\/backup\/testfeed\.csv/);
+});
+
+test('update: an admin backup is not marked pending', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest(
+    { slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } },
+    { headers: { 'X-User-Name': 'AdminUser' } },
+  ), env);
+  assert.equal(res.status, 200);
+  const cfg = JSON.parse(committedFiles()['data/mosques/testfeed.json']);
+  assert.equal(cfg.backup_pending, undefined);
+  assert.ok(!fetchCalls.some(c => c.method === 'POST' && c.url.endsWith('/issues')), 'no issue for admin uploads');
+});
+
+test('admin approve clears backup_pending in the config and index', async () => {
+  const pendingCfg = { ...FEED_CONFIG, backup_csv: 'backup/testfeed.csv', backup_pending: true };
+  installFetch(feedOverrides({
+    'contents/data/mosques/testfeed.json': () => j({ content: btoa(JSON.stringify(pendingCfg)), sha: 'cfgsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([pendingCfg])), sha: 'idxsha' }),
+  }));
+  const res = await worker.fetch(new Request('https://iqamah.co.uk/api/admin/approve', {
+    method: 'POST', body: JSON.stringify({ slug: 'testfeed' }),
+    headers: { 'Content-Type': 'application/json', 'X-User-Name': 'AdminUser' },
+  }), env);
+  assert.equal(res.status, 200);
+  const files = committedFiles();
+  assert.equal(JSON.parse(files['data/mosques/testfeed.json']).backup_pending, undefined);
+  const indexEntry = JSON.parse(files['data/mosques/index.json']).find(c => c.slug === 'testfeed');
+  assert.equal(indexEntry.backup_pending, undefined);
+  assert.equal(indexEntry.backup_csv, 'backup/testfeed.csv', 'the backup itself is kept');
+});
+
 test('update: a second upload for a live-feed masjid merges into the existing backup', async () => {
   const existingBackup = [
     "Date,Day,Islamic Day,Sehri Ends,Fajr Start,Sunrise,Zawal,Zohr,Asr,Esha,Fajr Jama'at,Zohar Jama'at,Asr Jama'at,Maghrib Iftari,Maghrib Jama'at,Esha Jama'at",

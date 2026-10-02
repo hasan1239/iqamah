@@ -1675,9 +1675,12 @@ function mergeCsvRows(existingCsvText, newRows, year) {
 // POST /api/update — Update existing masjid timetable
 // ============================================================
 
-async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, env) {
+async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, env, { backup = false } = {}) {
   try {
-    const issueBody = `A timetable update has been submitted.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**New rows:** ${newRowCount}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`;
+    const intro = backup
+      ? `A timetable was uploaded for a live-feed masjid and saved as a **backup** (\`data/backup/${slug}.csv\`). The feed stays the main source; backup rows are only shown on days the feed has no times, labelled "pending review" until approved.`
+      : 'A timetable update has been submitted.';
+    const issueBody = `${intro}\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**New rows:** ${newRowCount}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`, or use the Approve button on the masjid page.`;
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
       method: 'POST',
       headers: {
@@ -1687,7 +1690,7 @@ async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: `Timetable updated: ${mosqueName}`,
+        title: `${backup ? 'Backup timetable' : 'Timetable updated'}: ${mosqueName}`,
         body: issueBody,
         labels: ['timetable-update'],
       }),
@@ -1818,6 +1821,10 @@ async function handleUpdate(request, env) {
     // Feed times stay live and unflagged; only the backup is new
     existingConfig.backup_csv = `backup/${slug}.csv`;
     existingConfig.backup_updated_at = new Date().toISOString().slice(0, 10);
+    // Backup rows go live (only on days the feed has none) but are labelled
+    // pending review until approved, like a normal timetable update
+    if (admin) delete existingConfig.backup_pending;
+    else existingConfig.backup_pending = true;
   } else {
     existingConfig.is_stale = false;
     existingConfig.pending_update = admin ? false : true;
@@ -1896,7 +1903,7 @@ async function handleUpdate(request, env) {
     await githubCommitFiles(files, `${isLiveFeed ? 'Backup timetable' : 'Update timetable'}: ${existingConfig.display_name}`, env);
 
     // Create notification issue (skip for admin)
-    if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
+    if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env, { backup: isLiveFeed });
 
     // Trigger lockscreen generation
     triggerLockscreenGeneration(slug, env);
@@ -2034,6 +2041,7 @@ async function handleAdminApprove(request, env) {
     const config = JSON.parse(decodeGitHubContent(configFile.content));
     config.approved = true;
     delete config.pending_update;
+    delete config.backup_pending;
 
     // Get index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
@@ -2042,7 +2050,7 @@ async function handleAdminApprove(request, env) {
       const entrySlug = typeof entry === 'string' ? entry : entry.slug;
       if (entrySlug === slug) {
         if (typeof entry === 'object') {
-          return { ...entry, approved: true, pending_update: undefined };
+          return { ...entry, approved: true, pending_update: undefined, backup_pending: undefined };
         }
       }
       return entry;

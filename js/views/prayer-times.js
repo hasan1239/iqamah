@@ -94,7 +94,8 @@ function renderSourceTag(cfg) {
     const backupLabel = cfg.backup_source_image
       ? `<a href="/data/${cfg.backup_source_image}" target="_blank" rel="noopener" class="source-link">uploaded timetable</a>`
       : 'uploaded timetable';
-    return `<div class="source-tag">Times from ${backupLabel} · ${label} has no times for today</div>`;
+    const pending = cfg.backup_pending ? ' <span class="backup-pending">(pending review)</span>' : '';
+    return `<div class="source-tag">Times from ${backupLabel}${pending} · ${label} has no times for today</div>`;
   }
 
   // External providers link to their site; uploaded timetables link to the image.
@@ -1480,7 +1481,7 @@ async function renderAdminControls(container) {
   }
 
   // Approve button (if pending)
-  if (config.approved === false || config.pending_update === true) {
+  if (config.approved === false || config.pending_update === true || config.backup_pending === true) {
     const approveBtn = document.createElement('button');
     approveBtn.className = 'btn btn-admin admin-approve-btn';
     approveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Approve';
@@ -1497,8 +1498,10 @@ async function renderAdminControls(container) {
         if (!resp.ok || !result.success) throw new Error(result.error || 'Failed');
         config.approved = true;
         delete config.pending_update;
+        delete config.backup_pending;
         const notice = ptView.querySelector('.pending-notice');
         if (notice) notice.remove();
+        ptView.querySelectorAll('.backup-pending').forEach(el => el.remove());
         approveBtn.remove();
       } catch (e) {
         approveBtn.disabled = false;
