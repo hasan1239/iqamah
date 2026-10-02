@@ -722,9 +722,11 @@ function renderTodayView(target) {
   const sunIssue = !todayRow._backup && ((config.quality && config.quality.issues) || []).find(i =>
     (i.type === 'sun_times_late' || i.type === 'sun_times_early') && !i.acknowledged &&
     Array.isArray(i.affected_dates) && i.affected_dates.includes(todayIso));
-  const sunFootnoteHtml = sunIssue
-    ? `<div class="esha-combined-note">Today's times look about ${Math.abs(sunIssue.typical_offset_min || 60)} minutes ${sunIssue.type === 'sun_times_late' ? 'later' : 'earlier'} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
-    : '';
+  const sunOffset = sunIssue ? Math.abs(sunIssue.typical_offset_min || 0) : 0;
+  const sunDirection = sunIssue && sunIssue.type === 'sun_times_late' ? 'later' : 'earlier';
+  const sunFootnoteHtml = !sunIssue ? '' : (sunOffset >= 45 && sunOffset <= 75)
+    ? `<div class="esha-combined-note">Today's times look about an hour ${sunDirection} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
+    : `<div class="esha-combined-note">Some of today's times don't match sunrise and sunset at this masjid's location. Please check with the masjid.</div>`;
 
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">

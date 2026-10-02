@@ -24,6 +24,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from providers import lookup_uk_postcode, regenerate_index
+from providers.quality import feed_quality
 
 EMBED_URL = "https://timing.athanplus.com/masjid/widgets/embed?theme=2&masjid_id={mid}"
 SOURCE_URL = "https://timing.athanplus.com/masjid/widgets/embed?masjid_id={mid}"
@@ -69,9 +70,16 @@ def parse_widget(html: str) -> list[dict]:
         dm = DATE_RE.search(block)
         if not dm:
             continue
-        try:
-            iso = datetime.strptime(dm.group(1), "%B %d, %Y").strftime("%Y-%m-%d")
-        except ValueError:
+        # AthanPlus switched from "October 2, 2026" to "Oct 2, 2026" (Jun 2026),
+        # which silently broke this feed for months; accept both
+        iso = None
+        for fmt in ("%B %d, %Y", "%b %d, %Y"):
+            try:
+                iso = datetime.strptime(dm.group(1), fmt).strftime("%Y-%m-%d")
+                break
+            except ValueError:
+                pass
+        if not iso:
             continue
         times = [_to24(int(h), int(m), ap) for h, m, ap in TIME_RE.findall(block)]
         if len(times) < 11:
@@ -109,6 +117,11 @@ def upsert_csv(csv_path: Path, new_rows: list[dict]) -> int:
     return len(rows)
 
 
+def read_csv_rows(csv_path: Path) -> list[dict]:
+    with open(csv_path, encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
 def load_existing_config(p: Path) -> dict:
     if not p.exists():
         return {}
@@ -124,7 +137,7 @@ def prefer_existing(existing, new):
     return existing
 
 
-def build_config(slug: str, mid: str, existing: dict, row_count: int) -> dict:
+def build_config(slug: str, mid: str, existing: dict, rows: list[dict]) -> dict:
     def keep(field, new):
         return prefer_existing(existing.get(field), new)
     address = (existing.get("address") or "").strip()
@@ -155,8 +168,8 @@ def build_config(slug: str, mid: str, existing: dict, row_count: int) -> dict:
                      "source_url": SOURCE_URL.format(mid=mid)},
         "today_only": True,
         "suppress_times": list(existing.get("suppress_times") or []),
-        "quality": {"status": "ok", "checked_at": date.today().isoformat(),
-                    "row_count": row_count, "warnings": [], "issues": []},
+        # Sun-position + Fajr-after-sunrise checks on the upcoming rows
+        "quality": feed_quality(rows, lat, lng, acknowledged=existing.get("acknowledged_issues")),
         "acknowledged_issues": list(existing.get("acknowledged_issues") or []),
     }
     for k, v in existing.items():
@@ -178,7 +191,7 @@ def fetch_one(mid: str, slug: str, data_dir: Path, verbose: bool = True) -> dict
             if f in r:
                 r[f] = "-"
     row_count = upsert_csv(data_dir / f"{slug}.csv", new_rows)
-    config = build_config(slug, mid, existing, row_count)
+    config = build_config(slug, mid, existing, read_csv_rows(data_dir / f"{slug}.csv"))
     config_path.parent.mkdir(parents=True, exist_ok=True)
     json.dump(config, open(config_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     if verbose:

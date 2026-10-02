@@ -25,11 +25,28 @@
   "today_only": true,
   "suppress_times": [],
   "quality": {
-    "status": "ok",
+    "status": "warnings",
     "checked_at": "2026-10-02",
     "row_count": 137,
-    "warnings": [],
-    "issues": []
+    "warnings": [
+      "Sunrise/Maghrib 401 min earlier than the sun on 2 upcoming days (2026-10-02 to 2026-10-03)."
+    ],
+    "issues": [
+      {
+        "type": "sun_times_early",
+        "severity": "medium",
+        "count": 2,
+        "first_date": "2026-10-02",
+        "last_date": "2026-10-03",
+        "typical_offset_min": -401,
+        "affected_dates": [
+          "2026-10-02",
+          "2026-10-03"
+        ],
+        "action_taken": "none (early times are shown; users arrive early)",
+        "fix": "Sunrise/Maghrib are about 401 min earlier than the sun at this location. Check the masjid's source page."
+      }
+    ]
   },
   "acknowledged_issues": []
 }

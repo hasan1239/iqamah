@@ -24,6 +24,8 @@ from datetime import date, timedelta
 THRESHOLD_MIN = 15      # beyond normal precaution offsets and minute rounding
 WINDOW_DAYS = 60        # only the upcoming period matters for what users see
 MIN_DAYS_FOR_HIGH = 3   # one or two odd days are a typo, not a broken feed
+                        # (capped at the number of upcoming days a short-window
+                        # feed like MasjidBox actually has)
 
 
 def _last_sunday(year: int, month: int) -> date:
@@ -104,6 +106,7 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
     end = today + timedelta(days=WINDOW_DAYS)
 
     late, early, offsets = [], [], []
+    checked = 0
     for row in rows:
         try:
             d = date.fromisoformat(row.get("date", ""))
@@ -115,13 +118,16 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
         if sun is None:
             continue
         worst = 0.0
+        compared = False
         for field, expected in (("sunrise", sun[0]), ("maghrib_iftari", sun[1])):
             got = _minutes(row.get(field, ""))
             if got is None:
                 continue
+            compared = True
             diff = got - expected
             if abs(diff) > abs(worst):
                 worst = diff
+        checked += compared
         if worst >= THRESHOLD_MIN:
             late.append(row["date"])
             offsets.append(worst)
@@ -134,11 +140,12 @@ def sun_time_issues(rows: list[dict], lat, lon, today: date | None = None) -> li
         return round(vals[len(vals) // 2]) if vals else 0
 
     issues = []
+    high_after = max(1, min(MIN_DAYS_FOR_HIGH, checked))
     if late:
         typical = summary(late, 1)
         issues.append({
             "type": "sun_times_late",
-            "severity": "high" if len(late) >= MIN_DAYS_FOR_HIGH else "medium",
+            "severity": "high" if len(late) >= high_after else "medium",
             "count": len(late),
             "first_date": late[0],
             "last_date": late[-1],
