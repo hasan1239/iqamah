@@ -1,0 +1,26 @@
+{
+  "display_name": "Masjid Faizul Islam",
+  "slug": "faizul_perry",
+  "csv": "faizul_perry.csv",
+  "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
+  "phone": "07812372352",
+  "month": "October 2026",
+  "islamic_month": "Rabi' al-Thani - Jumada al-Ula 1448 AH",
+  "jummah_times": "1st Jumu'ah: 1:30PM, 2nd Jumu'ah: 4PM (2nd & 9th Second Jummah will be at 3:50PM)",
+  "eid_salah": "",
+  "sadaqatul_fitr": "",
+  "radio_frequency": "453.7000",
+  "approved": false,
+  "is_stale": false,
+  "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct — please put clock one hour back. Jumuah Bayaan starts half an hour before Khutbah. The Sunset column is present in the timetable but is not mapped to any output field; the Maghrib Jama'at column contains the Maghrib time (labelled 'Magrib' under Jama'at Times). There is no separate Maghrib start/iftari column — the Jama'at Magrib column is used for maghrib_iftari. No separate maghrib_jamaat column exists.",
+  "source_image": "sources/faizul_perry.jpg",
+  "provider": {
+    "type": "image",
+    "ref": {
+      "source_image": "sources/faizul_perry.jpg"
+    },
+    "source_url": "/data/sources/faizul_perry.jpg"
+  },
+  "lat": 52.5123854,
+  "lon": -1.8945269
+}
