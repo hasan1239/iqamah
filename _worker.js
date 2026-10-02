@@ -1343,8 +1343,11 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
     }
 
     // Proximity
-    if (lat != null && lon != null && cfg.lat != null && cfg.lon != null) {
-      const dist = haversineDistanceMetres(lat, lon, cfg.lat, cfg.lon);
+    // Submitted configs use lat/lon; provider (Mawaqit etc.) configs use latitude/longitude
+    const cfgLat = cfg.lat ?? cfg.latitude;
+    const cfgLon = cfg.lon ?? cfg.longitude;
+    if (lat != null && lon != null && cfgLat != null && cfgLon != null) {
+      const dist = haversineDistanceMetres(lat, lon, cfgLat, cfgLon);
       if (dist < 100) {
         veryClose = true;
         score += 40;

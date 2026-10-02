@@ -69,6 +69,9 @@ let masjidConfig = null;
 let masjidSlug = null;
 
 export async function render(container, { slug }) {
+  // Take the Add -> Update handoff before any await, so a failed or
+  // abandoned render can't leave it pending for a later visit
+  const handoff = takeUploadHandoff(slug);
   selectedFile = null;
   imageDataUrl = null;
   extractedData = null;
@@ -103,7 +106,6 @@ export async function render(container, { slug }) {
 
   // Arrived from Add Masjid after a duplicate match: reuse that upload and
   // its reviewed extraction, and open straight on the review step
-  const handoff = takeUploadHandoff(slug);
   if (handoff) {
     imageDataUrl = handoff.imageDataUrl;
     extractedData = handoff.extractedData;
@@ -467,7 +469,14 @@ function setupEventListeners(container, fromHandoff = false) {
       try {
         const converted = await convertPdfToImage(file);
         selectedFile = converted;
-        imageDataUrl = URL.createObjectURL(converted);
+        // Must be a data: URL, not a blob: URL - it's sent to /api/update
+        // as the source image and the worker only accepts base64
+        imageDataUrl = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(new Error('Failed to read converted PDF'));
+          reader.readAsDataURL(converted);
+        });
         previewImg.src = imageDataUrl;
         previewImg.style.display = '';
         fileInfo.textContent = `${converted.name} (${(converted.size / 1024 / 1024).toFixed(1)} MB)`;

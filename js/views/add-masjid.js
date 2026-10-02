@@ -698,6 +698,7 @@ function setupEventListeners(container) {
           ${m.strong ? `<button class="btn btn-primary duplicate-update-btn" data-slug="${esc(m.slug)}">Update existing masjid</button>` : ''}
         </div>
       `).join('')}
+      ${strong ? `<p class="duplicate-contact">Is this a different masjid? <a href="mailto:prayerly@hotmail.com?subject=${encodeURIComponent('Iqamah Add Masjid - ' + (masjidNameInput.value.trim() || 'duplicate check'))}">Contact us</a> and we'll add it for you.</p>` : ''}
       <div class="duplicate-actions">
         <button class="btn btn-secondary" id="dupCancelBtn">Cancel</button>
         ${strong ? '' : '<button class="btn btn-primary" id="dupConfirmBtn">This is different, submit anyway</button>'}
@@ -715,8 +716,9 @@ function setupEventListeners(container) {
         setUploadHandoff(btn.dataset.slug, imageDataUrl, gatherReviewData());
         // No slide transition: the Update view fills its review step during
         // render, and its document-level ID lookups would otherwise hit this
-        // view's duplicate IDs in the exiting pane
-        navigate(`/update/${btn.dataset.slug}`, { skipTransition: true });
+        // view's duplicate IDs in the exiting pane. Replace history so Back
+        // doesn't land on an emptied Add wizard.
+        navigate(`/update/${btn.dataset.slug}`, { skipTransition: true, replace: true });
       });
     });
 

@@ -385,6 +385,74 @@ test('submit: admin can override a strong duplicate', async () => {
 
   const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }, { headers }), env);
   assert.equal(override.status, 200);
+  assert.ok(fetchCalls.some(c => c.method === 'POST' && c.url.endsWith('/git/trees')), 'admin override committed');
+});
+
+function indexWith(configs, extra = {}) {
+  return {
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(configs)), sha: 'idxsha' }),
+    ...extra,
+  };
+}
+
+test('submit: same name + same full postcode (no phone) is strong', async () => {
+  installFetch(indexWith([{ display_name: 'Faizul Islam', slug: 'faizul', address: '1-8 The Broadway, Birmingham, B20 3EA', csv: 'faizul.csv' }]));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({
+    data: { mosque_name: 'Masjid Faizul Islam', address: 'The Broadway, Perry Barr, B20 3EA', rows, year },
+    confirm_not_duplicate: true,
+  }), env);
+  assert.equal(res.status, 409);
+  assert.equal((await res.json()).strong, true);
+});
+
+test('submit: same name within 100m is strong, using provider latitude/longitude fields', async () => {
+  // Mawaqit-style config: latitude/longitude, no lat/lon, no postcode
+  installFetch(indexWith(
+    [{ display_name: 'Faizul Islam', slug: 'faizul', latitude: 52.51060, longitude: -1.89120, csv: 'faizul.csv' }],
+    { 'nominatim.openstreetmap.org': () => j([{ lat: '52.51065', lon: '-1.89125' }]) },
+  ));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({
+    data: { mosque_name: 'Faizul Islam', address: 'The Broadway, Perry Barr', rows, year },
+    confirm_not_duplicate: true,
+  }), env);
+  assert.equal(res.status, 409);
+  const body = await res.json();
+  assert.equal(body.strong, true);
+  assert.ok(body.matches[0].reasons.some(r => /<100m/.test(r)));
+});
+
+test('submit: name below the 85% bar with same postcode is weak and overridable', async () => {
+  // "faizan islam" vs "faizul islam" = 83% similar
+  installFetch(indexWith([{ display_name: 'Faizul Islam', slug: 'faizul', address: 'Birmingham, B20 3EA', csv: 'faizul.csv' }]));
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Faizan Islam', address: 'Birmingham, B20 3EA', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 200);
+});
+
+test('submit: confirm_not_duplicate with a weak + strong mix returns only the strong match', async () => {
+  installFetch(indexWith([
+    { display_name: 'Test Masjid', slug: 'existing', address: 'Birmingham, B20 3EA', csv: 'existing.csv' },
+    { display_name: 'Green Lane Masjid', slug: 'green_lane', phone: '0121 111 2222', csv: 'green_lane.csv' },
+  ]));
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', address: 'Birmingham, B20 3EA', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.deepEqual((await first.json()).matches.map(m => m.slug).sort(), ['existing', 'green_lane']);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 409);
+  const body = await override.json();
+  assert.equal(body.strong, true);
+  assert.deepEqual(body.matches.map(m => m.slug), ['existing']);
 });
 
 test('submit: missing masjid name is rejected', async () => {
