@@ -98,6 +98,26 @@ Sunrise/Maghrib are objectively checkable against the sun; jama'at times can onl
 sanity-checked against the masjid's recent days. Recommended start: layers 1-2. Related:
 "AI quality sentinel" below.
 
+### Feed quality follow-ups (from the PR #223 reviews, Oct 2026)
+Small items left after the sun-position check, weekly refresh and backup timetables
+landed. None are blocking. **Effort: small each.**
+- **Same-day hiding.** Hidden status is decided by the daily run (~05:00 UTC), so
+  between midnight and that run it's a day stale. The client could check the issue's
+  `affected_dates` against today itself.
+- **Explain hidden My Masjid / pinned masjids.** A `needs_review` masjid silently drops
+  off lists. Users who've set it as My Masjid should see a "times under review"
+  notice instead.
+- **Stale-flag step writes `\u` escapes.** It dumps JSON with the default
+  `ensure_ascii=True`, so non-ASCII text in configs it touches churns diffs. Use
+  `ensure_ascii=False` and UTF-8, like the providers.
+- **`bulk --only` ignores unknown refs silently.** Warn when only some of the
+  requested refs match the curated list.
+- **Rehearse 1 January in late December.** The year-end refresh assumes Mawaqit and
+  My-Masjid already serve the new year. Do a dry run with a faked date before 31 Dec.
+- **Test the workflow's bash logic.** The refresh steps' branching (Sunday / ran out /
+  feed_health failure) is only dry-run by hand. Move it into a Python entry point
+  with unit tests.
+
 ## Data & coverage (the moat)
 
 ### Coverage gap dashboard
