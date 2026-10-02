@@ -10,9 +10,9 @@
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "453.7000",
-  "approved": false,
+  "approved": true,
   "is_stale": false,
-  "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct — please put clock one hour back. Jumuah Bayaan starts half an hour before Khutbah. The Sunset column is present in the timetable but is not mapped to any output field; the Maghrib Jama'at column contains the Maghrib time (labelled 'Magrib' under Jama'at Times). There is no separate Maghrib start/iftari column — the Jama'at Magrib column is used for maghrib_iftari. No separate maghrib_jamaat column exists.",
+  "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct â please put clock one hour back. Jumuah Bayaan starts half an hour before Khutbah. The Sunset column is present in the timetable but is not mapped to any output field; the Maghrib Jama'at column contains the Maghrib time (labelled 'Magrib' under Jama'at Times). There is no separate Maghrib start/iftari column â the Jama'at Magrib column is used for maghrib_iftari. No separate maghrib_jamaat column exists.",
   "source_image": "sources/faizul_perry.jpg",
   "provider": {
     "type": "image",

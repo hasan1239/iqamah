@@ -1961,7 +1961,7 @@
     "csv": "annoor.csv",
     "approved": true,
     "eid_salah": "",
-    "jummah_times": "BayÄn: 12:15pm, AzÄn: 12:50pm",
+    "jummah_times": "BayÃÂn: 12:15pm, AzÃÂn: 12:50pm",
     "lat": 52.6342653,
     "lon": -1.1101507
   },
@@ -2151,7 +2151,7 @@
     "display_name": "Masjid Faizul Islam",
     "address": "1-8 The Broadway, Perry Barr, Birmingham, B20 3EA",
     "csv": "faizul_perry.csv",
-    "approved": false,
+    "approved": true,
     "eid_salah": "",
     "jummah_times": "1st Jumu'ah: 1:30PM, 2nd Jumu'ah: 4PM (2nd & 9th Second Jummah will be at 3:50PM)",
     "lat": 52.5123854,
