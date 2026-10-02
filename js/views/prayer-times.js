@@ -713,6 +713,19 @@ function renderTodayView(target) {
     ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today. Please confirm with the masjid.</div>`
     : '';
 
+  // Provider quality check (providers/sun.py) found today's sunrise/Maghrib
+  // well off the sun at this location, e.g. a clock-change error at source.
+  // Masjids with a sustained late offset are hidden; this covers the
+  // remaining day-specific cases. Not shown for backup rows (different source).
+  const now = new Date();
+  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const sunIssue = !todayRow._backup && ((config.quality && config.quality.issues) || []).find(i =>
+    (i.type === 'sun_times_late' || i.type === 'sun_times_early') && !i.acknowledged &&
+    Array.isArray(i.affected_dates) && i.affected_dates.includes(todayIso));
+  const sunFootnoteHtml = sunIssue
+    ? `<div class="esha-combined-note">Today's times look about ${Math.abs(sunIssue.typical_offset_min || 60)} minutes ${sunIssue.type === 'sun_times_late' ? 'later' : 'earlier'} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
+    : '';
+
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
@@ -741,6 +754,7 @@ function renderTodayView(target) {
       </div>
       ${eshaFootnoteHtml}
       ${fajrFootnoteHtml}
+      ${sunFootnoteHtml}
 
       ${renderInfoSection()}
 

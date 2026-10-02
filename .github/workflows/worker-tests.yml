@@ -9,6 +9,7 @@ on:
       - 'prompts/extraction.txt'
       - 'js/utils/csv.js'
       - 'js/utils/masjid-csv.js'
+      - 'providers/**'
   pull_request:
     paths:
       - '_worker.js'
@@ -16,6 +17,7 @@ on:
       - 'prompts/extraction.txt'
       - 'js/utils/csv.js'
       - 'js/utils/masjid-csv.js'
+      - 'providers/**'
 
 jobs:
   test:
@@ -29,3 +31,8 @@ jobs:
         run: node --test tests/worker.test.mjs
       - name: Run timetable merge tests
         run: node --test tests/masjid-csv.test.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run provider sun-position tests
+        run: python -m unittest tests.test_sun

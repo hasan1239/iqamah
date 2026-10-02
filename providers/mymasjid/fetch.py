@@ -39,6 +39,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from providers import lookup_uk_postcode, regenerate_index
+from providers.sun import sun_time_issues, sun_time_warnings
 
 
 API_BASE = "https://time.my-masjid.com/api"
@@ -280,7 +281,8 @@ def repair_glitches(rows: list[dict]) -> list[dict]:
 
 
 def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
-                  corrections: list[dict] | None = None) -> dict:
+                  corrections: list[dict] | None = None,
+                  lat: float | None = None, lon: float | None = None) -> dict:
     """
     Quality checks. Reuses the Mawaqit-style signals (fajr_after_sunrise,
     iqamas_unconfigured, sehri_unconfigured) plus a My-Masjid-specific
@@ -451,6 +453,11 @@ def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
             "fix": "Verify against the masjid's real timetable; fix upstream or skip",
         })
 
+    # Sunrise/Maghrib vs the sun at the masjid's location (providers/sun.py)
+    sun_issues = sun_time_issues(rows, lat, lon)
+    issues.extend(sun_issues)
+    warnings.extend(sun_time_warnings(sun_issues))
+
     for issue in issues:
         if issue.get("type") in acknowledged:
             issue["acknowledged"] = True
@@ -618,7 +625,11 @@ def _run(model: dict, guid: str, slug: str, data_dir: Path, existing: dict) -> d
         raise RuntimeError(f"No usable rows for {guid}")
     corrections = repair_glitches(rows)
     acknowledged = existing.get("acknowledged_issues") or []
-    quality = quality_check(rows, acknowledged=acknowledged, corrections=corrections)
+    details = model.get("masjidDetails") or {}
+    lat, lon = real_coords(existing.get("latitude"), existing.get("longitude"))
+    if lat is None:
+        lat, lon = real_coords(details.get("latitude"), details.get("longitude"))
+    quality = quality_check(rows, acknowledged=acknowledged, corrections=corrections, lat=lat, lon=lon)
     config = build_config(model, guid, slug, quality, existing)
 
     write_csv(rows, data_dir / f"{slug}.csv")

@@ -37,6 +37,7 @@ from datetime import date
 from pathlib import Path
 
 from providers import regenerate_index
+from providers.sun import sun_time_issues, sun_time_warnings
 
 
 MAWAQIT_URL = "https://mawaqit.net/en/m/{path}"
@@ -422,6 +423,8 @@ def quality_check(
     rows: list[dict],
     data: dict,
     acknowledged: list[str] | None = None,
+    lat: float | None = None,
+    lon: float | None = None,
 ) -> dict:
     """
     Run quality checks against the normalised rows. Returns a status dict.
@@ -515,6 +518,12 @@ def quality_check(
             "fix": "Reach out to masjid, or skip this masjid",
         })
 
+    # Sunrise/Maghrib vs the sun at the masjid's location: catches calendars
+    # with clock-change or location errors at source (providers/sun.py)
+    sun_issues = sun_time_issues(rows, lat, lon)
+    issues.extend(sun_issues)
+    warnings.extend(sun_time_warnings(sun_issues))
+
     # Mark acknowledged issues so the audit trail records they were accepted
     for issue in issues:
         if issue.get("type") in acknowledged:
@@ -539,6 +548,14 @@ def quality_check(
         "warnings": warnings,
         "issues": issues,
     }
+
+
+def masjid_coords(existing: dict, data: dict) -> tuple:
+    """Coordinates for the sun check: the existing config's (which may have
+    been corrected by hand) win over the ones in Mawaqit's data."""
+    if existing.get("latitude") is not None and existing.get("longitude") is not None:
+        return existing["latitude"], existing["longitude"]
+    return data.get("latitude"), data.get("longitude")
 
 
 def load_existing_config(config_path: Path) -> dict:
@@ -713,7 +730,8 @@ def rebuild_from_cache(slug: str, data_dir: Path) -> dict:
     year = detect_year(data)
     rows = normalise(data, year)
     acknowledged = existing.get("acknowledged_issues") or []
-    quality = quality_check(rows, data, acknowledged=acknowledged)
+    lat, lon = masjid_coords(existing, data)
+    quality = quality_check(rows, data, acknowledged=acknowledged, lat=lat, lon=lon)
     config = build_config(data, slug, mawaqit_path, quality, existing)
 
     write_csv(rows, data_dir / f"{slug}.csv")
@@ -760,7 +778,8 @@ def fetch_one(
         print(f"Normalised {len(rows)} days")
 
     acknowledged = existing.get("acknowledged_issues") or []
-    quality = quality_check(rows, data, acknowledged=acknowledged)
+    lat, lon = masjid_coords(existing, data)
+    quality = quality_check(rows, data, acknowledged=acknowledged, lat=lat, lon=lon)
     if verbose:
         print(f"\nQuality: {quality['status']}")
         for w in quality["warnings"]:

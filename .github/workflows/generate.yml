@@ -27,6 +27,11 @@ on:
       template:
         description: 'Template version (leave blank to auto-detect from season)'
         required: false
+      refresh_full_year_feeds:
+        description: 'Also re-fetch the full-year feeds (Mawaqit, My-Masjid) now instead of waiting for Sunday'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: write
@@ -53,9 +58,20 @@ jobs:
         shell: python3 {0}
         run: |
           import json, csv, os, glob
-          from datetime import datetime
+          from datetime import datetime, date
           months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
           today = datetime.now().date()
+          def row_date(row):
+              # Provider CSVs: lowercase 'date', ISO. Worker CSVs: 'Date', ISO
+              # (older ones "1 Oct", which were all 2026).
+              s = (row.get('Date') or row.get('date') or '').strip()
+              try:
+                  return date.fromisoformat(s)
+              except ValueError:
+                  parts = s.split()
+                  if len(parts) == 2 and parts[1] in months and parts[0].isdigit():
+                      return date(2026, months[parts[1]], int(parts[0]))
+              return None
           for path in sorted(glob.glob('data/mosques/*.json')):
               if path.endswith('index.json') or path.endswith('index-slim.json'):
                   continue
@@ -71,12 +87,10 @@ jobs:
               if os.path.exists(csv_path):
                   with open(csv_path) as f:
                       for row in csv.DictReader(f):
-                          parts = row.get('Date', '').strip().split()
-                          if len(parts) == 2 and parts[1] in months:
-                              d = datetime(2026, months[parts[1]], int(parts[0])).date()
-                              if d >= today:
-                                  has_future = True
-                                  break
+                          d = row_date(row)
+                          if d and d >= today:
+                              has_future = True
+                              break
               if not has_future:
                   changed = False
                   if is_pending_update:
@@ -136,6 +150,25 @@ jobs:
             python -m providers.masjidal.bulk || echo "⚠️ Masjidal fetch had errors (continuing)"
           else
             echo "No data/masjidal_uk.txt — skipping Masjidal refresh"
+          fi
+
+      - name: Refresh full-year feeds (weekly)
+        if: github.event_name == 'schedule' || github.event.inputs.refresh_full_year_feeds == 'true'
+        run: |
+          # Mawaqit and My-Masjid publish a whole year at once, so they don't
+          # need a daily fetch, but masjids do correct their calendars (e.g.
+          # clock-change errors). Re-fetch weekly (Sundays) so fixes reach the
+          # app, and so the sun-position quality check (providers/sun.py)
+          # re-evaluates the upcoming 60 days. Non-fatal on errors.
+          if [ "$(date -u +%u)" != "7" ] && [ "${{ github.event.inputs.refresh_full_year_feeds }}" != "true" ]; then
+            echo "Not Sunday - skipping full-year feed refresh"
+            exit 0
+          fi
+          if [ -f data/mawaqit_uk.txt ]; then
+            python -m providers.mawaqit.bulk --delay 1.5 || echo "⚠️ Mawaqit fetch had errors (continuing)"
+          fi
+          if [ -f data/mymasjid_uk.txt ]; then
+            python -m providers.mymasjid.bulk || echo "⚠️ My-Masjid fetch had errors (continuing)"
           fi
 
       - name: Determine date, mosque, and template
