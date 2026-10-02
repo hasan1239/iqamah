@@ -536,9 +536,26 @@ def resolve_address(model: dict, existing: dict) -> tuple[str, str]:
     return build_address(model.get("masjidDetails") or {})
 
 
+# My-Masjid returns 54.0, -2.0 (a UK-wide default) when a masjid hasn't set its
+# location. Treat it, and 0/0, as unknown so it never becomes a map pin or a
+# duplicate-check position.
+PLACEHOLDER_COORDS = {(54.0, -2.0), (0.0, 0.0)}
+
+
+def real_coords(lat, lon):
+    try:
+        if (float(lat), float(lon)) in PLACEHOLDER_COORDS:
+            return None, None
+    except (TypeError, ValueError):
+        return None, None
+    return lat, lon
+
+
 def build_config(model: dict, guid: str, slug: str, quality: dict, existing: dict) -> dict:
     details = model.get("masjidDetails") or {}
     address, address_source = resolve_address(model, existing)
+    new_lat, new_lon = real_coords(details.get("latitude"), details.get("longitude"))
+    old_lat, old_lon = real_coords(existing.get("latitude"), existing.get("longitude"))
 
     def keep(field, new_value):
         return prefer_existing(existing.get(field), new_value)
@@ -547,8 +564,8 @@ def build_config(model: dict, guid: str, slug: str, quality: dict, existing: dic
         "slug": slug,
         "display_name": keep("display_name", (details.get("name") or "").strip()),
         "city": keep("city", ""),
-        "latitude": keep("latitude", details.get("latitude")),
-        "longitude": keep("longitude", details.get("longitude")),
+        "latitude": prefer_existing(old_lat, new_lat),
+        "longitude": prefer_existing(old_lon, new_lon),
         "country_code": keep("country_code", "GB"),
         "website": keep("website", ""),
         "logo": keep("logo", ""),

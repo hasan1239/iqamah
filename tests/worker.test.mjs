@@ -463,6 +463,136 @@ test('submit: missing masjid name is rejected', async () => {
 
 // ---- /api/update ----
 
+// Map of committed path -> decoded content (null for deletions). Blobs are
+// created in the same order as the tree's non-deleted entries.
+function committedFiles() {
+  const treeCall = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/git/trees'));
+  if (!treeCall) return null;
+  const blobs = fetchCalls.filter(c => c.method === 'POST' && c.url.endsWith('/git/blobs'));
+  const out = {};
+  let i = 0;
+  for (const entry of JSON.parse(treeCall.body).tree) {
+    if (entry.sha === null) { out[entry.path] = null; continue; }
+    const b64 = JSON.parse(blobs[i++].body).content;
+    out[entry.path] = Buffer.from(b64, 'base64').toString('utf8');
+  }
+  return out;
+}
+
+// Live-feed (Mawaqit) masjid: provider-format CSV with snake_case + ISO dates
+const FEED_CONFIG = {
+  display_name: 'Test Masjid', slug: 'testfeed', csv: 'testfeed.csv',
+  provider: { type: 'mawaqit', ref: { path: 'test-masjid-birmingham' }, source_url: 'https://mawaqit.net/en/m/test' },
+};
+function isoDate(offsetDays) {
+  return new Date(Date.now() + offsetDays * 86400000).toISOString().slice(0, 10);
+}
+const FEED_CSV = [
+  'date,day,islamic_day,sehri_ends,fajr_start,sunrise,zawal,zohr,asr,esha,fajr_jamaat,zohar_jamaat,asr_jamaat,maghrib_iftari,maghrib_jamaat,esha_jamaat',
+  `${isoDate(1)},Mon,,,05:00,06:30,,13:00,16:00,20:00,05:30,13:30,16:30,19:00,19:05,20:30`,
+  `${isoDate(40)},Tue,,,05:10,06:40,,13:00,15:50,19:50,05:40,13:30,16:20,18:50,18:55,20:20`,
+].join('\n');
+
+function feedOverrides(extra = {}) {
+  return {
+    'contents/data/mosques/testfeed.json': () => j({ content: btoa(JSON.stringify(FEED_CONFIG)), sha: 'cfgsha' }),
+    'contents/data/testfeed.csv': () => j({ content: btoa(FEED_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([FEED_CONFIG])), sha: 'idxsha' }),
+    ...extra,
+  };
+}
+
+test('update: live-feed masjid stores the upload as a backup and leaves the feed untouched', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({
+    slug: 'testfeed',
+    data: { mosque_name: 'Test Masjid', rows, year, jummah_times: '1:30pm' },
+    image: 'data:image/png;base64,' + btoa('fakepng'),
+  }), env);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.backup, true);
+  assert.equal(body.pending, false);
+
+  const files = committedFiles();
+  assert.ok(files['data/backup/testfeed.csv'], 'backup CSV committed');
+  assert.ok(!('data/testfeed.csv' in files), 'feed CSV not rewritten');
+  assert.ok(files['data/sources/testfeed_backup.png'] !== undefined, 'backup image committed');
+  assert.ok(files['data/backup/testfeed.json'] !== undefined, 'raw extraction stored with the backup');
+  assert.ok(!('data/testfeed.json' in files));
+
+  const cfg = JSON.parse(files['data/mosques/testfeed.json']);
+  assert.deepEqual(cfg.provider, FEED_CONFIG.provider, 'provider record unchanged');
+  assert.equal(cfg.backup_csv, 'backup/testfeed.csv');
+  assert.equal(cfg.backup_source_image, 'sources/testfeed_backup.png');
+  assert.match(cfg.backup_updated_at, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(cfg.source_image, undefined);
+  assert.equal(cfg.pending_update, undefined, 'feed times are not flagged pending');
+  assert.equal(cfg.jummah_times, '1:30pm', 'metadata still updated');
+
+  const slim = JSON.parse(files['data/mosques/index-slim.json']);
+  assert.equal(slim[0].backup_csv, 'backup/testfeed.csv', 'slim index carries backup_csv');
+
+  const commit = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/git/commits'));
+  assert.match(JSON.parse(commit.body).message, /^Backup timetable: /);
+});
+
+test('update: a second upload for a live-feed masjid merges into the existing backup', async () => {
+  const existingBackup = [
+    "Date,Day,Islamic Day,Sehri Ends,Fajr Start,Sunrise,Zawal,Zohr,Asr,Esha,Fajr Jama'at,Zohar Jama'at,Asr Jama'at,Maghrib Iftari,Maghrib Jama'at,Esha Jama'at",
+    '1 Jan,Thu,,,06:15,08:15,,12:10,02:00,,6:45,12:30,2:30,04:05,,07:00',
+  ].join('\n');
+  installFetch(feedOverrides({
+    'contents/data/backup/testfeed.csv': () => j({ content: btoa(existingBackup), sha: 'bksha' }),
+  }));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const csv = committedFiles()['data/backup/testfeed.csv'];
+  assert.match(csv, /^1 Jan,/m, 'earlier backup rows kept');
+  assert.equal(csv.trim().split('\n').length, 1 + 1 + rows.length);
+});
+
+test('update: merging keeps existing rows from a snake_case/ISO CSV and dedupes across date formats', async () => {
+  // Image masjid whose CSV is in provider format (e.g. it used to be a feed)
+  const cfg = { display_name: 'Test Masjid', slug: 'testmasjid', csv: 'testmasjid.csv', provider: { type: 'image' } };
+  installFetch({
+    'contents/data/mosques/testmasjid.json': () => j({ content: btoa(JSON.stringify(cfg)), sha: 'cfgsha' }),
+    'contents/data/testmasjid.csv': () => j({ content: btoa(FEED_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([cfg])), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows(); // first row is tomorrow, in "D Mon" format
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const lines = committedFiles()['data/testmasjid.csv'].trim().split('\n');
+  assert.equal(lines[0].split(',')[0], 'Date');
+  // FEED_CSV has tomorrow (overlaps the upload) + day 40: 3 uploaded + 1 kept
+  assert.equal(lines.length, 1 + rows.length + 1, lines.join('\n'));
+  assert.ok(lines.some(l => l.startsWith(isoDate(40) + ',')), 'non-overlapping existing row kept');
+  assert.ok(!lines.some(l => l.startsWith(isoDate(1) + ',')), 'overlapping date replaced by the upload, not duplicated');
+});
+
+test('update: image masjid still replaces provider and source_image as before', async () => {
+  installFetch(updateOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({
+    slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year },
+    image: 'data:image/jpeg;base64,' + btoa('fakejpg'),
+  }), env);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.backup, false);
+  assert.equal(body.pending, true);
+  const files = committedFiles();
+  const cfg = JSON.parse(files['data/mosques/testmasjid.json']);
+  assert.equal(cfg.source_image, 'sources/testmasjid.jpg');
+  assert.equal(cfg.provider.type, 'image');
+  assert.equal(cfg.pending_update, true);
+  assert.equal(cfg.backup_csv, undefined);
+  assert.ok('data/sources/testmasjid.jpg' in files);
+});
+
 test('update: happy path merges the CSV and commits', async () => {
   installFetch(updateOverrides());
   const { rows, year } = sampleRows();

@@ -68,6 +68,18 @@ let _syncImageHeight = null;
 let masjidConfig = null;
 let masjidSlug = null;
 
+// Live-feed providers: uploads are kept as a backup timetable rather than
+// replacing the feed (mirrors LIVE_FEED_PROVIDERS in _worker.js)
+const LIVE_FEED_LABELS = {
+  mawaqit: 'Mawaqit', masjidbox: 'MasjidBox', mymasjid: 'MyMasjid',
+  masjidal: 'Masjidal', londonprayertimes: 'LondonPrayerTimes',
+};
+
+function liveFeedLabel(cfg) {
+  const type = cfg && cfg.provider && cfg.provider.type;
+  return LIVE_FEED_LABELS[type] || null;
+}
+
 export async function render(container, { slug }) {
   // Take the Add -> Update handoff before any await, so a failed or
   // abandoned render can't leave it pending for a later visit
@@ -175,6 +187,7 @@ function getWizardHTML() {
       <header>
         <h1>Update Timetable <span class="beta-badge">BETA</span></h1>
         <p class="add-subtitle" id="uploadSubtitle">Upload the latest timetable for ${escapeHtml(name)}</p>
+        ${liveFeedLabel(masjidConfig) ? `<p class="add-subtitle feed-backup-note" id="feedBackupNote">Times for ${escapeHtml(name)} come from ${liveFeedLabel(masjidConfig)} automatically. Your timetable will be kept as a backup and used for any days ${liveFeedLabel(masjidConfig)} has no times.</p>` : ''}
         <p class="add-subtitle" id="aiDisclaimer" style="display:none;">Times were extracted using AI and may contain errors.<br>Please verify before submitting.</p>
       </header>
 
@@ -338,6 +351,8 @@ function setupEventListeners(container, fromHandoff = false) {
     const disclaimer = document.getElementById('aiDisclaimer');
     if (uploadSub) uploadSub.style.display = num === 3 ? 'none' : '';
     if (disclaimer) disclaimer.style.display = num === 3 ? '' : 'none';
+    const feedNote = document.getElementById('feedBackupNote');
+    if (feedNote) feedNote.style.display = num === 4 ? 'none' : '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -748,7 +763,11 @@ function setupEventListeners(container, fromHandoff = false) {
 
       confirmationText.textContent = result.message || 'Timetable has been updated!';
       const confirmNote = document.getElementById('confirmationNote');
-      if (confirmNote) confirmNote.textContent = 'The updated times are live but will show a "Pending Review" tag until approved.';
+      if (confirmNote) {
+        confirmNote.textContent = result.backup
+          ? `${liveFeedLabel(masjidConfig) || 'The live feed'} stays the main source. Your timetable will be used for any days it has no times.`
+          : 'The updated times are live but will show a "Pending Review" tag until approved.';
+      }
       goToStep(4);
     } catch (e) {
       showError(submitError, e.message);

@@ -548,10 +548,15 @@ async function githubCommitFiles(files, message, env) {
 
 // Lightweight companion to index.json — same array order, but each entry is
 // cut down to only the fields the list/map/home/eid views actually read.
+// Providers whose times come from a live feed refreshed by provider scripts.
+// Uploads for these masjids are stored as a backup (data/backup/{slug}.csv)
+// rather than replacing the feed - see handleUpdate.
+const LIVE_FEED_PROVIDERS = new Set(['mawaqit', 'masjidbox', 'mymasjid', 'masjidal', 'londonprayertimes']);
+
 // Mirrors SLIM_INDEX_FIELDS + slim_config() in providers/__init__.py (the
 // reference implementation) — keep the two in sync.
 const SLIM_INDEX_FIELDS = [
-  'slug', 'display_name', 'address', 'city', 'logo', 'csv', 'approved',
+  'slug', 'display_name', 'address', 'city', 'logo', 'csv', 'backup_csv', 'approved',
   'eid_salah', 'jummah_times', 'test_masjid', 'hidden',
   'latitude', 'longitude', 'lat', 'lon',
 ];
@@ -916,12 +921,15 @@ async function buildMasjidOgMeta(slug, request, env) {
   if (config.csv) {
     try {
       const csvRes = await env.ASSETS.fetch(new URL(`/data/${config.csv}`, request.url).toString());
-      if (csvRes.ok) {
-        const row = findTodayRowForOg(await csvRes.text());
-        const times = row ? buildTodayTimesLine(row) : null;
-        if (times) {
-          description = `Today: ${times.line} — ${times.usedJamaat ? "jama'at times" : 'start times'}`;
-        }
+      let row = csvRes.ok ? findTodayRowForOg(await csvRes.text()) : null;
+      // Live-feed masjids fall back to their uploaded backup timetable
+      if (!row && config.backup_csv) {
+        const backupRes = await env.ASSETS.fetch(new URL(`/data/${config.backup_csv}`, request.url).toString());
+        if (backupRes.ok) row = findTodayRowForOg(await backupRes.text());
+      }
+      const times = row ? buildTodayTimesLine(row) : null;
+      if (times) {
+        description = `Today: ${times.line} — ${times.usedJamaat ? "jama'at times" : 'start times'}`;
       }
     } catch {
       // CSV problems never block the preview — keep the generic description
@@ -1572,30 +1580,31 @@ async function handleSubmit(request, env) {
 // CSV merge logic
 // ============================================================
 
-function parseDateForSort(dateStr) {
-  if (!dateStr) return 0;
-  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
-  const parts = dateStr.trim().split(/\s+/);
-  if (parts.length < 2) return 0;
-  const day = parseInt(parts[0]);
-  const mon = months[parts[1]];
-  if (isNaN(day) || mon === undefined) return 0;
-  // Use a sortable number: month * 100 + day
-  return mon * 100 + day;
+// Canonical YYYY-MM-DD key for a CSV date in either format ("2026-10-01" from
+// providers, "1 Oct" from image extraction), so the two layouts merge and
+// sort together instead of duplicating or dropping rows.
+function csvDateKey(dateStr) {
+  const d = ogParseDate(dateStr);
+  if (!d) return null;
+  return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}`;
 }
 
 function mergeCsvRows(existingCsvText, newRows) {
-  // Parse existing CSV into Map keyed by date string
+  // Parse existing CSV into Map keyed by date. Provider CSVs use snake_case
+  // headers, so alias them first (otherwise every existing row is dropped).
   const lines = existingCsvText.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim());
+  const headers = lines[0].split(',').map(h => {
+    const trimmed = h.trim();
+    return OG_HEADER_ALIASES[trimmed] || trimmed;
+  });
   const existingMap = new Map();
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',').map(v => v.trim());
     const row = {};
     headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
-    const dateKey = row['Date'] || '';
-    if (dateKey) existingMap.set(dateKey.trim(), row);
+    const dateKey = csvDateKey(row['Date'] || '');
+    if (dateKey) existingMap.set(dateKey, row);
   }
 
   // Generate new CSV string and parse it
@@ -1607,13 +1616,14 @@ function mergeCsvRows(existingCsvText, newRows) {
     const values = newLines[i].split(',').map(v => v.trim());
     const row = {};
     newHeaders.forEach((h, idx) => { row[h] = values[idx] || ''; });
-    const dateKey = row['Date'] || '';
-    if (dateKey) existingMap.set(dateKey.trim(), row);
+    const dateKey = csvDateKey(row['Date'] || '');
+    if (dateKey) existingMap.set(dateKey, row);
   }
 
-  // Sort all rows by date
-  const allRows = Array.from(existingMap.values());
-  allRows.sort((a, b) => parseDateForSort(a['Date']) - parseDateForSort(b['Date']));
+  // Sort all rows by date (ISO keys sort lexically)
+  const allRows = Array.from(existingMap.entries())
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([, row]) => row);
 
   // Rebuild CSV with standard headers
   const standardHeaders = [
@@ -1738,12 +1748,23 @@ async function handleUpdate(request, env) {
     if (data[field]) data[field] = data[field].substring(0, max);
   }
 
+  // Live-feed masjids keep the feed as their main source: the upload is
+  // merged into a separate backup CSV that the app only uses for dates the
+  // feed has no row for. The feed's CSV and provider record are never
+  // touched (rewriting them would lose feed rows and make the nightly
+  // refresh stop recognising the masjid and recreate it as a duplicate).
+  const providerType = existingConfig.provider && existingConfig.provider.type;
+  const isLiveFeed = LIVE_FEED_PROVIDERS.has(providerType);
+  const csvPath = isLiveFeed
+    ? `data/backup/${slug}.csv`
+    : `data/${existingConfig.csv || slug + '.csv'}`;
+
   // Fetch existing CSV. A GitHub error must not fall through to the
   // no-CSV branch - that would silently replace the merged history with
   // only the newly uploaded rows.
   let csvFile;
   try {
-    csvFile = await githubGetFile(`data/${existingConfig.csv || slug + '.csv'}`, env);
+    csvFile = await githubGetFile(csvPath, env);
   } catch (e) {
     if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
     throw e;
@@ -1763,11 +1784,17 @@ async function handleUpdate(request, env) {
       existingConfig[field] = data[field].trim();
     }
   }
-  existingConfig.is_stale = false;
-  existingConfig.pending_update = admin ? false : true;
-  if (admin) existingConfig.approved = true;
-  if (data.month) existingConfig.month = data.month;
-  if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
+  if (isLiveFeed) {
+    // Feed times stay live and unflagged; only the backup is new
+    existingConfig.backup_csv = `backup/${slug}.csv`;
+    existingConfig.backup_updated_at = new Date().toISOString().slice(0, 10);
+  } else {
+    existingConfig.is_stale = false;
+    existingConfig.pending_update = admin ? false : true;
+    if (admin) existingConfig.approved = true;
+    if (data.month) existingConfig.month = data.month;
+    if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
+  }
 
   // Re-geocode if address changed
   if (data.address && data.address.trim() && data.address.trim() !== (existingConfig.address || '')) {
@@ -1779,35 +1806,34 @@ async function handleUpdate(request, env) {
   }
 
   // Source image update
-  if (image) {
-    const imgMatch = image.match(/^data:image\/(\w+);base64,/);
-    if (imgMatch) {
-      const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
-      existingConfig.source_image = `sources/${slug}.${ext}`;
-      // Times now come from this uploaded timetable image.
-      existingConfig.provider = {
-        type: 'image',
-        ref: { source_image: existingConfig.source_image },
-        source_url: `/data/${existingConfig.source_image}`,
-      };
-    }
+  const imgMatch = image ? image.match(/^data:image\/(\w+);base64,(.+)$/) : null;
+  const imgExt = imgMatch ? (imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1]) : null;
+  const imagePath = imgMatch
+    ? (isLiveFeed ? `sources/${slug}_backup.${imgExt}` : `sources/${slug}.${imgExt}`)
+    : null;
+  if (imagePath && isLiveFeed) {
+    existingConfig.backup_source_image = imagePath;
+  } else if (imagePath) {
+    existingConfig.source_image = imagePath;
+    // Times now come from this uploaded timetable image.
+    existingConfig.provider = {
+      type: 'image',
+      ref: { source_image: existingConfig.source_image },
+      source_url: `/data/${existingConfig.source_image}`,
+    };
   }
 
   try {
     // Build file list
     const files = [
-      { path: `data/${existingConfig.csv || slug + '.csv'}`, content: mergedCsv },
+      { path: csvPath, content: mergedCsv },
       { path: `data/mosques/${slug}.json`, content: JSON.stringify(existingConfig, null, 2) },
-      { path: `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
+      { path: isLiveFeed ? `data/backup/${slug}.json` : `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
     ];
 
     // Source timetable image
-    if (image) {
-      const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
-      if (imgMatch) {
-        const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
-        files.push({ path: `data/sources/${slug}.${ext}`, base64: imgMatch[2] });
-      }
+    if (imagePath) {
+      files.push({ path: `data/${imagePath}`, base64: imgMatch[2] });
     }
 
     // Update index.json
@@ -1837,7 +1863,7 @@ async function handleUpdate(request, env) {
     pushSlimIndexFile(files, existingConfigs);
 
     // Single commit
-    await githubCommitFiles(files, `Update timetable: ${existingConfig.display_name}`, env);
+    await githubCommitFiles(files, `${isLiveFeed ? 'Backup timetable' : 'Update timetable'}: ${existingConfig.display_name}`, env);
 
     // Create notification issue (skip for admin)
     if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
@@ -1849,8 +1875,11 @@ async function handleUpdate(request, env) {
       success: true,
       slug,
       url: `/${slug}`,
-      pending: !admin,
-      message: `Timetable for ${existingConfig.display_name} has been updated!`,
+      pending: !admin && !isLiveFeed,
+      backup: isLiveFeed,
+      message: isLiveFeed
+        ? `Thanks! Your timetable for ${existingConfig.display_name} has been saved as a backup.`
+        : `Timetable for ${existingConfig.display_name} has been updated!`,
     });
   } catch (e) {
     console.error('Update error:', e);
@@ -1921,12 +1950,16 @@ async function handleAdminDelete(request, env) {
       files.push({ path: `data/${slug}.json`, delete: true });
     }
 
-    // Delete source image if exists
-    if (config.source_image) {
-      const sourceFile = await githubGetFile(config.source_image, env);
-      if (sourceFile) {
-        files.push({ path: config.source_image, delete: true });
-      }
+    // Delete source image(s) and any backup timetable if they exist.
+    // Config image paths are relative to data/ ("sources/x.jpg").
+    const extraPaths = [
+      config.source_image && `data/${config.source_image}`,
+      config.backup_source_image && `data/${config.backup_source_image}`,
+      config.backup_csv && `data/${config.backup_csv}`,
+      config.backup_csv && `data/backup/${slug}.json`,
+    ].filter(Boolean);
+    for (const path of extraPaths) {
+      if (await githubGetFile(path, env)) files.push({ path, delete: true });
     }
 
     // Update index.json

@@ -24,8 +24,8 @@
     "logo": "",
     "csv": "ad_duha_institute.csv",
     "jummah_times": "13:00",
-    "latitude": 54.0,
-    "longitude": -2.0,
+    "latitude": 52.437994,
+    "longitude": -1.84723,
     "quality": {
       "status": "warnings"
     },
@@ -515,8 +515,8 @@
     "logo": "",
     "csv": "bilal.csv",
     "jummah_times": "13:00",
-    "latitude": 54.0,
-    "longitude": -2.0,
+    "latitude": 52.433504,
+    "longitude": -1.837229,
     "quality": {
       "status": "warnings"
     },

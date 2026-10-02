@@ -58,7 +58,7 @@ INDEX_FILENAMES = {"index.json", "index-slim.json"}
 # (data/mosques/{slug}.json) instead. Values are copied verbatim; keys absent
 # from a config stay absent from its slim entry.
 SLIM_INDEX_FIELDS = (
-    "slug", "display_name", "address", "city", "logo", "csv", "approved",
+    "slug", "display_name", "address", "city", "logo", "csv", "backup_csv", "approved",
     "eid_salah", "jummah_times", "test_masjid", "hidden",
     "latitude", "longitude", "lat", "lon",
 )

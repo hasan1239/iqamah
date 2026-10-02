@@ -4,6 +4,7 @@ import { gregorianToHijri, formatHijriDate } from '../utils/hijri.js';
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
 import { getMyMasjid, setMyMasjid, clearMyMasjid, isOther, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
 import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
+import { loadMasjidRows } from '../utils/masjid-csv.js';
 
 let config = null;
 let csvData = [];
@@ -85,6 +86,16 @@ function renderSourceTag(cfg) {
   if (!type) return '';
 
   const label = PROVIDER_LABELS[type] || type;
+
+  // Live-feed masjid whose feed has no row for today: today's times come
+  // from the uploaded backup timetable (see utils/masjid-csv.js)
+  const todayRow = getTodayRow();
+  if (todayRow && todayRow._backup) {
+    const backupLabel = cfg.backup_source_image
+      ? `<a href="/data/${cfg.backup_source_image}" target="_blank" rel="noopener" class="source-link">uploaded timetable</a>`
+      : 'uploaded timetable';
+    return `<div class="source-tag">Times from ${backupLabel} · ${label} has no times for today</div>`;
+  }
 
   // External providers link to their site; uploaded timetables link to the image.
   let sourceUrl = null;
@@ -175,12 +186,8 @@ export async function render(container, { slug }) {
     }
     document.title = `${config.display_name} - Iqamah`;
 
-    const csvRes = await fetch(`/data/${config.csv}`);
-    if (csvRes.ok) {
-      csvData = parseCSV(await csvRes.text());
-    } else {
-      csvData = [];
-    }
+    // Feed rows, with any uploaded backup timetable filling missing dates
+    csvData = (await loadMasjidRows(config)) || [];
 
     renderContent(container);
 
@@ -238,33 +245,6 @@ function recordRecentVisit(slug) {
 }
 
 // --- CSV parsing (local to this view, matches original exactly) ---
-
-// Snake-case headers from providers/mawaqit/fetch.py map to legacy title-case headers
-// used throughout the UI. Keeps both CSV layouts readable by a single parser.
-const HEADER_ALIASES = {
-  'date': 'Date', 'day': 'Day', 'islamic_day': 'Islamic Day',
-  'sehri_ends': 'Sehri Ends', 'fajr_start': 'Fajr Start',
-  'sunrise': 'Sunrise', 'zawal': 'Zawal', 'zohr': 'Zohr', 'asr': 'Asr', 'esha': 'Esha',
-  'fajr_jamaat': "Fajr Jama'at", 'zohar_jamaat': "Zohar Jama'at",
-  'asr_jamaat': "Asr Jama'at", 'maghrib_iftari': 'Maghrib Iftari',
-  'maghrib_jamaat': "Maghrib Jama'at", 'esha_jamaat': "Esha Jama'at",
-};
-
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => {
-    const trimmed = h.trim();
-    return HEADER_ALIASES[trimmed] || trimmed;
-  });
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',').map(v => v.trim());
-    const row = {};
-    headers.forEach((header, index) => { row[header] = values[index]; });
-    rows.push(row);
-  }
-  return rows;
-}
 
 function parseDate(dateStr) {
   if (!dateStr) return null;

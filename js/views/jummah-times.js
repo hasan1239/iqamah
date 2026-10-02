@@ -9,7 +9,8 @@
 // Cities come from deriveCity (js/utils/cities.js), the same rollup the Masjids
 // view uses (e.g. B-postcodes group under Birmingham).
 
-import { parseCSV, parseDate } from '../utils/csv.js';
+import { parseDate } from '../utils/csv.js';
+import { loadMasjidRows } from '../utils/masjid-csv.js';
 import { loadMasjidIndex } from '../utils/masjid-index.js';
 import { deriveCity, getCityPostcode, OTHER_CITY } from '../utils/cities.js';
 
@@ -322,13 +323,10 @@ async function loadFallbacks(entries, gen) {
     const c = entry.config;
     let resolved = null;
     try {
-      const csvFile = c.csv || c.slug + '.csv';
-      const res = await fetch(`/data/${csvFile}`);
+      const csvData = await loadMasjidRows(c);
       if (gen !== loadGeneration) return;
-      if (res.ok) {
-        const text = await res.text();
-        if (gen !== loadGeneration) return;
-        const fridayRow = getFridayRow(parseCSV(text));
+      if (csvData) {
+        const fridayRow = getFridayRow(csvData);
         if (fridayRow) {
           // On Fridays the Jummah jama'at is the Friday Dhuhr jama'at.
           // Default '1:00' matches prayer-times.js / home.js Dhuhr handling.

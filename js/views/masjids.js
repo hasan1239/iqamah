@@ -1,7 +1,8 @@
 // Masjids view — full searchable list with location toggle
 import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
-import { parseCSV, getTodayRow } from '../utils/csv.js';
+import { getTodayRow } from '../utils/csv.js';
+import { loadMasjidRows } from '../utils/masjid-csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
 import { getOthers, isOther, getMyMasjid, setMyMasjid, clearMyMasjid, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
@@ -587,19 +588,15 @@ async function loadCardPrayers(configs) {
   let changed = false;
   const promises = configs.map(async (config) => {
     try {
-      const csvFile = config.csv || config.slug + '.csv';
-      const res = await fetch(`/data/${csvFile}`);
+      const csvData = await loadMasjidRows(config);
       if (gen !== loadGeneration) return;
       const root = (viewContainer && viewContainer.isConnected) ? viewContainer : document;
       const el = root.querySelector(`[data-card-next="${config.slug}"]`);
-      if (!res.ok) {
+      if (!csvData) {
         if (hasTimesMap[config.slug] !== false) { hasTimesMap[config.slug] = false; changed = true; }
         if (el) el.innerHTML = '';
         return;
       }
-      const text = await res.text();
-      if (gen !== loadGeneration) return;
-      const csvData = parseCSV(text);
       const todayRow = getTodayRow(csvData);
       const hasTimes = !!todayRow;
       if (hasTimesMap[config.slug] !== hasTimes) { hasTimesMap[config.slug] = hasTimes; changed = true; }
@@ -1319,10 +1316,9 @@ async function loadTodayForPopup(slug) {
   const config = cachedConfigs.find(c => c.slug === slug);
   if (!config) return null;
   try {
-    const csvFile = config.csv || slug + '.csv';
-    const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) return null;
-    const r = getTodayRow(parseCSV(await res.text()));
+    const csvData = await loadMasjidRows(config);
+    if (!csvData) return null;
+    const r = getTodayRow(csvData);
     if (!r) return null;
     const fmt = (t, isAM) => (t ? formatCardTime(t, isAM) : '-');
     const fajrStart = r['Fajr Start'] || r['Subha Sadiq'] || r['Sehri Ends'] || '';
