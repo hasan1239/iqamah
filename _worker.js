@@ -325,7 +325,30 @@ function assignIslamicMonths(rows) {
   return days.map((_, i) => i < r1 ? 'Sha' : i < r2 ? 'Ram' : 'Shaw');
 }
 
-function generateCsvString(rows) {
+// Extracted rows carry "1 Oct"-style dates with no year. Store full ISO dates
+// so a timetable keeps meaning the right days in later years: use the
+// timetable's year, moving to the next year when the months wrap (a Dec-Jan
+// timetable). Already-ISO dates pass through unchanged.
+const ROW_DATE_MONTHS = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+
+function isoRowDates(rows, year) {
+  let y = parseInt(year, 10) || londonToday().year;
+  let prevMonth = null;
+  return rows.map((r) => {
+    const s = String((r && r.date) || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const parts = s.split(/\s+/);
+    const day = parseInt(parts[0], 10);
+    const month = parts.length >= 2 ? ROW_DATE_MONTHS[parts[1].slice(0, 3).toLowerCase()] : undefined;
+    if (isNaN(day) || !month) return s;
+    if (prevMonth !== null && month < prevMonth) y += 1;
+    prevMonth = month;
+    return `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  });
+}
+
+function generateCsvString(rows, year) {
+  const isoDates = isoRowDates(rows, year);
   const headers = [
     'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Fajr Start', 'Sunrise',
     'Zawal', 'Zohr', 'Asr', 'Esha',
@@ -336,7 +359,7 @@ function generateCsvString(rows) {
   const months = assignIslamicMonths(rows);
 
   const fieldMap = {
-    'Date': 'date',
+    'Date': (r, i) => isoDates[i],
     'Day': 'day',
     'Islamic Day': (r, i) => {
       const v = r.islamic_day != null ? r.islamic_day : (r.ramadan_day || '');
@@ -722,16 +745,13 @@ async function createExtractionNotification(mosqueName, ip, success, errorMsg, e
 
 function validateTimetableDates(rows, year) {
   if (!year) return null; // can't validate without year
-  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  // Same year/rollover rules as the stored CSV, so a Dec-Jan timetable's
+  // January rows count as next year rather than making it look outdated
   let latestDate = null;
-  for (const row of rows) {
-    if (!row.date) continue;
-    const parts = row.date.trim().split(/\s+/);
-    if (parts.length < 2) continue;
-    const day = parseInt(parts[0]);
-    const mon = months[parts[1]];
-    if (isNaN(day) || mon === undefined) continue;
-    const d = new Date(Date.UTC(year, mon, day));
+  for (const iso of isoRowDates(rows, year)) {
+    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) continue;
+    const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
     if (!latestDate || d > latestDate) latestDate = d;
   }
   if (!latestDate) return null; // can't parse, skip
@@ -1499,7 +1519,7 @@ async function handleSubmit(request, env) {
   slug = await deduplicateSlug(slug, address, env);
 
   // Build CSV
-  const csvContent = generateCsvString(data.rows);
+  const csvContent = generateCsvString(data.rows, data.year);
 
   // Build config JSON
   const config = {
@@ -1599,7 +1619,7 @@ function csvDateKey(dateStr) {
   return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}`;
 }
 
-function mergeCsvRows(existingCsvText, newRows) {
+function mergeCsvRows(existingCsvText, newRows, year) {
   // Parse existing CSV into Map keyed by date. Provider CSVs use snake_case
   // headers, so alias them first (otherwise every existing row is dropped).
   const lines = existingCsvText.trim().split('\n');
@@ -1618,7 +1638,7 @@ function mergeCsvRows(existingCsvText, newRows) {
   }
 
   // Generate new CSV string and parse it
-  const newCsvText = generateCsvString(newRows);
+  const newCsvText = generateCsvString(newRows, year);
   const newLines = newCsvText.trim().split('\n');
   const newHeaders = newLines[0].split(',').map(h => h.trim());
 
@@ -1782,9 +1802,9 @@ async function handleUpdate(request, env) {
   let mergedCsv;
   if (csvFile) {
     const existingCsvText = decodeGitHubContent(csvFile.content);
-    mergedCsv = mergeCsvRows(existingCsvText, fixedRows);
+    mergedCsv = mergeCsvRows(existingCsvText, fixedRows, data.year);
   } else {
-    mergedCsv = generateCsvString(fixedRows);
+    mergedCsv = generateCsvString(fixedRows, data.year);
   }
 
   // Update config — only overwrite non-empty metadata fields

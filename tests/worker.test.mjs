@@ -123,7 +123,7 @@ function sampleRows() {
   let year = new Date().getUTCFullYear();
   for (let i = 1; i <= 3; i++) {
     const d = new Date(Date.now() + i * 86400000);
-    year = d.getUTCFullYear();
+    if (i === 1) year = d.getUTCFullYear(); // "year" = the first row's year
     rows.push({
       date: `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`,
       day: DAYS[d.getUTCDay()],
@@ -570,7 +570,32 @@ test('update: merging keeps existing rows from a snake_case/ISO CSV and dedupes 
   // FEED_CSV has tomorrow (overlaps the upload) + day 40: 3 uploaded + 1 kept
   assert.equal(lines.length, 1 + rows.length + 1, lines.join('\n'));
   assert.ok(lines.some(l => l.startsWith(isoDate(40) + ',')), 'non-overlapping existing row kept');
-  assert.ok(!lines.some(l => l.startsWith(isoDate(1) + ',')), 'overlapping date replaced by the upload, not duplicated');
+  const tomorrow = lines.filter(l => l.startsWith(isoDate(1) + ','));
+  assert.equal(tomorrow.length, 1, 'overlapping date replaced by the upload, not duplicated');
+  assert.ok(tomorrow[0].includes(',3:45,'), 'the uploaded row wins');
+});
+
+test('submit: uploaded "1 Oct" dates are stored as ISO dates using the timetable year', async () => {
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({ data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const lines = committedFiles()['data/test_masjid.csv'].trim().split('\n').slice(1);
+  assert.deepEqual(lines.map(l => l.split(',')[0]), [1, 2, 3].map(isoDate));
+});
+
+test('update: a December-January timetable rolls over into the next year', async () => {
+  installFetch(updateOverrides());
+  const y = new Date().getUTCFullYear();
+  const row = (date, day) => ({ ...sampleRows().rows[0], date, day });
+  const rows = [row('30 Dec', 'Wed'), row('31 Dec', 'Thu'), row('1 Jan', 'Fri'), row('2 Jan', 'Sat')];
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year: y } }), env);
+  assert.equal(res.status, 200);
+  const dates = committedFiles()['data/testmasjid.csv'].trim().split('\n').slice(1).map(l => l.split(',')[0]);
+  for (const d of [`${y}-12-30`, `${y}-12-31`, `${y + 1}-01-01`, `${y + 1}-01-02`]) {
+    assert.ok(dates.includes(d), `${d} in ${dates.join(' ')}`);
+  }
+  // Sorted chronologically: next January comes after this December
+  assert.ok(dates.indexOf(`${y + 1}-01-01`) > dates.indexOf(`${y}-12-31`));
 });
 
 test('update: non-ASCII text in the config and index survives a round trip unchanged', async () => {
