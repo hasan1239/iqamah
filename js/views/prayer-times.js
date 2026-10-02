@@ -714,16 +714,17 @@ function renderTodayView(target) {
     : '';
 
   // Provider quality check (providers/sun.py) found today's sunrise/Maghrib
-  // well off the sun at this location, e.g. a clock-change error at source.
-  // Masjids with a sustained late offset are hidden; this covers the
-  // remaining day-specific cases. Not shown for backup rows (different source).
+  // off the sun at this location in a direction that could make someone pray
+  // at the wrong time (e.g. a clock-change error at source). Masjids where
+  // that's sustained are hidden; this covers the remaining day-specific
+  // cases. Not shown for backup rows (different source).
   const now = new Date();
   const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
   const sunIssue = !todayRow._backup && ((config.quality && config.quality.issues) || []).find(i =>
-    (i.type === 'sun_times_late' || i.type === 'sun_times_early') && !i.acknowledged &&
+    i.type === 'sun_times_unsafe' && !i.acknowledged &&
     Array.isArray(i.affected_dates) && i.affected_dates.includes(todayIso));
   const sunOffset = sunIssue ? Math.abs(sunIssue.typical_offset_min || 0) : 0;
-  const sunDirection = sunIssue && sunIssue.type === 'sun_times_late' ? 'later' : 'earlier';
+  const sunDirection = sunIssue && sunIssue.typical_offset_min > 0 ? 'later' : 'earlier';
   const sunFootnoteHtml = !sunIssue ? '' : (sunOffset >= 45 && sunOffset <= 75)
     ? `<div class="esha-combined-note">Today's times look about an hour ${sunDirection} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
     : `<div class="esha-combined-note">Some of today's times don't match sunrise and sunset at this masjid's location. Please check with the masjid.</div>`;
