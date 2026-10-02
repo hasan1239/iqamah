@@ -16,7 +16,6 @@
   "source_image": "sources/raufbarzenji.png",
   "lat": 53.4608698,
   "lon": -2.2513595,
-  "pending_update": true,
   "provider": {
     "type": "image",
     "ref": {
