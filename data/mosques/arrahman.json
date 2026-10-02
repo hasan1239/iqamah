@@ -10,7 +10,7 @@
   "eid_salah": "",
   "sadaqatul_fitr": "",
   "radio_frequency": "",
-  "approved": false,
+  "approved": true,
   "is_stale": false,
   "notes": "From Sunday 25 October 2026, time will change 1hr backward. Charity No. 1134915. Mortuary Expansion Project fundraising ongoing.",
   "source_image": "sources/arrahman.jpg",
@@ -22,6 +22,5 @@
     "source_url": "/data/sources/arrahman.jpg"
   },
   "lat": 53.4544139,
-  "lon": -2.2485425,
-  "pending_update": true
+  "lon": -2.2485425
 }

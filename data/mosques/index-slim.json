@@ -416,7 +416,7 @@
     "display_name": "Arrahman Manchester Islamic Cultural Association AMICA",
     "address": "16 Bedwell Street, Moss Side, Manchester, M16 7LN",
     "csv": "arrahman.csv",
-    "approved": false,
+    "approved": true,
     "eid_salah": "",
     "jummah_times": "Begins: 1:15PM, Jama'ah: 1:30PM",
     "lat": 53.4544139,
@@ -2197,7 +2197,7 @@
     "latitude": 52.974433054565,
     "longitude": -1.1688677966595,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
