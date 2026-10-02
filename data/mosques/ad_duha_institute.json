@@ -2,8 +2,8 @@
   "slug": "ad_duha_institute",
   "display_name": "Ad-Duha Institute",
   "city": "",
-  "latitude": 54.0,
-  "longitude": -2.0,
+  "latitude": 52.437994,
+  "longitude": -1.84723,
   "country_code": "GB",
   "website": "",
   "logo": "",
@@ -29,7 +29,8 @@
     "checked_at": "2026-05-20",
     "row_count": 365,
     "warnings": [
-      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+      "Sunrise/Maghrib UNSAFE: typically +60 min from the sun on 2 upcoming days (2026-10-25 to 2026-10-26)."
     ],
     "issues": [
       {
@@ -37,6 +38,24 @@
         "severity": "medium",
         "action_taken": "sehri_ends = fajr_start",
         "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      },
+      {
+        "type": "sun_times_unsafe",
+        "severity": "medium",
+        "count": 2,
+        "first_date": "2026-10-25",
+        "last_date": "2026-10-26",
+        "typical_offset_min": 60,
+        "affected_dates": [
+          "2026-10-25",
+          "2026-10-26"
+        ],
+        "affected_offsets": [
+          60,
+          60
+        ],
+        "action_taken": "none (per-day notice on the masjid page)",
+        "fix": "Sunrise/Maghrib are typically +60 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },

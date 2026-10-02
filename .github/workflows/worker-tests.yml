@@ -7,11 +7,17 @@ on:
       - '_worker.js'
       - 'tests/**'
       - 'prompts/extraction.txt'
+      - 'js/utils/csv.js'
+      - 'js/utils/masjid-csv.js'
+      - 'providers/**'
   pull_request:
     paths:
       - '_worker.js'
       - 'tests/**'
       - 'prompts/extraction.txt'
+      - 'js/utils/csv.js'
+      - 'js/utils/masjid-csv.js'
+      - 'providers/**'
 
 jobs:
   test:
@@ -23,3 +29,10 @@ jobs:
           node-version: 22
       - name: Run worker API tests
         run: node --test tests/worker.test.mjs
+      - name: Run timetable merge tests
+        run: node --test tests/masjid-csv.test.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run provider quality tests
+        run: python -m unittest tests.test_sun tests.test_quality

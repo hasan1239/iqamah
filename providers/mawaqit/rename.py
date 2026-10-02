@@ -58,6 +58,7 @@ def apply_renames(proposals: list, data_dir: Path, list_path: Path) -> dict:
     """
     mosques_dir = data_dir / "mosques"
     raw_dir = data_dir / "raw"
+    backup_dir = data_dir / "backup"   # uploaded backup timetables (see _worker.js handleUpdate)
     suffix = f".rename_tmp_{int(time.time())}"
 
     slug_renames = [
@@ -75,6 +76,8 @@ def apply_renames(proposals: list, data_dir: Path, list_path: Path) -> dict:
             mosques_dir / f"{cur}.json",
             data_dir / f"{cur}.csv",
             raw_dir / f"{cur}.json",
+            backup_dir / f"{cur}.csv",
+            backup_dir / f"{cur}.json",
         ]:
             if src.exists():
                 staged = src.with_name(cur + suffix + src.suffix)
@@ -86,6 +89,8 @@ def apply_renames(proposals: list, data_dir: Path, list_path: Path) -> dict:
             ("config", mosques_dir, ".json"),
             ("csv",    data_dir,    ".csv"),
             ("raw",    raw_dir,     ".json"),
+            ("backup_csv", backup_dir, ".csv"),
+            ("backup_raw", backup_dir, ".json"),
         ]:
             staged = dir_ / f"{cur}{suffix}{ext}"
             if staged.exists():
@@ -105,6 +110,15 @@ def apply_renames(proposals: list, data_dir: Path, list_path: Path) -> dict:
         cfg["display_name"] = ideal_name
         cfg["slug"] = target
         cfg["csv"] = f"{target}.csv"
+        if cfg.get("backup_csv"):
+            cfg["backup_csv"] = f"backup/{target}.csv"
+        img = cfg.get("backup_source_image")
+        if img and cur != target:
+            src = data_dir / img
+            dst = src.with_name(f"{target}_backup{src.suffix}")
+            if src.exists() and not dst.exists():
+                src.rename(dst)
+            cfg["backup_source_image"] = f"sources/{dst.name}"
         with open(cfg_path, "w", encoding="utf-8") as f:
             json.dump(cfg, f, indent=2, ensure_ascii=False)
 

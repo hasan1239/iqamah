@@ -69,7 +69,7 @@ function statusRank(cfg) {
 }
 
 function isStaleish(cfg) {
-  return cfg.is_stale === true || cfg.pending_update === true;
+  return cfg.is_stale === true || cfg.pending_update === true || cfg.backup_pending === true;
 }
 
 function getFlags(cfg) {
@@ -77,6 +77,7 @@ function getFlags(cfg) {
   if (cfg.approved === false) flags.push({ cls: 'unapproved', label: 'Unapproved' });
   if (cfg.is_stale === true) flags.push({ cls: 'stale', label: 'Stale' });
   if (cfg.pending_update === true) flags.push({ cls: 'pending', label: 'Pending update' });
+  if (cfg.backup_pending === true) flags.push({ cls: 'pending', label: 'Backup pending' });
   if (cfg.hidden === true) flags.push({ cls: 'hidden', label: 'Hidden' });
   if (cfg.test_masjid === true) flags.push({ cls: 'test', label: 'Test' });
   if (cfg.today_only === true) flags.push({ cls: 'today-only', label: 'Today only' });

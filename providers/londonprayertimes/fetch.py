@@ -34,6 +34,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from providers import regenerate_index
+from providers.quality import feed_quality
 
 API = "https://www.londonprayertimes.com/api/times/"
 SOURCE_URL = "https://www.londonprayertimes.com/"
@@ -124,7 +125,7 @@ def prefer_existing(existing, new):
     return existing
 
 
-def build_config(slug: str, existing: dict, row_count: int) -> dict:
+def build_config(slug: str, existing: dict, rows: list[dict]) -> dict:
     def keep(field, new):
         return prefer_existing(existing.get(field), new)
 
@@ -150,13 +151,12 @@ def build_config(slug: str, existing: dict, row_count: int) -> dict:
             "ref": {"city": "london"},
             "source_url": SOURCE_URL,
         },
-        "quality": {
-            "status": "ok",
-            "checked_at": date.today().isoformat(),
-            "row_count": row_count,
-            "warnings": ["London Unified Prayer Timetable — shared across all London masjids that follow it."],
-            "issues": [],
-        },
+        # Sun-position + Fajr-after-sunrise checks on the upcoming rows
+        "quality": feed_quality(
+            rows, existing.get("latitude"), existing.get("longitude"),
+            acknowledged=existing.get("acknowledged_issues"),
+            warnings=["London Unified Prayer Timetable — shared across all London masjids that follow it."],
+        ),
         "acknowledged_issues": list(existing.get("acknowledged_issues") or []),
     }
     # Carry forward unknown legacy fields, but drop image-pipeline cruft that no
@@ -183,7 +183,7 @@ def fetch_one(slug: str, data_dir: Path, year_rows: dict, verbose: bool = True) 
     config_path = data_dir / "mosques" / f"{slug}.json"
     existing = load_existing_config(config_path)
     write_csv(rows, data_dir / f"{slug}.csv")
-    config = build_config(slug, existing, len(rows))
+    config = build_config(slug, existing, rows)
     config_path.parent.mkdir(parents=True, exist_ok=True)
     json.dump(config, open(config_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     if verbose:

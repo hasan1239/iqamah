@@ -57,6 +57,67 @@ cache set. **Effort: medium (sw.js strategy work + cache invalidation on update)
 Needs care: freshness is the brand promise, so keep TTLs short (minutes, not hours).
 **Effort: small.**
 
+### Self-healing provider parsers
+Provider format changes currently break feeds silently. In Oct 2026 we found AthanPlus
+had switched its widget dates from "October 2, 2026" to "Oct 2, 2026"; the Masjidal
+parser found 0 rows and London Central Mosque showed no times from 31 May to 2 Oct.
+The new "Check daily feeds have today's times" step in `generate.yml` now *detects* that
+within a day, but nothing *adapts*. Fragility by provider:
+
+| Provider | Fetch | Breaks when |
+|---|---|---|
+| Masjidal | scrapes AthanPlus widget HTML | any markup/wording change (most fragile) |
+| Mawaqit | regex for the `confData` JSON in the page | variable renamed / embedding changes |
+| MasjidBox, My-Masjid, LondonPrayerTimes | JSON APIs | fields renamed, URL version bump |
+
+Layers, cheapest first:
+1. **Tolerant parsers (no AI).** Parse by meaning, not exact format: accept any
+   reasonable date format, find prayers by label ("Fajr", "Sunrise") instead of
+   position, field-alias tables for the JSON providers. Alone, this would have
+   survived the "Oct 2" change. **Effort: small.**
+2. **Validate every parse before writing it.** Treat 0 rows, or rows that fail the
+   checks, as a failed parse rather than data. Checks: prayer ordering, sunrise and
+   Maghrib vs the sun (`providers/sun.py`, `providers/quality.py`), and dates covering
+   today. Keep the last good data and alert instead of writing garbage.
+   **Effort: small (most checks exist).**
+3. **Claude fallback extractor.** When the parser fails validation, send the raw
+   response (trimmed HTML/JSON) to Claude with the same 16-field schema as image
+   extraction. Run the result through the same checks, plus a comparison with the
+   masjid's recent days (jama'at times rarely jump). If it passes, write it tagged
+   `parsed_by: ai_fallback` and open a "Masjidal parser needs updating" GitHub issue
+   with a sample of the new format. `ANTHROPIC_API_KEY` is already a GitHub Actions
+   secret, and calls only happen on failure, so the cost is negligible.
+   **Effort: medium.**
+4. **Claude-proposed parser fix.** The issue from layer 3 triggers a job that gives
+   Claude the saved sample, the parser and its tests, and opens a PR for review.
+   **Effort: medium.**
+
+**Open decision before layer 3:** should AI-extracted times go live automatically
+(labelled, with the alert), or be held for approval while the last good data shows?
+Sunrise/Maghrib are objectively checkable against the sun; jama'at times can only be
+sanity-checked against the masjid's recent days. Recommended start: layers 1-2. Related:
+"AI quality sentinel" below.
+
+### Feed quality follow-ups (from the PR #223 reviews, Oct 2026)
+Small items left after the sun-position check, weekly refresh and backup timetables
+landed. None are blocking. **Effort: small each.**
+- **Same-day hiding.** Hidden status is decided by the daily run (~05:00 UTC), so
+  between midnight and that run it's a day stale. The client could check the issue's
+  `affected_dates` against today itself.
+- **Explain hidden My Masjid / pinned masjids.** A `needs_review` masjid silently drops
+  off lists. Users who've set it as My Masjid should see a "times under review"
+  notice instead.
+- **Stale-flag step writes `\u` escapes.** It dumps JSON with the default
+  `ensure_ascii=True`, so non-ASCII text in configs it touches churns diffs. Use
+  `ensure_ascii=False` and UTF-8, like the providers.
+- **`bulk --only` ignores unknown refs silently.** Warn when only some of the
+  requested refs match the curated list.
+- **Rehearse 1 January in late December.** The year-end refresh assumes Mawaqit and
+  My-Masjid already serve the new year. Do a dry run with a faked date before 31 Dec.
+- **Test the workflow's bash logic.** The refresh steps' branching (Sunday / ran out /
+  feed_health failure) is only dry-run by hand. Move it into a Python entry point
+  with unit tests.
+
 ## Data & coverage (the moat)
 
 ### Coverage gap dashboard

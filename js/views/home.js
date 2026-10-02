@@ -1,7 +1,8 @@
 // Home view — hero card (pinned masjid) + recently viewed
 import { navigate } from '../router.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
-import { parseCSV, getTodayRow, getTomorrowRow } from '../utils/csv.js';
+import { getTodayRow, getTomorrowRow } from '../utils/csv.js';
+import { loadMasjidRows } from '../utils/masjid-csv.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { getOthers, getMyMasjid, clearMyMasjid } from '../utils/follow.js';
@@ -327,10 +328,8 @@ async function isRamadanEndingSoon() {
       ? cachedConfigs.find(c => c.slug === pinnedSlug)
       : findBestMasjid();
     if (!config) return false;
-    const csvFile = config.csv || config.slug + '.csv';
-    const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) return false;
-    const csvData = parseCSV(await res.text());
+    const csvData = await loadMasjidRows(config);
+    if (!csvData) return false;
     const todayRow = getTodayRow(csvData);
     if (!todayRow) return false;
     const hijri = (todayRow['Islamic Day'] || todayRow['Ramadan'] || todayRow['Hijri'] || '').trim();
@@ -538,11 +537,8 @@ async function loadSehriIftari(config) {
   if (!body) return;
 
   try {
-    const csvFile = config.csv || config.slug + '.csv';
-    const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) { body.innerHTML = ''; return; }
-    const text = await res.text();
-    const csvData = parseCSV(text);
+    const csvData = await loadMasjidRows(config);
+    if (!csvData) { body.innerHTML = ''; return; }
     const todayRow = getTodayRow(csvData);
     if (!todayRow) { body.innerHTML = '<div class="sehri-iftari-empty">No times available for today</div>'; return; }
 
@@ -589,11 +585,8 @@ async function loadSuggestedNextPrayer(config) {
   if (!body) return;
 
   try {
-    const csvFile = config.csv || config.slug + '.csv';
-    const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) { body.innerHTML = ''; return; }
-    const text = await res.text();
-    const csvData = parseCSV(text);
+    const csvData = await loadMasjidRows(config);
+    if (!csvData) { body.innerHTML = ''; return; }
     const todayRow = getTodayRow(csvData);
     if (!todayRow) { body.innerHTML = '<div class="sehri-iftari-empty">No times available for today</div>'; return; }
 
@@ -921,11 +914,8 @@ async function loadHeroNextPrayer(config) {
   if (!body) return;
 
   try {
-    const csvFile = config.csv || config.slug + '.csv';
-    const res = await fetch(`/data/${csvFile}`);
-    if (!res.ok) { body.innerHTML = ''; return; }
-    const text = await res.text();
-    const csvData = parseCSV(text);
+    const csvData = await loadMasjidRows(config);
+    if (!csvData) { body.innerHTML = ''; return; }
     const todayRow = getTodayRow(csvData);
     if (!todayRow) {
       body.innerHTML = `<a href="/update/${config.slug}" data-link class="hero-upload-cta" onclick="event.stopPropagation()">Upload timetable</a>`;
@@ -1112,11 +1102,8 @@ async function loadRecentCardPrayers(configs) {
     const el = document.querySelector(`[data-recent-next="${config.slug}"]`);
     if (!el) continue;
     try {
-      const csvFile = config.csv || config.slug + '.csv';
-      const res = await fetch(`/data/${csvFile}`);
-      if (!res.ok) { setNext(el, ''); continue; }
-      const text = await res.text();
-      const csvData = parseCSV(text);
+      const csvData = await loadMasjidRows(config);
+      if (!csvData) { setNext(el, ''); continue; }
       const todayRow = getTodayRow(csvData);
       if (!todayRow) { setNext(el, ''); continue; }
       const next = getNextJamaatFromRow(todayRow);

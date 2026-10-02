@@ -123,7 +123,7 @@ function sampleRows() {
   let year = new Date().getUTCFullYear();
   for (let i = 1; i <= 3; i++) {
     const d = new Date(Date.now() + i * 86400000);
-    year = d.getUTCFullYear();
+    if (i === 1) year = d.getUTCFullYear(); // "year" = the first row's year
     rows.push({
       date: `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`,
       day: DAYS[d.getUTCDay()],
@@ -330,6 +330,131 @@ test('submit: likely duplicate returns 409 warning and does not consume quota', 
   assert.equal(env.RATE_LIMITS.store.size, 0);
 });
 
+// Same name + same phone (the Faizul Islam case): near-certain duplicate
+const STRONG_EXISTING = [{ display_name: 'Test Masjid', slug: 'existing', phone: '0121 111 2222', address: '1 High St, Birmingham, B20 3EA', csv: 'existing.csv' }];
+
+test('submit: strong duplicate is flagged strong and cannot be overridden with confirm_not_duplicate', async () => {
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(STRONG_EXISTING)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  const firstBody = await first.json();
+  assert.equal(firstBody.strong, true);
+  assert.equal(firstBody.matches[0].slug, 'existing');
+  assert.equal(firstBody.matches[0].strong, true);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 409);
+  assert.equal((await override.json()).strong, true);
+  assert.ok(!fetchCalls.some(c => c.url.endsWith('/git/trees')), 'nothing committed');
+  assert.equal(env.RATE_LIMITS.store.size, 0);
+});
+
+test('submit: shared phone with a different name is a weak match and can be overridden', async () => {
+  const existing = [{ display_name: 'Green Lane Masjid', slug: 'green_lane', phone: '0121 111 2222', csv: 'green_lane.csv' }];
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(existing)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Small Heath Branch', phone: '01211112222', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 200);
+  assert.equal((await override.json()).success, true);
+});
+
+test('submit: admin can override a strong duplicate', async () => {
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(STRONG_EXISTING)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', rows, year };
+  const headers = { 'X-User-Name': 'AdminUser' };
+
+  const first = await worker.fetch(submitRequest({ data }, { headers }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false, 'admins get the overridable warning');
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }, { headers }), env);
+  assert.equal(override.status, 200);
+  assert.ok(fetchCalls.some(c => c.method === 'POST' && c.url.endsWith('/git/trees')), 'admin override committed');
+});
+
+function indexWith(configs, extra = {}) {
+  return {
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(configs)), sha: 'idxsha' }),
+    ...extra,
+  };
+}
+
+test('submit: same name + same full postcode (no phone) is strong', async () => {
+  installFetch(indexWith([{ display_name: 'Faizul Islam', slug: 'faizul', address: '1-8 The Broadway, Birmingham, B20 3EA', csv: 'faizul.csv' }]));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({
+    data: { mosque_name: 'Masjid Faizul Islam', address: 'The Broadway, Perry Barr, B20 3EA', rows, year },
+    confirm_not_duplicate: true,
+  }), env);
+  assert.equal(res.status, 409);
+  assert.equal((await res.json()).strong, true);
+});
+
+test('submit: same name within 100m is strong, using provider latitude/longitude fields', async () => {
+  // Mawaqit-style config: latitude/longitude, no lat/lon, no postcode
+  installFetch(indexWith(
+    [{ display_name: 'Faizul Islam', slug: 'faizul', latitude: 52.51060, longitude: -1.89120, csv: 'faizul.csv' }],
+    { 'nominatim.openstreetmap.org': () => j([{ lat: '52.51065', lon: '-1.89125' }]) },
+  ));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({
+    data: { mosque_name: 'Faizul Islam', address: 'The Broadway, Perry Barr', rows, year },
+    confirm_not_duplicate: true,
+  }), env);
+  assert.equal(res.status, 409);
+  const body = await res.json();
+  assert.equal(body.strong, true);
+  assert.ok(body.matches[0].reasons.some(r => /<100m/.test(r)));
+});
+
+test('submit: name below the 85% bar with same postcode is weak and overridable', async () => {
+  // "faizan islam" vs "faizul islam" = 83% similar
+  installFetch(indexWith([{ display_name: 'Faizul Islam', slug: 'faizul', address: 'Birmingham, B20 3EA', csv: 'faizul.csv' }]));
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Faizan Islam', address: 'Birmingham, B20 3EA', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 200);
+});
+
+test('submit: confirm_not_duplicate with a weak + strong mix returns only the strong match', async () => {
+  installFetch(indexWith([
+    { display_name: 'Test Masjid', slug: 'existing', address: 'Birmingham, B20 3EA', csv: 'existing.csv' },
+    { display_name: 'Green Lane Masjid', slug: 'green_lane', phone: '0121 111 2222', csv: 'green_lane.csv' },
+  ]));
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', address: 'Birmingham, B20 3EA', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.deepEqual((await first.json()).matches.map(m => m.slug).sort(), ['existing', 'green_lane']);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 409);
+  const body = await override.json();
+  assert.equal(body.strong, true);
+  assert.deepEqual(body.matches.map(m => m.slug), ['existing']);
+});
+
 test('submit: missing masjid name is rejected', async () => {
   const { rows, year } = sampleRows();
   const res = await worker.fetch(submitRequest({ data: { mosque_name: '', rows, year } }), env);
@@ -337,6 +462,230 @@ test('submit: missing masjid name is rejected', async () => {
 });
 
 // ---- /api/update ----
+
+// Map of committed path -> decoded content (null for deletions). Blobs are
+// created in the same order as the tree's non-deleted entries.
+function committedFiles() {
+  const treeCall = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/git/trees'));
+  if (!treeCall) return null;
+  const blobs = fetchCalls.filter(c => c.method === 'POST' && c.url.endsWith('/git/blobs'));
+  const out = {};
+  let i = 0;
+  for (const entry of JSON.parse(treeCall.body).tree) {
+    if (entry.sha === null) { out[entry.path] = null; continue; }
+    const b64 = JSON.parse(blobs[i++].body).content;
+    out[entry.path] = Buffer.from(b64, 'base64').toString('utf8');
+  }
+  return out;
+}
+
+// Live-feed (Mawaqit) masjid: provider-format CSV with snake_case + ISO dates
+const FEED_CONFIG = {
+  display_name: 'Test Masjid', slug: 'testfeed', csv: 'testfeed.csv',
+  provider: { type: 'mawaqit', ref: { path: 'test-masjid-birmingham' }, source_url: 'https://mawaqit.net/en/m/test' },
+};
+function isoDate(offsetDays) {
+  return new Date(Date.now() + offsetDays * 86400000).toISOString().slice(0, 10);
+}
+const FEED_CSV = [
+  'date,day,islamic_day,sehri_ends,fajr_start,sunrise,zawal,zohr,asr,esha,fajr_jamaat,zohar_jamaat,asr_jamaat,maghrib_iftari,maghrib_jamaat,esha_jamaat',
+  `${isoDate(1)},Mon,,,05:00,06:30,,13:00,16:00,20:00,05:30,13:30,16:30,19:00,19:05,20:30`,
+  `${isoDate(40)},Tue,,,05:10,06:40,,13:00,15:50,19:50,05:40,13:30,16:20,18:50,18:55,20:20`,
+].join('\n');
+
+function feedOverrides(extra = {}) {
+  return {
+    'contents/data/mosques/testfeed.json': () => j({ content: btoa(JSON.stringify(FEED_CONFIG)), sha: 'cfgsha' }),
+    'contents/data/testfeed.csv': () => j({ content: btoa(FEED_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([FEED_CONFIG])), sha: 'idxsha' }),
+    ...extra,
+  };
+}
+
+test('update: live-feed masjid stores the upload as a backup and leaves the feed untouched', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({
+    slug: 'testfeed',
+    data: { mosque_name: 'Test Masjid', rows, year, jummah_times: '1:30pm' },
+    image: 'data:image/png;base64,' + btoa('fakepng'),
+  }), env);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.backup, true);
+  assert.equal(body.pending, false);
+
+  const files = committedFiles();
+  assert.ok(files['data/backup/testfeed.csv'], 'backup CSV committed');
+  assert.ok(!('data/testfeed.csv' in files), 'feed CSV not rewritten');
+  assert.ok(files['data/sources/testfeed_backup.png'] !== undefined, 'backup image committed');
+  assert.ok(files['data/backup/testfeed.json'] !== undefined, 'raw extraction stored with the backup');
+  assert.ok(!('data/testfeed.json' in files));
+
+  const cfg = JSON.parse(files['data/mosques/testfeed.json']);
+  assert.deepEqual(cfg.provider, FEED_CONFIG.provider, 'provider record unchanged');
+  assert.equal(cfg.backup_csv, 'backup/testfeed.csv');
+  assert.equal(cfg.backup_source_image, 'sources/testfeed_backup.png');
+  assert.match(cfg.backup_updated_at, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(cfg.source_image, undefined);
+  assert.equal(cfg.pending_update, undefined, 'feed times are not flagged pending');
+  assert.equal(cfg.jummah_times, '1:30pm', 'metadata still updated');
+
+  const slim = JSON.parse(files['data/mosques/index-slim.json']);
+  assert.equal(slim[0].backup_csv, 'backup/testfeed.csv', 'slim index carries backup_csv');
+
+  const commit = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/git/commits'));
+  assert.match(JSON.parse(commit.body).message, /^Backup timetable: /);
+});
+
+test('update: a non-admin backup is marked pending review and raises a backup issue', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const cfg = JSON.parse(committedFiles()['data/mosques/testfeed.json']);
+  assert.equal(cfg.backup_pending, true);
+  const issue = fetchCalls.find(c => c.method === 'POST' && c.url.endsWith('/issues'));
+  assert.ok(issue, 'notification issue created');
+  const { title, body } = JSON.parse(issue.body);
+  assert.match(title, /^Backup timetable: /);
+  assert.match(body, /saved as a \*\*backup\*\*/);
+  assert.match(body, /data\/backup\/testfeed\.csv/);
+});
+
+test('update: an admin backup is not marked pending', async () => {
+  installFetch(feedOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest(
+    { slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } },
+    { headers: { 'X-User-Name': 'AdminUser' } },
+  ), env);
+  assert.equal(res.status, 200);
+  const cfg = JSON.parse(committedFiles()['data/mosques/testfeed.json']);
+  assert.equal(cfg.backup_pending, undefined);
+  assert.ok(!fetchCalls.some(c => c.method === 'POST' && c.url.endsWith('/issues')), 'no issue for admin uploads');
+});
+
+test('admin approve clears backup_pending in the config and index', async () => {
+  const pendingCfg = { ...FEED_CONFIG, backup_csv: 'backup/testfeed.csv', backup_pending: true };
+  installFetch(feedOverrides({
+    'contents/data/mosques/testfeed.json': () => j({ content: btoa(JSON.stringify(pendingCfg)), sha: 'cfgsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([pendingCfg])), sha: 'idxsha' }),
+  }));
+  const res = await worker.fetch(new Request('https://iqamah.co.uk/api/admin/approve', {
+    method: 'POST', body: JSON.stringify({ slug: 'testfeed' }),
+    headers: { 'Content-Type': 'application/json', 'X-User-Name': 'AdminUser' },
+  }), env);
+  assert.equal(res.status, 200);
+  const files = committedFiles();
+  assert.equal(JSON.parse(files['data/mosques/testfeed.json']).backup_pending, undefined);
+  const indexEntry = JSON.parse(files['data/mosques/index.json']).find(c => c.slug === 'testfeed');
+  assert.equal(indexEntry.backup_pending, undefined);
+  assert.equal(indexEntry.backup_csv, 'backup/testfeed.csv', 'the backup itself is kept');
+});
+
+test('update: a second upload for a live-feed masjid merges into the existing backup', async () => {
+  const existingBackup = [
+    "Date,Day,Islamic Day,Sehri Ends,Fajr Start,Sunrise,Zawal,Zohr,Asr,Esha,Fajr Jama'at,Zohar Jama'at,Asr Jama'at,Maghrib Iftari,Maghrib Jama'at,Esha Jama'at",
+    '1 Jan,Thu,,,06:15,08:15,,12:10,02:00,,6:45,12:30,2:30,04:05,,07:00',
+  ].join('\n');
+  installFetch(feedOverrides({
+    'contents/data/backup/testfeed.csv': () => j({ content: btoa(existingBackup), sha: 'bksha' }),
+  }));
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testfeed', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const csv = committedFiles()['data/backup/testfeed.csv'];
+  assert.match(csv, /^1 Jan,/m, 'earlier backup rows kept');
+  assert.equal(csv.trim().split('\n').length, 1 + 1 + rows.length);
+});
+
+test('update: merging keeps existing rows from a snake_case/ISO CSV and dedupes across date formats', async () => {
+  // Image masjid whose CSV is in provider format (e.g. it used to be a feed)
+  const cfg = { display_name: 'Test Masjid', slug: 'testmasjid', csv: 'testmasjid.csv', provider: { type: 'image' } };
+  installFetch({
+    'contents/data/mosques/testmasjid.json': () => j({ content: btoa(JSON.stringify(cfg)), sha: 'cfgsha' }),
+    'contents/data/testmasjid.csv': () => j({ content: btoa(FEED_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify([cfg])), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows(); // first row is tomorrow, in "D Mon" format
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const lines = committedFiles()['data/testmasjid.csv'].trim().split('\n');
+  assert.equal(lines[0].split(',')[0], 'Date');
+  // FEED_CSV has tomorrow (overlaps the upload) + day 40: 3 uploaded + 1 kept
+  assert.equal(lines.length, 1 + rows.length + 1, lines.join('\n'));
+  assert.ok(lines.some(l => l.startsWith(isoDate(40) + ',')), 'non-overlapping existing row kept');
+  const tomorrow = lines.filter(l => l.startsWith(isoDate(1) + ','));
+  assert.equal(tomorrow.length, 1, 'overlapping date replaced by the upload, not duplicated');
+  assert.ok(tomorrow[0].includes(',3:45,'), 'the uploaded row wins');
+});
+
+test('submit: uploaded "1 Oct" dates are stored as ISO dates using the timetable year', async () => {
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(submitRequest({ data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const lines = committedFiles()['data/test_masjid.csv'].trim().split('\n').slice(1);
+  assert.deepEqual(lines.map(l => l.split(',')[0]), [1, 2, 3].map(isoDate));
+});
+
+test('update: a December-January timetable rolls over into the next year', async () => {
+  installFetch(updateOverrides());
+  const y = new Date().getUTCFullYear();
+  const row = (date, day) => ({ ...sampleRows().rows[0], date, day });
+  const rows = [row('30 Dec', 'Wed'), row('31 Dec', 'Thu'), row('1 Jan', 'Fri'), row('2 Jan', 'Sat')];
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year: y } }), env);
+  assert.equal(res.status, 200);
+  const dates = committedFiles()['data/testmasjid.csv'].trim().split('\n').slice(1).map(l => l.split(',')[0]);
+  for (const d of [`${y}-12-30`, `${y}-12-31`, `${y + 1}-01-01`, `${y + 1}-01-02`]) {
+    assert.ok(dates.includes(d), `${d} in ${dates.join(' ')}`);
+  }
+  // Sorted chronologically: next January comes after this December
+  assert.ok(dates.indexOf(`${y + 1}-01-01`) > dates.indexOf(`${y}-12-31`));
+});
+
+test('update: non-ASCII text in the config and index survives a round trip unchanged', async () => {
+  // GitHub serves base64 of UTF-8 bytes; decoding with atob() alone garbled
+  // "£"/"—"/"ā" and re-encoded the garbage on every write.
+  const cfg = { ...EXISTING_CONFIG, sadaqatul_fitr: 'Minimum £6.00', notes: 'Sub’h Ṣādiq — 5 min' };
+  const other = { display_name: 'Ānnoor', slug: 'annoor', notes: 'Ṣādiq', csv: 'annoor.csv' };
+  const b64 = (obj) => Buffer.from(JSON.stringify(obj), 'utf8').toString('base64');
+  installFetch({
+    'contents/data/mosques/testmasjid.json': () => j({ content: b64(cfg), sha: 'cfgsha' }),
+    'contents/data/testmasjid.csv': () => j({ content: btoa(EXISTING_CSV), sha: 'csvsha' }),
+    'contents/data/mosques/index.json': () => j({ content: b64([other, cfg]), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({ slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year } }), env);
+  assert.equal(res.status, 200);
+  const files = committedFiles();
+  const saved = JSON.parse(files['data/mosques/testmasjid.json']);
+  assert.equal(saved.sadaqatul_fitr, 'Minimum £6.00');
+  assert.equal(saved.notes, cfg.notes);
+  const index = JSON.parse(files['data/mosques/index.json']);
+  assert.equal(index.find(c => c.slug === 'annoor').notes, 'Ṣādiq', 'untouched index entries keep their text');
+  assert.equal(index.find(c => c.slug === 'annoor').display_name, 'Ānnoor');
+});
+
+test('update: image masjid still replaces provider and source_image as before', async () => {
+  installFetch(updateOverrides());
+  const { rows, year } = sampleRows();
+  const res = await worker.fetch(updateRequest({
+    slug: 'testmasjid', data: { mosque_name: 'Test Masjid', rows, year },
+    image: 'data:image/jpeg;base64,' + btoa('fakejpg'),
+  }), env);
+  assert.equal(res.status, 200);
+  const body = await res.json();
+  assert.equal(body.backup, false);
+  assert.equal(body.pending, true);
+  const files = committedFiles();
+  const cfg = JSON.parse(files['data/mosques/testmasjid.json']);
+  assert.equal(cfg.source_image, 'sources/testmasjid.jpg');
+  assert.equal(cfg.provider.type, 'image');
+  assert.equal(cfg.pending_update, true);
+  assert.equal(cfg.backup_csv, undefined);
+  assert.ok('data/sources/testmasjid.jpg' in files);
+});
 
 test('update: happy path merges the CSV and commits', async () => {
   installFetch(updateOverrides());

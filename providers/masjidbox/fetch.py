@@ -33,6 +33,7 @@ from datetime import date, datetime
 from pathlib import Path
 
 from providers import lookup_uk_postcode, regenerate_index
+from providers.quality import feed_quality
 
 API_URL = "https://api.masjidbox.com/1.0/masjidbox/landing/athany/{slug}"
 API_KEY = "JejYcMS7hsOsZTPDk2ZhKOAlW9IyQ6Px"
@@ -117,6 +118,11 @@ def upsert_csv(csv_path: Path, new_rows: list[dict]) -> int:
     return len(rows)
 
 
+def read_csv_rows(csv_path: Path) -> list[dict]:
+    with open(csv_path, encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
 def load_existing_config(config_path: Path) -> dict:
     if not config_path.exists():
         return {}
@@ -132,7 +138,7 @@ def prefer_existing(existing, new):
     return existing
 
 
-def build_config(data: dict, slug: str, mb_slug: str, existing: dict, row_count: int) -> dict:
+def build_config(data: dict, slug: str, mb_slug: str, existing: dict, rows: list[dict]) -> dict:
     address = (data.get("address") or "").strip()
     lat = existing.get("latitude")
     lng = existing.get("longitude")
@@ -173,13 +179,8 @@ def build_config(data: dict, slug: str, mb_slug: str, existing: dict, row_count:
         },
         "today_only": True,
         "suppress_times": list(existing.get("suppress_times") or []),
-        "quality": {
-            "status": "ok",
-            "checked_at": date.today().isoformat(),
-            "row_count": row_count,
-            "warnings": [],
-            "issues": [],
-        },
+        # Sun-position + Fajr-after-sunrise checks on the upcoming rows
+        "quality": feed_quality(rows, lat, lng, acknowledged=existing.get("acknowledged_issues")),
         "acknowledged_issues": list(existing.get("acknowledged_issues") or []),
     }
     for k, v in existing.items():
@@ -211,7 +212,7 @@ def fetch_one(mb_slug: str, slug: str, data_dir: Path, verbose: bool = True) -> 
             if f in r:
                 r[f] = "-"
     row_count = upsert_csv(data_dir / f"{slug}.csv", new_rows)
-    config = build_config(data, slug, mb_slug, existing, row_count)
+    config = build_config(data, slug, mb_slug, existing, read_csv_rows(data_dir / f"{slug}.csv"))
     config_path.parent.mkdir(parents=True, exist_ok=True)
     json.dump(config, open(config_path, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
 

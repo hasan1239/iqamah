@@ -40,6 +40,8 @@ async function pdfToImageDataUrl(dataUrl) {
 }
 
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+import { setUploadHandoff } from '../utils/upload-handoff.js';
+import { navigate } from '../router.js';
 
 const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
 let turnstileToken = null;
@@ -679,23 +681,27 @@ function setupEventListeners(container) {
     if (existing) existing.remove();
   }
 
-  function showDuplicateWarning(matches, message) {
+  function showDuplicateWarning(matches, message, strong) {
     removeDuplicateWarning();
     const warning = document.createElement('div');
     warning.className = 'duplicate-warning';
+    const esc = (s) => escapeAttr(String(s || ''));
+    // Strong matches can't be overridden: offer the Update flow instead
     warning.innerHTML = `
-      <div class="duplicate-warning-header">&#9888; ${message}</div>
+      <div class="duplicate-warning-header">&#9888; ${esc(message)}</div>
       ${matches.map(m => `
         <div class="duplicate-match-card">
-          <strong>${m.display_name}</strong>
-          ${m.address ? `<p>${m.address}</p>` : ''}
-          <div class="duplicate-match-reasons">${m.reasons.join(' &middot; ')}</div>
-          <a class="duplicate-match-link" href="/${m.slug}" target="_blank">View masjid &rarr;</a>
+          <strong>${esc(m.display_name)}</strong>
+          ${m.address ? `<p>${esc(m.address)}</p>` : ''}
+          <div class="duplicate-match-reasons">${m.reasons.map(esc).join(' &middot; ')}</div>
+          <a class="duplicate-match-link" href="/${esc(m.slug)}" target="_blank">View masjid &rarr;</a>
+          ${m.strong ? `<button class="btn btn-primary duplicate-update-btn" data-slug="${esc(m.slug)}">Update existing masjid</button>` : ''}
         </div>
       `).join('')}
+      ${strong ? `<p class="duplicate-contact">Is this a different masjid? <a href="mailto:prayerly@hotmail.com?subject=${encodeURIComponent('Iqamah Add Masjid - ' + (masjidNameInput.value.trim() || 'duplicate check'))}">Contact us</a> and we'll add it for you.</p>` : ''}
       <div class="duplicate-actions">
         <button class="btn btn-secondary" id="dupCancelBtn">Cancel</button>
-        <button class="btn btn-primary" id="dupConfirmBtn">This is different &mdash; submit anyway</button>
+        ${strong ? '' : '<button class="btn btn-primary" id="dupConfirmBtn">This is different, submit anyway</button>'}
       </div>
     `;
     submitError.parentElement.insertBefore(warning, submitError);
@@ -704,6 +710,19 @@ function setupEventListeners(container) {
       removeDuplicateWarning();
       goToStep(1);
     });
+
+    warning.querySelectorAll('.duplicate-update-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setUploadHandoff(btn.dataset.slug, imageDataUrl, gatherReviewData());
+        // No slide transition: the Update view fills its review step during
+        // render, and its document-level ID lookups would otherwise hit this
+        // view's duplicate IDs in the exiting pane. Replace history so Back
+        // doesn't land on an emptied Add wizard.
+        navigate(`/update/${btn.dataset.slug}`, { skipTransition: true, replace: true });
+      });
+    });
+
+    if (strong) return;
 
     warning.querySelector('#dupConfirmBtn').addEventListener('click', async () => {
       if (isSubmitting) return;
@@ -715,6 +734,11 @@ function setupEventListeners(container) {
       try {
         const freshData = gatherReviewData();
         const { resp, result } = await doSubmit(freshData, true);
+        // Server still blocks strong matches even after "submit anyway"
+        if (resp.status === 409 && result.duplicate_warning) {
+          showDuplicateWarning(result.matches, result.message, result.strong);
+          return;
+        }
         if (!resp.ok || !result.success) throw new Error(result.error || 'Submission failed');
         handleSuccess(result);
       } catch (e) {
@@ -774,7 +798,7 @@ function setupEventListeners(container) {
       if (resp.status === 409 && result.duplicate_warning) {
         submittingStatus.style.display = 'none';
         submitBtn.disabled = false;
-        showDuplicateWarning(result.matches, result.message);
+        showDuplicateWarning(result.matches, result.message, result.strong);
         return;
       }
 

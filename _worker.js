@@ -325,7 +325,30 @@ function assignIslamicMonths(rows) {
   return days.map((_, i) => i < r1 ? 'Sha' : i < r2 ? 'Ram' : 'Shaw');
 }
 
-function generateCsvString(rows) {
+// Extracted rows carry "1 Oct"-style dates with no year. Store full ISO dates
+// so a timetable keeps meaning the right days in later years: use the
+// timetable's year, moving to the next year when the months wrap (a Dec-Jan
+// timetable). Already-ISO dates pass through unchanged.
+const ROW_DATE_MONTHS = { jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12 };
+
+function isoRowDates(rows, year) {
+  let y = parseInt(year, 10) || londonToday().year;
+  let prevMonth = null;
+  return rows.map((r) => {
+    const s = String((r && r.date) || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const parts = s.split(/\s+/);
+    const day = parseInt(parts[0], 10);
+    const month = parts.length >= 2 ? ROW_DATE_MONTHS[parts[1].slice(0, 3).toLowerCase()] : undefined;
+    if (isNaN(day) || !month) return s;
+    if (prevMonth !== null && month < prevMonth) y += 1;
+    prevMonth = month;
+    return `${y}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  });
+}
+
+function generateCsvString(rows, year) {
+  const isoDates = isoRowDates(rows, year);
   const headers = [
     'Date', 'Day', 'Islamic Day', 'Sehri Ends', 'Fajr Start', 'Sunrise',
     'Zawal', 'Zohr', 'Asr', 'Esha',
@@ -336,7 +359,7 @@ function generateCsvString(rows) {
   const months = assignIslamicMonths(rows);
 
   const fieldMap = {
-    'Date': 'date',
+    'Date': (r, i) => isoDates[i],
     'Day': 'day',
     'Islamic Day': (r, i) => {
       const v = r.islamic_day != null ? r.islamic_day : (r.ramadan_day || '');
@@ -544,6 +567,21 @@ async function githubCommitFiles(files, message, env) {
   }
 }
 
+// GitHub's Contents API returns base64 of the file's UTF-8 bytes. atob() alone
+// gives one character per byte, so non-ASCII text ("£", "—", "ā") was read
+// garbled and then re-encoded garbled on every write, compounding mojibake
+// in index.json and configs. Decode the bytes as UTF-8 instead.
+function decodeGitHubContent(content) {
+  const bin = atob((content || '').replace(/\n/g, ''));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+// Providers whose times come from a live feed refreshed by provider scripts.
+// Uploads for these masjids are stored as a backup (data/backup/{slug}.csv)
+// rather than replacing the feed - see handleUpdate.
+const LIVE_FEED_PROVIDERS = new Set(['mawaqit', 'masjidbox', 'mymasjid', 'masjidal', 'londonprayertimes']);
+
 // --- Slim index companion (data/mosques/index-slim.json) ---
 
 // Lightweight companion to index.json — same array order, but each entry is
@@ -551,7 +589,7 @@ async function githubCommitFiles(files, message, env) {
 // Mirrors SLIM_INDEX_FIELDS + slim_config() in providers/__init__.py (the
 // reference implementation) — keep the two in sync.
 const SLIM_INDEX_FIELDS = [
-  'slug', 'display_name', 'address', 'city', 'logo', 'csv', 'approved',
+  'slug', 'display_name', 'address', 'city', 'logo', 'csv', 'backup_csv', 'approved',
   'eid_salah', 'jummah_times', 'test_masjid', 'hidden',
   'latitude', 'longitude', 'lat', 'lon',
 ];
@@ -707,16 +745,13 @@ async function createExtractionNotification(mosqueName, ip, success, errorMsg, e
 
 function validateTimetableDates(rows, year) {
   if (!year) return null; // can't validate without year
-  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
+  // Same year/rollover rules as the stored CSV, so a Dec-Jan timetable's
+  // January rows count as next year rather than making it look outdated
   let latestDate = null;
-  for (const row of rows) {
-    if (!row.date) continue;
-    const parts = row.date.trim().split(/\s+/);
-    if (parts.length < 2) continue;
-    const day = parseInt(parts[0]);
-    const mon = months[parts[1]];
-    if (isNaN(day) || mon === undefined) continue;
-    const d = new Date(Date.UTC(year, mon, day));
+  for (const iso of isoRowDates(rows, year)) {
+    const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) continue;
+    const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
     if (!latestDate || d > latestDate) latestDate = d;
   }
   if (!latestDate) return null; // can't parse, skip
@@ -916,12 +951,15 @@ async function buildMasjidOgMeta(slug, request, env) {
   if (config.csv) {
     try {
       const csvRes = await env.ASSETS.fetch(new URL(`/data/${config.csv}`, request.url).toString());
-      if (csvRes.ok) {
-        const row = findTodayRowForOg(await csvRes.text());
-        const times = row ? buildTodayTimesLine(row) : null;
-        if (times) {
-          description = `Today: ${times.line} — ${times.usedJamaat ? "jama'at times" : 'start times'}`;
-        }
+      let row = csvRes.ok ? findTodayRowForOg(await csvRes.text()) : null;
+      // Live-feed masjids fall back to their uploaded backup timetable
+      if (!row && config.backup_csv) {
+        const backupRes = await env.ASSETS.fetch(new URL(`/data/${config.backup_csv}`, request.url).toString());
+        if (backupRes.ok) row = findTodayRowForOg(await backupRes.text());
+      }
+      const times = row ? buildTodayTimesLine(row) : null;
+      if (times) {
+        description = `Today: ${times.line} — ${times.usedJamaat ? "jama'at times" : 'start times'}`;
       }
     } catch {
       // CSV problems never block the preview — keep the generic description
@@ -1302,11 +1340,13 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
   for (const cfg of existingConfigs) {
     let score = 0;
     const reasons = [];
+    let samePhone = false, nameRatio = 0, samePostcode = false, veryClose = false;
 
     // Phone match
     if (normPhone && cfg.phone) {
       const cfgPhone = normalisePhone(cfg.phone);
       if (cfgPhone && normPhone === cfgPhone) {
+        samePhone = true;
         score += 100;
         reasons.push('Same phone number');
       }
@@ -1317,6 +1357,7 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
       const cfgName = normaliseName(cfg.display_name);
       if (cfgName) {
         const ratio = levenshteinRatio(normName, cfgName);
+        nameRatio = ratio;
         if (ratio > 0.7) {
           score += Math.round(ratio * 40);
           reasons.push(`Similar name (${Math.round(ratio * 100)}% match)`);
@@ -1329,6 +1370,7 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
       const cfgPostcode = extractPostcode(cfg.address);
       if (cfgPostcode) {
         if (postcode.full === cfgPostcode.full) {
+          samePostcode = true;
           score += 50;
           reasons.push('Same postcode');
         } else if (postcode.outcode === cfgPostcode.outcode) {
@@ -1339,9 +1381,13 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
     }
 
     // Proximity
-    if (lat != null && lon != null && cfg.lat != null && cfg.lon != null) {
-      const dist = haversineDistanceMetres(lat, lon, cfg.lat, cfg.lon);
+    // Submitted configs use lat/lon; provider (Mawaqit etc.) configs use latitude/longitude
+    const cfgLat = cfg.lat ?? cfg.latitude;
+    const cfgLon = cfg.lon ?? cfg.longitude;
+    if (lat != null && lon != null && cfgLat != null && cfgLon != null) {
+      const dist = haversineDistanceMetres(lat, lon, cfgLat, cfgLon);
       if (dist < 100) {
+        veryClose = true;
         score += 40;
         reasons.push('Very close location (<100m)');
       } else if (dist < 300) {
@@ -1354,12 +1400,17 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
     }
 
     if (score >= 60) {
+      // Strong = almost certainly the same masjid. Users can't override
+      // these; they're sent to the Update flow instead. Phone alone isn't
+      // enough (a trust may share one number across branches).
+      const strong = nameRatio >= 0.85 && (samePhone || samePostcode || veryClose);
       matches.push({
         slug: cfg.slug,
         display_name: cfg.display_name,
         address: cfg.address || '',
         score,
         reasons,
+        strong,
       });
     }
   }
@@ -1431,7 +1482,7 @@ async function handleSubmit(request, env) {
   try {
     indexFile = await githubGetFile('data/mosques/index.json', env);
     if (indexFile) {
-      existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+      existingConfigs = JSON.parse(decodeGitHubContent(indexFile.content));
     }
   } catch (e) {
     // GitHub being unreachable is a server problem - abort rather than
@@ -1441,14 +1492,20 @@ async function handleSubmit(request, env) {
     // Corrupt index JSON: skip duplicate check and proceed
   }
 
-  // Duplicate detection (skip if user confirmed)
-  if (!body.confirm_not_duplicate && existingConfigs.length > 0) {
-    const duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+  // Duplicate detection. "Submit anyway" (confirm_not_duplicate) only skips
+  // weak matches; strong matches still block unless the request is admin.
+  if (!(admin && body.confirm_not_duplicate) && existingConfigs.length > 0) {
+    let duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+    if (body.confirm_not_duplicate) duplicates = duplicates.filter(d => d.strong);
     if (duplicates.length > 0) {
+      const strong = !admin && duplicates.some(d => d.strong);
       return jsonResponse({
         duplicate_warning: true,
+        strong,
         matches: duplicates,
-        message: 'We found existing masjids that may be the same. Please check before submitting.',
+        message: strong
+          ? 'This masjid is already on Iqamah. To upload a new timetable, update the existing masjid instead.'
+          : 'We found existing masjids that may be the same. Please check before submitting.',
       }, 409);
     }
   }
@@ -1462,7 +1519,7 @@ async function handleSubmit(request, env) {
   slug = await deduplicateSlug(slug, address, env);
 
   // Build CSV
-  const csvContent = generateCsvString(data.rows);
+  const csvContent = generateCsvString(data.rows, data.year);
 
   // Build config JSON
   const config = {
@@ -1553,34 +1610,35 @@ async function handleSubmit(request, env) {
 // CSV merge logic
 // ============================================================
 
-function parseDateForSort(dateStr) {
-  if (!dateStr) return 0;
-  const months = { Jan:0, Feb:1, Mar:2, Apr:3, May:4, Jun:5, Jul:6, Aug:7, Sep:8, Oct:9, Nov:10, Dec:11 };
-  const parts = dateStr.trim().split(/\s+/);
-  if (parts.length < 2) return 0;
-  const day = parseInt(parts[0]);
-  const mon = months[parts[1]];
-  if (isNaN(day) || mon === undefined) return 0;
-  // Use a sortable number: month * 100 + day
-  return mon * 100 + day;
+// Canonical YYYY-MM-DD key for a CSV date in either format ("2026-10-01" from
+// providers, "1 Oct" from image extraction), so the two layouts merge and
+// sort together instead of duplicating or dropping rows.
+function csvDateKey(dateStr) {
+  const d = ogParseDate(dateStr);
+  if (!d) return null;
+  return `${d.year}-${String(d.month).padStart(2, '0')}-${String(d.day).padStart(2, '0')}`;
 }
 
-function mergeCsvRows(existingCsvText, newRows) {
-  // Parse existing CSV into Map keyed by date string
+function mergeCsvRows(existingCsvText, newRows, year) {
+  // Parse existing CSV into Map keyed by date. Provider CSVs use snake_case
+  // headers, so alias them first (otherwise every existing row is dropped).
   const lines = existingCsvText.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim());
+  const headers = lines[0].split(',').map(h => {
+    const trimmed = h.trim();
+    return OG_HEADER_ALIASES[trimmed] || trimmed;
+  });
   const existingMap = new Map();
 
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',').map(v => v.trim());
     const row = {};
     headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
-    const dateKey = row['Date'] || '';
-    if (dateKey) existingMap.set(dateKey.trim(), row);
+    const dateKey = csvDateKey(row['Date'] || '');
+    if (dateKey) existingMap.set(dateKey, row);
   }
 
   // Generate new CSV string and parse it
-  const newCsvText = generateCsvString(newRows);
+  const newCsvText = generateCsvString(newRows, year);
   const newLines = newCsvText.trim().split('\n');
   const newHeaders = newLines[0].split(',').map(h => h.trim());
 
@@ -1588,13 +1646,14 @@ function mergeCsvRows(existingCsvText, newRows) {
     const values = newLines[i].split(',').map(v => v.trim());
     const row = {};
     newHeaders.forEach((h, idx) => { row[h] = values[idx] || ''; });
-    const dateKey = row['Date'] || '';
-    if (dateKey) existingMap.set(dateKey.trim(), row);
+    const dateKey = csvDateKey(row['Date'] || '');
+    if (dateKey) existingMap.set(dateKey, row);
   }
 
-  // Sort all rows by date
-  const allRows = Array.from(existingMap.values());
-  allRows.sort((a, b) => parseDateForSort(a['Date']) - parseDateForSort(b['Date']));
+  // Sort all rows by date (ISO keys sort lexically)
+  const allRows = Array.from(existingMap.entries())
+    .sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0))
+    .map(([, row]) => row);
 
   // Rebuild CSV with standard headers
   const standardHeaders = [
@@ -1616,9 +1675,12 @@ function mergeCsvRows(existingCsvText, newRows) {
 // POST /api/update — Update existing masjid timetable
 // ============================================================
 
-async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, env) {
+async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, env, { backup = false } = {}) {
   try {
-    const issueBody = `A timetable update has been submitted.\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**New rows:** ${newRowCount}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`.`;
+    const intro = backup
+      ? `A timetable was uploaded for a live-feed masjid and saved as a **backup** (\`data/backup/${slug}.csv\`). The feed stays the main source; backup rows are only shown on days the feed has no times, labelled "pending review" until approved.`
+      : 'A timetable update has been submitted.';
+    const issueBody = `${intro}\n\n**Name:** ${mosqueName}\n**Slug:** \`${slug}\`\n**New rows:** ${newRowCount}\n**IP:** \`${ip}\`\n**Time:** ${new Date().toISOString()}\n**View page:** [iqamah.co.uk/${slug}](https://iqamah.co.uk/${slug})\n\n**To approve**, run the [Approve Masjid](https://github.com/${GITHUB_REPO}/actions/workflows/approve_masjid.yml) workflow with slug \`${slug}\`, or use the Approve button on the masjid page.`;
     await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
       method: 'POST',
       headers: {
@@ -1628,7 +1690,7 @@ async function createUpdateNotificationIssue(slug, mosqueName, newRowCount, ip, 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: `Timetable updated: ${mosqueName}`,
+        title: `${backup ? 'Backup timetable' : 'Timetable updated'}: ${mosqueName}`,
         body: issueBody,
         labels: ['timetable-update'],
       }),
@@ -1681,7 +1743,7 @@ async function handleUpdate(request, env) {
 
   let existingConfig;
   try {
-    existingConfig = JSON.parse(atob(configFile.content.replace(/\n/g, '')));
+    existingConfig = JSON.parse(decodeGitHubContent(configFile.content));
   } catch (e) {
     return errorResponse('Failed to read existing masjid config', 500);
   }
@@ -1719,22 +1781,33 @@ async function handleUpdate(request, env) {
     if (data[field]) data[field] = data[field].substring(0, max);
   }
 
+  // Live-feed masjids keep the feed as their main source: the upload is
+  // merged into a separate backup CSV that the app only uses for dates the
+  // feed has no row for. The feed's CSV and provider record are never
+  // touched (rewriting them would lose feed rows and make the nightly
+  // refresh stop recognising the masjid and recreate it as a duplicate).
+  const providerType = existingConfig.provider && existingConfig.provider.type;
+  const isLiveFeed = LIVE_FEED_PROVIDERS.has(providerType);
+  const csvPath = isLiveFeed
+    ? `data/backup/${slug}.csv`
+    : `data/${existingConfig.csv || slug + '.csv'}`;
+
   // Fetch existing CSV. A GitHub error must not fall through to the
   // no-CSV branch - that would silently replace the merged history with
   // only the newly uploaded rows.
   let csvFile;
   try {
-    csvFile = await githubGetFile(`data/${existingConfig.csv || slug + '.csv'}`, env);
+    csvFile = await githubGetFile(csvPath, env);
   } catch (e) {
     if (e instanceof GitHubApiError) return githubApiErrorResponse(e);
     throw e;
   }
   let mergedCsv;
   if (csvFile) {
-    const existingCsvText = atob(csvFile.content.replace(/\n/g, ''));
-    mergedCsv = mergeCsvRows(existingCsvText, fixedRows);
+    const existingCsvText = decodeGitHubContent(csvFile.content);
+    mergedCsv = mergeCsvRows(existingCsvText, fixedRows, data.year);
   } else {
-    mergedCsv = generateCsvString(fixedRows);
+    mergedCsv = generateCsvString(fixedRows, data.year);
   }
 
   // Update config — only overwrite non-empty metadata fields
@@ -1744,11 +1817,21 @@ async function handleUpdate(request, env) {
       existingConfig[field] = data[field].trim();
     }
   }
-  existingConfig.is_stale = false;
-  existingConfig.pending_update = admin ? false : true;
-  if (admin) existingConfig.approved = true;
-  if (data.month) existingConfig.month = data.month;
-  if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
+  if (isLiveFeed) {
+    // Feed times stay live and unflagged; only the backup is new
+    existingConfig.backup_csv = `backup/${slug}.csv`;
+    existingConfig.backup_updated_at = new Date().toISOString().slice(0, 10);
+    // Backup rows go live (only on days the feed has none) but are labelled
+    // pending review until approved, like a normal timetable update
+    if (admin) delete existingConfig.backup_pending;
+    else existingConfig.backup_pending = true;
+  } else {
+    existingConfig.is_stale = false;
+    existingConfig.pending_update = admin ? false : true;
+    if (admin) existingConfig.approved = true;
+    if (data.month) existingConfig.month = data.month;
+    if (data.islamic_month) existingConfig.islamic_month = data.islamic_month;
+  }
 
   // Re-geocode if address changed
   if (data.address && data.address.trim() && data.address.trim() !== (existingConfig.address || '')) {
@@ -1760,35 +1843,34 @@ async function handleUpdate(request, env) {
   }
 
   // Source image update
-  if (image) {
-    const imgMatch = image.match(/^data:image\/(\w+);base64,/);
-    if (imgMatch) {
-      const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
-      existingConfig.source_image = `sources/${slug}.${ext}`;
-      // Times now come from this uploaded timetable image.
-      existingConfig.provider = {
-        type: 'image',
-        ref: { source_image: existingConfig.source_image },
-        source_url: `/data/${existingConfig.source_image}`,
-      };
-    }
+  const imgMatch = image ? image.match(/^data:image\/(\w+);base64,(.+)$/) : null;
+  const imgExt = imgMatch ? (imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1]) : null;
+  const imagePath = imgMatch
+    ? (isLiveFeed ? `sources/${slug}_backup.${imgExt}` : `sources/${slug}.${imgExt}`)
+    : null;
+  if (imagePath && isLiveFeed) {
+    existingConfig.backup_source_image = imagePath;
+  } else if (imagePath) {
+    existingConfig.source_image = imagePath;
+    // Times now come from this uploaded timetable image.
+    existingConfig.provider = {
+      type: 'image',
+      ref: { source_image: existingConfig.source_image },
+      source_url: `/data/${existingConfig.source_image}`,
+    };
   }
 
   try {
     // Build file list
     const files = [
-      { path: `data/${existingConfig.csv || slug + '.csv'}`, content: mergedCsv },
+      { path: csvPath, content: mergedCsv },
       { path: `data/mosques/${slug}.json`, content: JSON.stringify(existingConfig, null, 2) },
-      { path: `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
+      { path: isLiveFeed ? `data/backup/${slug}.json` : `data/${slug}.json`, content: JSON.stringify(data, null, 2) },
     ];
 
     // Source timetable image
-    if (image) {
-      const imgMatch = image.match(/^data:image\/(\w+);base64,(.+)$/);
-      if (imgMatch) {
-        const ext = imgMatch[1] === 'jpeg' ? 'jpg' : imgMatch[1];
-        files.push({ path: `data/sources/${slug}.${ext}`, base64: imgMatch[2] });
-      }
+    if (imagePath) {
+      files.push({ path: `data/${imagePath}`, base64: imgMatch[2] });
     }
 
     // Update index.json
@@ -1797,7 +1879,7 @@ async function handleUpdate(request, env) {
     try {
       indexFile = await githubGetFile('data/mosques/index.json', env);
       if (indexFile) {
-        existingConfigs = JSON.parse(atob(indexFile.content.replace(/\n/g, '')));
+        existingConfigs = JSON.parse(decodeGitHubContent(indexFile.content));
       }
     } catch (e) {
       // A GitHub error here must abort - proceeding with an empty list
@@ -1818,10 +1900,10 @@ async function handleUpdate(request, env) {
     pushSlimIndexFile(files, existingConfigs);
 
     // Single commit
-    await githubCommitFiles(files, `Update timetable: ${existingConfig.display_name}`, env);
+    await githubCommitFiles(files, `${isLiveFeed ? 'Backup timetable' : 'Update timetable'}: ${existingConfig.display_name}`, env);
 
     // Create notification issue (skip for admin)
-    if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env);
+    if (!admin) await createUpdateNotificationIssue(slug, existingConfig.display_name, fixedRows.length, ip, env, { backup: isLiveFeed });
 
     // Trigger lockscreen generation
     triggerLockscreenGeneration(slug, env);
@@ -1830,8 +1912,11 @@ async function handleUpdate(request, env) {
       success: true,
       slug,
       url: `/${slug}`,
-      pending: !admin,
-      message: `Timetable for ${existingConfig.display_name} has been updated!`,
+      pending: !admin && !isLiveFeed,
+      backup: isLiveFeed,
+      message: isLiveFeed
+        ? `Thanks! Your timetable for ${existingConfig.display_name} has been saved as a backup.`
+        : `Timetable for ${existingConfig.display_name} has been updated!`,
     });
   } catch (e) {
     console.error('Update error:', e);
@@ -1870,14 +1955,14 @@ async function handleAdminDelete(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
 
     // Get index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
     if (!indexFile) {
       return errorResponse('Index file not found', 500);
     }
-    const indexList = JSON.parse(atob(indexFile.content));
+    const indexList = JSON.parse(decodeGitHubContent(indexFile.content));
     const newIndex = indexList.filter(entry => {
       const entrySlug = typeof entry === 'string' ? entry : entry.slug;
       return entrySlug !== slug;
@@ -1902,12 +1987,16 @@ async function handleAdminDelete(request, env) {
       files.push({ path: `data/${slug}.json`, delete: true });
     }
 
-    // Delete source image if exists
-    if (config.source_image) {
-      const sourceFile = await githubGetFile(config.source_image, env);
-      if (sourceFile) {
-        files.push({ path: config.source_image, delete: true });
-      }
+    // Delete source image(s) and any backup timetable if they exist.
+    // Config image paths are relative to data/ ("sources/x.jpg").
+    const extraPaths = [
+      config.source_image && `data/${config.source_image}`,
+      config.backup_source_image && `data/${config.backup_source_image}`,
+      config.backup_csv && `data/${config.backup_csv}`,
+      config.backup_csv && `data/backup/${slug}.json`,
+    ].filter(Boolean);
+    for (const path of extraPaths) {
+      if (await githubGetFile(path, env)) files.push({ path, delete: true });
     }
 
     // Update index.json
@@ -1949,18 +2038,19 @@ async function handleAdminApprove(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
     config.approved = true;
     delete config.pending_update;
+    delete config.backup_pending;
 
     // Get index.json
     const indexFile = await githubGetFile('data/mosques/index.json', env);
-    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const indexList = indexFile ? JSON.parse(decodeGitHubContent(indexFile.content)) : [];
     const updatedIndex = indexList.map(entry => {
       const entrySlug = typeof entry === 'string' ? entry : entry.slug;
       if (entrySlug === slug) {
         if (typeof entry === 'object') {
-          return { ...entry, approved: true, pending_update: undefined };
+          return { ...entry, approved: true, pending_update: undefined, backup_pending: undefined };
         }
       }
       return entry;
@@ -2014,12 +2104,12 @@ async function handleAdminRename(request, env) {
     if (!configFile) {
       return errorResponse('Masjid not found', 404);
     }
-    const config = JSON.parse(atob(configFile.content));
+    const config = JSON.parse(decodeGitHubContent(configFile.content));
     config.display_name = newName;
 
     // Get index.json and update the entry
     const indexFile = await githubGetFile('data/mosques/index.json', env);
-    const indexList = indexFile ? JSON.parse(atob(indexFile.content)) : [];
+    const indexList = indexFile ? JSON.parse(decodeGitHubContent(indexFile.content)) : [];
     const updatedIndex = indexList.map(entry => {
       if (typeof entry === 'object' && entry.slug === slug) {
         return { ...entry, display_name: newName };

@@ -16,7 +16,7 @@ jobs:
         run: |
           CONFIG="data/mosques/${{ github.event.inputs.slug }}.json"
           if [ ! -f "$CONFIG" ]; then echo "Not found: $CONFIG"; exit 1; fi
-          jq '.approved = true | del(.pending_update)' "$CONFIG" > tmp.json && mv tmp.json "$CONFIG"
+          jq '.approved = true | del(.pending_update) | del(.backup_pending)' "$CONFIG" > tmp.json && mv tmp.json "$CONFIG"
       - name: Regenerate index.json + index-slim.json
         run: python3 -c "from pathlib import Path; from providers import regenerate_index; regenerate_index(Path('data/mosques'))"
       - name: Commit

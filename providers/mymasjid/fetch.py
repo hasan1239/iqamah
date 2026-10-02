@@ -39,6 +39,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from providers import lookup_uk_postcode, regenerate_index
+from providers.sun import sun_time_issues, sun_time_warnings
 
 
 API_BASE = "https://time.my-masjid.com/api"
@@ -280,7 +281,8 @@ def repair_glitches(rows: list[dict]) -> list[dict]:
 
 
 def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
-                  corrections: list[dict] | None = None) -> dict:
+                  corrections: list[dict] | None = None,
+                  lat: float | None = None, lon: float | None = None) -> dict:
     """
     Quality checks. Reuses the Mawaqit-style signals (fajr_after_sunrise,
     iqamas_unconfigured, sehri_unconfigured) plus a My-Masjid-specific
@@ -451,6 +453,11 @@ def quality_check(rows: list[dict], acknowledged: list[str] | None = None,
             "fix": "Verify against the masjid's real timetable; fix upstream or skip",
         })
 
+    # Sunrise/Maghrib vs the sun at the masjid's location (providers/sun.py)
+    sun_issues = sun_time_issues(rows, lat, lon)
+    issues.extend(sun_issues)
+    warnings.extend(sun_time_warnings(sun_issues))
+
     for issue in issues:
         if issue.get("type") in acknowledged:
             issue["acknowledged"] = True
@@ -536,9 +543,26 @@ def resolve_address(model: dict, existing: dict) -> tuple[str, str]:
     return build_address(model.get("masjidDetails") or {})
 
 
+# My-Masjid returns 54.0, -2.0 (a UK-wide default) when a masjid hasn't set its
+# location. Treat it, and 0/0, as unknown so it never becomes a map pin or a
+# duplicate-check position.
+PLACEHOLDER_COORDS = {(54.0, -2.0), (0.0, 0.0)}
+
+
+def real_coords(lat, lon):
+    try:
+        if (float(lat), float(lon)) in PLACEHOLDER_COORDS:
+            return None, None
+    except (TypeError, ValueError):
+        return None, None
+    return lat, lon
+
+
 def build_config(model: dict, guid: str, slug: str, quality: dict, existing: dict) -> dict:
     details = model.get("masjidDetails") or {}
     address, address_source = resolve_address(model, existing)
+    new_lat, new_lon = real_coords(details.get("latitude"), details.get("longitude"))
+    old_lat, old_lon = real_coords(existing.get("latitude"), existing.get("longitude"))
 
     def keep(field, new_value):
         return prefer_existing(existing.get(field), new_value)
@@ -547,8 +571,8 @@ def build_config(model: dict, guid: str, slug: str, quality: dict, existing: dic
         "slug": slug,
         "display_name": keep("display_name", (details.get("name") or "").strip()),
         "city": keep("city", ""),
-        "latitude": keep("latitude", details.get("latitude")),
-        "longitude": keep("longitude", details.get("longitude")),
+        "latitude": prefer_existing(old_lat, new_lat),
+        "longitude": prefer_existing(old_lon, new_lon),
         "country_code": keep("country_code", "GB"),
         "website": keep("website", ""),
         "logo": keep("logo", ""),
@@ -601,7 +625,11 @@ def _run(model: dict, guid: str, slug: str, data_dir: Path, existing: dict) -> d
         raise RuntimeError(f"No usable rows for {guid}")
     corrections = repair_glitches(rows)
     acknowledged = existing.get("acknowledged_issues") or []
-    quality = quality_check(rows, acknowledged=acknowledged, corrections=corrections)
+    details = model.get("masjidDetails") or {}
+    lat, lon = real_coords(existing.get("latitude"), existing.get("longitude"))
+    if lat is None:
+        lat, lon = real_coords(details.get("latitude"), details.get("longitude"))
+    quality = quality_check(rows, acknowledged=acknowledged, corrections=corrections, lat=lat, lon=lon)
     config = build_config(model, guid, slug, quality, existing)
 
     write_csv(rows, data_dir / f"{slug}.csv")

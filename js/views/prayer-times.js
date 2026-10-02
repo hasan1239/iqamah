@@ -4,6 +4,7 @@ import { gregorianToHijri, formatHijriDate } from '../utils/hijri.js';
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
 import { getMyMasjid, setMyMasjid, clearMyMasjid, isOther, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
 import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
+import { loadMasjidRows } from '../utils/masjid-csv.js';
 
 let config = null;
 let csvData = [];
@@ -85,6 +86,17 @@ function renderSourceTag(cfg) {
   if (!type) return '';
 
   const label = PROVIDER_LABELS[type] || type;
+
+  // Live-feed masjid whose feed has no row for today: today's times come
+  // from the uploaded backup timetable (see utils/masjid-csv.js)
+  const todayRow = getTodayRow();
+  if (todayRow && todayRow._backup) {
+    const backupLabel = cfg.backup_source_image
+      ? `<a href="/data/${cfg.backup_source_image}" target="_blank" rel="noopener" class="source-link">uploaded timetable</a>`
+      : 'uploaded timetable';
+    const pending = cfg.backup_pending ? ' <span class="backup-pending">(pending review)</span>' : '';
+    return `<div class="source-tag">Times from ${backupLabel}${pending} · ${label} has no times for today</div>`;
+  }
 
   // External providers link to their site; uploaded timetables link to the image.
   let sourceUrl = null;
@@ -175,12 +187,8 @@ export async function render(container, { slug }) {
     }
     document.title = `${config.display_name} - Iqamah`;
 
-    const csvRes = await fetch(`/data/${config.csv}`);
-    if (csvRes.ok) {
-      csvData = parseCSV(await csvRes.text());
-    } else {
-      csvData = [];
-    }
+    // Feed rows, with any uploaded backup timetable filling missing dates
+    csvData = (await loadMasjidRows(config)) || [];
 
     renderContent(container);
 
@@ -238,33 +246,6 @@ function recordRecentVisit(slug) {
 }
 
 // --- CSV parsing (local to this view, matches original exactly) ---
-
-// Snake-case headers from providers/mawaqit/fetch.py map to legacy title-case headers
-// used throughout the UI. Keeps both CSV layouts readable by a single parser.
-const HEADER_ALIASES = {
-  'date': 'Date', 'day': 'Day', 'islamic_day': 'Islamic Day',
-  'sehri_ends': 'Sehri Ends', 'fajr_start': 'Fajr Start',
-  'sunrise': 'Sunrise', 'zawal': 'Zawal', 'zohr': 'Zohr', 'asr': 'Asr', 'esha': 'Esha',
-  'fajr_jamaat': "Fajr Jama'at", 'zohar_jamaat': "Zohar Jama'at",
-  'asr_jamaat': "Asr Jama'at", 'maghrib_iftari': 'Maghrib Iftari',
-  'maghrib_jamaat': "Maghrib Jama'at", 'esha_jamaat': "Esha Jama'at",
-};
-
-function parseCSV(text) {
-  const lines = text.trim().split('\n');
-  const headers = lines[0].split(',').map(h => {
-    const trimmed = h.trim();
-    return HEADER_ALIASES[trimmed] || trimmed;
-  });
-  const rows = [];
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',').map(v => v.trim());
-    const row = {};
-    headers.forEach((header, index) => { row[header] = values[index]; });
-    rows.push(row);
-  }
-  return rows;
-}
 
 function parseDate(dateStr) {
   if (!dateStr) return null;
@@ -733,6 +714,29 @@ function renderTodayView(target) {
     ? `<div class="esha-combined-note">* Fajr jama'at is listed after sunrise today. Please confirm with the masjid.</div>`
     : '';
 
+  // Provider quality check (providers/sun.py) found today's sunrise/Maghrib
+  // off the sun at this location in a direction that could make someone pray
+  // at the wrong time (e.g. a clock-change error at source). Masjids where
+  // that's sustained are hidden; this covers the remaining day-specific
+  // cases. Not shown for backup rows (different source).
+  const now = new Date();
+  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const sunIssue = !todayRow._backup && ((config.quality && config.quality.issues) || []).find(i =>
+    i.type === 'sun_times_unsafe' && !i.acknowledged &&
+    Array.isArray(i.affected_dates) && i.affected_dates.includes(todayIso));
+  // Today's own offset (affected_offsets parallels affected_dates); older
+  // quality blocks only have the window's typical offset
+  const sunIdx = sunIssue ? sunIssue.affected_dates.indexOf(todayIso) : -1;
+  const sunToday = sunIssue
+    ? ((Array.isArray(sunIssue.affected_offsets) && sunIssue.affected_offsets[sunIdx] != null)
+      ? sunIssue.affected_offsets[sunIdx] : (sunIssue.typical_offset_min || 0))
+    : 0;
+  const sunOffset = Math.abs(sunToday);
+  const sunDirection = sunToday > 0 ? 'later' : 'earlier';
+  const sunFootnoteHtml = !sunIssue ? '' : (sunOffset >= 45 && sunOffset <= 75)
+    ? `<div class="esha-combined-note">Today's times look about an hour ${sunDirection} than sunrise and sunset at this masjid, possibly a clock-change error in the source. Please check with the masjid.</div>`
+    : `<div class="esha-combined-note">Some of today's times don't match sunrise and sunset at this masjid's location. Please check with the masjid.</div>`;
+
   target.innerHTML = `
     <div class="prayer-times-view" id="pt-content">
       <header>
@@ -761,6 +765,7 @@ function renderTodayView(target) {
       </div>
       ${eshaFootnoteHtml}
       ${fajrFootnoteHtml}
+      ${sunFootnoteHtml}
 
       ${renderInfoSection()}
 
@@ -1483,7 +1488,7 @@ async function renderAdminControls(container) {
   }
 
   // Approve button (if pending)
-  if (config.approved === false || config.pending_update === true) {
+  if (config.approved === false || config.pending_update === true || config.backup_pending === true) {
     const approveBtn = document.createElement('button');
     approveBtn.className = 'btn btn-admin admin-approve-btn';
     approveBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg> Approve';
@@ -1500,8 +1505,10 @@ async function renderAdminControls(container) {
         if (!resp.ok || !result.success) throw new Error(result.error || 'Failed');
         config.approved = true;
         delete config.pending_update;
+        delete config.backup_pending;
         const notice = ptView.querySelector('.pending-notice');
         if (notice) notice.remove();
+        ptView.querySelectorAll('.backup-pending').forEach(el => el.remove());
         approveBtn.remove();
       } catch (e) {
         approveBtn.disabled = false;

@@ -404,12 +404,51 @@ def _assign_islamic_months(rows: list[dict]) -> list[str]:
     return ["Sha" if i < r1 else "Ram" if i < r2 else "Shaw" for i in range(n)]
 
 
+_ROW_DATE_MONTHS = {m: i for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def iso_row_dates(rows: list[dict], year: int) -> list[str]:
+    """
+    "1 Oct" -> "2026-10-01", so a stored timetable keeps meaning the right
+    days in later years. Moves to the next year when the months wrap (a
+    Dec-Jan timetable). Mirrors isoRowDates() in _worker.js.
+    """
+    out, prev = [], None
+    for row in rows:
+        s = str(row.get("date", "")).strip()
+        try:
+            datetime.date.fromisoformat(s)
+            out.append(s)
+            continue
+        except ValueError:
+            pass
+        parts = s.split()
+        month = _ROW_DATE_MONTHS.get(parts[1][:3].lower()) if len(parts) >= 2 else None
+        if not month or not parts[0].isdigit():
+            out.append(s)
+            continue
+        if prev is not None and month < prev:
+            year += 1
+        prev = month
+        out.append(f"{year:04d}-{month:02d}-{int(parts[0]):02d}")
+    return out
+
+
+def timetable_year(data: dict) -> int:
+    if str(data.get("year", "")).isdigit():
+        return int(data["year"])
+    m = re.search(r"(\d{4})", str(data.get("month", "")))
+    return int(m.group(1)) if m else datetime.date.today().year
+
+
 def save_csv(data: dict, output_path: str, notes: str = ""):
     """Save extracted data as a CSV file."""
     rows = data["rows"]
     rows = validate_and_fix_rows(rows, notes)
 
     months = _assign_islamic_months(rows)
+    iso_dates = iso_row_dates(rows, timetable_year(data))
 
     fieldnames = [
         "Date", "Day", "Islamic Day", "Sehri Ends", "Fajr Start", "Sunrise",
@@ -431,7 +470,7 @@ def save_csv(data: dict, output_path: str, notes: str = ""):
             else:
                 islamic_day_str = ""
             writer.writerow({
-                "Date": row.get("date", ""),
+                "Date": iso_dates[i],
                 "Day": row.get("day", ""),
                 "Islamic Day": islamic_day_str,
                 "Sehri Ends": row.get("sehri_ends", ""),

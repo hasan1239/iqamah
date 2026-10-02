@@ -27,6 +27,11 @@ on:
       template:
         description: 'Template version (leave blank to auto-detect from season)'
         required: false
+      refresh_full_year_feeds:
+        description: 'Also re-fetch the full-year feeds (Mawaqit, My-Masjid) now instead of waiting for Sunday'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: write
@@ -53,14 +58,39 @@ jobs:
         shell: python3 {0}
         run: |
           import json, csv, os, glob
-          from datetime import datetime
+          from datetime import datetime, date
           months = {'Jan':1,'Feb':2,'Mar':3,'Apr':4,'May':5,'Jun':6,'Jul':7,'Aug':8,'Sep':9,'Oct':10,'Nov':11,'Dec':12}
           today = datetime.now().date()
+          def row_date(row):
+              # Provider CSVs: lowercase 'date', ISO. Worker CSVs: 'Date', ISO
+              # (older ones "1 Oct", which were all 2026).
+              s = (row.get('Date') or row.get('date') or '').strip()
+              try:
+                  return date.fromisoformat(s)
+              except ValueError:
+                  parts = s.split()
+                  if len(parts) == 2 and parts[1] in months and parts[0].isdigit():
+                      return date(2026, months[parts[1]], int(parts[0]))
+              return None
           for path in sorted(glob.glob('data/mosques/*.json')):
               if path.endswith('index.json') or path.endswith('index-slim.json'):
                   continue
               with open(path) as f:
                   c = json.load(f)
+              # A pending backup timetable whose rows are all in the past no
+              # longer shows anywhere, so stop flagging it for review
+              if c.get('backup_pending') and c.get('backup_csv'):
+                  bpath = os.path.join('data', c['backup_csv'])
+                  future = False
+                  if os.path.exists(bpath):
+                      with open(bpath) as f:
+                          future = any((d := row_date(r)) and d >= today for r in csv.DictReader(f))
+                  if not future:
+                      print(f"Clearing backup_pending for {os.path.basename(path)}")
+                      del c['backup_pending']
+                      with open(path, 'w') as f:
+                          json.dump(c, f, indent=2)
+                          f.write('\n')
               is_pending_update = c.get('pending_update')
               is_unapproved = c.get('approved') == False
               if not is_pending_update and not is_unapproved:
@@ -71,12 +101,10 @@ jobs:
               if os.path.exists(csv_path):
                   with open(csv_path) as f:
                       for row in csv.DictReader(f):
-                          parts = row.get('Date', '').strip().split()
-                          if len(parts) == 2 and parts[1] in months:
-                              d = datetime(2026, months[parts[1]], int(parts[0])).date()
-                              if d >= today:
-                                  has_future = True
-                                  break
+                          d = row_date(row)
+                          if d and d >= today:
+                              has_future = True
+                              break
               if not has_future:
                   changed = False
                   if is_pending_update:
@@ -120,10 +148,12 @@ jobs:
           # Daily-accumulating MasjidBox masjids: upsert today/tomorrow into each
           # masjid's CSV. Uses only stdlib, so no extra deps. Non-fatal on errors.
           # Each call returns 2 days, so we fetch half the list per day (shard by
-          # day-of-year parity) — every masjid is still refreshed every other day
-          # with no gaps, and the daily API footprint is halved.
+          # day parity) — every masjid is still refreshed every other day
+          # with no gaps, and the daily API footprint is halved. Days since the
+          # epoch, not day-of-year: 31 Dec (day 365) and 1 Jan (day 1) are both
+          # odd, which left one shard with no row for 1 January.
           if [ -f data/masjidbox_uk.txt ]; then
-            SHARD=$(( 10#$(date -u +%j) % 2 ))
+            SHARD=$(( $(date -u +%s) / 86400 % 2 ))
             python -m providers.masjidbox.bulk --of 2 --shard "$SHARD" || echo "⚠️ MasjidBox fetch had errors (continuing)"
           else
             echo "No data/masjidbox_uk.txt — skipping MasjidBox refresh"
@@ -137,6 +167,70 @@ jobs:
           else
             echo "No data/masjidal_uk.txt — skipping Masjidal refresh"
           fi
+
+      - name: Refresh full-year feeds (weekly, or when a year runs out)
+        if: github.event_name == 'schedule' || github.event.inputs.refresh_full_year_feeds == 'true'
+        run: |
+          # Mawaqit and My-Masjid publish a whole year at once, so they don't
+          # need a daily fetch, but masjids do correct their calendars (e.g.
+          # clock-change errors). Full re-fetch weekly (Sundays) so fixes reach
+          # the app. On other days, re-fetch only masjids with no row for today:
+          # their CSVs cover one calendar year, so on 1 January they're all
+          # empty until re-fetched, and one dead feed shouldn't trigger a full
+          # re-fetch every day. Non-fatal throughout: a failure here must not
+          # skip the commit (and lose the day's MasjidBox/Masjidal data).
+          FULL=no
+          if [ "$(date -u +%u)" = "7" ] || [ "${{ github.event.inputs.refresh_full_year_feeds }}" = "true" ]; then
+            FULL=yes
+          fi
+          MAWAQIT_MISSING=$(python -m providers.feed_health --types mawaqit --format ref) || { echo "::warning::feed_health failed - doing a full refresh"; FULL=yes; }
+          MYMASJID_MISSING=$(python -m providers.feed_health --types mymasjid --format ref) || { echo "::warning::feed_health failed - doing a full refresh"; FULL=yes; }
+          if [ "$FULL" = "yes" ]; then
+            [ -f data/mawaqit_uk.txt ] && { python -m providers.mawaqit.bulk --delay 1.5 || echo "⚠️ Mawaqit fetch had errors (continuing)"; }
+            [ -f data/mymasjid_uk.txt ] && { python -m providers.mymasjid.bulk || echo "⚠️ My-Masjid fetch had errors (continuing)"; }
+            exit 0
+          fi
+          if [ -n "$MAWAQIT_MISSING" ]; then
+            echo "Mawaqit masjids with no row for today:"; echo "$MAWAQIT_MISSING"
+            python -m providers.mawaqit.bulk --delay 1.5 --only "$(echo "$MAWAQIT_MISSING" | paste -sd, -)" || echo "⚠️ Mawaqit fetch had errors (continuing)"
+          fi
+          if [ -n "$MYMASJID_MISSING" ]; then
+            echo "My-Masjid masjids with no row for today:"; echo "$MYMASJID_MISSING"
+            python -m providers.mymasjid.bulk --only "$(echo "$MYMASJID_MISSING" | paste -sd, -)" || echo "⚠️ My-Masjid fetch had errors (continuing)"
+          fi
+          if [ -z "$MAWAQIT_MISSING$MYMASJID_MISSING" ]; then
+            echo "Not Sunday and no full-year feed has run out - skipping"
+          fi
+
+      - name: Refresh LondonPrayerTimes (when its year runs out)
+        if: github.event_name == 'schedule' || github.event.inputs.refresh_full_year_feeds == 'true'
+        env:
+          LPT_API_KEY: ${{ secrets.LPT_API_KEY }}
+        run: |
+          # The London Unified timetable is published a year at a time (12 API
+          # calls), so only fetch when a LondonPrayerTimes masjid has no row for
+          # today (i.e. 1 January) or on a manual full refresh. Needs the
+          # LPT_API_KEY repository secret (free key from londonprayertimes.com/api).
+          RUN_OUT=$(python -m providers.feed_health --types londonprayertimes) || RUN_OUT="feed_health failed"
+          if [ -z "$RUN_OUT" ] && [ "${{ github.event.inputs.refresh_full_year_feeds }}" != "true" ]; then
+            echo "LondonPrayerTimes has today's times - skipping"
+            exit 0
+          fi
+          if [ -z "$LPT_API_KEY" ]; then
+            echo "::warning::LondonPrayerTimes needs a refresh but the LPT_API_KEY secret is not set"
+            exit 0
+          fi
+          for slug in $(python -m providers.feed_health --types londonprayertimes --every --format slug || true); do
+            python -m providers.londonprayertimes.fetch "$slug" || echo "⚠️ LondonPrayerTimes fetch failed for $slug (continuing)"
+          done
+
+      - name: Re-check feed times against the sun
+        run: |
+          # Offline and quick: re-run the sun-position check for every live-feed
+          # masjid from its CSV, so the hide window (today + 2 days) moves daily
+          # even for feeds fetched weekly or yearly (providers/requalify.py).
+          # Non-fatal: a failure must not skip the commit below.
+          python -m providers.requalify || echo "::warning::requalify failed (continuing)"
 
       - name: Determine date, mosque, and template
         if: env.GENERATE_LOCKSCREENS == 'true'
@@ -214,3 +308,12 @@ jobs:
           git commit -m "$MSG" || echo "No changes to commit"
           git pull --rebase
           git push
+
+      - name: Check every live feed has today's times
+        run: |
+          # The refresh steps above are non-fatal by design, which once let the
+          # Masjidal feed fail silently for four months (the widget changed its
+          # date format). Fail the run (GitHub emails the owner) when any
+          # live-feed masjid has no row for today. Runs after the commit, so the
+          # rest of the refresh still lands.
+          python -m providers.feed_health --fail
