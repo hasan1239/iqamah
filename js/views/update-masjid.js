@@ -53,6 +53,7 @@ async function convertPdfToImage(file) {
 }
 
 import { isAdmin, getAdminHeaders } from '../utils/admin.js';
+import { takeUploadHandoff } from '../utils/upload-handoff.js';
 
 const TURNSTILE_SITE_KEY = '0x4AAAAAACq8qcWOcA9r5EqM';
 let turnstileToken = null;
@@ -99,8 +100,17 @@ export async function render(container, { slug }) {
 
   isAdminUser = await isAdmin();
   document.title = `Update ${masjidConfig.display_name} - Iqamah`;
+
+  // Arrived from Add Masjid after a duplicate match: reuse that upload and
+  // its reviewed extraction, and open straight on the review step
+  const handoff = takeUploadHandoff(slug);
+  if (handoff) {
+    imageDataUrl = handoff.imageDataUrl;
+    extractedData = handoff.extractedData;
+  }
+
   container.innerHTML = getWizardHTML();
-  setupEventListeners(container);
+  setupEventListeners(container, !!handoff);
   if (!isAdminUser) loadTurnstile(container);
 }
 
@@ -290,7 +300,7 @@ function getWizardHTML() {
 function escapeHtml(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function escapeAttr(s) { return (s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
-function setupEventListeners(container) {
+function setupEventListeners(container, fromHandoff = false) {
   const uploadArea = container.querySelector('#uploadArea');
   const fileInput = container.querySelector('#fileInput');
   const imagePreview = container.querySelector('#imagePreview');
@@ -838,4 +848,10 @@ function setupEventListeners(container) {
 
   _syncImageHeight = syncImageHeight;
   window.addEventListener('resize', syncImageHeight);
+
+  if (fromHandoff) {
+    populateReview();
+    goToStep(3);
+    setTimeout(setupResizeObserver, 100);
+  }
 }

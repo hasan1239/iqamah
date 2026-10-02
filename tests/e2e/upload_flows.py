@@ -140,6 +140,7 @@ def setup_page(context, captured, errors):
 
     def extract_handler(route):
         captured["extract_action"] = (route.request.post_data or "").count("name=\"action\"")
+        captured["extract_calls"] = captured.get("extract_calls", 0) + 1
         route.fulfill(json={"success": True, "data": sample_extraction()})
 
     page.route("**/api/extract", extract_handler)
@@ -211,6 +212,55 @@ def test_update_flow(context, base_url, fixture):
     return errors
 
 
+def test_duplicate_redirect_flow(context, base_url, fixture):
+    """Add flow hits a strong duplicate -> 'Update existing masjid' hands the
+    reviewed upload to the Update wizard, which submits to /api/update."""
+    captured, errors = {}, []
+    page = setup_page(context, captured, errors)
+
+    def strong_dup_handler(route):
+        captured["submit"] = json.loads(route.request.post_data)
+        route.fulfill(status=409, json={
+            "duplicate_warning": True, "strong": True,
+            "message": "This masjid is already on Iqamah.",
+            "matches": [{"slug": UPDATE_SLUG, "display_name": "Existing Masjid", "address": "",
+                         "score": 230, "reasons": ["Same phone number"], "strong": True}],
+        })
+
+    page.unroute("**/api/submit")
+    page.route("**/api/submit", strong_dup_handler)
+
+    page.goto(f"{base_url}/add")
+    page.wait_for_selector("#fileInput", state="attached", timeout=30000)
+    page.set_input_files("#fileInput", fixture)
+    expect(page.locator("#extractBtn")).to_be_enabled(timeout=15000)
+    page.click("#extractBtn")
+    page.wait_for_selector("#step3.active", timeout=20000)
+    page.fill("#masjidName", "E2E Test Masjid")
+    # Edit a cell so we can check reviewed edits survive the handoff
+    page.fill('#reviewTbody input[data-row="0"][data-key="fajr_jamaat"]', "4:01")
+    page.click("#submitBtn")
+
+    page.wait_for_selector(".duplicate-warning", timeout=15000)
+    expect(page.locator("#dupConfirmBtn")).to_have_count(0)
+    page.click(".duplicate-update-btn")
+
+    page.wait_for_url(f"**/update/{UPDATE_SLUG}", timeout=15000)
+    page.wait_for_selector("#step3.active", timeout=20000)
+    expect(page.locator("#reviewTbody tr")).to_have_count(3)
+    assert captured.get("extract_calls") == 1, "Update wizard re-ran extraction"
+    page.click("#submitBtn")
+    page.wait_for_selector("#step4.active", timeout=15000)
+
+    payload = captured.get("update")
+    assert payload, "update was never called"
+    assert payload["slug"] == UPDATE_SLUG, payload.get("slug")
+    assert payload["data"]["rows"][0]["fajr_jamaat"] == "4:01", "reviewed edit lost in handoff"
+    assert payload.get("image", "").startswith("data:image/"), "source image missing from update"
+    page.close()
+    return errors
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base-url", help="reuse a running dev server instead of starting wrangler")
@@ -242,7 +292,8 @@ def main():
             context = browser.new_context(service_workers="block")
             context.add_init_script(seed)
 
-            for name, fn in [("add masjid", test_add_flow), ("update masjid", test_update_flow)]:
+            for name, fn in [("add masjid", test_add_flow), ("update masjid", test_update_flow),
+                             ("duplicate -> update existing", test_duplicate_redirect_flow)]:
                 try:
                     errors = fn(context, base_url, fixture)
                     js_errors = [e for e in errors if e.startswith("pageerror")]

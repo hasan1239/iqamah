@@ -1302,11 +1302,13 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
   for (const cfg of existingConfigs) {
     let score = 0;
     const reasons = [];
+    let samePhone = false, nameRatio = 0, samePostcode = false, veryClose = false;
 
     // Phone match
     if (normPhone && cfg.phone) {
       const cfgPhone = normalisePhone(cfg.phone);
       if (cfgPhone && normPhone === cfgPhone) {
+        samePhone = true;
         score += 100;
         reasons.push('Same phone number');
       }
@@ -1317,6 +1319,7 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
       const cfgName = normaliseName(cfg.display_name);
       if (cfgName) {
         const ratio = levenshteinRatio(normName, cfgName);
+        nameRatio = ratio;
         if (ratio > 0.7) {
           score += Math.round(ratio * 40);
           reasons.push(`Similar name (${Math.round(ratio * 100)}% match)`);
@@ -1329,6 +1332,7 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
       const cfgPostcode = extractPostcode(cfg.address);
       if (cfgPostcode) {
         if (postcode.full === cfgPostcode.full) {
+          samePostcode = true;
           score += 50;
           reasons.push('Same postcode');
         } else if (postcode.outcode === cfgPostcode.outcode) {
@@ -1342,6 +1346,7 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
     if (lat != null && lon != null && cfg.lat != null && cfg.lon != null) {
       const dist = haversineDistanceMetres(lat, lon, cfg.lat, cfg.lon);
       if (dist < 100) {
+        veryClose = true;
         score += 40;
         reasons.push('Very close location (<100m)');
       } else if (dist < 300) {
@@ -1354,12 +1359,17 @@ function findDuplicates(name, address, phone, lat, lon, existingConfigs) {
     }
 
     if (score >= 60) {
+      // Strong = almost certainly the same masjid. Users can't override
+      // these; they're sent to the Update flow instead. Phone alone isn't
+      // enough (a trust may share one number across branches).
+      const strong = nameRatio >= 0.85 && (samePhone || samePostcode || veryClose);
       matches.push({
         slug: cfg.slug,
         display_name: cfg.display_name,
         address: cfg.address || '',
         score,
         reasons,
+        strong,
       });
     }
   }
@@ -1441,14 +1451,20 @@ async function handleSubmit(request, env) {
     // Corrupt index JSON: skip duplicate check and proceed
   }
 
-  // Duplicate detection (skip if user confirmed)
-  if (!body.confirm_not_duplicate && existingConfigs.length > 0) {
-    const duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+  // Duplicate detection. "Submit anyway" (confirm_not_duplicate) only skips
+  // weak matches; strong matches still block unless the request is admin.
+  if (!(admin && body.confirm_not_duplicate) && existingConfigs.length > 0) {
+    let duplicates = findDuplicates(mosqueName, address, phone, geoLat, geoLon, existingConfigs);
+    if (body.confirm_not_duplicate) duplicates = duplicates.filter(d => d.strong);
     if (duplicates.length > 0) {
+      const strong = !admin && duplicates.some(d => d.strong);
       return jsonResponse({
         duplicate_warning: true,
+        strong,
         matches: duplicates,
-        message: 'We found existing masjids that may be the same. Please check before submitting.',
+        message: strong
+          ? 'This masjid is already on Iqamah. To upload a new timetable, update the existing masjid instead.'
+          : 'We found existing masjids that may be the same. Please check before submitting.',
       }, 409);
     }
   }

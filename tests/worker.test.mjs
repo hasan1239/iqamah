@@ -330,6 +330,63 @@ test('submit: likely duplicate returns 409 warning and does not consume quota', 
   assert.equal(env.RATE_LIMITS.store.size, 0);
 });
 
+// Same name + same phone (the Faizul Islam case): near-certain duplicate
+const STRONG_EXISTING = [{ display_name: 'Test Masjid', slug: 'existing', phone: '0121 111 2222', address: '1 High St, Birmingham, B20 3EA', csv: 'existing.csv' }];
+
+test('submit: strong duplicate is flagged strong and cannot be overridden with confirm_not_duplicate', async () => {
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(STRONG_EXISTING)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  const firstBody = await first.json();
+  assert.equal(firstBody.strong, true);
+  assert.equal(firstBody.matches[0].slug, 'existing');
+  assert.equal(firstBody.matches[0].strong, true);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 409);
+  assert.equal((await override.json()).strong, true);
+  assert.ok(!fetchCalls.some(c => c.url.endsWith('/git/trees')), 'nothing committed');
+  assert.equal(env.RATE_LIMITS.store.size, 0);
+});
+
+test('submit: shared phone with a different name is a weak match and can be overridden', async () => {
+  const existing = [{ display_name: 'Green Lane Masjid', slug: 'green_lane', phone: '0121 111 2222', csv: 'green_lane.csv' }];
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(existing)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Small Heath Branch', phone: '01211112222', rows, year };
+
+  const first = await worker.fetch(submitRequest({ data }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false);
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }), env);
+  assert.equal(override.status, 200);
+  assert.equal((await override.json()).success, true);
+});
+
+test('submit: admin can override a strong duplicate', async () => {
+  installFetch({
+    'contents/data/mosques/index.json': () => j({ content: btoa(JSON.stringify(STRONG_EXISTING)), sha: 'idxsha' }),
+  });
+  const { rows, year } = sampleRows();
+  const data = { mosque_name: 'Test Masjid', phone: '01211112222', rows, year };
+  const headers = { 'X-User-Name': 'AdminUser' };
+
+  const first = await worker.fetch(submitRequest({ data }, { headers }), env);
+  assert.equal(first.status, 409);
+  assert.equal((await first.json()).strong, false, 'admins get the overridable warning');
+
+  const override = await worker.fetch(submitRequest({ data, confirm_not_duplicate: true }, { headers }), env);
+  assert.equal(override.status, 200);
+});
+
 test('submit: missing masjid name is rejected', async () => {
   const { rows, year } = sampleRows();
   const res = await worker.fetch(submitRequest({ data: { mosque_name: '', rows, year } }), env);
