@@ -1352,29 +1352,29 @@
     "suppress_times": [],
     "quality": {
       "status": "needs_review",
-      "checked_at": "2026-10-02",
-      "row_count": 137,
+      "checked_at": "2026-10-03",
+      "row_count": 138,
       "warnings": [
-        "Sunrise/Maghrib UNSAFE: typically -401 min from the sun on 2 upcoming days (2026-10-02 to 2026-10-03)."
+        "Sunrise/Maghrib UNSAFE: typically -398 min from the sun on 2 upcoming days (2026-10-03 to 2026-10-04)."
       ],
       "issues": [
         {
           "type": "sun_times_unsafe",
           "severity": "high",
           "count": 2,
-          "first_date": "2026-10-02",
-          "last_date": "2026-10-03",
-          "typical_offset_min": -401,
+          "first_date": "2026-10-03",
+          "last_date": "2026-10-04",
+          "typical_offset_min": -398,
           "affected_dates": [
-            "2026-10-02",
-            "2026-10-03"
+            "2026-10-03",
+            "2026-10-04"
           ],
           "affected_offsets": [
-            -403,
-            -401
+            -401,
+            -398
           ],
           "action_taken": "none",
-          "fix": "Sunrise/Maghrib are typically -401 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+          "fix": "Sunrise/Maghrib are typically -398 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
         }
       ]
     },
@@ -2371,7 +2371,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically -57 min from the sun on 23 upcoming days (2026-10-02 to 2026-10-24)."
+        "Sunrise/Maghrib UNSAFE: typically -57 min from the sun on 22 upcoming days (2026-10-03 to 2026-10-24)."
       ],
       "issues": [
         {
@@ -2383,12 +2383,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 23,
-          "first_date": "2026-10-02",
+          "count": 22,
+          "first_date": "2026-10-03",
           "last_date": "2026-10-24",
           "typical_offset_min": -57,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -2413,7 +2412,6 @@
             "2026-10-24"
           ],
           "affected_offsets": [
-            -57,
             -56,
             -57,
             -57,
@@ -2601,8 +2599,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-10-02",
-      "row_count": 137,
+      "checked_at": "2026-10-03",
+      "row_count": 138,
       "warnings": [],
       "issues": []
     },
@@ -2740,7 +2738,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +60 min from the sun on 25 upcoming days (2026-10-02 to 2026-10-26)."
+        "Sunrise/Maghrib UNSAFE: typically +60 min from the sun on 24 upcoming days (2026-10-03 to 2026-10-26)."
       ],
       "issues": [
         {
@@ -2752,12 +2750,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 25,
-          "first_date": "2026-10-02",
+          "count": 24,
+          "first_date": "2026-10-03",
           "last_date": "2026-10-26",
           "typical_offset_min": 60,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -2784,7 +2781,6 @@
             "2026-10-26"
           ],
           "affected_offsets": [
-            60,
             60,
             60,
             60,
@@ -2995,7 +2991,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Fajr jamaat is at or after sunrise on 61 days (2026-06-01 to 2026-07-31). Indicates a data error — Fajr jamaat must always be before sunrise.",
-        "Sunrise/Maghrib UNSAFE: typically +17 min from the sun on 30 upcoming days (2026-11-01 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +17 min from the sun on 31 upcoming days (2026-11-01 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -3080,9 +3076,9 @@
         {
           "type": "sun_times_unsafe",
           "severity": "medium",
-          "count": 30,
+          "count": 31,
           "first_date": "2026-11-01",
-          "last_date": "2026-11-30",
+          "last_date": "2026-12-01",
           "typical_offset_min": 17,
           "affected_dates": [
             "2026-11-01",
@@ -3114,7 +3110,8 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
             17,
@@ -3146,7 +3143,8 @@
             17,
             16,
             17,
-            17
+            17,
+            16
           ],
           "action_taken": "none (per-day notice on the masjid page)",
           "fix": "Sunrise/Maghrib are typically +17 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
@@ -3231,7 +3229,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +16 min from the sun on 60 upcoming days (2026-10-02 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +16 min from the sun on 60 upcoming days (2026-10-03 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -3244,11 +3242,10 @@
           "type": "sun_times_unsafe",
           "severity": "high",
           "count": 60,
-          "first_date": "2026-10-02",
-          "last_date": "2026-11-30",
+          "first_date": "2026-10-03",
+          "last_date": "2026-12-01",
           "typical_offset_min": 16,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -3307,12 +3304,12 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
             17,
             17,
-            17,
             16,
             16,
             17,
@@ -3364,6 +3361,7 @@
             16,
             16,
             17,
+            16,
             16,
             16,
             16,
@@ -3868,8 +3866,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-10-02",
-      "row_count": 137,
+      "checked_at": "2026-10-03",
+      "row_count": 138,
       "warnings": [],
       "issues": []
     },
@@ -4844,7 +4842,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically -58 min from the sun on 36 upcoming days (2026-10-26 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically -58 min from the sun on 37 upcoming days (2026-10-26 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -4856,9 +4854,9 @@
         {
           "type": "sun_times_unsafe",
           "severity": "medium",
-          "count": 36,
+          "count": 37,
           "first_date": "2026-10-26",
-          "last_date": "2026-11-30",
+          "last_date": "2026-12-01",
           "typical_offset_min": -58,
           "affected_dates": [
             "2026-10-26",
@@ -4896,7 +4894,8 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
             -58,
@@ -4934,7 +4933,8 @@
             -57,
             -58,
             -58,
-            -57
+            -57,
+            55
           ],
           "action_taken": "none (per-day notice on the masjid page)",
           "fix": "Sunrise/Maghrib are typically -58 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
@@ -5119,8 +5119,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-10-02",
-      "row_count": 18,
+      "checked_at": "2026-10-03",
+      "row_count": 19,
       "warnings": [],
       "issues": []
     },
@@ -6529,7 +6529,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Fajr jamaat is at or after sunrise on 80 days (2026-05-10 to 2026-07-28). Indicates a data error — Fajr jamaat must always be before sunrise.",
-        "Sunrise/Maghrib UNSAFE: typically +60 min from the sun on 23 upcoming days (2026-10-02 to 2026-10-24)."
+        "Sunrise/Maghrib UNSAFE: typically +60 min from the sun on 22 upcoming days (2026-10-03 to 2026-10-24)."
       ],
       "issues": [
         {
@@ -6633,12 +6633,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 23,
-          "first_date": "2026-10-02",
+          "count": 22,
+          "first_date": "2026-10-03",
           "last_date": "2026-10-24",
           "typical_offset_min": 60,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -6663,7 +6662,6 @@
             "2026-10-24"
           ],
           "affected_offsets": [
-            60,
             60,
             60,
             59,
@@ -6893,7 +6891,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +326 min from the sun on 30 upcoming days (2026-11-01 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +324 min from the sun on 31 upcoming days (2026-11-01 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -6905,10 +6903,10 @@
         {
           "type": "sun_times_unsafe",
           "severity": "medium",
-          "count": 30,
+          "count": 31,
           "first_date": "2026-11-01",
-          "last_date": "2026-11-30",
-          "typical_offset_min": 326,
+          "last_date": "2026-12-01",
+          "typical_offset_min": 324,
           "affected_dates": [
             "2026-11-01",
             "2026-11-02",
@@ -6939,7 +6937,8 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
             289,
@@ -6971,10 +6970,11 @@
             341,
             342,
             342,
-            343
+            343,
+            223
           ],
           "action_taken": "none (per-day notice on the masjid page)",
-          "fix": "Sunrise/Maghrib are typically +326 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+          "fix": "Sunrise/Maghrib are typically +324 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
         }
       ]
     },
@@ -7301,7 +7301,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Fajr jamaat is at or after sunrise on 144 days (2026-04-17 to 2026-11-30). Indicates a data error — Fajr jamaat must always be before sunrise.",
-        "Sunrise/Maghrib UNSAFE: typically +179 min from the sun on 30 upcoming days (2026-11-01 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +176 min from the sun on 31 upcoming days (2026-11-01 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -7468,10 +7468,10 @@
         {
           "type": "sun_times_unsafe",
           "severity": "medium",
-          "count": 30,
+          "count": 31,
           "first_date": "2026-11-01",
-          "last_date": "2026-11-30",
-          "typical_offset_min": 179,
+          "last_date": "2026-12-01",
+          "typical_offset_min": 176,
           "affected_dates": [
             "2026-11-01",
             "2026-11-02",
@@ -7502,7 +7502,8 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
             127,
@@ -7534,10 +7535,11 @@
             211,
             214,
             217,
-            219
+            219,
+            -607
           ],
           "action_taken": "none (per-day notice on the masjid page)",
-          "fix": "Sunrise/Maghrib are typically +179 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+          "fix": "Sunrise/Maghrib are typically +176 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
         }
       ]
     },
@@ -7933,8 +7935,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-10-02",
-      "row_count": 137,
+      "checked_at": "2026-10-03",
+      "row_count": 138,
       "warnings": [],
       "issues": []
     },
@@ -8144,7 +8146,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Sunrise/Maghrib UNSAFE: typically -117 min from the sun on 1 upcoming days (2026-10-25 to 2026-10-25).",
-        "Sunrise/Maghrib off: typically -17 min from the sun on 25 upcoming days (2026-11-03 to 2026-11-30)."
+        "Sunrise/Maghrib off: typically -17 min from the sun on 26 upcoming days (2026-11-03 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -8172,9 +8174,9 @@
         {
           "type": "sun_times_off",
           "severity": "medium",
-          "count": 25,
+          "count": 26,
           "first_date": "2026-11-03",
-          "last_date": "2026-11-30",
+          "last_date": "2026-12-01",
           "typical_offset_min": -17,
           "affected_dates": [
             "2026-11-03",
@@ -8201,7 +8203,8 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "action_taken": "none (harmless direction: early sunrise / late Maghrib)",
           "fix": "Sunrise/Maghrib are typically -17 min from the sun at this location. Check the masjid's source page."
@@ -8244,7 +8247,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise.",
-        "Sunrise/Maghrib UNSAFE: typically +198 min from the sun on 60 upcoming days (2026-10-02 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +200 min from the sun on 60 upcoming days (2026-10-03 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -8323,11 +8326,10 @@
           "type": "sun_times_unsafe",
           "severity": "high",
           "count": 60,
-          "first_date": "2026-10-02",
-          "last_date": "2026-11-30",
-          "typical_offset_min": 198,
+          "first_date": "2026-10-03",
+          "last_date": "2026-12-01",
+          "typical_offset_min": 200,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -8386,10 +8388,10 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
-            75,
             77,
             79,
             82,
@@ -8448,10 +8450,11 @@
             234,
             234,
             235,
-            236
+            236,
+            237
           ],
           "action_taken": "none",
-          "fix": "Sunrise/Maghrib are typically +198 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+          "fix": "Sunrise/Maghrib are typically +200 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
         }
       ]
     },
@@ -10168,8 +10171,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-10-02",
-      "row_count": 137,
+      "checked_at": "2026-10-03",
+      "row_count": 138,
       "warnings": [],
       "issues": []
     },
@@ -10206,7 +10209,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +262 min from the sun on 60 upcoming days (2026-10-02 to 2026-11-30)."
+        "Sunrise/Maghrib UNSAFE: typically +264 min from the sun on 60 upcoming days (2026-10-03 to 2026-12-01)."
       ],
       "issues": [
         {
@@ -10219,11 +10222,10 @@
           "type": "sun_times_unsafe",
           "severity": "high",
           "count": 60,
-          "first_date": "2026-10-02",
-          "last_date": "2026-11-30",
-          "typical_offset_min": 262,
+          "first_date": "2026-10-03",
+          "last_date": "2026-12-01",
+          "typical_offset_min": 264,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -10282,10 +10284,10 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
-            139,
             141,
             144,
             146,
@@ -10344,10 +10346,11 @@
             298,
             299,
             300,
-            300
+            300,
+            301
           ],
           "action_taken": "none",
-          "fix": "Sunrise/Maghrib are typically +262 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+          "fix": "Sunrise/Maghrib are typically +264 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
         }
       ]
     },
@@ -10426,7 +10429,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +96 min from the sun on 57 upcoming days (2026-10-02 to 2026-11-30).",
+        "Sunrise/Maghrib UNSAFE: typically +96 min from the sun on 57 upcoming days (2026-10-03 to 2026-12-01).",
         "Sunrise/Maghrib off: typically +40 min from the sun on 3 upcoming days (2026-10-09 to 2026-10-11)."
       ],
       "issues": [
@@ -10440,11 +10443,10 @@
           "type": "sun_times_unsafe",
           "severity": "high",
           "count": 57,
-          "first_date": "2026-10-02",
-          "last_date": "2026-11-30",
+          "first_date": "2026-10-03",
+          "last_date": "2026-12-01",
           "typical_offset_min": 96,
           "affected_dates": [
-            "2026-10-02",
             "2026-10-03",
             "2026-10-04",
             "2026-10-05",
@@ -10500,10 +10502,10 @@
             "2026-11-27",
             "2026-11-28",
             "2026-11-29",
-            "2026-11-30"
+            "2026-11-30",
+            "2026-12-01"
           ],
           "affected_offsets": [
-            42,
             38,
             33,
             30,
@@ -10559,7 +10561,8 @@
             149,
             152,
             154,
-            217
+            217,
+            107
           ],
           "action_taken": "none",
           "fix": "Sunrise/Maghrib are typically +96 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."

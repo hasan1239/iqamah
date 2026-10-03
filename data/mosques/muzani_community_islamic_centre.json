@@ -30,7 +30,7 @@
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
       "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise.",
-      "Sunrise/Maghrib UNSAFE: typically +198 min from the sun on 60 upcoming days (2026-10-02 to 2026-11-30)."
+      "Sunrise/Maghrib UNSAFE: typically +200 min from the sun on 60 upcoming days (2026-10-03 to 2026-12-01)."
     ],
     "issues": [
       {
@@ -109,11 +109,10 @@
         "type": "sun_times_unsafe",
         "severity": "high",
         "count": 60,
-        "first_date": "2026-10-02",
-        "last_date": "2026-11-30",
-        "typical_offset_min": 198,
+        "first_date": "2026-10-03",
+        "last_date": "2026-12-01",
+        "typical_offset_min": 200,
         "affected_dates": [
-          "2026-10-02",
           "2026-10-03",
           "2026-10-04",
           "2026-10-05",
@@ -172,10 +171,10 @@
           "2026-11-27",
           "2026-11-28",
           "2026-11-29",
-          "2026-11-30"
+          "2026-11-30",
+          "2026-12-01"
         ],
         "affected_offsets": [
-          75,
           77,
           79,
           82,
@@ -234,10 +233,11 @@
           234,
           234,
           235,
-          236
+          236,
+          237
         ],
         "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +198 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+        "fix": "Sunrise/Maghrib are typically +200 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },
