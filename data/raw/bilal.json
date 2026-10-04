@@ -4,7 +4,7 @@
     "guidId": "a82d0574-d7d6-42d6-8bca-92254037f654",
     "name": "Bilal",
     "house": "School",
-    "street": null,
+    "street": "",
     "zipCode": "B288je",
     "latitude": 54.0,
     "longitude": -2.0,
@@ -5608,18 +5608,18 @@
   "secondaryLanguage": {
     "id": 2,
     "name": "Arabic",
-    "IsRTL": true,
+    "IsRTL": false,
     "salahTimesHeader": "أوقات الصلاة",
     "salah": "صلاة",
     "adhan": "أذان",
     "iqamah": "إقامة",
     "tomorrow": "غداً",
-    "fajr": "فجر",
-    "zuhr": "ظهر",
-    "asr": "عصر",
-    "maghrib": "مغرب",
-    "isha": "عشاء",
-    "shouruq": "شروق",
+    "fajr": "الفجر",
+    "zuhr": "الظُهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء",
+    "shouruq": "الشروق",
     "jumah": "جمعة",
     "dstOn": "",
     "dstOff": "",
@@ -5667,7 +5667,7 @@
     "services": "خدمات",
     "contactsAndDonations": "جهات الاتصال والتبرعات",
     "masjidHasAlertMessage": "يحتوي المسجد على رسالة تنبيه",
-    "inLessThan": ""
+    "inLessThan": "اقل"
   },
   "jumahSalahIqamahTimings": [
     {
@@ -5677,5 +5677,5 @@
       "isPrimary": true
     }
   ],
-  "lastUpdatedAt": "2026-05-20T09:53:29.0788394"
+  "lastUpdatedAt": "2026-10-04T02:33:17.4153174"
 }

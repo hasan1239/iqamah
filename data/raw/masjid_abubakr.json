@@ -2,6 +2,9 @@
   "showCityInTitle": false,
   "showLogo": false,
   "showPrayerTimesOnMessageScreen": true,
+  "jumuaDhikrReminderEnabled": false,
+  "jumuaBlackScreenEnabled": false,
+  "jumuaTimeout": 30,
   "duaAfterPrayerShowTimes": [
     "9",
     "8",
@@ -13,22 +16,6 @@
   "hijriDateForceTo30": false,
   "duaAfterAzanEnabled": true,
   "duaAfterPrayerEnabled": true,
-  "alwaysDisplayHhMmFormat": false,
-  "iqamaDisplayTime": 30,
-  "iqamaBip": false,
-  "backgroundColor": "#1b1b1b",
-  "jumuaDhikrReminderEnabled": false,
-  "jumuaTimeout": 30,
-  "randomHadithEnabled": true,
-  "blackScreenWhenPraying": true,
-  "wakeForFajrTime": null,
-  "jumuaBlackScreenEnabled": false,
-  "temperatureEnabled": true,
-  "temperatureUnit": "C",
-  "hadithLang": "en",
-  "iqamaEnabled": true,
-  "randomHadithIntervalDisabling": "",
-  "fajrFixationComparedToShuruq": null,
   "adhanVoice": null,
   "adhanEnabledByPrayer": [
     "1",
@@ -37,18 +24,35 @@
     "1",
     "1"
   ],
-  "footer": true,
-  "displayQrCodeAndLogoOnAndroidTV": true,
+  "iqamaBipSound": null,
+  "iqamaBip": false,
+  "iqamaFullScreenCountdown": true,
+  "blackScreenWhenPraying": true,
+  "alwaysDisplayHhMmFormat": false,
+  "iqamaDisplayTime": 30,
+  "randomHadithEnabled": true,
+  "randomHadithIntervalDisabling": "",
+  "temperatureEnabled": true,
+  "temperatureUnit": "C",
+  "backgroundColor": "#1b1b1b",
+  "theme": "mawaqit",
+  "hadithLang": "en",
+  "wakeForFajrTime": null,
+  "iqamaEnabled": true,
+  "fajrFixationComparedToShuruq": null,
   "iqamaMoreImportant": true,
-  "timeDisplayFormat": "12",
+  "footer": true,
+  "displayQrCodeAndLogoOnAndroidTV": false,
+  "adhanDuration": 150,
   "backgroundType": "motif",
   "backgroundMotif": "19",
-  "iqamaFullScreenCountdown": true,
-  "theme": "mawaqit",
-  "adhanDuration": 150,
+  "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
+  "customAthan": null,
+  "customAthanDuration": null,
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/19.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Masjid AbuBakr",
@@ -112,20 +116,21 @@
   "events": [],
   "aidPrayerTime": "08:30",
   "aidPrayerTime2": "09:30",
+  "aidPrayerTime3": null,
   "jumua": "14:00",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
-  "hijriAdjustment": -1,
+  "hijriAdjustment": 0,
   "times": [
-    "03:28",
-    "13:14",
-    "18:32",
-    "21:05",
-    "22:15"
+    "05:43",
+    "13:07",
+    "16:52",
+    "18:48",
+    "20:08"
   ],
-  "shuruq": "05:17",
+  "shuruq": "07:18",
   "calendar": [
     {
       "1": [
@@ -4160,210 +4165,210 @@
         "04:20",
         "14:00",
         "19:00",
-        "+10",
+        "+0",
         "22:50"
       ],
       "2": [
         "04:20",
         "14:00",
         "19:00",
-        "+10",
+        "+0",
         "22:50"
       ],
       "3": [
         "04:20",
         "14:00",
         "19:00",
-        "+10",
+        "+0",
         "22:50"
       ],
       "4": [
         "04:20",
         "14:00",
         "19:00",
-        "+10",
+        "+0",
         "22:50"
       ],
       "5": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "22:50"
       ],
       "6": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "22:50"
       ],
       "7": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "8": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "9": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "10": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "11": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "12": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "13": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "14": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "15": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "16": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "17": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "18": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "19": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "20": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "21": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "22": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "23": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "24": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "25": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "26": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "27": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "28": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:05"
       ],
       "29": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ],
       "30": [
         "04:15",
         "14:00",
         "19:15",
-        "+10",
+        "+0",
         "23:00"
       ]
     },

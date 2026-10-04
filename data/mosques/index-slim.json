@@ -44,7 +44,7 @@
     "latitude": 52.4571396,
     "longitude": -1.8816212,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -177,7 +177,7 @@
     "latitude": 52.4698817,
     "longitude": -1.8309234,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -194,7 +194,7 @@
     "latitude": 51.4880917,
     "longitude": -3.1548601,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -313,7 +313,7 @@
     "latitude": 51.5332415,
     "longitude": -0.2752457,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -347,7 +347,7 @@
     "latitude": 53.7359052,
     "longitude": -2.4546096,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -603,7 +603,7 @@
     "latitude": 52.4250446,
     "longitude": -1.9500744,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -637,7 +637,7 @@
     "latitude": 52.487676,
     "longitude": -1.9219111,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -716,7 +716,7 @@
     "latitude": 51.5066038,
     "longitude": -3.2403899,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -750,7 +750,7 @@
     "latitude": 51.532212609059,
     "longitude": -0.12978146795223,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mawaqit"
@@ -888,7 +888,7 @@
     "latitude": 52.504105164844,
     "longitude": -1.8792553894927,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -905,7 +905,7 @@
     "latitude": 51.4956181,
     "longitude": -3.2380423,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -956,7 +956,7 @@
     "latitude": 53.802840812126,
     "longitude": -2.2322139531316,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -1024,7 +1024,7 @@
     "latitude": 53.807151482163,
     "longitude": -1.7815124988556,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -1096,7 +1096,7 @@
     "latitude": 52.490133466215,
     "longitude": -1.9581493735313,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -1453,7 +1453,7 @@
     "latitude": 53.776818955797,
     "longitude": -1.7589738356216,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -1839,7 +1839,7 @@
     "latitude": 52.49118,
     "longitude": -1.8124484,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2265,7 +2265,7 @@
     "latitude": 52.5242061,
     "longitude": -1.8589892,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2316,7 +2316,7 @@
     "latitude": 52.497555402566,
     "longitude": -1.8958451511032,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2384,7 +2384,7 @@
     "latitude": 51.5527189,
     "longitude": -0.0866006,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2531,7 +2531,7 @@
     "latitude": 51.5066931,
     "longitude": -0.1253432,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2618,7 +2618,7 @@
     "latitude": 51.5277567,
     "longitude": -0.2643845,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2997,7 +2997,7 @@
     "latitude": 51.5377133,
     "longitude": -0.2495035,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"

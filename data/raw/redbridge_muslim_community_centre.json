@@ -2,6 +2,9 @@
   "showCityInTitle": false,
   "showLogo": false,
   "showPrayerTimesOnMessageScreen": true,
+  "jumuaDhikrReminderEnabled": false,
+  "jumuaBlackScreenEnabled": true,
+  "jumuaTimeout": 20,
   "duaAfterPrayerShowTimes": [
     "5",
     "5",
@@ -13,22 +16,6 @@
   "hijriDateForceTo30": false,
   "duaAfterAzanEnabled": true,
   "duaAfterPrayerEnabled": false,
-  "alwaysDisplayHhMmFormat": false,
-  "iqamaDisplayTime": 20,
-  "iqamaBip": false,
-  "backgroundColor": "#24072d",
-  "jumuaDhikrReminderEnabled": false,
-  "jumuaTimeout": 20,
-  "randomHadithEnabled": false,
-  "blackScreenWhenPraying": true,
-  "wakeForFajrTime": null,
-  "jumuaBlackScreenEnabled": true,
-  "temperatureEnabled": false,
-  "temperatureUnit": "C",
-  "hadithLang": "en",
-  "iqamaEnabled": true,
-  "randomHadithIntervalDisabling": "",
-  "fajrFixationComparedToShuruq": null,
   "adhanVoice": null,
   "adhanEnabledByPrayer": [
     "1",
@@ -37,18 +24,35 @@
     "1",
     "1"
   ],
-  "footer": true,
-  "displayQrCodeAndLogoOnAndroidTV": true,
+  "iqamaBipSound": null,
+  "iqamaBip": false,
+  "iqamaFullScreenCountdown": false,
+  "blackScreenWhenPraying": true,
+  "alwaysDisplayHhMmFormat": false,
+  "iqamaDisplayTime": 20,
+  "randomHadithEnabled": false,
+  "randomHadithIntervalDisabling": "",
+  "temperatureEnabled": false,
+  "temperatureUnit": "C",
+  "backgroundColor": "#24072d",
+  "theme": "winter",
+  "hadithLang": "en",
+  "wakeForFajrTime": null,
+  "iqamaEnabled": true,
+  "fajrFixationComparedToShuruq": null,
   "iqamaMoreImportant": true,
-  "timeDisplayFormat": "12",
+  "footer": true,
+  "displayQrCodeAndLogoOnAndroidTV": false,
+  "adhanDuration": 90,
   "backgroundType": "motif",
   "backgroundMotif": "1",
-  "iqamaFullScreenCountdown": false,
-  "theme": "winter",
-  "adhanDuration": 90,
+  "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
+  "customAthan": null,
+  "customAthanDuration": null,
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/1.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Redbridge Muslim Community Centre",
@@ -79,21 +83,6 @@
   "closed": null,
   "announcements": [
     {
-      "id": 234904,
-      "uuid": "0ccea753-ef7c-4a63-9ca8-1c8a88870b56",
-      "title": "Jumma Summer",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/message/1f12a2a9-0fa3-6304-9e7a-0e970c56ec55.png",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-03-27 23:12",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 249234,
       "uuid": "0ccea753-ef7c-4a63-9ca8-1c8a88870b56",
       "title": "No Parking",
@@ -105,21 +94,6 @@
       "updated": "2026-01-10 11:27",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 126777,
-      "uuid": "0ccea753-ef7c-4a63-9ca8-1c8a88870b56",
-      "title": "Dhul HIjjah Appeal TV",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/message/1f03b358-54f0-66ea-8d11-0afdac34284f.png",
-      "video": null,
-      "startDate": "2025-05-27 18:10",
-      "endDate": "2025-06-07 12:12",
-      "updated": "2026-01-10 11:32",
-      "duration": 20,
-      "isMobile": false,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
     },
@@ -169,54 +143,39 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 284778,
+      "id": 300210,
       "uuid": "0ccea753-ef7c-4a63-9ca8-1c8a88870b56",
-      "title": "Summer Time Salat updates",
+      "title": "Eid Salat",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/message/1f12a324-f746-6988-8243-0af6e742f381.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/message/1f15607c-77b6-666a-a904-0ed29e526ca1.jpeg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-03-27 23:11",
+      "updated": "2026-05-22 17:58",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": true,
+      "isDesktop": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
-  "events": [
-    {
-      "id": 126777,
-      "uuid": "0ccea753-ef7c-4a63-9ca8-1c8a88870b56",
-      "title": "Dhul HIjjah Appeal TV",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/0ccea753-ef7c-4a63-9ca8-1c8a88870b56/message/1f03b358-54f0-66ea-8d11-0afdac34284f.png",
-      "video": null,
-      "startDate": "2025-05-27 18:10",
-      "endDate": "2025-06-07 12:12",
-      "updated": "2026-01-10 11:32",
-      "duration": 20,
-      "isMobile": false,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    }
-  ],
-  "aidPrayerTime": "06:20",
-  "aidPrayerTime2": "08:15",
+  "events": [],
+  "aidPrayerTime": "05:15",
+  "aidPrayerTime2": "07:30",
+  "aidPrayerTime3": null,
   "jumua": "13:20",
   "jumua2": "14:10",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
-  "hijriAdjustment": -1,
+  "hijriAdjustment": 0,
   "times": [
-    "03:18",
-    "13:01",
-    "18:18",
-    "20:51",
-    "22:00"
+    "05:34",
+    "12:53",
+    "16:37",
+    "18:35",
+    "19:54"
   ],
-  "shuruq": "05:06",
+  "shuruq": "07:05",
   "calendar": [
     {
       "1": [
@@ -2196,236 +2155,236 @@
         "21:01"
       ],
       "2": [
-        "03:37",
-        "05:12",
-        "00:05",
-        "04:40",
+        "04:37",
+        "06:12",
+        "13:05",
+        "17:40",
         "19:48",
-        "08:01"
+        "21:01"
       ],
       "3": [
-        "03:39",
-        "05:14",
-        "00:04",
-        "04:38",
+        "04:39",
+        "06:14",
+        "13:04",
+        "17:38",
         "19:46",
-        "07:59"
+        "20:59"
       ],
       "4": [
-        "03:40",
-        "05:15",
-        "00:04",
-        "04:36",
+        "04:40",
+        "06:15",
+        "13:04",
+        "17:36",
         "19:44",
-        "07:57"
+        "20:57"
       ],
       "5": [
-        "03:42",
-        "05:17",
-        "00:04",
-        "04:34",
+        "04:42",
+        "06:17",
+        "13:04",
+        "17:34",
         "19:41",
-        "07:56"
+        "20:56"
       ],
       "6": [
-        "03:43",
-        "05:18",
-        "00:03",
-        "04:33",
+        "04:43",
+        "06:18",
+        "13:03",
+        "17:33",
         "19:39",
-        "07:53"
+        "20:53"
       ],
       "7": [
-        "03:45",
-        "05:20",
-        "00:03",
-        "04:31",
+        "04:45",
+        "06:20",
+        "13:03",
+        "17:31",
         "19:37",
-        "07:51"
+        "20:51"
       ],
       "8": [
-        "03:47",
-        "05:22",
-        "00:03",
-        "04:29",
+        "04:47",
+        "06:22",
+        "13:03",
+        "17:29",
         "19:34",
-        "07:50"
+        "20:50"
       ],
       "9": [
-        "03:48",
-        "05:23",
-        "00:02",
-        "04:27",
+        "04:48",
+        "06:23",
+        "13:02",
+        "17:27",
         "19:32",
-        "07:47"
+        "20:47"
       ],
       "10": [
-        "03:50",
-        "05:25",
-        "00:02",
-        "04:25",
+        "04:50",
+        "06:25",
+        "13:02",
+        "17:25",
         "19:30",
-        "07:45"
+        "20:45"
       ],
       "11": [
-        "03:51",
-        "05:26",
-        "00:02",
-        "04:24",
+        "04:51",
+        "06:26",
+        "13:02",
+        "17:24",
         "19:28",
-        "07:43"
+        "20:43"
       ],
       "12": [
-        "03:53",
-        "05:28",
-        "00:01",
-        "04:22",
+        "04:53",
+        "06:28",
+        "13:01",
+        "17:22",
         "19:25",
-        "07:42"
+        "20:42"
       ],
       "13": [
-        "03:55",
-        "05:30",
-        "00:01",
-        "04:20",
+        "04:55",
+        "06:30",
+        "13:01",
+        "17:20",
         "19:23",
-        "07:39"
+        "20:39"
       ],
       "14": [
-        "03:56",
-        "05:31",
-        "00:01",
-        "04:18",
+        "04:56",
+        "06:31",
+        "13:01",
+        "17:18",
         "19:21",
-        "07:37"
+        "20:37"
       ],
       "15": [
-        "03:58",
-        "05:33",
-        "00:00",
-        "04:16",
+        "04:58",
+        "06:33",
+        "13:00",
+        "17:16",
         "19:18",
-        "07:35"
+        "20:35"
       ],
       "16": [
-        "03:59",
-        "05:34",
-        "00:00",
-        "04:14",
+        "04:59",
+        "06:34",
+        "13:00",
+        "17:14",
         "19:16",
-        "07:33"
+        "20:33"
       ],
       "17": [
-        "04:02",
-        "05:36",
-        "12:00",
-        "04:12",
+        "05:02",
+        "06:36",
+        "13:00",
+        "17:12",
         "19:14",
-        "07:31"
+        "20:31"
       ],
       "18": [
-        "04:04",
-        "05:38",
-        "11:59",
-        "04:10",
+        "05:04",
+        "06:38",
+        "12:59",
+        "17:10",
         "19:11",
-        "07:29"
+        "20:29"
       ],
       "19": [
-        "04:05",
-        "05:39",
-        "11:59",
-        "04:08",
+        "05:05",
+        "06:39",
+        "12:59",
+        "17:08",
         "19:09",
-        "07:26"
+        "20:26"
       ],
       "20": [
-        "04:08",
-        "05:41",
-        "11:58",
-        "04:06",
+        "05:08",
+        "06:41",
+        "12:58",
+        "17:06",
         "19:07",
-        "07:24"
+        "20:24"
       ],
       "21": [
-        "04:09",
-        "05:42",
-        "11:58",
-        "04:04",
+        "05:09",
+        "06:42",
+        "12:58",
+        "17:04",
         "19:04",
-        "07:22"
+        "20:22"
       ],
       "22": [
-        "04:11",
-        "05:44",
-        "11:58",
-        "04:02",
+        "05:11",
+        "06:44",
+        "12:58",
+        "17:02",
         "19:02",
-        "07:20"
+        "20:20"
       ],
       "23": [
-        "04:14",
-        "05:46",
-        "11:57",
-        "04:01",
+        "05:14",
+        "06:46",
+        "12:57",
+        "17:01",
         "19:00",
-        "07:18"
+        "20:18"
       ],
       "24": [
-        "04:15",
-        "05:47",
-        "11:57",
-        "03:59",
+        "05:15",
+        "06:47",
+        "12:57",
+        "16:59",
         "18:58",
-        "07:16"
+        "20:16"
       ],
       "25": [
-        "04:17",
-        "05:49",
-        "11:57",
-        "03:57",
+        "05:17",
+        "06:49",
+        "12:57",
+        "16:57",
         "18:55",
-        "07:14"
+        "20:14"
       ],
       "26": [
-        "04:19",
-        "05:50",
-        "11:56",
-        "03:55",
+        "05:19",
+        "06:50",
+        "12:56",
+        "16:55",
         "18:53",
-        "07:12"
+        "20:12"
       ],
       "27": [
-        "04:21",
-        "05:52",
-        "11:56",
-        "03:53",
+        "05:21",
+        "06:52",
+        "12:56",
+        "16:53",
         "18:51",
-        "07:10"
+        "20:10"
       ],
       "28": [
-        "04:23",
-        "05:54",
-        "11:56",
-        "03:51",
+        "05:23",
+        "06:54",
+        "12:56",
+        "16:51",
         "18:48",
-        "07:08"
+        "20:08"
       ],
       "29": [
-        "04:25",
-        "05:55",
-        "11:55",
-        "03:49",
+        "05:25",
+        "06:55",
+        "12:55",
+        "16:49",
         "18:46",
-        "07:05"
+        "20:05"
       ],
       "30": [
-        "04:27",
-        "05:57",
-        "11:55",
-        "03:47",
+        "05:27",
+        "06:57",
+        "12:55",
+        "16:47",
         "18:44",
-        "07:03"
+        "20:03"
       ]
     },
     {
@@ -4233,14 +4192,14 @@
       ],
       "30": [
         "04:15",
-        "13:15",
+        "13:30",
         "19:45",
         "21:10",
         "22:40"
       ],
       "31": [
         "04:15",
-        "13:15",
+        "13:30",
         "19:45",
         "21:11",
         "22:40"
@@ -4672,7 +4631,7 @@
       "31": [
         "04:45",
         "13:15",
-        "19:45",
+        "19:30",
         "20:54",
         "22:10"
       ]
@@ -5279,49 +5238,49 @@
       ],
       "25": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:30",
         "16:50",
         "19:30"
       ],
       "26": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:30",
         "16:48",
         "19:30"
       ],
       "27": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:30",
         "16:46",
         "19:30"
       ],
       "28": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:30",
         "16:44",
         "19:30"
       ],
       "29": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:30",
         "16:42",
         "19:30"
       ],
       "30": [
         "06:15",
-        "+0",
+        "13:00",
         "15:00",
         "16:40",
         "19:30"
       ],
       "31": [
         "06:15",
-        "13:30",
+        "13:00",
         "15:00",
         "16:38",
         "18:30"
@@ -5365,7 +5324,7 @@
       ],
       "6": [
         "06:30",
-        "+0",
+        "13:00",
         "15:00",
         "16:28",
         "19:30"
@@ -5414,7 +5373,7 @@
       ],
       "13": [
         "06:45",
-        "+0",
+        "13:00",
         "14:45",
         "16:17",
         "19:30"
@@ -5463,7 +5422,7 @@
       ],
       "20": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "16:08",
         "19:30"
@@ -5512,7 +5471,7 @@
       ],
       "27": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "16:01",
         "19:30"
@@ -5563,7 +5522,7 @@
       ],
       "4": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "15:56",
         "19:30"
@@ -5612,7 +5571,7 @@
       ],
       "11": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "15:54",
         "19:30"
@@ -5661,7 +5620,7 @@
       ],
       "18": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "15:55",
         "19:30"
@@ -5710,7 +5669,7 @@
       ],
       "25": [
         "07:00",
-        "+0",
+        "13:00",
         "14:45",
         "15:59",
         "19:30"

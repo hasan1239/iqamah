@@ -24,12 +24,11 @@
     "source_url": "https://mawaqit.net/en/m/dar-ul-quran-london-london-nw1-1hw-united-kingdom"
   },
   "quality": {
-    "status": "needs_review",
-    "checked_at": "2026-05-19",
+    "status": "warnings",
+    "checked_at": "2026-10-04",
     "row_count": 365,
     "warnings": [
-      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically -57 min from the sun on 22 upcoming days (2026-10-03 to 2026-10-24)."
+      "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."
     ],
     "issues": [
       {
@@ -37,64 +36,6 @@
         "severity": "medium",
         "action_taken": "sehri_ends = fajr_start (Mawaqit's default)",
         "fix": "Verify masjid's actual Suhoor cutoff during Ramadan"
-      },
-      {
-        "type": "sun_times_unsafe",
-        "severity": "high",
-        "count": 22,
-        "first_date": "2026-10-03",
-        "last_date": "2026-10-24",
-        "typical_offset_min": -57,
-        "affected_dates": [
-          "2026-10-03",
-          "2026-10-04",
-          "2026-10-05",
-          "2026-10-06",
-          "2026-10-07",
-          "2026-10-08",
-          "2026-10-09",
-          "2026-10-10",
-          "2026-10-11",
-          "2026-10-12",
-          "2026-10-13",
-          "2026-10-14",
-          "2026-10-15",
-          "2026-10-16",
-          "2026-10-17",
-          "2026-10-18",
-          "2026-10-19",
-          "2026-10-20",
-          "2026-10-21",
-          "2026-10-22",
-          "2026-10-23",
-          "2026-10-24"
-        ],
-        "affected_offsets": [
-          -56,
-          -57,
-          -57,
-          -57,
-          -56,
-          -57,
-          -57,
-          -57,
-          -56,
-          -56,
-          -57,
-          -57,
-          -57,
-          -57,
-          -56,
-          -56,
-          -56,
-          -56,
-          -56,
-          -57,
-          -57,
-          -57
-        ],
-        "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically -57 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },

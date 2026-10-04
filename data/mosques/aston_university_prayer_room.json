@@ -29,22 +29,20 @@
     "checked_at": "2026-10-03",
     "row_count": 138,
     "warnings": [
-      "Sunrise/Maghrib UNSAFE: typically -398 min from the sun on 2 upcoming days (2026-10-03 to 2026-10-04)."
+      "Sunrise/Maghrib UNSAFE: typically -398 min from the sun on 1 upcoming days (2026-10-04 to 2026-10-04)."
     ],
     "issues": [
       {
         "type": "sun_times_unsafe",
         "severity": "high",
-        "count": 2,
-        "first_date": "2026-10-03",
+        "count": 1,
+        "first_date": "2026-10-04",
         "last_date": "2026-10-04",
         "typical_offset_min": -398,
         "affected_dates": [
-          "2026-10-03",
           "2026-10-04"
         ],
         "affected_offsets": [
-          -401,
           -398
         ],
         "action_taken": "none",

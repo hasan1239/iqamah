@@ -9,7 +9,7 @@
     "latitude": 54.0,
     "longitude": -2.0,
     "plDisplayName": "Ad-Duha Institute",
-    "slDisplayName": null,
+    "slDisplayName": "",
     "subHeading": "1164 Stratford Road, B28 8AF, birmingham",
     "comments": "This Masjid is created by Auto Masjid Registration Model.\r\nThese are the changes that our system made:\r\n1. The user hasn't provided their state.\r\n2. Masjid is created by Auto Masjid Registration Model.\r\n3. User is created for this Masjid by Auto Masjid Registration Model.\r\n4. User hasn't provided salah timing sheet.\r\n\r\n",
     "city": "Birmingham",
@@ -5608,18 +5608,18 @@
   "secondaryLanguage": {
     "id": 2,
     "name": "Arabic",
-    "IsRTL": true,
+    "IsRTL": false,
     "salahTimesHeader": "أوقات الصلاة",
     "salah": "صلاة",
     "adhan": "أذان",
     "iqamah": "إقامة",
     "tomorrow": "غداً",
-    "fajr": "فجر",
-    "zuhr": "ظهر",
-    "asr": "عصر",
-    "maghrib": "مغرب",
-    "isha": "عشاء",
-    "shouruq": "شروق",
+    "fajr": "الفجر",
+    "zuhr": "الظُهر",
+    "asr": "العصر",
+    "maghrib": "المغرب",
+    "isha": "العشاء",
+    "shouruq": "الشروق",
     "jumah": "جمعة",
     "dstOn": "",
     "dstOff": "",
@@ -5667,7 +5667,7 @@
     "services": "خدمات",
     "contactsAndDonations": "جهات الاتصال والتبرعات",
     "masjidHasAlertMessage": "يحتوي المسجد على رسالة تنبيه",
-    "inLessThan": ""
+    "inLessThan": "اقل"
   },
   "jumahSalahIqamahTimings": [
     {
@@ -5677,5 +5677,5 @@
       "isPrimary": true
     }
   ],
-  "lastUpdatedAt": "2026-05-20T09:53:20.3224508"
+  "lastUpdatedAt": "2026-10-04T02:33:06.9148427"
 }

@@ -2,6 +2,9 @@
   "showCityInTitle": false,
   "showLogo": false,
   "showPrayerTimesOnMessageScreen": true,
+  "jumuaDhikrReminderEnabled": true,
+  "jumuaBlackScreenEnabled": true,
+  "jumuaTimeout": 40,
   "duaAfterPrayerShowTimes": [
     "15",
     "15",
@@ -13,22 +16,6 @@
   "hijriDateForceTo30": false,
   "duaAfterAzanEnabled": true,
   "duaAfterPrayerEnabled": true,
-  "alwaysDisplayHhMmFormat": false,
-  "iqamaDisplayTime": 5,
-  "iqamaBip": false,
-  "backgroundColor": "#24072d",
-  "jumuaDhikrReminderEnabled": true,
-  "jumuaTimeout": 40,
-  "randomHadithEnabled": true,
-  "blackScreenWhenPraying": true,
-  "wakeForFajrTime": null,
-  "jumuaBlackScreenEnabled": true,
-  "temperatureEnabled": false,
-  "temperatureUnit": "C",
-  "hadithLang": "en-ar",
-  "iqamaEnabled": true,
-  "randomHadithIntervalDisabling": "",
-  "fajrFixationComparedToShuruq": null,
   "adhanVoice": null,
   "adhanEnabledByPrayer": [
     "1",
@@ -37,18 +24,35 @@
     "1",
     "1"
   ],
-  "footer": true,
-  "displayQrCodeAndLogoOnAndroidTV": true,
+  "iqamaBipSound": null,
+  "iqamaBip": false,
+  "iqamaFullScreenCountdown": true,
+  "blackScreenWhenPraying": true,
+  "alwaysDisplayHhMmFormat": false,
+  "iqamaDisplayTime": 5,
+  "randomHadithEnabled": true,
+  "randomHadithIntervalDisabling": "",
+  "temperatureEnabled": false,
+  "temperatureUnit": "C",
+  "backgroundColor": "#24072d",
+  "theme": "spring",
+  "hadithLang": "en-ar",
+  "wakeForFajrTime": null,
+  "iqamaEnabled": true,
+  "fajrFixationComparedToShuruq": null,
   "iqamaMoreImportant": true,
-  "timeDisplayFormat": "24",
+  "footer": true,
+  "displayQrCodeAndLogoOnAndroidTV": false,
+  "adhanDuration": 150,
   "backgroundType": "motif",
   "backgroundMotif": "23",
-  "iqamaFullScreenCountdown": true,
-  "theme": "spring",
-  "adhanDuration": 150,
+  "timeDisplayFormat": "24",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
+  "customAthan": null,
+  "customAthanDuration": null,
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/23.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Chelsea Muslim Community Hub",
@@ -81,20 +85,21 @@
   "events": [],
   "aidPrayerTime": "08:00",
   "aidPrayerTime2": "09:00",
+  "aidPrayerTime3": null,
   "jumua": "13:20",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
-  "hijriAdjustment": -1,
+  "hijriAdjustment": 0,
   "times": [
-    "03:20",
-    "13:02",
-    "17:10",
-    "20:51",
-    "22:02"
+    "05:35",
+    "12:54",
+    "15:51",
+    "18:35",
+    "19:54"
   ],
-  "shuruq": "05:05",
+  "shuruq": "07:03",
   "calendar": [
     {
       "1": [
@@ -4126,210 +4131,210 @@
     },
     {
       "1": [
-        "03:12",
+        "03:30",
         "13:30",
         "17:33",
         "21:16",
         "22:37"
       ],
       "2": [
-        "03:10",
+        "03:30",
         "13:30",
         "17:34",
         "21:17",
         "22:39"
       ],
       "3": [
-        "03:10",
+        "03:30",
         "13:30",
         "17:34",
         "21:18",
         "22:40"
       ],
       "4": [
-        "03:08",
+        "03:30",
         "13:30",
         "17:35",
         "21:19",
         "22:41"
       ],
       "5": [
-        "03:07",
+        "03:30",
         "13:30",
         "17:35",
         "21:20",
         "22:43"
       ],
       "6": [
-        "03:06",
+        "03:30",
         "13:30",
         "17:36",
         "21:21",
         "22:44"
       ],
       "7": [
-        "03:05",
+        "03:30",
         "13:30",
         "17:36",
         "21:22",
         "22:45"
       ],
       "8": [
-        "03:04",
+        "03:30",
         "13:30",
         "17:36",
         "21:23",
         "22:46"
       ],
       "9": [
-        "03:03",
+        "03:30",
         "13:30",
         "17:37",
         "21:24",
         "22:48"
       ],
       "10": [
-        "03:02",
+        "03:30",
         "13:30",
         "17:37",
         "21:25",
         "22:49"
       ],
       "11": [
-        "03:02",
+        "03:30",
         "13:30",
         "17:38",
         "21:25",
         "22:50"
       ],
       "12": [
-        "03:00",
+        "03:30",
         "13:30",
         "17:38",
         "21:26",
         "22:51"
       ],
       "13": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:38",
         "21:27",
         "22:53"
       ],
       "14": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:39",
         "21:27",
         "22:53"
       ],
       "15": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:39",
         "21:28",
         "22:54"
       ],
       "16": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:39",
         "21:28",
         "22:54"
       ],
       "17": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:40",
         "21:29",
         "22:55"
       ],
       "18": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:40",
         "21:29",
         "22:54"
       ],
       "19": [
-        "02:59",
+        "03:30",
         "13:30",
         "17:40",
         "21:29",
         "22:54"
       ],
       "20": [
-        "03:00",
+        "03:30",
         "13:30",
         "17:40",
         "21:29",
         "22:53"
       ],
       "21": [
-        "03:00",
+        "03:30",
         "13:30",
         "17:40",
         "21:30",
         "22:53"
       ],
       "22": [
-        "03:01",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:52"
       ],
       "23": [
-        "03:02",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:52"
       ],
       "24": [
-        "03:02",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:51"
       ],
       "25": [
-        "03:03",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:51"
       ],
       "26": [
-        "03:04",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:51"
       ],
       "27": [
-        "03:04",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:50"
       ],
       "28": [
-        "03:06",
+        "03:30",
         "13:30",
         "17:41",
         "21:30",
         "22:50"
       ],
       "29": [
-        "03:07",
+        "03:30",
         "13:30",
         "17:42",
         "21:30",
         "22:49"
       ],
       "30": [
-        "03:07",
+        "03:30",
         "13:30",
         "17:42",
         "21:29",
@@ -4338,112 +4343,112 @@
     },
     {
       "1": [
-        "03:09",
+        "03:30",
         "13:30",
         "17:42",
         "21:29",
         "22:46"
       ],
       "2": [
-        "03:10",
+        "03:30",
         "13:30",
         "17:42",
         "21:29",
         "22:46"
       ],
       "3": [
-        "03:11",
+        "03:30",
         "13:30",
         "17:42",
         "21:28",
         "22:45"
       ],
       "4": [
-        "03:13",
+        "03:30",
         "13:30",
         "17:42",
         "21:28",
         "22:44"
       ],
       "5": [
-        "03:14",
+        "03:30",
         "13:30",
         "17:42",
         "21:27",
         "22:43"
       ],
       "6": [
-        "03:15",
+        "03:30",
         "13:30",
         "17:42",
         "21:27",
         "22:43"
       ],
       "7": [
-        "03:17",
+        "03:30",
         "13:30",
         "17:41",
         "21:26",
         "22:41"
       ],
       "8": [
-        "03:18",
+        "03:30",
         "13:30",
         "17:41",
         "21:25",
         "22:40"
       ],
       "9": [
-        "03:20",
+        "03:30",
         "13:30",
         "17:41",
         "21:25",
         "22:40"
       ],
       "10": [
-        "03:21",
+        "03:30",
         "13:30",
         "17:41",
         "21:24",
         "22:38"
       ],
       "11": [
-        "03:22",
+        "03:30",
         "13:30",
         "17:41",
         "21:23",
         "22:37"
       ],
       "12": [
-        "03:24",
+        "03:30",
         "13:30",
         "17:41",
         "21:22",
         "22:36"
       ],
       "13": [
-        "03:25",
+        "03:30",
         "13:30",
         "17:40",
         "21:21",
         "22:34"
       ],
       "14": [
-        "03:27",
+        "03:30",
         "13:30",
         "17:40",
         "21:21",
         "22:34"
       ],
       "15": [
-        "03:28",
+        "03:30",
         "13:30",
         "17:40",
         "21:20",
         "22:33"
       ],
       "16": [
-        "03:29",
+        "03:30",
         "13:30",
         "17:40",
         "21:19",
