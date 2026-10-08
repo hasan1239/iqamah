@@ -29,7 +29,7 @@
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically +104 min from the sun on 57 upcoming days (2026-10-07 to 2026-12-05).",
+      "Sunrise/Maghrib UNSAFE: typically +106 min from the sun on 57 upcoming days (2026-10-08 to 2026-12-06).",
       "Sunrise/Maghrib off: typically +40 min from the sun on 3 upcoming days (2026-10-09 to 2026-10-11)."
     ],
     "issues": [
@@ -43,11 +43,10 @@
         "type": "sun_times_unsafe",
         "severity": "high",
         "count": 57,
-        "first_date": "2026-10-07",
-        "last_date": "2026-12-05",
-        "typical_offset_min": 104,
+        "first_date": "2026-10-08",
+        "last_date": "2026-12-06",
+        "typical_offset_min": 106,
         "affected_dates": [
-          "2026-10-07",
           "2026-10-08",
           "2026-10-12",
           "2026-10-13",
@@ -103,10 +102,10 @@
           "2026-12-02",
           "2026-12-03",
           "2026-12-04",
-          "2026-12-05"
+          "2026-12-05",
+          "2026-12-06"
         ],
         "affected_offsets": [
-          22,
           19,
           47,
           52,
@@ -162,10 +161,11 @@
           110,
           112,
           115,
-          116
+          116,
+          119
         ],
         "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +104 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+        "fix": "Sunrise/Maghrib are typically +106 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       },
       {
         "type": "sun_times_off",
