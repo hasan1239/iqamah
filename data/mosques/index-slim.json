@@ -3149,7 +3149,7 @@
     "latitude": 51.4359221,
     "longitude": -0.1969466,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"

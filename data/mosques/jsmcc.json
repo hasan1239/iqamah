@@ -29,7 +29,7 @@
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically -58 min from the sun on 43 upcoming days (2026-10-26 to 2026-12-07)."
+      "Sunrise/Maghrib UNSAFE: typically -58 min from the sun on 44 upcoming days (2026-10-26 to 2026-12-08)."
     ],
     "issues": [
       {
@@ -41,9 +41,9 @@
       {
         "type": "sun_times_unsafe",
         "severity": "medium",
-        "count": 43,
+        "count": 44,
         "first_date": "2026-10-26",
-        "last_date": "2026-12-07",
+        "last_date": "2026-12-08",
         "typical_offset_min": -58,
         "affected_dates": [
           "2026-10-26",
@@ -88,7 +88,8 @@
           "2026-12-04",
           "2026-12-05",
           "2026-12-06",
-          "2026-12-07"
+          "2026-12-07",
+          "2026-12-08"
         ],
         "affected_offsets": [
           -58,
@@ -132,6 +133,7 @@
           56,
           55,
           55,
+          56,
           56,
           56
         ],
