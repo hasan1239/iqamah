@@ -115,11 +115,11 @@
   ],
   "events": [],
   "flash": {
-    "content": "Fajr jama'at time changes to 7:00am from tomorrow ان شاء اللّٰه",
+    "content": "Asr jama'at time changes to 5:00pm from tomorrow ان شاء اللّٰه",
     "uuid": "53227010-c064-4608-99f1-ba75efe53d2a",
-    "expire": 1791244800,
-    "startDate": "2026-10-05",
-    "endDate": "2026-10-06",
+    "expire": 1791763200,
+    "startDate": "2026-10-11",
+    "endDate": "2026-10-12",
     "color": "#FFBC00",
     "orientation": "ltr"
   },
@@ -133,13 +133,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:25",
-    "13:12",
-    "16:46",
-    "18:51",
-    "20:50"
+    "05:40",
+    "13:10",
+    "16:30",
+    "18:34",
+    "20:31"
   ],
-  "shuruq": "07:21",
+  "shuruq": "07:35",
   "calendar": [
     {
       "1": [

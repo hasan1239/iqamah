@@ -121,8 +121,8 @@
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2025-12-06 20:10",
-      "duration": 30,
+      "updated": "2026-10-09 17:31",
+      "duration": 45,
       "isMobile": true,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
@@ -218,21 +218,6 @@
       "tvOrientation": "PORTRAIT"
     },
     {
-      "id": 331405,
-      "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
-      "title": "Help load Medical Aid for Syria",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/5bb580db-d0ee-41fd-a602-5ac9738a72cf/message/1f1be74d-6916-61e2-bfcc-0a58a9feac02.jpeg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-10-02 15:20",
-      "duration": 60,
-      "isMobile": false,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 331406,
       "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
       "title": "Monthly Donation Appeal",
@@ -291,9 +276,55 @@
       "isMobile": true,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 332307,
+      "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
+      "title": "Visit My Mosque",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/5bb580db-d0ee-41fd-a602-5ac9738a72cf/message/1f1c194d-3694-6bba-814c-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-06 14:47",
+      "duration": 40,
+      "isMobile": true,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 332308,
+      "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
+      "title": "Volunteers wanted for Open Day activity",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/5bb580db-d0ee-41fd-a602-5ac9738a72cf/message/1f1c1957-6def-6416-93bb-0a58a9feac02.png",
+      "video": null,
+      "startDate": "2026-10-06 15:51",
+      "endDate": "2026-10-22 16:00",
+      "updated": "2026-10-06 14:51",
+      "duration": 45,
+      "isMobile": false,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
     }
   ],
-  "events": [],
+  "events": [
+    {
+      "id": 332308,
+      "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
+      "title": "Volunteers wanted for Open Day activity",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/5bb580db-d0ee-41fd-a602-5ac9738a72cf/message/1f1c1957-6def-6416-93bb-0a58a9feac02.png",
+      "video": null,
+      "startDate": "2026-10-06 15:51",
+      "endDate": "2026-10-22 16:00",
+      "updated": "2026-10-06 14:51",
+      "duration": 45,
+      "isMobile": false,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
+    }
+  ],
   "flash": {
     "content": "اللهم إني أسألك الثبات في الأمر والعزيمةعلى الرشدوأسألك شكر نعمتك وأسألك حسن عبادتك وأسألك قلبا سليماوأسألك لساناصادقا وأسألك من خيرما تعلم وأعوذ بك من شر ما تعلم وأستغفرك لما تعلم إنك أنت علام الغيوب",
     "uuid": "5bb580db-d0ee-41fd-a602-5ac9738a72cf",
@@ -313,13 +344,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:41",
-    "13:11",
-    "16:09",
-    "18:54",
-    "20:34"
+    "05:55",
+    "13:09",
+    "15:55",
+    "18:36",
+    "20:15"
   ],
-  "shuruq": "07:21",
+  "shuruq": "07:35",
   "calendar": [
     {
       "1": [

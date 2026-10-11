@@ -26,7 +26,7 @@
   },
   "quality": {
     "status": "warnings",
-    "checked_at": "2026-10-04",
+    "checked_at": "2026-10-11",
     "row_count": 365,
     "warnings": [
       "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",

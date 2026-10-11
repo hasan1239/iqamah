@@ -25,12 +25,12 @@
   },
   "quality": {
     "status": "needs_review",
-    "checked_at": "2026-10-04",
+    "checked_at": "2026-10-11",
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
       "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise.",
-      "Sunrise/Maghrib UNSAFE: typically +211 min from the sun on 60 upcoming days (2026-10-10 to 2026-12-08)."
+      "Sunrise/Maghrib UNSAFE: typically +213 min from the sun on 60 upcoming days (2026-10-11 to 2026-12-09)."
     ],
     "issues": [
       {
@@ -109,11 +109,10 @@
         "type": "sun_times_unsafe",
         "severity": "high",
         "count": 60,
-        "first_date": "2026-10-10",
-        "last_date": "2026-12-08",
-        "typical_offset_min": 211,
+        "first_date": "2026-10-11",
+        "last_date": "2026-12-09",
+        "typical_offset_min": 213,
         "affected_dates": [
-          "2026-10-10",
           "2026-10-11",
           "2026-10-12",
           "2026-10-13",
@@ -172,10 +171,10 @@
           "2026-12-05",
           "2026-12-06",
           "2026-12-07",
-          "2026-12-08"
+          "2026-12-08",
+          "2026-12-09"
         ],
         "affected_offsets": [
-          93,
           95,
           97,
           99,
@@ -234,10 +233,11 @@
           239,
           239,
           239,
+          240,
           240
         ],
         "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +211 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+        "fix": "Sunrise/Maghrib are typically +213 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },

@@ -116,57 +116,57 @@
       "id": 322436,
       "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
       "title": "Jumah",
-      "content": "*Jumah Salah* *Schedule** \n(For 4 weeks)\n\n1st: 1.30pm\n2nd: 4.00pm\n\nإنشاءاللّٰه",
+      "content": "*Jumah Salah*\nThis Friday will be the last 4:00 pm Jumma Jamaat. \nFrom next Friday, Jumma Jamaat times will be 1:30 pm and 2:15 pm.\n\nإنشاءاللّٰه",
       "image": null,
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-08-21 03:49",
+      "updated": "2026-10-07 07:54",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 331201,
-      "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
-      "title": "Dua of the week",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1bde97-3045-6f98-92d2-0a58a9feac02.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-10-01 22:42",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 331202,
-      "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
-      "title": "Hadith of the week",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1bde98-28cb-6e56-9b25-0a58a9feac02.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-10-01 22:43",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 331203,
+      "id": 332870,
       "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
       "title": "Ayah of the week",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1bde99-1518-63d6-937a-06ffc5f351bd.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1c373e-843f-6694-a6be-0effddf68bdb.jpg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-01 22:43",
+      "updated": "2026-10-08 23:56",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 332871,
+      "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
+      "title": "Dua of the week",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1c373f-5ec1-6600-9656-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-08 23:57",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 332872,
+      "uuid": "8ea8777a-16ec-4d2b-a070-cdd161437dde",
+      "title": "Hadith of the week",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/8ea8777a-16ec-4d2b-a070-cdd161437dde/message/1f1c3740-5a65-6b82-9b26-0effddf68bdb.jpg",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-08 23:57",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -187,19 +187,19 @@
   "aidPrayerTime2": "10:30",
   "aidPrayerTime3": null,
   "jumua": "13:30",
-  "jumua2": "16:00",
+  "jumua2": "14:15",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 5,
   "hijriAdjustment": 0,
   "times": [
-    "05:25",
-    "13:12",
-    "16:46",
-    "18:51",
-    "20:50"
+    "05:40",
+    "13:10",
+    "16:30",
+    "18:34",
+    "20:31"
   ],
-  "shuruq": "07:21",
+  "shuruq": "07:35",
   "calendar": [
     {
       "1": [
@@ -5307,7 +5307,7 @@
         "13:15",
         "16:00",
         "16:46",
-        "20:00"
+        "19:00"
       ]
     },
     {
@@ -5319,11 +5319,11 @@
         "19:00"
       ],
       "2": [
-        "06:45",
+        "07:00",
         "13:15",
-        "16:00",
+        "15:45",
         "16:42",
-        "19:00"
+        "20:00"
       ],
       "3": [
         "07:00",
@@ -5348,17 +5348,17 @@
       ],
       "6": [
         "07:00",
-        "13:15",
+        "13:30",
         "15:45",
         "16:34",
         "20:00"
       ],
       "7": [
         "07:00",
-        "13:30",
+        "13:15",
         "15:45",
         "16:32",
-        "20:00"
+        "19:00"
       ],
       "8": [
         "07:00",
@@ -5370,9 +5370,9 @@
       "9": [
         "07:00",
         "13:15",
-        "15:45",
+        "14:30",
         "16:28",
-        "19:00"
+        "20:00"
       ],
       "10": [
         "07:00",
@@ -5397,17 +5397,17 @@
       ],
       "13": [
         "07:00",
-        "13:15",
+        "13:30",
         "14:30",
         "16:20",
         "20:00"
       ],
       "14": [
         "07:00",
-        "13:30",
+        "13:15",
         "14:30",
         "16:19",
-        "20:00"
+        "19:00"
       ],
       "15": [
         "07:00",
@@ -5419,9 +5419,9 @@
       "16": [
         "07:00",
         "13:15",
-        "14:30",
+        "14:18",
         "16:15",
-        "19:00"
+        "20:00"
       ],
       "17": [
         "07:00",
@@ -5446,17 +5446,17 @@
       ],
       "20": [
         "07:00",
-        "13:15",
+        "13:30",
         "14:15",
         "16:09",
         "20:00"
       ],
       "21": [
         "07:00",
-        "13:30",
+        "13:15",
         "14:15",
         "16:08",
-        "20:00"
+        "19:00"
       ],
       "22": [
         "07:00",
@@ -5468,9 +5468,9 @@
       "23": [
         "07:00",
         "13:15",
-        "14:15",
+        "14:10",
         "16:05",
-        "19:00"
+        "20:00"
       ],
       "24": [
         "07:00",
@@ -5495,17 +5495,17 @@
       ],
       "27": [
         "07:00",
-        "13:15",
+        "13:30",
         "14:10",
         "16:00",
         "20:00"
       ],
       "28": [
         "07:00",
-        "13:30",
+        "13:15",
         "14:10",
         "15:59",
-        "20:00"
+        "19:00"
       ],
       "29": [
         "07:00",
@@ -5519,7 +5519,7 @@
         "13:15",
         "14:10",
         "15:57",
-        "19:00"
+        "20:00"
       ]
     },
     {

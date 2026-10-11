@@ -156,6 +156,21 @@
       "isMobile": true,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 332668,
+      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
+      "title": "Thursdays Quran classes",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1c3003-85cd-6d7c-aef2-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-08 10:08",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
@@ -178,13 +193,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:45",
-    "12:59",
-    "16:00",
-    "18:42",
-    "20:13"
+    "05:57",
+    "12:57",
+    "15:48",
+    "18:26",
+    "19:57"
   ],
-  "shuruq": "07:17",
+  "shuruq": "07:28",
   "calendar": [
     {
       "1": [
@@ -5138,7 +5153,7 @@
         "13:30",
         "16:30",
         "18:31",
-        "20:10"
+        "20:20"
       ],
       "10": [
         "06:30",

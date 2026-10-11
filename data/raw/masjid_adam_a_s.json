@@ -92,13 +92,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:45",
+    "06:00",
     "13:15",
     "17:05",
-    "18:37",
-    "20:08"
+    "18:21",
+    "19:55"
   ],
-  "shuruq": "07:11",
+  "shuruq": "07:23",
   "calendar": [
     {
       "1": [

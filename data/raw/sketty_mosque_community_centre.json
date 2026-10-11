@@ -81,26 +81,10 @@
   "parking": true,
   "otherInfo": "Please note that maghrib and isha prayers are combined between mid-May and mid-August",
   "closed": null,
-  "announcements": [
-    {
-      "id": 330337,
-      "uuid": "de0e0a50-0bff-4502-8bbf-66d911a434c0",
-      "title": "Lecture",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/de0e0a50-0bff-4502-8bbf-66d911a434c0/message/1f1baf9a-1b61-63f6-bad4-0effd6af3e37.png",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-09-28 05:01",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "tvOrientation": "LANDSCAPE"
-    }
-  ],
+  "announcements": [],
   "events": [],
   "flash": {
-    "content": "Qur'an Halaqah: Daily after fajr | Riyadu Saliheen: Mon & Wed after Isha | Seerah: Thu after isha",
+    "content": "Qur'an Halaqah: Daily after fajr | Riyadu Saliheen: Mon & Wed after Isha | Seerah: Thu after isha | Iqra Academy children classes: Sat and Sun 10am - 12:30 pm",
     "uuid": "de0e0a50-0bff-4502-8bbf-66d911a434c0",
     "expire": null,
     "startDate": null,
@@ -118,13 +102,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:47",
-    "13:09",
-    "16:06",
-    "18:50",
-    "20:07"
+    "05:58",
+    "13:07",
+    "15:54",
+    "18:34",
+    "19:53"
   ],
-  "shuruq": "07:21",
+  "shuruq": "07:33",
   "calendar": [
     {
       "1": [
@@ -5187,50 +5171,50 @@
       ],
       "25": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "17:10",
         "19:30"
       ],
       "26": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "17:08",
         "19:30"
       ],
       "27": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "17:06",
         "19:30"
       ],
       "28": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "17:04",
         "19:30"
       ],
       "29": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "17:02",
         "19:30"
       ],
       "30": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:15",
+        "15:15",
         "17:00",
         "19:30"
       ],
       "31": [
         "06:15",
-        "12:30",
-        "16:00",
+        "13:30",
+        "15:15",
         "16:58",
         "19:30"
       ]

@@ -34,8 +34,8 @@
   "randomHadithIntervalDisabling": "",
   "temperatureEnabled": true,
   "temperatureUnit": "C",
-  "backgroundColor": "#525a3e",
-  "theme": "winter",
+  "backgroundColor": "#3e595a",
+  "theme": "mawaqit",
   "hadithLang": "en-ar",
   "wakeForFajrTime": null,
   "iqamaEnabled": true,
@@ -45,14 +45,14 @@
   "displayQrCodeAndLogoOnAndroidTV": false,
   "adhanDuration": 150,
   "backgroundType": "motif",
-  "backgroundMotif": "13",
+  "backgroundMotif": "12",
   "timeDisplayFormat": "24",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
   "customAthan": null,
   "customAthanDuration": null,
-  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/13.jpg",
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/12.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Nimrah Masjid",
@@ -179,13 +179,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:41",
-    "12:57",
-    "16:43",
-    "18:41",
-    "19:58"
+    "05:52",
+    "12:55",
+    "16:28",
+    "18:25",
+    "19:44"
   ],
-  "shuruq": "07:16",
+  "shuruq": "07:28",
   "calendar": [
     {
       "1": [

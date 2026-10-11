@@ -190,11 +190,11 @@
   ],
   "events": [],
   "flash": {
-    "content": "Tuesday 29th salatul Asr will be 4.30",
+    "content": "Monday 12th salatul Isha will be 8.15",
     "uuid": "4cee86e8-15f8-468a-8bd7-5f6ce37ed7af",
-    "expire": 1790553600,
+    "expire": 1791849600,
     "startDate": null,
-    "endDate": "2026-09-28",
+    "endDate": "2026-10-13",
     "color": "#2F23FF",
     "orientation": "ltr"
   },
@@ -208,13 +208,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:48",
-    "13:07",
-    "16:03",
-    "18:48",
-    "20:08"
+    "05:57",
+    "13:05",
+    "15:51",
+    "18:33",
+    "19:53"
   ],
-  "shuruq": "07:18",
+  "shuruq": "07:30",
   "calendar": [
     {
       "1": [
