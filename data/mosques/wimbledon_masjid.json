@@ -29,8 +29,7 @@
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically +108 min from the sun on 59 upcoming days (2026-10-12 to 2026-12-09).",
-      "Sunrise/Maghrib off: typically +44 min from the sun on 1 upcoming days (2026-10-11 to 2026-10-11)."
+      "Sunrise/Maghrib UNSAFE: typically +109 min from the sun on 60 upcoming days (2026-10-12 to 2026-12-10)."
     ],
     "issues": [
       {
@@ -42,10 +41,10 @@
       {
         "type": "sun_times_unsafe",
         "severity": "high",
-        "count": 59,
+        "count": 60,
         "first_date": "2026-10-12",
-        "last_date": "2026-12-09",
-        "typical_offset_min": 108,
+        "last_date": "2026-12-10",
+        "typical_offset_min": 109,
         "affected_dates": [
           "2026-10-12",
           "2026-10-13",
@@ -105,7 +104,8 @@
           "2026-12-06",
           "2026-12-07",
           "2026-12-08",
-          "2026-12-09"
+          "2026-12-09",
+          "2026-12-10"
         ],
         "affected_offsets": [
           47,
@@ -166,23 +166,11 @@
           119,
           121,
           123,
-          125
+          125,
+          127
         ],
         "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +108 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
-      },
-      {
-        "type": "sun_times_off",
-        "severity": "medium",
-        "count": 1,
-        "first_date": "2026-10-11",
-        "last_date": "2026-10-11",
-        "typical_offset_min": 44,
-        "affected_dates": [
-          "2026-10-11"
-        ],
-        "action_taken": "none (harmless direction: early sunrise / late Maghrib)",
-        "fix": "Sunrise/Maghrib are typically +44 min from the sun at this location. Check the masjid's source page."
+        "fix": "Sunrise/Maghrib are typically +109 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },
