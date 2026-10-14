@@ -30,7 +30,7 @@
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
       "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise.",
-      "Sunrise/Maghrib UNSAFE: typically +216 min from the sun on 60 upcoming days (2026-10-13 to 2026-12-11)."
+      "Sunrise/Maghrib UNSAFE: typically +217 min from the sun on 60 upcoming days (2026-10-14 to 2026-12-12)."
     ],
     "issues": [
       {
@@ -109,11 +109,10 @@
         "type": "sun_times_unsafe",
         "severity": "high",
         "count": 60,
-        "first_date": "2026-10-13",
-        "last_date": "2026-12-11",
-        "typical_offset_min": 216,
+        "first_date": "2026-10-14",
+        "last_date": "2026-12-12",
+        "typical_offset_min": 217,
         "affected_dates": [
-          "2026-10-13",
           "2026-10-14",
           "2026-10-15",
           "2026-10-16",
@@ -172,10 +171,10 @@
           "2026-12-08",
           "2026-12-09",
           "2026-12-10",
-          "2026-12-11"
+          "2026-12-11",
+          "2026-12-12"
         ],
         "affected_offsets": [
-          99,
           102,
           104,
           106,
@@ -234,10 +233,11 @@
           240,
           240,
           240,
+          240,
           240
         ],
         "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +216 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+        "fix": "Sunrise/Maghrib are typically +217 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },
