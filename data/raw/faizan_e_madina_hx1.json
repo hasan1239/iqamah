@@ -100,15 +100,15 @@
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
-  "hijriAdjustment": 0,
+  "hijriAdjustment": -1,
   "times": [
-    "05:30",
-    "12:55",
-    "16:28",
-    "18:24",
-    "20:17"
+    "05:32",
+    "12:54",
+    "16:26",
+    "18:21",
+    "20:15"
   ],
-  "shuruq": "07:44",
+  "shuruq": "07:46",
   "calendar": [
     {
       "1": [

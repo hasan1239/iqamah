@@ -115,11 +115,11 @@
   ],
   "events": [],
   "flash": {
-    "content": "Asr jama'at time changes to 5:00pm from tomorrow ان شاء اللّٰه",
+    "content": "Summer time ends Sunday 25th ان شاء اللّٰه All jama'at times affected except Isha",
     "uuid": "53227010-c064-4608-99f1-ba75efe53d2a",
-    "expire": 1791763200,
-    "startDate": "2026-10-11",
-    "endDate": "2026-10-12",
+    "expire": 1792886400,
+    "startDate": "2026-10-23",
+    "endDate": "2026-10-25",
     "color": "#FFBC00",
     "orientation": "ltr"
   },
@@ -133,13 +133,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:40",
-    "13:10",
-    "16:30",
-    "18:34",
-    "20:31"
+    "05:54",
+    "13:08",
+    "16:15",
+    "18:16",
+    "20:14"
   ],
-  "shuruq": "07:35",
+  "shuruq": "07:49",
   "calendar": [
     {
       "1": [

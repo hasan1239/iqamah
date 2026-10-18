@@ -45,14 +45,14 @@
   "displayQrCodeAndLogoOnAndroidTV": false,
   "adhanDuration": 200,
   "backgroundType": "motif",
-  "backgroundMotif": "16",
+  "backgroundMotif": "18",
   "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
   "customAthan": null,
   "customAthanDuration": null,
-  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/16.jpg",
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/18.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Faizan-e-Madinah Huddersfield",
@@ -104,9 +104,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-08-13 20:16",
-      "endDate": "2026-12-31 20:16",
-      "updated": "2026-09-24 11:21",
+      "startDate": "2026-10-15 20:16",
+      "endDate": "2027-05-31 20:16",
+      "updated": "2026-10-13 15:04",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -143,18 +143,18 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 296230,
+      "id": 333775,
       "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Weekend madrasah interest form",
+      "title": "Sunnah Inspired Ijtima",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f14fca0-4a5c-69ca-abbe-0a58a9feac02.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1c7178-5df3-6ad4-839d-0a58a9feac02.jpg",
       "video": null,
-      "startDate": "2026-05-14 20:20",
-      "endDate": "2026-10-16 20:20",
-      "updated": "2026-05-14 20:01",
+      "startDate": "2026-10-13 16:05",
+      "endDate": "2026-10-15 20:15",
+      "updated": "2026-10-13 15:05",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": false,
+      "isDesktop": true,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -166,27 +166,27 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-08-13 20:16",
-      "endDate": "2026-12-31 20:16",
-      "updated": "2026-09-24 11:21",
+      "startDate": "2026-10-15 20:16",
+      "endDate": "2027-05-31 20:16",
+      "updated": "2026-10-13 15:04",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 296230,
+      "id": 333775,
       "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Weekend madrasah interest form",
+      "title": "Sunnah Inspired Ijtima",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f14fca0-4a5c-69ca-abbe-0a58a9feac02.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1c7178-5df3-6ad4-839d-0a58a9feac02.jpg",
       "video": null,
-      "startDate": "2026-05-14 20:20",
-      "endDate": "2026-10-16 20:20",
-      "updated": "2026-05-14 20:01",
+      "startDate": "2026-10-13 16:05",
+      "endDate": "2026-10-15 20:15",
+      "updated": "2026-10-13 15:05",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": false,
+      "isDesktop": true,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -209,13 +209,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:30",
-    "12:54",
-    "16:27",
-    "18:22",
-    "20:17"
+    "05:39",
+    "12:53",
+    "16:17",
+    "18:11",
+    "20:05"
   ],
-  "shuruq": "07:24",
+  "shuruq": "07:34",
   "calendar": [
     {
       "1": [
@@ -2626,7 +2626,7 @@
         "11:52",
         "14:59",
         "16:51",
-        "19:47"
+        "18:47"
       ],
       "26": [
         "04:57",
@@ -2634,7 +2634,7 @@
         "11:52",
         "14:57",
         "16:49",
-        "19:45"
+        "18:45"
       ],
       "27": [
         "04:58",
@@ -2642,7 +2642,7 @@
         "11:51",
         "14:55",
         "16:47",
-        "19:43"
+        "18:43"
       ],
       "28": [
         "06:00",
@@ -2650,7 +2650,7 @@
         "11:51",
         "14:53",
         "16:45",
-        "19:41"
+        "18:41"
       ],
       "29": [
         "06:02",
@@ -2658,7 +2658,7 @@
         "11:51",
         "14:51",
         "16:43",
-        "19:39"
+        "18:39"
       ],
       "30": [
         "06:03",
@@ -2666,7 +2666,7 @@
         "11:51",
         "14:49",
         "16:41",
-        "19:37"
+        "18:37"
       ],
       "31": [
         "06:05",
@@ -2674,7 +2674,7 @@
         "11:51",
         "14:47",
         "16:39",
-        "19:36"
+        "18:36"
       ]
     },
     {
@@ -5181,91 +5181,91 @@
       "11": [
         "07:00",
         "13:30",
-        "17:15",
+        "17:30",
         "18:22",
         "20:45"
       ],
       "12": [
         "07:00",
         "13:30",
-        "17:15",
+        "17:30",
         "18:20",
         "20:45"
       ],
       "13": [
         "07:00",
         "13:30",
-        "17:15",
+        "17:30",
         "18:18",
         "20:45"
       ],
       "14": [
         "07:00",
         "13:30",
-        "17:15",
+        "17:30",
         "18:15",
         "20:45"
       ],
       "15": [
         "07:00",
         "13:30",
-        "17:15",
+        "17:30",
         "18:13",
         "20:45"
       ],
       "16": [
         "07:00",
         "13:30",
-        "17:15",
-        "+0",
+        "17:30",
+        "18:11",
         "20:45"
       ],
       "17": [
         "07:00",
         "13:30",
         "17:15",
-        "+0",
+        "18:09",
         "20:30"
       ],
       "18": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "18:06",
         "20:30"
       ],
       "19": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "18:04",
         "20:30"
       ],
       "20": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "+0",
         "20:30"
       ],
       "21": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "+0",
         "20:30"
       ],
       "22": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "+0",
         "20:30"
       ],
       "23": [
         "07:00",
         "13:30",
-        "17:00",
+        "17:15",
         "17:55",
         "20:30"
       ],
@@ -5279,51 +5279,51 @@
       "25": [
         "06:00",
         "12:30",
-        "15:45",
+        "16:00",
         "16:51",
-        "+15"
+        "19:15"
       ],
       "26": [
         "06:30",
         "13:30",
-        "15:45",
-        "+0",
-        "+15"
+        "16:00",
+        "16:49",
+        "19:15"
       ],
       "27": [
         "06:30",
         "13:30",
-        "15:45",
-        "+0",
-        "+15"
+        "16:00",
+        "16:47",
+        "19:15"
       ],
       "28": [
         "06:30",
         "13:30",
-        "15:45",
-        "+0",
-        "+15"
+        "16:00",
+        "16:45",
+        "19:15"
       ],
       "29": [
         "06:30",
         "13:30",
-        "15:45",
-        "+0",
-        "+15"
+        "16:00",
+        "16:43",
+        "19:15"
       ],
       "30": [
         "06:30",
         "13:30",
-        "15:45",
-        "+0",
-        "+15"
+        "16:00",
+        "16:41",
+        "19:15"
       ],
       "31": [
         "06:30",
         "13:30",
         "15:45",
-        "+0",
-        "+15"
+        "16:39",
+        "19:00"
       ]
     },
     {

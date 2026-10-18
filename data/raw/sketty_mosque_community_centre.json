@@ -84,7 +84,7 @@
   "announcements": [],
   "events": [],
   "flash": {
-    "content": "Qur'an Halaqah: Daily after fajr | Riyadu Saliheen: Mon & Wed after Isha | Seerah: Thu after isha | Iqra Academy children classes: Sat and Sun 10am - 12:30 pm",
+    "content": "Qur'an Halaqah: Daily after fajr | Iqra Academy children classes: Sat and Sun 10am - 12:30 pm",
     "uuid": "de0e0a50-0bff-4502-8bbf-66d911a434c0",
     "expire": null,
     "startDate": null,
@@ -102,13 +102,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:58",
-    "13:07",
-    "15:54",
-    "18:34",
-    "19:53"
+    "06:09",
+    "13:06",
+    "15:43",
+    "18:19",
+    "19:39"
   ],
-  "shuruq": "07:33",
+  "shuruq": "07:45",
   "calendar": [
     {
       "1": [

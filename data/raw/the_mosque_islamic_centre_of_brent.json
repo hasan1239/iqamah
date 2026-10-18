@@ -87,11 +87,11 @@
       "uuid": "7e60536c-cf81-4b7b-bccb-3093aec77bfe",
       "title": "Friday Collection",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/7e60536c-cf81-4b7b-bccb-3093aec77bfe/message/1f1be532-f8a4-6952-8ecd-0efff39a9ddf.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/7e60536c-cf81-4b7b-bccb-3093aec77bfe/message/1f1c9597-d063-6734-bda6-0a58a9feac02.jpg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-02 11:19",
+      "updated": "2026-10-16 12:02",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -208,13 +208,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:44",
-    "12:52",
-    "16:24",
-    "18:19",
-    "19:40"
+    "05:54",
+    "12:51",
+    "16:10",
+    "18:04",
+    "19:27"
   ],
-  "shuruq": "07:15",
+  "shuruq": "07:27",
   "calendar": [
     {
       "1": [

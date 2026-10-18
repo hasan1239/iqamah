@@ -115,11 +115,11 @@
   ],
   "events": [],
   "flash": {
-    "content": "Giyarween Shareef, Tuesday 22nd September, After Salaatul Magrib, Faizan e Deyar e Madina, 2 Showell Green Lane, Sparkhill, B11 4JP",
+    "content": "Weekly Sunnah Inspired Ijtima. Every Thursday 8pm, Faizan e Madina Stechford",
     "uuid": "7ad64daf-99d6-41be-be42-d51b174994ae",
-    "expire": 1790035200,
+    "expire": null,
     "startDate": null,
-    "endDate": "2026-09-22",
+    "endDate": null,
     "color": "#FFFFFF",
     "orientation": "ltr"
   },
@@ -128,18 +128,18 @@
   "aidPrayerTime3": null,
   "jumua": "13:30",
   "jumua2": "14:30",
-  "jumua3": "16:00",
+  "jumua3": "15:30",
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:31",
-    "12:54",
-    "16:31",
-    "18:26",
-    "20:16"
+    "05:40",
+    "12:53",
+    "16:21",
+    "18:15",
+    "20:05"
   ],
-  "shuruq": "07:21",
+  "shuruq": "07:30",
   "calendar": [
     {
       "1": [

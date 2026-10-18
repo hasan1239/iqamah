@@ -25,7 +25,7 @@
   },
   "quality": {
     "status": "warnings",
-    "checked_at": "2026-10-11",
+    "checked_at": "2026-10-18",
     "row_count": 365,
     "warnings": [
       "Isha clamped to Maghrib on 75 days (2026-05-17 to 2026-07-31). Verify whether the masjid genuinely combines Isha with Maghrib in summer, or has a fixed Isha time that needs to be set manually.",

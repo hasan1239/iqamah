@@ -83,30 +83,30 @@
   "closed": null,
   "announcements": [
     {
-      "id": 327024,
+      "id": 333649,
       "uuid": "5052d674-5852-495d-91ce-d410bc8cfb9e",
-      "title": "Declaration for Rabi ath-Thani 1448",
-      "content": "Foreign Sighting Report: Negative\n\nTherefore, the Islamic month of Rabi al-Awwal will complete 30 days. Rabi ath-Thani will begin after Maghrib on Saturday 12th September.\n\nThe 1st day of Rabi ath-Thani will be Sunday 13th September.",
+      "title": "Declaration for Jumada al-Ula 1448",
+      "content": "Sighting Report: Positive\n\nTherefore, the Islamic month of Rabi ath-Thani completed 29 days and Jumada al-Ula has begun. \n\nThe first day of Jumada al-Ula will be Monday 12th October 2026.",
       "image": null,
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-09-11 21:44",
+      "updated": "2026-10-12 18:29",
       "duration": 30,
       "isMobile": true,
       "isDesktop": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 327026,
+      "id": 333650,
       "uuid": "5052d674-5852-495d-91ce-d410bc8cfb9e",
-      "title": "Rabi ath-Thani 1448 Calendar",
+      "title": "Jumada al-Ula 1448 Calendar",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/5052d674-5852-495d-91ce-d410bc8cfb9e/message/1f1ae2a2-6afc-6bc4-8e41-0e3d5c78e5b5.jpeg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/5052d674-5852-495d-91ce-d410bc8cfb9e/message/1f1c66af-737c-621c-8cfe-0a58a9feac02.jpeg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-09-11 21:45",
+      "updated": "2026-10-12 18:30",
       "duration": 30,
       "isMobile": true,
       "isDesktop": false,
@@ -124,13 +124,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:32",
-    "13:04",
-    "16:25",
-    "18:26",
-    "20:04"
+    "05:46",
+    "13:03",
+    "16:09",
+    "18:09",
+    "19:47"
   ],
-  "shuruq": "07:36",
+  "shuruq": "07:50",
   "calendar": [
     {
       "1": [
