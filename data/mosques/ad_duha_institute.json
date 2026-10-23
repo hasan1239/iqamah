@@ -25,7 +25,7 @@
     "source_url": "https://time.my-masjid.com/timingsInfoScreen/60fe0a65-de8d-447f-8ffd-05e6c4e3b683"
   },
   "quality": {
-    "status": "warnings",
+    "status": "needs_review",
     "checked_at": "2026-10-18",
     "row_count": 365,
     "warnings": [
@@ -41,7 +41,7 @@
       },
       {
         "type": "sun_times_unsafe",
-        "severity": "medium",
+        "severity": "high",
         "count": 2,
         "first_date": "2026-10-25",
         "last_date": "2026-10-26",
@@ -54,7 +54,7 @@
           60,
           60
         ],
-        "action_taken": "none (per-day notice on the masjid page)",
+        "action_taken": "none",
         "fix": "Sunrise/Maghrib are typically +60 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
