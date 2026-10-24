@@ -1504,7 +1504,7 @@
     "latitude": 51.6441442,
     "longitude": -0.3609989,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -1601,7 +1601,7 @@
     "latitude": null,
     "longitude": null,
     "quality": {
-      "status": "ok"
+      "status": "needs_review"
     },
     "provider": {
       "type": "masjidbox"
@@ -1805,7 +1805,7 @@
     "latitude": 52.4583596,
     "longitude": -1.8951956,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
