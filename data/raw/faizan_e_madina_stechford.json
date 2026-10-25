@@ -95,21 +95,23 @@
       "duration": 15,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 329704,
+      "id": 335847,
       "uuid": "7ad64daf-99d6-41be-be42-d51b174994ae",
-      "title": "Telethon",
+      "title": "Fund raising",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/message/1f1b84d5-2bd9-6584-928a-0a58a9feac02.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/7ad64daf-99d6-41be-be42-d51b174994ae/message/1f1ce505-5838-6044-a955-0efffb44e91b.png",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-09-24 19:23",
-      "duration": 15,
+      "updated": "2026-10-22 20:01",
+      "duration": 20,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
@@ -133,13 +135,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:40",
-    "12:53",
-    "16:21",
-    "18:15",
-    "20:05"
+    "04:55",
+    "11:51",
+    "15:03",
+    "16:56",
+    "18:46"
   ],
-  "shuruq": "07:30",
+  "shuruq": "06:46",
   "calendar": [
     {
       "1": [

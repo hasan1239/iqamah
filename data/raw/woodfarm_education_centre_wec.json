@@ -95,6 +95,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -110,12 +111,13 @@
       "duration": 120,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
   "flash": {
-    "content": "Summer time ends Sunday 25th ان شاء اللّٰه All jama'at times affected except Isha",
+    "content": "Summer time ends Sunday 25th ان شاء اللّٰه. All jama'at times change except Isha.",
     "uuid": "53227010-c064-4608-99f1-ba75efe53d2a",
     "expire": 1792886400,
     "startDate": "2026-10-23",
@@ -133,13 +135,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:54",
-    "13:08",
-    "16:15",
-    "18:16",
-    "20:14"
+    "05:08",
+    "12:07",
+    "14:59",
+    "17:00",
+    "18:58"
   ],
-  "shuruq": "07:49",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

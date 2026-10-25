@@ -95,6 +95,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -110,6 +111,7 @@
       "duration": 15,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -125,6 +127,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -140,6 +143,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -155,6 +159,7 @@
       "duration": 25,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -170,6 +175,7 @@
       "duration": 15,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -185,6 +191,7 @@
       "duration": 35,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -200,6 +207,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -215,6 +223,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -230,6 +239,7 @@
       "duration": 35,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -245,6 +255,7 @@
       "duration": 35,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -260,6 +271,7 @@
       "duration": 35,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -275,6 +287,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -290,6 +303,7 @@
       "duration": 20,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
@@ -304,13 +318,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:07",
-    "12:53",
-    "15:32",
-    "18:07",
-    "19:27"
+    "05:18",
+    "11:52",
+    "14:21",
+    "16:52",
+    "18:12"
   ],
-  "shuruq": "07:38",
+  "shuruq": "06:51",
   "calendar": [
     {
       "1": [

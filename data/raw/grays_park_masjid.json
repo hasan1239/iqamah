@@ -36,7 +36,7 @@
   "temperatureUnit": "C",
   "backgroundColor": "#24072d",
   "theme": "winter",
-  "hadithLang": "en",
+  "hadithLang": "en-ar",
   "wakeForFajrTime": null,
   "iqamaEnabled": true,
   "fajrFixationComparedToShuruq": null,
@@ -45,14 +45,14 @@
   "displayQrCodeAndLogoOnAndroidTV": true,
   "adhanDuration": 150,
   "backgroundType": "motif",
-  "backgroundMotif": "22",
+  "backgroundMotif": "25",
   "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
   "customAthan": null,
   "customAthanDuration": null,
-  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/22.jpg",
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/25.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Grays Park Masjid",
@@ -87,14 +87,15 @@
       "uuid": "2dd6dbea-0049-4bad-90a9-cbc558799d65",
       "title": "Raised funds",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/2dd6dbea-0049-4bad-90a9-cbc558799d65/message/1f1c4724-9cad-64ba-8231-0effddf68bdb.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/2dd6dbea-0049-4bad-90a9-cbc558799d65/message/1f1cb261-7804-6d40-acda-06ffe6b9feb3.png",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-10 06:17",
+      "updated": "2026-10-21 15:56",
       "duration": 30,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": true,
       "tvOrientation": "LANDSCAPE"
     }
   ],
@@ -109,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:43",
-    "12:53",
-    "16:26",
-    "18:21",
-    "19:42"
+    "05:04",
+    "11:50",
+    "14:57",
+    "16:50",
+    "18:17"
   ],
-  "shuruq": "07:13",
+  "shuruq": "06:39",
   "calendar": [
     {
       "1": [

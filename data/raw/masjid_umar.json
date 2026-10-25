@@ -95,6 +95,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -110,6 +111,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -125,6 +127,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -140,6 +143,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -155,6 +159,23 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 336422,
+      "uuid": "6d2ac9b8-dd3b-4288-94ce-127c8d1c0a66",
+      "title": "Holiday programme",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/6d2ac9b8-dd3b-4288-94ce-127c8d1c0a66/message/1f1cfcce-a7b0-6b68-9c89-0a58a9feac02.jpeg",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-24 17:04",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -169,13 +190,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:06",
-    "13:03",
-    "16:24",
-    "18:17",
-    "19:41"
+    "05:17",
+    "12:02",
+    "15:11",
+    "17:03",
+    "18:28"
   ],
-  "shuruq": "07:41",
+  "shuruq": "06:53",
   "calendar": [
     {
       "1": [

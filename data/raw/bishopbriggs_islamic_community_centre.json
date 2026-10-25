@@ -95,6 +95,7 @@
       "duration": 45,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -110,6 +111,7 @@
       "duration": 40,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -125,6 +127,7 @@
       "duration": 40,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -140,6 +143,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -155,6 +159,7 @@
       "duration": 45,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -170,6 +175,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -193,13 +199,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:54",
-    "13:08",
-    "16:15",
-    "18:16",
-    "20:14"
+    "04:08",
+    "11:07",
+    "13:59",
+    "16:00",
+    "17:58"
   ],
-  "shuruq": "07:54",
+  "shuruq": "06:09",
   "calendar": [
     {
       "1": [

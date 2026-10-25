@@ -83,7 +83,7 @@
   "announcements": [],
   "events": [],
   "flash": {
-    "content": "Assalamu alaykum my dear brothers and sisters ,as you know we have 2 Friday jama'at - 1st Jumm'uah Khutbah starts at 13:30 and 2nd Jummu'ah Khutbah starts at 14:15 Insha Allah.",
+    "content": "Assalamu alaykum my dear brothers and sisters ,as you know we have 2 Friday jama'at - 1st Jumm'uah Khutbah starts at 12:30 and 2nd Jummu'ah Khutbah starts at 13:15 Insha Allah.",
     "uuid": "1881cf42-a4b8-4b00-9445-da16aa0bc313",
     "expire": null,
     "startDate": null,
@@ -101,13 +101,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:42",
-    "12:57",
-    "15:57",
-    "18:38",
-    "19:53"
+    "05:18",
+    "11:52",
+    "14:21",
+    "16:52",
+    "18:07"
   ],
-  "shuruq": "07:13",
+  "shuruq": "06:50",
   "calendar": [
     {
       "1": [
@@ -5171,35 +5171,35 @@
       "25": [
         "05:45",
         "12:45",
-        "14:45",
+        "14:30",
         "16:52",
         "18:45"
       ],
       "26": [
         "05:45",
         "12:45",
-        "14:45",
+        "14:30",
         "16:50",
         "18:45"
       ],
       "27": [
         "05:45",
         "12:45",
-        "14:45",
+        "14:30",
         "16:48",
         "18:45"
       ],
       "28": [
         "05:45",
         "12:45",
-        "14:45",
+        "14:30",
         "16:46",
         "18:45"
       ],
       "29": [
         "05:45",
         "12:45",
-        "14:45",
+        "14:30",
         "16:44",
         "18:45"
       ],

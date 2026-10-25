@@ -95,6 +95,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": false,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
@@ -109,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:42",
-    "13:03",
-    "16:13",
-    "18:14",
-    "19:52"
+    "06:00",
+    "13:02",
+    "15:54",
+    "17:52",
+    "19:31"
   ],
-  "shuruq": "07:46",
+  "shuruq": "08:05",
   "calendar": [
     {
       "1": [

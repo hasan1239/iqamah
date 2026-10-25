@@ -46,7 +46,7 @@
   "adhanDuration": 150,
   "backgroundType": "motif",
   "backgroundMotif": "0",
-  "timeDisplayFormat": "24",
+  "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
@@ -102,13 +102,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:09",
-    "13:06",
-    "15:43",
-    "18:19",
-    "19:39"
+    "05:21",
+    "12:05",
+    "14:31",
+    "17:05",
+    "18:27"
   ],
-  "shuruq": "07:45",
+  "shuruq": "06:57",
   "calendar": [
     {
       "1": [

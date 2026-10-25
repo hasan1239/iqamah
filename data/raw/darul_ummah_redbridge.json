@@ -83,18 +83,19 @@
   "closed": null,
   "announcements": [
     {
-      "id": 311840,
+      "id": 335021,
       "uuid": "0e5653ef-418c-455e-9359-813376048eef",
       "title": "Tafseer",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/0e5653ef-418c-455e-9359-813376048eef/message/1f18c2a0-ff28-697a-b8cf-0a58a9feac02.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/0e5653ef-418c-455e-9359-813376048eef/message/1f1cb26f-18aa-6300-9d30-0a58a9feac02.jpg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-07-30 15:19",
-      "duration": 30,
+      "updated": "2026-10-18 19:05",
+      "duration": 45,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
@@ -111,20 +112,20 @@
   "aidPrayerTime": "07:30",
   "aidPrayerTime2": "08:30",
   "aidPrayerTime3": null,
-  "jumua": "13:30",
-  "jumua2": "14:20",
+  "jumua": "12:30",
+  "jumua2": "13:15",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:00",
-    "12:51",
-    "16:18",
-    "18:12",
-    "19:28"
+    "05:18",
+    "11:49",
+    "14:57",
+    "16:49",
+    "18:05"
   ],
-  "shuruq": "07:22",
+  "shuruq": "06:41",
   "calendar": [
     {
       "1": [

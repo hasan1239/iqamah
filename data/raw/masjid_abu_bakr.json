@@ -32,10 +32,10 @@
   "iqamaDisplayTime": 30,
   "randomHadithEnabled": false,
   "randomHadithIntervalDisabling": "",
-  "temperatureEnabled": false,
+  "temperatureEnabled": true,
   "temperatureUnit": "C",
   "backgroundColor": "#24072d",
-  "theme": "summer",
+  "theme": "autumn",
   "hadithLang": "en-ar",
   "wakeForFajrTime": null,
   "iqamaEnabled": true,
@@ -95,20 +95,20 @@
   "aidPrayerTime": "09:30",
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:45",
-  "jumua2": "16:00",
+  "jumua": "13:15",
+  "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:01",
-    "12:56",
-    "16:12",
-    "18:07",
-    "19:17"
+    "05:14",
+    "11:55",
+    "14:58",
+    "16:52",
+    "18:02"
   ],
-  "shuruq": "07:38",
+  "shuruq": "06:51",
   "calendar": [
     {
       "1": [

@@ -95,6 +95,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -112,6 +113,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -125,13 +127,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:06",
-    "13:03",
-    "15:40",
-    "18:17",
-    "19:37"
+    "05:16",
+    "12:02",
+    "14:29",
+    "17:02",
+    "18:22"
   ],
-  "shuruq": "07:39",
+  "shuruq": "06:51",
   "calendar": [
     {
       "1": [

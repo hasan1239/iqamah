@@ -25,7 +25,7 @@
   },
   "quality": {
     "status": "warnings",
-    "checked_at": "2026-10-18",
+    "checked_at": "2026-10-25",
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier."

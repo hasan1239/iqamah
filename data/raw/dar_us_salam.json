@@ -95,6 +95,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -110,6 +111,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -125,6 +127,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -140,6 +143,7 @@
       "duration": 30,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     },
     {
@@ -155,21 +159,7 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": false,
-      "tvOrientation": "PORTRAIT"
-    },
-    {
-      "id": 290618,
-      "uuid": "4cee86e8-15f8-468a-8bd7-5f6ce37ed7af",
-      "title": "Tuesday lecture",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/4cee86e8-15f8-468a-8bd7-5f6ce37ed7af/message/1f13cc57-b7d5-6648-aa02-0e0d43694a85.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-04-20 14:30",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     },
     {
@@ -185,17 +175,18 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
   "flash": {
-    "content": "Monday 12th salatul Isha will be 8.15",
+    "content": "Friday Jummah will be at 12.30",
     "uuid": "4cee86e8-15f8-468a-8bd7-5f6ce37ed7af",
-    "expire": 1791849600,
+    "expire": 1793404800,
     "startDate": null,
-    "endDate": "2026-10-13",
-    "color": "#2F23FF",
+    "endDate": "2026-10-31",
+    "color": "#FFFFFF",
     "orientation": "ltr"
   },
   "aidPrayerTime": "08:30",
@@ -208,13 +199,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "06:01",
-    "13:04",
-    "15:46",
-    "18:26",
-    "19:46"
+    "05:17",
+    "12:02",
+    "14:29",
+    "17:03",
+    "18:23"
   ],
-  "shuruq": "07:35",
+  "shuruq": "06:54",
   "calendar": [
     {
       "1": [

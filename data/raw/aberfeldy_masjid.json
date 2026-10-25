@@ -94,36 +94,37 @@
       "duration": 30,
       "isMobile": false,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
   "flash": {
-    "content": ":::: Last week, you donated £1,342.89 to the Masjid. If you’re a UK taxpayer, Gift Aid adds 25% at no cost. Press YES on the terminal & register once جزاك اللهُ خيراً",
+    "content": ":::: Last week, you donated £1,262.48 to the Masjid. If you’re a UK taxpayer, Gift Aid adds 25% at no cost. Press YES on the terminal & register once جزاك اللهُ خيراً",
     "uuid": "4a5c4e68-c484-418a-b85f-78205baf30e8",
-    "expire": 1792540800,
-    "startDate": "2026-10-16",
-    "endDate": "2026-10-21",
-    "color": "#1EB8FF",
+    "expire": 1793145600,
+    "startDate": "2026-10-23",
+    "endDate": "2026-10-28",
+    "color": "#70FF6A",
     "orientation": "ltr"
   },
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:30",
-  "jumua2": "14:00",
-  "jumua3": "14:30",
+  "jumua": "12:30",
+  "jumua2": "13:00",
+  "jumua3": "13:30",
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:51",
-    "12:51",
-    "15:31",
-    "18:08",
-    "19:31"
+    "05:04",
+    "11:50",
+    "14:17",
+    "16:50",
+    "18:17"
   ],
-  "shuruq": "07:23",
+  "shuruq": "06:39",
   "calendar": [
     {
       "1": [
@@ -2529,12 +2530,12 @@
         "19:17"
       ],
       "25": [
-        "04:04",
-        "05:39",
-        "10:50",
-        "13:17",
-        "15:50",
-        "17:17"
+        "05:04",
+        "06:39",
+        "11:50",
+        "14:17",
+        "16:50",
+        "18:17"
       ],
       "26": [
         "05:05",
@@ -5440,7 +5441,7 @@
       ],
       "30": [
         "06:30",
-        "+50",
+        "12:45",
         "14:45",
         "16:04",
         "19:15"

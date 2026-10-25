@@ -94,6 +94,7 @@
       "duration": 45,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
   ],
@@ -101,20 +102,20 @@
   "aidPrayerTime": "08:00",
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:15",
+  "jumua": "12:30",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:54",
-    "12:51",
-    "15:27",
-    "18:04",
-    "19:27"
+    "05:04",
+    "11:50",
+    "14:16",
+    "16:49",
+    "18:16"
   ],
-  "shuruq": "07:27",
+  "shuruq": "06:39",
   "calendar": [
     {
       "1": [
