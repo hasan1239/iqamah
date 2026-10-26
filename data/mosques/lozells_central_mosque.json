@@ -25,26 +25,11 @@
   "today_only": true,
   "suppress_times": [],
   "quality": {
-    "status": "needs_review",
-    "checked_at": "2026-10-24",
-    "row_count": 159,
-    "warnings": [
-      "Fajr jama'at is at or after sunrise on 1 upcoming days (2026-10-25 to 2026-10-25)."
-    ],
-    "issues": [
-      {
-        "type": "fajr_after_sunrise",
-        "severity": "high",
-        "count": 1,
-        "first_date": "2026-10-25",
-        "last_date": "2026-10-25",
-        "affected_dates": [
-          "2026-10-25"
-        ],
-        "action_taken": "none",
-        "fix": "Investigate: Fajr jama'at must be before sunrise. Likely a data error at source"
-      }
-    ]
+    "status": "ok",
+    "checked_at": "2026-10-26",
+    "row_count": 161,
+    "warnings": [],
+    "issues": []
   },
   "acknowledged_issues": [],
   "hidden": true,

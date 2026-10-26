@@ -1601,7 +1601,7 @@
     "latitude": null,
     "longitude": null,
     "quality": {
-      "status": "needs_review"
+      "status": "ok"
     },
     "provider": {
       "type": "masjidbox"
