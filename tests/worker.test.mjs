@@ -272,6 +272,20 @@ test('extract: happy path returns extracted rows and applies the name override',
   assert.ok(body.data.rows[0].date, 'rows survive validateAndFixRows');
 });
 
+test('extract: winter Zawal 11:55 before Dhuhr 12:00 is not swapped', async () => {
+  // Bare 11:xx Dhuhr/Zawal times are morning (late-autumn GMT); reading them as
+  // PM made Zawal 23:55 > Dhuhr 12:00 and swapped the columns.
+  const extraction = sampleExtraction();
+  extraction.rows = extraction.rows.map(r => ({ ...r, zawal: '11:55', zohr: '12:00', zohar_jamaat: '12:30' }));
+  installFetch({ 'api.anthropic.com': () => j({ content: [{ text: JSON.stringify(extraction) }] }) });
+  const res = await worker.fetch(extractRequest(), env);
+  assert.equal(res.status, 200);
+  const row = (await res.json()).data.rows[0];
+  assert.equal(row.zawal, '11:55');
+  assert.equal(row.zohr, '12:00');
+  assert.equal(row.zohar_jamaat, '12:30');
+});
+
 test('extract: unparseable AI response returns a clear error', async () => {
   installFetch({ 'api.anthropic.com': () => j({ content: [{ text: 'not json at all' }] }) });
   const res = await worker.fetch(extractRequest(), env);

@@ -77,6 +77,8 @@ async function verifyTurnstile(token, ip, env) {
 
 // --- Validation helpers (ported from extract_timetable.py) ---
 
+// forcePm: true = afternoon/evening, 'midday' = Dhuhr/Zawal, which fall either
+// side of noon (11:54 in late-autumn GMT), so bare 10:xx and 11:xx stay morning.
 function timeToMinutes(t, forcePm = false) {
   if (!t || !t.trim()) return null;
   t = t.trim().toLowerCase().replace('am', '').replace('pm', '').trim();
@@ -85,6 +87,7 @@ function timeToMinutes(t, forcePm = false) {
   const h = parseInt(parts[0], 10);
   const m = parseInt(parts[1], 10);
   if (isNaN(h) || isNaN(m)) return null;
+  if (forcePm === 'midday') forcePm = !(h >= 10 && h <= 11);
   // If h >= 13 or === 0, already in 24h format — skip forcePm conversion
   const already24h = h >= 13 || h === 0;
   const hour = (!already24h && forcePm && h >= 1 && h <= 11) ? h + 12 : h;
@@ -159,16 +162,16 @@ function validateAndFixRows(rows, notes) {
     }
 
     // Fix 0: Zawal > Zohr — swap them (model confused the columns)
-    let zawalMins = timeToMinutes(row.zawal || '', true);
-    let zohrMins = timeToMinutes(row.zohr || '', true);
+    let zawalMins = timeToMinutes(row.zawal || '', 'midday');
+    let zohrMins = timeToMinutes(row.zohr || '', 'midday');
     if (zawalMins !== null && zohrMins !== null && zawalMins > zohrMins) {
       [row.zawal, row.zohr] = [row.zohr, row.zawal];
       fixCounts.zawal_swap++;
-      zohrMins = timeToMinutes(row.zohr || '', true);
+      zohrMins = timeToMinutes(row.zohr || '', 'midday');
     }
 
-    zohrMins = timeToMinutes(row.zohr || '', true);
-    let zoharJMins = timeToMinutes(row.zohar_jamaat || '', true);
+    zohrMins = timeToMinutes(row.zohr || '', 'midday');
+    let zoharJMins = timeToMinutes(row.zohar_jamaat || '', 'midday');
     let asrMins = timeToMinutes(row.asr || '', true);
     let asrJMins = timeToMinutes(row.asr_jamaat || '', true);
     let eshaMins = timeToMinutes(row.esha || '', false);

@@ -3,6 +3,7 @@ import { navigate } from '../router.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { getTodayRow } from '../utils/csv.js';
 import { loadMasjidRows } from '../utils/masjid-csv.js';
+import { MIDDAY, resolveIsAM } from '../utils/midday.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { mountMap, unmountMap, focusBounds, refreshMap } from './masjid-map.js';
 import { getOthers, isOther, getMyMasjid, setMyMasjid, clearMyMasjid, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
@@ -533,6 +534,7 @@ function formatCardTime(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
+  isAM = resolveIsAM(isAM, h);
   if (localStorage.getItem('iqamah-time-format') === '12') {
     if (h >= 13) return `${h - 12}:${m} PM`;
     if (h === 0) return `12:${m} AM`;
@@ -549,6 +551,7 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
   let hours = parseInt(parts[0]);
   const minutes = parseInt(parts[1]);
   if (isNaN(hours) || isNaN(minutes)) return null;
+  isAM = resolveIsAM(isAM, hours);
   // If hours >= 13, time is already in 24h format — no conversion needed
   if (hours < 13) {
     if (!isAM && hours !== 12) hours += 12;
@@ -561,7 +564,7 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
 function getNextPrayerFromRow(row) {
   const prayers = [
     { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
-    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
+    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: MIDDAY, defaultTime: '1:00' },
     { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
     { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
     { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
@@ -1324,7 +1327,7 @@ async function loadTodayForPopup(slug) {
     const fajrStart = r['Fajr Start'] || r['Subha Sadiq'] || r['Sehri Ends'] || '';
     const rows = [
       { name: 'Fajr', start: fmt(fajrStart, true), jamaat: fmt(r["Fajr Jama'at"], true) },
-      { name: 'Dhuhr', start: fmt(r['Zohr'], false), jamaat: fmt(r["Zohar Jama'at"] || '1:00', false) },
+      { name: 'Dhuhr', start: fmt(r['Zohr'], MIDDAY), jamaat: fmt(r["Zohar Jama'at"] || '1:00', MIDDAY) },
       { name: 'Asr', start: fmt(r['Asr'], false), jamaat: fmt(r["Asr Jama'at"], false) },
       { name: 'Maghrib', start: fmt(r['Maghrib Iftari'], false), jamaat: fmt(r["Maghrib Jama'at"] || r['Maghrib Iftari'], false) },
       { name: 'Esha', start: fmt(r['Esha'], false), jamaat: fmt(r["Esha Jama'at"], false) },

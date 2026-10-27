@@ -3,6 +3,7 @@ import { navigate } from '../router.js';
 import { canInstall, promptInstall, isStandalone, isIOSSafari } from '../utils/pwa.js';
 import { getTodayRow, getTomorrowRow } from '../utils/csv.js';
 import { loadMasjidRows } from '../utils/masjid-csv.js';
+import { MIDDAY, resolveIsAM } from '../utils/midday.js';
 import { formatCountdown } from '../utils/countdown.js';
 import { haversineDistance, getCurrentPosition } from '../utils/geolocation.js';
 import { getOthers, getMyMasjid, clearMyMasjid } from '../utils/follow.js';
@@ -814,6 +815,7 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
   let hours = parseInt(parts[0]);
   const minutes = parseInt(parts[1]);
   if (isNaN(hours) || isNaN(minutes)) return null;
+  isAM = resolveIsAM(isAM, hours);
   // If hours >= 13, time is already in 24h format — no conversion needed
   if (hours < 13) {
     if (!isAM && hours !== 12) hours += 12;
@@ -826,7 +828,7 @@ function parseTimeTodayWithAMPM(timeStr, isAM) {
 function getNextJamaatFromRow(row) {
   const prayers = [
     { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
-    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
+    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: MIDDAY, defaultTime: '1:00' },
     { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
     { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
     { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
@@ -852,7 +854,7 @@ function getNextStartFromRow(row) {
   const sehriLabel = seasonConfig.season === 'ramadan' ? 'Sehri' : 'Fajr';
   const prayers = [
     { name: sehriLabel, keys: ['Sehri Ends', 'Fajr Start', 'Subha Sadiq'], isAM: true },
-    { name: 'Dhuhr', keys: ['Zohr Start', 'Zuhr Start', 'Zohr'], isAM: false },
+    { name: 'Dhuhr', keys: ['Zohr Start', 'Zuhr Start', 'Zohr'], isAM: MIDDAY },
     { name: 'Asr', keys: ['Asr Start', 'Asr'], isAM: false },
     { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
     { name: 'Esha', keys: ['Esha Start', 'Isha Start', 'Esha'], isAM: false },
@@ -878,6 +880,7 @@ function formatTimeDisplay(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
+  isAM = resolveIsAM(isAM, h);
   if (localStorage.getItem('iqamah-time-format') === '12') {
     // If already 24h (h >= 13), convert to 12h
     if (h >= 13) return `${h - 12}:${m} <span class="hero-next-ampm">PM</span>`;
@@ -895,6 +898,7 @@ function formatCardTime(timeStr, isAM) {
   if (parts.length < 2) return timeStr;
   const h = parseInt(parts[0]);
   const m = parts[1];
+  isAM = resolveIsAM(isAM, h);
   if (localStorage.getItem('iqamah-time-format') === '12') {
     // If already 24h (h >= 13), convert to 12h
     if (h >= 13) return `${h - 12}:${m} PM`;

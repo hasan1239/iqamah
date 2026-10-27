@@ -5,6 +5,7 @@ import { isAdmin, getAdminHeaders } from '../utils/admin.js';
 import { getMyMasjid, setMyMasjid, clearMyMasjid, isOther, saveOther, removeOther, OTHERS_CAP } from '../utils/follow.js';
 import { openContextMenu, closeContextMenu } from '../utils/context-menu.js';
 import { loadMasjidRows } from '../utils/masjid-csv.js';
+import { MIDDAY, resolveIsAM } from '../utils/midday.js';
 
 let config = null;
 let csvData = [];
@@ -33,6 +34,7 @@ function ft(timeStr, isAM, skipSuffix) {
   if (!match) return timeStr;
   let hours = parseInt(match[1]);
   const minutes = match[2];
+  isAM = resolveIsAM(isAM, hours);
   // If hours >= 13, the time is already in 24h format — derive isAM from the value
   const already24h = hours >= 13 || (hours === 0);
   if (already24h) isAM = hours < 12;
@@ -127,7 +129,7 @@ function renderSourceTag(cfg) {
 // Column key → isAM mapping for CSV columns
 const COL_IS_AM = {
   'Sehri Ends': true, 'Fajr Start': true, 'Subha Sadiq': true, "Fajr Jama'at": true, 'Sunrise': true,
-  'Zohr': false, "Zohar Jama'at": false, 'Zawal': false,
+  'Zohr': MIDDAY, "Zohar Jama'at": MIDDAY, 'Zawal': MIDDAY,
   'Asr': false, "Asr Jama'at": false,
   'Maghrib Iftari': false, "Maghrib Jama'at": false,
   'Esha': false, "Esha Jama'at": false,
@@ -295,6 +297,7 @@ function parseTimeToDate(timeStr, isAM) {
   const parts = timeStr.trim().split(':');
   let hours = parseInt(parts[0]);
   const minutes = parseInt(parts[1]);
+  isAM = resolveIsAM(isAM, hours);
   // If hours >= 13 or === 0, already in 24h format — skip conversion
   const already24h = hours >= 13 || (hours === 0);
   if (!already24h) {
@@ -320,7 +323,7 @@ function formatCountdown(prayerDate) {
 function getNextPrayer(todayRow) {
   const prayers = [
     { name: 'Fajr', keys: ["Fajr Jama'at"], isAM: true },
-    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: false, defaultTime: '1:00' },
+    { name: 'Dhuhr', keys: ["Zohar Jama'at"], isAM: MIDDAY, defaultTime: '1:00' },
     { name: 'Asr', keys: ["Asr Jama'at"], isAM: false },
     { name: 'Maghrib', keys: ["Maghrib Jama'at", "Maghrib Iftari"], isAM: false },
     { name: 'Esha', keys: ["Esha Jama'at"], isAM: false },
@@ -379,7 +382,7 @@ function applyNextPrayerHighlight(todayRow) {
   // Next start time (independent)
   const startTimes = [
     { name: 'Fajr', keys: ['Sehri Ends', 'Fajr Start', 'Subha Sadiq'], isAM: true },
-    { name: 'Dhuhr', keys: ['Zohr'], isAM: false },
+    { name: 'Dhuhr', keys: ['Zohr'], isAM: MIDDAY },
     { name: 'Asr', keys: ['Asr'], isAM: false },
     { name: 'Maghrib', keys: ['Maghrib Iftari'], isAM: false },
     { name: 'Esha', keys: ['Esha'], isAM: false },
@@ -652,7 +655,7 @@ function renderTodayView(target) {
   const fajrStart = isRamadan ? (todayRow['Sehri Ends'] || null) : (todayRow['Fajr Start'] || todayRow['Subha Sadiq'] || todayRow['Sehri Ends'] || null);
   const prayerRows = [];
   prayerRows.push({ name: 'Fajr', isAM: true, start: fajrStart, jamaat: todayRow["Fajr Jama'at"] });
-  prayerRows.push({ name: 'Dhuhr', isAM: false, start: todayRow['Zohr'] || null, jamaat: todayRow["Zohar Jama'at"] || '1:00' });
+  prayerRows.push({ name: 'Dhuhr', isAM: MIDDAY, start: todayRow['Zohr'] || null, jamaat: todayRow["Zohar Jama'at"] || '1:00' });
   prayerRows.push({ name: 'Asr', isAM: false, start: todayRow['Asr'] || null, jamaat: todayRow["Asr Jama'at"] });
   prayerRows.push({ name: 'Maghrib', isAM: false, start: todayRow['Maghrib Iftari'] || null, jamaat: todayRow["Maghrib Jama'at"] || todayRow['Maghrib Iftari'] });
   prayerRows.push({ name: 'Esha', isAM: false, start: todayRow['Esha'] || null, jamaat: todayRow["Esha Jama'at"] });
@@ -683,7 +686,7 @@ function renderTodayView(target) {
   let sunZawalRowHtml = '';
   if (hasSunrise || hasZawal) {
     const sunriseHtml = hasSunrise ? `<div class="sun-zawal-cell${!hasZawal ? ' full-width' : ''}"><span class="sun-zawal-label">Sunrise</span><span class="sun-zawal-time">${ft(todayRow['Sunrise'], true)}</span></div>` : '';
-    const zawalHtml = hasZawal ? `<div class="sun-zawal-cell${!hasSunrise ? ' full-width' : ''}"><span class="sun-zawal-label">Zawal</span><span class="sun-zawal-time">${ft(todayRow['Zawal'], false)}</span></div>` : '';
+    const zawalHtml = hasZawal ? `<div class="sun-zawal-cell${!hasSunrise ? ' full-width' : ''}"><span class="sun-zawal-label">Zawal</span><span class="sun-zawal-time">${ft(todayRow['Zawal'], MIDDAY)}</span></div>` : '';
     const divider = hasSunrise && hasZawal ? '<div class="sun-zawal-divider"></div>' : '';
     sunZawalRowHtml = `<div class="time-row sun-zawal-row">${sunriseHtml}${divider}${zawalHtml}</div>`;
   }
@@ -874,14 +877,14 @@ function renderMonthlyView(target) {
         ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true, group: 'start' }]
         : [{ label: 'Fajr', key: 'Fajr Start', altKey: 'Subha Sadiq', isAM: true, group: 'start' }]),
       { label: 'Sunrise', key: 'Sunrise', isAM: true, group: 'start' },
-      { label: 'Dhuhr', key: 'Zohr', isAM: false, group: 'start' },
+      { label: 'Dhuhr', key: 'Zohr', isAM: MIDDAY, group: 'start' },
       { label: 'Asr', key: 'Asr', isAM: false, group: 'start' },
       { label: 'Maghrib', key: 'Maghrib Iftari', isAM: false, group: 'start' },
       { label: 'Esha', key: 'Esha', isAM: false, group: 'start' },
     ];
     const allJamaatCols = [
       { label: 'Fajr J', key: "Fajr Jama'at", isAM: true, group: 'jamaat' },
-      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00', isAM: false, group: 'jamaat' },
+      { label: 'Dhuhr J', key: "Zohar Jama'at", fallback: '1:00', isAM: MIDDAY, group: 'jamaat' },
       { label: 'Asr J', key: "Asr Jama'at", isAM: false, group: 'jamaat' },
       { label: 'Magh J', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false, group: 'jamaat' },
       { label: 'Esha J', key: "Esha Jama'at", isAM: false, group: 'jamaat' },
@@ -935,7 +938,7 @@ function renderMonthlyView(target) {
         ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true }]
         : []),
       { label: 'Fajr', key: "Fajr Jama'at", isAM: true },
-      { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: false },
+      { label: 'Dhuhr', key: "Zohar Jama'at", fallback: '1:00', isAM: MIDDAY },
       { label: 'Asr', key: "Asr Jama'at", isAM: false },
       { label: 'Magh', key: "Maghrib Jama'at", fallbackKey: 'Maghrib Iftari', isAM: false },
       { label: 'Esha', key: "Esha Jama'at", isAM: false },
@@ -945,7 +948,7 @@ function renderMonthlyView(target) {
         ? [{ label: 'Sehri', key: 'Sehri Ends', isAM: true }]
         : [{ label: 'Fajr', key: 'Fajr Start', altKey: 'Subha Sadiq', isAM: true }]),
       { label: 'Sunrise', key: 'Sunrise', isAM: true },
-      { label: 'Dhuhr', key: 'Zohr', isAM: false },
+      { label: 'Dhuhr', key: 'Zohr', isAM: MIDDAY },
       { label: 'Asr', key: 'Asr', isAM: false },
       { label: 'Magh', key: 'Maghrib Iftari', isAM: false },
       { label: 'Esha', key: 'Esha', isAM: false },
