@@ -27,7 +27,7 @@
     "latitude": 52.437994,
     "longitude": -1.84723,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mymasjid"
@@ -160,7 +160,7 @@
     "latitude": 55.871635506808,
     "longitude": -4.2717046233135,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -518,7 +518,7 @@
     "latitude": 52.433504,
     "longitude": -1.837229,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mymasjid"
@@ -682,7 +682,7 @@
     "latitude": 51.481081030825,
     "longitude": -0.17885868465577,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mawaqit"
@@ -871,7 +871,7 @@
     "latitude": 53.6827273,
     "longitude": -1.8383437,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mawaqit"
@@ -1992,7 +1992,7 @@
     "latitude": 51.566845643747,
     "longitude": 0.10928634061741,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mawaqit"
@@ -2765,7 +2765,7 @@
     "latitude": 51.5909457,
     "longitude": -2.9835106,
     "quality": {
-      "status": "warnings"
+      "status": "needs_review"
     },
     "provider": {
       "type": "mawaqit"
@@ -2878,7 +2878,7 @@
     "latitude": 51.549180971004,
     "longitude": 0.0016710960972199,
     "quality": {
-      "status": "needs_review"
+      "status": "warnings"
     },
     "provider": {
       "type": "mawaqit"
