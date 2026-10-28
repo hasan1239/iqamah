@@ -24,7 +24,7 @@
     "source_url": "https://mawaqit.net/en/m/edmonton-mosque"
   },
   "quality": {
-    "status": "warnings",
+    "status": "needs_review",
     "checked_at": "2026-10-25",
     "row_count": 365,
     "warnings": [
@@ -40,7 +40,7 @@
       },
       {
         "type": "sun_times_unsafe",
-        "severity": "medium",
+        "severity": "high",
         "count": 2,
         "first_date": "2026-10-30",
         "last_date": "2026-10-31",
@@ -53,7 +53,7 @@
           -64,
           -64
         ],
-        "action_taken": "none (per-day notice on the masjid page)",
+        "action_taken": "none",
         "fix": "Sunrise/Maghrib are typically -64 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]

@@ -24,12 +24,12 @@
     "source_url": "https://mawaqit.net/en/m/madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
   },
   "quality": {
-    "status": "needs_review",
+    "status": "warnings",
     "checked_at": "2026-10-25",
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically +63 min from the sun on 2 upcoming days (2026-10-27 to 2026-10-31)."
+      "Sunrise/Maghrib UNSAFE: typically -68 min from the sun on 1 upcoming days (2026-10-31 to 2026-10-31)."
     ],
     "issues": [
       {
@@ -40,21 +40,19 @@
       },
       {
         "type": "sun_times_unsafe",
-        "severity": "high",
-        "count": 2,
-        "first_date": "2026-10-27",
+        "severity": "medium",
+        "count": 1,
+        "first_date": "2026-10-31",
         "last_date": "2026-10-31",
-        "typical_offset_min": 63,
+        "typical_offset_min": -68,
         "affected_dates": [
-          "2026-10-27",
           "2026-10-31"
         ],
         "affected_offsets": [
-          63,
           -68
         ],
-        "action_taken": "none",
-        "fix": "Sunrise/Maghrib are typically +63 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+        "action_taken": "none (per-day notice on the masjid page)",
+        "fix": "Sunrise/Maghrib are typically -68 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },
