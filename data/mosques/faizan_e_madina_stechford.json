@@ -24,12 +24,12 @@
     "source_url": "https://mawaqit.net/en/m/faizan-e-madina-stechford"
   },
   "quality": {
-    "status": "warnings",
+    "status": "needs_review",
     "checked_at": "2026-10-25",
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Sunrise/Maghrib UNSAFE: typically +28 min from the sun on 57 upcoming days (2026-11-01 to 2026-12-27)."
+      "Sunrise/Maghrib UNSAFE: typically +28 min from the sun on 58 upcoming days (2026-11-01 to 2026-12-28)."
     ],
     "issues": [
       {
@@ -40,10 +40,10 @@
       },
       {
         "type": "sun_times_unsafe",
-        "severity": "medium",
-        "count": 57,
+        "severity": "high",
+        "count": 58,
         "first_date": "2026-11-01",
-        "last_date": "2026-12-27",
+        "last_date": "2026-12-28",
         "typical_offset_min": 28,
         "affected_dates": [
           "2026-11-01",
@@ -102,7 +102,8 @@
           "2026-12-24",
           "2026-12-25",
           "2026-12-26",
-          "2026-12-27"
+          "2026-12-27",
+          "2026-12-28"
         ],
         "affected_offsets": [
           34,
@@ -161,9 +162,10 @@
           26,
           26,
           25,
+          26,
           26
         ],
-        "action_taken": "none (per-day notice on the masjid page)",
+        "action_taken": "none",
         "fix": "Sunrise/Maghrib are typically +28 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]

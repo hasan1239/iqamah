@@ -24,7 +24,7 @@
     "source_url": "https://mawaqit.net/en/m/madina-islamic-centre-cricklewood-london-nw2-2qh-united-kingdom"
   },
   "quality": {
-    "status": "needs_review",
+    "status": "warnings",
     "checked_at": "2026-10-25",
     "row_count": 365,
     "warnings": [
@@ -40,7 +40,7 @@
       },
       {
         "type": "sun_times_unsafe",
-        "severity": "high",
+        "severity": "medium",
         "count": 1,
         "first_date": "2026-10-31",
         "last_date": "2026-10-31",
@@ -51,7 +51,7 @@
         "affected_offsets": [
           -68
         ],
-        "action_taken": "none",
+        "action_taken": "none (per-day notice on the masjid page)",
         "fix": "Sunrise/Maghrib are typically -68 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
