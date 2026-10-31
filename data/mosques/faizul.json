@@ -6,14 +6,14 @@
   "lat": 52.5106,
   "lon": -1.8912,
   "phone": "07812372352",
-  "month": "October 2026",
-  "islamic_month": "Rabi' al-Thani - Jumada al-Ula 1448 AH",
-  "jummah_times": "1st Jumu'ah: 1:30PM, 2nd Jumu'ah: 4PM (2nd & 9th Second Jummah will be at 3:50PM)",
+  "month": "November 2026",
+  "islamic_month": "Jumada al-Ula / al-Aakhirah 1448 A.H",
+  "jummah_times": "1:15pm",
   "eid_salah": "1st Jamaat 7:00am, 2nd Jamaat 8:30am, 3rd Jamaat 10am",
   "sadaqatul_fitr": "Minimum £6.00 for adults & children",
-  "radio_frequency": "453.7000",
+  "radio_frequency": "454 7000",
   "is_stale": false,
-  "notes": "Zuhr 2PM. British Summer Time ends on Sunday 25th Oct, please put clocks one hour back. Jumuah Bayaan starts half an hour before Khutbah. On Sunday after Zuhr salah Dars-e-Quraan will take place in Urdu.",
+  "notes": "Zohr Jama'at: 1:00pm daily (non-Friday). Jumuah Jama'at: 1:15pm. Sat & Sun Esha Jamaat will be at 6:30pm. Jumua'h Bayaan starts half an hour before Khutbah. Jamaat times are subject to change, please refer to Masjid notice board for changes.",
   "source_image": "sources/faizul.jpg",
   "approved": true,
   "provider": {
@@ -23,5 +23,5 @@
     },
     "source_url": "/data/sources/faizul.jpg"
   },
-  "pending_update": false
+  "pending_update": true
 }
