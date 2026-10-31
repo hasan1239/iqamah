@@ -25,11 +25,30 @@
   "today_only": true,
   "suppress_times": [],
   "quality": {
-    "status": "ok",
-    "checked_at": "2026-10-29",
-    "row_count": 164,
-    "warnings": [],
-    "issues": []
+    "status": "warnings",
+    "checked_at": "2026-10-31",
+    "row_count": 166,
+    "warnings": [
+      "Sunrise/Maghrib UNSAFE: typically -278 min from the sun on 1 upcoming days (2026-11-01 to 2026-11-01)."
+    ],
+    "issues": [
+      {
+        "type": "sun_times_unsafe",
+        "severity": "medium",
+        "count": 1,
+        "first_date": "2026-11-01",
+        "last_date": "2026-11-01",
+        "typical_offset_min": -278,
+        "affected_dates": [
+          "2026-11-01"
+        ],
+        "affected_offsets": [
+          -278
+        ],
+        "action_taken": "none (per-day notice on the masjid page)",
+        "fix": "Sunrise/Maghrib are typically -278 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
+      }
+    ]
   },
   "acknowledged_issues": []
 }
