@@ -147,22 +147,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 285051,
-      "uuid": "6ef55c47-c762-4ca7-afc8-2a3ccb85dca1",
-      "title": "Jumaa Time",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/6ef55c47-c762-4ca7-afc8-2a3ccb85dca1/message/1f12adb2-7ef5-6b26-b126-0e970c56ec55.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-08-15 14:27",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 322262,
       "uuid": "6ef55c47-c762-4ca7-afc8-2a3ccb85dca1",
       "title": "aldar school",
@@ -192,20 +176,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:30",
-  "jumua2": "14:15",
+  "jumua": "12:30",
+  "jumua2": "13:15",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:16",
-    "11:52",
-    "14:22",
-    "16:52",
-    "18:26"
+    "05:27",
+    "11:51",
+    "14:12",
+    "16:38",
+    "18:14"
   ],
-  "shuruq": "06:51",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

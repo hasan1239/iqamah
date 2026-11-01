@@ -163,22 +163,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 226956,
-      "uuid": "b2cec319-fe5c-4d65-a321-777088ff28e5",
-      "title": "SHOES",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b2cec319-fe5c-4d65-a321-777088ff28e5/message/1f093020-5e29-6c62-a68b-0a8b93797803.jpeg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-01-29 17:13",
-      "duration": 10,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 246397,
       "uuid": "b2cec319-fe5c-4d65-a321-777088ff28e5",
       "title": "Jamia",
@@ -263,13 +247,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "04:54",
-    "11:52",
-    "14:58",
-    "16:51",
-    "18:46"
+    "05:07",
+    "11:51",
+    "14:45",
+    "16:37",
+    "18:34"
   ],
-  "shuruq": "06:50",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

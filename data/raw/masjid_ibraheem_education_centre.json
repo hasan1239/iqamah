@@ -229,7 +229,7 @@
   ],
   "events": [],
   "flash": {
-    "content": "1st Jummah Salah time - 1:30pm (Khutbah 1:15pm), 2nd Jummah Salah time - 4:30pm (Khutbah 4:15pm)",
+    "content": "Jummah Salah time - 1:15pm (Khutbah 1:00pm)",
     "uuid": "d30c0ea4-2950-4428-b75b-340deaba2412",
     "expire": null,
     "startDate": null,
@@ -247,13 +247,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:16",
+    "05:28",
     "11:51",
-    "14:55",
-    "16:56",
-    "17:56"
+    "14:42",
+    "16:41",
+    "17:41"
   ],
-  "shuruq": "06:54",
+  "shuruq": "07:07",
   "calendar": [
     {
       "1": [
@@ -2691,7 +2691,7 @@
         "17:49"
       ],
       "29": [
-        "06:23",
+        "05:23",
         "07:02",
         "11:51",
         "14:48",
@@ -5315,11 +5315,11 @@
         "19:40"
       ],
       "25": [
-        "06:00",
-        "12:30",
+        "06:30",
+        "13:00",
         "15:30",
         "16:56",
-        "18:40"
+        "19:40"
       ],
       "26": [
         "06:30",

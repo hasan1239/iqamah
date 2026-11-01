@@ -112,20 +112,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:15",
+  "jumua": "12:15",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:17",
+    "05:27",
     "12:30",
-    "14:30",
-    "17:03",
-    "18:23"
+    "14:19",
+    "16:50",
+    "18:20"
   ],
-  "shuruq": "06:52",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

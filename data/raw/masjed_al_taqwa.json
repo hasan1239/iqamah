@@ -71,14 +71,14 @@
   "latitude": 51.5749096,
   "longitude": -2.9884931,
   "womenSpace": true,
-  "janazaPrayer": false,
+  "janazaPrayer": true,
   "aidPrayer": true,
   "childrenCourses": true,
   "adultCourses": true,
   "ramadanMeal": false,
   "handicapAccessibility": false,
   "ablutions": true,
-  "parking": false,
+  "parking": true,
   "otherInfo": null,
   "closed": null,
   "announcements": [],
@@ -86,20 +86,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:20",
+  "jumua": "12:20",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:22",
+    "05:34",
     "12:30",
-    "14:33",
-    "16:59",
-    "18:29"
+    "14:30",
+    "16:46",
+    "18:16"
   ],
-  "shuruq": "06:52",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [
@@ -2540,7 +2540,7 @@
         "05:29",
         "06:59",
         "12:30",
-        "14:29",
+        "14:30",
         "16:51",
         "18:21"
       ],
@@ -2548,7 +2548,7 @@
         "05:30",
         "07:00",
         "12:30",
-        "14:28",
+        "14:30",
         "16:49",
         "18:19"
       ],
@@ -2556,7 +2556,7 @@
         "05:32",
         "07:02",
         "12:30",
-        "14:27",
+        "14:30",
         "16:48",
         "18:18"
       ]

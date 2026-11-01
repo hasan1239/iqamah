@@ -81,25 +81,58 @@
   "parking": true,
   "otherInfo": "Open for all prayers. Also open 4pm - 8pm. Open in between prayers too. \r\n\r\nClosed after isha till fajr.",
   "closed": null,
-  "announcements": [],
+  "announcements": [
+    {
+      "id": 336654,
+      "uuid": "7406f786-4a78-4adb-9670-b55dfa2e3097",
+      "title": "Best Madrasah Service UK Finalists 2026",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/7406f786-4a78-4adb-9670-b55dfa2e3097/message/1f1d07d0-4a5f-64ca-9922-0affc4a76493.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-28 08:29",
+      "duration": 30,
+      "isMobile": false,
+      "isDesktop": true,
+      "isAnnouncementScreen": true,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 336657,
+      "uuid": "7406f786-4a78-4adb-9670-b55dfa2e3097",
+      "title": "VOTE NOW: Best Madrasah Service UK",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/7406f786-4a78-4adb-9670-b55dfa2e3097/message/1f1d07ee-d02f-6b5e-a95e-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-25 14:18",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": false,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    }
+  ],
   "events": [],
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "14:00",
+  "jumua": "13:00",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:07",
+    "05:19",
     "11:56",
-    "15:02",
-    "16:56",
-    "18:49"
+    "14:49",
+    "16:42",
+    "18:36"
   ],
-  "shuruq": "06:56",
+  "shuruq": "07:09",
   "calendar": [
     {
       "1": [

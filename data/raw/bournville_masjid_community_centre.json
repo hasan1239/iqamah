@@ -119,16 +119,16 @@
       "uuid": "e52002f6-0f22-4f9a-bfcf-ccba03526da8",
       "title": "Brothers' Weekly Tafsir & Fiqh Circle",
       "content": "Every Wednesday \nQuran Halaqa in the mosque with Sheikh Ayman Abed\nStart: 8 PM\nEnd: Before Magrib",
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/e52002f6-0f22-4f9a-bfcf-ccba03526da8/message/1f1b2844-7644-6ed6-b5fb-0a72268d02cf.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/e52002f6-0f22-4f9a-bfcf-ccba03526da8/message/1f1d3170-2204-6560-a59b-0a58a9feac02.jpg",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-01 20:27",
+      "updated": "2026-10-28 22:11",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
       "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
+      "tvOrientation": "PORTRAIT"
     },
     {
       "id": 232508,
@@ -215,20 +215,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:15",
-  "jumua2": "14:00",
+  "jumua": "12:15",
+  "jumua2": "13:00",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:19",
+    "05:30",
     "11:52",
-    "14:20",
-    "16:51",
-    "18:11"
+    "14:09",
+    "16:38",
+    "17:58"
   ],
-  "shuruq": "06:51",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

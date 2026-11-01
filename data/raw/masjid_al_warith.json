@@ -227,54 +227,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 238524,
-      "uuid": "42a93b0e-4a00-467c-9e98-953d98e156ce",
-      "title": "Donation List 1",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/42a93b0e-4a00-467c-9e98-953d98e156ce/message/1f0c0e7c-78a3-6510-ade8-0addc66f59a1.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2025-11-28 09:09",
-      "duration": 35,
-      "isMobile": false,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 238525,
-      "uuid": "42a93b0e-4a00-467c-9e98-953d98e156ce",
-      "title": "Donation List 2",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/42a93b0e-4a00-467c-9e98-953d98e156ce/message/1f0c0e7d-292c-65d0-aa53-0657323c28f1.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2025-11-28 09:09",
-      "duration": 35,
-      "isMobile": false,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 238526,
-      "uuid": "42a93b0e-4a00-467c-9e98-953d98e156ce",
-      "title": "Donation List 3",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/42a93b0e-4a00-467c-9e98-953d98e156ce/message/1f0c0e7d-c9d2-6ebc-b19a-0addc66f59a1.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2025-11-28 09:09",
-      "duration": 35,
-      "isMobile": false,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 264188,
       "uuid": "42a93b0e-4a00-467c-9e98-953d98e156ce",
       "title": "Monthly Ramadan Competition",
@@ -318,13 +270,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:18",
+    "05:30",
     "11:52",
-    "14:21",
-    "16:52",
-    "18:12"
+    "14:10",
+    "16:38",
+    "17:58"
   ],
-  "shuruq": "06:51",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

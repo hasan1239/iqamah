@@ -117,31 +117,31 @@
   ],
   "events": [],
   "flash": {
-    "content": "Summer time ends Sunday 25th ان شاء اللّٰه. All jama'at times change except Isha.",
+    "content": "Fajr jama'at time changes to 7:00am from tomorrow ان شاء اللّٰه.",
     "uuid": "53227010-c064-4608-99f1-ba75efe53d2a",
-    "expire": 1792886400,
-    "startDate": "2026-10-23",
-    "endDate": "2026-10-25",
+    "expire": 1793750400,
+    "startDate": "2026-11-03",
+    "endDate": "2026-11-04",
     "color": "#FFBC00",
     "orientation": "ltr"
   },
   "aidPrayerTime": "07:00",
   "aidPrayerTime2": "09:30",
   "aidPrayerTime3": null,
-  "jumua": "14:00",
-  "jumua2": "15:15",
+  "jumua": "13:00",
+  "jumua2": "12:30",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:08",
+    "05:21",
     "12:07",
-    "14:59",
-    "17:00",
-    "18:58"
+    "14:45",
+    "16:44",
+    "18:44"
   ],
-  "shuruq": "07:04",
+  "shuruq": "07:18",
   "calendar": [
     {
       "1": [

@@ -131,22 +131,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 327561,
-      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
-      "title": "10 Weeks Parenting Course",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1b03eb-a06b-64f8-b67b-067155a3d621.png",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-09-14 13:18",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 329053,
       "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
       "title": "Umrah with Tawfiq Masjid",
@@ -177,6 +161,38 @@
       "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 337625,
+      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
+      "title": "Night of Knowledge",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1d3d52-3711-6f50-ba30-0afff3d7064b.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-29 20:13",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 337697,
+      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
+      "title": "Rise up!",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1d40ad-68dc-6dba-ab43-06fffcb44a79.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-30 02:37",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
@@ -192,20 +208,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "13:00",
+  "jumua": "12:30",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:19",
+    "05:30",
     "11:54",
-    "14:26",
-    "16:57",
-    "18:29"
+    "14:17",
+    "16:43",
+    "18:18"
   ],
-  "shuruq": "06:52",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [
@@ -5318,14 +5334,14 @@
     },
     {
       "1": [
-        "06:00",
+        "05:45",
         "12:30",
         "15:15",
         "16:43",
         "19:00"
       ],
       "2": [
-        "06:00",
+        "05:45",
         "12:30",
         "15:15",
         "16:41",

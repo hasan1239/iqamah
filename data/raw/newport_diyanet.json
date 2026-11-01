@@ -81,25 +81,42 @@
   "parking": true,
   "otherInfo": null,
   "closed": null,
-  "announcements": [],
+  "announcements": [
+    {
+      "id": 337188,
+      "uuid": "f3094657-582a-481a-baf4-7bc480614fc8",
+      "title": "Jummah Prayer Time",
+      "content": "Jummah Prayer Time will be at 12:30",
+      "image": null,
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-10-28 10:52",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
+    }
+  ],
   "events": [],
   "aidPrayerTime": "08:30",
   "aidPrayerTime2": "09:30",
   "aidPrayerTime3": null,
-  "jumua": "13:20",
+  "jumua": "12:30",
   "jumua2": null,
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:01",
+    "05:12",
     "12:01",
-    "14:32",
-    "17:06",
-    "18:38"
+    "14:22",
+    "16:53",
+    "18:26"
   ],
-  "shuruq": "06:46",
+  "shuruq": "06:59",
   "calendar": [
     {
       "1": [

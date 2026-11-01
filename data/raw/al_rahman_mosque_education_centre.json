@@ -115,15 +115,15 @@
       "tvOrientation": "PORTRAIT"
     },
     {
-      "id": 315107,
+      "id": 337615,
       "uuid": "c9830e0e-94a5-40c3-b745-c865f93dab25",
-      "title": "Jummah",
+      "title": "Jummah Times",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/c9830e0e-94a5-40c3-b745-c865f93dab25/message/1f181ccc-d55a-69f6-8f36-0613ce160881.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c9830e0e-94a5-40c3-b745-c865f93dab25/message/1f1d3d09-0718-66e4-ab47-0afff3d7064b.png",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-07-17 10:46",
+      "updated": "2026-10-29 19:40",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -144,20 +144,20 @@
   "aidPrayerTime": "07:30",
   "aidPrayerTime2": "08:30",
   "aidPrayerTime3": null,
-  "jumua": "13:20",
-  "jumua2": "14:00",
-  "jumua3": "14:30",
+  "jumua": "12:20",
+  "jumua2": "13:00",
+  "jumua3": "13:30",
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:04",
-    "11:50",
-    "14:17",
-    "16:50",
-    "18:17"
+    "05:15",
+    "11:49",
+    "14:06",
+    "16:36",
+    "18:04"
   ],
-  "shuruq": "06:39",
+  "shuruq": "06:52",
   "calendar": [
     {
       "1": [
