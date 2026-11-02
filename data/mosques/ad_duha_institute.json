@@ -29,7 +29,8 @@
     "checked_at": "2026-11-01",
     "row_count": 365,
     "warnings": [
-      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier."
+      "My-Masjid has no Suhoor field — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end a few minutes earlier.",
+      "Sunrise/Maghrib UNSAFE: typically -78 min from the sun on 1 upcoming days (2026-12-31 to 2026-12-31)."
     ],
     "issues": [
       {
@@ -37,6 +38,22 @@
         "severity": "medium",
         "action_taken": "sehri_ends = fajr_start",
         "fix": "Set the masjid's actual Suhoor cutoff manually if needed"
+      },
+      {
+        "type": "sun_times_unsafe",
+        "severity": "medium",
+        "count": 1,
+        "first_date": "2026-12-31",
+        "last_date": "2026-12-31",
+        "typical_offset_min": -78,
+        "affected_dates": [
+          "2026-12-31"
+        ],
+        "affected_offsets": [
+          -78
+        ],
+        "action_taken": "none (per-day notice on the masjid page)",
+        "fix": "Sunrise/Maghrib are typically -78 min from the sun at this location, in a direction that could make users pray at the wrong time. Likely a clock-change or location error in the source. Check the masjid's source page, or acknowledge if our config's location is wrong."
       }
     ]
   },
