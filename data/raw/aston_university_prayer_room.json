@@ -10,72 +10,78 @@
     "azan": 150
   },
   "athany": {
-    "closed": false,
-    "highlight": "athan",
-    "qrcode": "https://cdn.mbxsrc.com/core/WVS3I0M7/m3UaEMJtS.svg",
-    "showIqamah": true,
     "slug": "aston-university-prayer-room",
-    "theme": "#00dddd"
+    "theme": "#00dddd",
+    "closed": false,
+    "qrcode": "https://cdn.mbxsrc.com/core/WVS3I0M7/m3UaEMJtS.svg",
+    "highlight": "athan",
+    "showIqamah": true
   },
   "timetable": [
     {
-      "date": "2026-11-04T00:00:00Z",
-      "fajr": "2026-11-04T05:31:00Z",
-      "sunrise": "2026-11-04T07:10:00Z",
-      "dhuhr": "2026-11-04T11:56:00Z",
-      "asr": "2026-11-04T14:06:00Z",
-      "maghrib": "2026-11-04T16:33:00Z",
-      "isha": "2026-11-04T18:03:00Z",
+      "date": "2026-11-06T00:00:00Z",
+      "fajr": "2026-11-06T05:35:00Z",
+      "sunrise": "2026-11-06T07:13:00Z",
+      "dhuhr": "2026-11-06T11:56:00Z",
+      "asr": "2026-11-06T14:03:00Z",
+      "maghrib": "2026-11-06T16:29:00Z",
+      "isha": "2026-11-06T18:00:00Z",
+      "jumuah": [
+        "2026-11-06T11:56:00Z"
+      ],
       "hijri": {
-        "gregorian": "2026-11-04",
-        "day": "الأربعاء",
-        "dayOfMonth": 25,
-        "formatted": "الأربعاء 25 جمادى الأولى 1448",
+        "gregorian": "2026-11-06",
+        "day": "الجمعة",
+        "dayOfMonth": 27,
+        "formatted": "الجمعة 27 جمادى الأولى 1448",
         "month": "جمادى الأولى",
         "monthISO": "Jumada al-Ula",
         "monthOfYear": 5,
         "year": 1448
       },
       "iqamah": {
-        "fajr": "2026-11-04T06:00:00Z",
-        "dhuhr": "2026-11-04T12:45:00Z",
-        "asr": "2026-11-04T14:30:00Z",
-        "maghrib": "2026-11-04T16:33:00Z",
-        "isha": "2026-11-04T19:30:00Z"
+        "fajr": "2026-11-06T06:00:00Z",
+        "dhuhr": "2026-11-06T12:50:00Z",
+        "asr": "2026-11-06T14:30:00Z",
+        "maghrib": "2026-11-06T16:29:00Z",
+        "isha": "2026-11-06T19:30:00Z",
+        "jumuah": [
+          "2026-11-06T13:30:00Z"
+        ]
       },
       "special": {
-        "imsak": "2026-11-04T05:16:00Z",
-        "iftar": "2026-11-04T16:33:00Z"
+        "imsak": "2026-11-06T05:20:00Z",
+        "iftar": "2026-11-06T16:29:00Z"
       }
     },
     {
-      "date": "2026-11-05T00:00:00Z",
-      "fajr": "2026-11-05T05:33:00Z",
-      "sunrise": "2026-11-05T07:12:00Z",
-      "dhuhr": "2026-11-05T11:56:00Z",
-      "asr": "2026-11-05T14:05:00Z",
-      "maghrib": "2026-11-05T16:31:00Z",
-      "isha": "2026-11-05T18:02:00Z",
+      "date": "2026-11-07T00:00:00Z",
+      "fajr": "2026-11-07T05:36:00Z",
+      "sunrise": "2026-11-07T07:15:00Z",
+      "dhuhr": "2026-11-07T11:56:00Z",
+      "asr": "2026-11-07T14:02:00Z",
+      "maghrib": "2026-11-07T16:28:00Z",
+      "isha": "2026-11-07T17:58:00Z",
       "hijri": {
-        "gregorian": "2026-11-05",
-        "day": "الخميس",
-        "dayOfMonth": 26,
-        "formatted": "الخميس 26 جمادى الأولى 1448",
+        "gregorian": "2026-11-07",
+        "day": "السبت",
+        "dayOfMonth": 28,
+        "formatted": "السبت 28 جمادى الأولى 1448",
         "month": "جمادى الأولى",
         "monthISO": "Jumada al-Ula",
         "monthOfYear": 5,
         "year": 1448
       },
       "iqamah": {
-        "fajr": "2026-11-05T06:00:00Z",
-        "dhuhr": "2026-11-05T12:45:00Z",
-        "asr": "2026-11-05T14:30:00Z",
-        "maghrib": "2026-11-05T16:31:00Z",
-        "isha": "2026-11-05T19:30:00Z"
+        "fajr": "2026-11-07T06:00:00Z",
+        "dhuhr": "2026-11-07T12:45:00Z",
+        "asr": "2026-11-07T14:30:00Z",
+        "maghrib": "2026-11-07T16:28:00Z",
+        "isha": "2026-11-07T19:30:00Z"
       },
       "special": {
-        "imsak": "2026-11-05T05:18:00Z",
-        "iftar": "2026-11-05T16:31:00Z"
+        "imsak": "2026-11-07T05:21:00Z",
+        "iftar": "2026-11-07T16:28:00Z"
       }
     }
   ],
