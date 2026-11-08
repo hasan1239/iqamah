@@ -83,15 +83,15 @@
   "closed": null,
   "announcements": [
     {
-      "id": 337188,
+      "id": 339789,
       "uuid": "f3094657-582a-481a-baf4-7bc480614fc8",
-      "title": "Jummah Prayer Time",
-      "content": "Jummah Prayer Time will be at 12:30",
+      "title": "Tomorrow- 𝐌𝐞𝐧’𝐬 𝐇𝐞𝐚𝐥𝐭𝐡",
+      "content": "𝐌𝐃𝐂 𝐌𝐨𝐯𝐞𝐦𝐛𝐞𝐫 𝐌𝐞𝐧’𝐬 𝐇𝐞𝐚𝐥𝐭𝐡 \n\nIn collaboration with Diyanet Mosque\n\nTopics\n🔵 Prostate Cancer\n🔵 Testicular Cancer\n🔵 Men’s Mental Health\n\n🙋🏻‍♂️Ask questions to an expert panel 🙋🏽‍♂️\n\n📍Newport Diyanet Mosque 📍\n🗓️Sunday 8th November 🗓️\n⏰ After Isha ⏰",
       "image": null,
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-28 10:52",
+      "updated": "2026-11-07 22:05",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -110,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:12",
+    "05:23",
     "12:01",
-    "14:22",
-    "16:53",
-    "18:26"
+    "14:12",
+    "16:41",
+    "18:16"
   ],
-  "shuruq": "06:59",
+  "shuruq": "07:11",
   "calendar": [
     {
       "1": [

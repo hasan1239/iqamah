@@ -45,14 +45,14 @@
   "displayQrCodeAndLogoOnAndroidTV": false,
   "adhanDuration": 200,
   "backgroundType": "motif",
-  "backgroundMotif": "17",
+  "backgroundMotif": "16",
   "timeDisplayFormat": "12",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
   "customAthan": null,
   "customAthanDuration": null,
-  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/17.jpg",
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/16.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Faizan-e-Madinah Huddersfield",
@@ -105,9 +105,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-10-22 20:16",
+      "startDate": "2026-11-05 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-10-20 16:30",
+      "updated": "2026-11-05 11:38",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -161,6 +161,22 @@
       "isDesktop": false,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 339033,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Weekly Sunnah Inspired Ijtima",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1d90d9-3283-66a2-a4e0-06fffcb44a79.jpg",
+      "video": null,
+      "startDate": "2026-11-05 11:39",
+      "endDate": "2026-11-05 20:15",
+      "updated": "2026-11-05 11:39",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
     }
   ],
   "events": [
@@ -171,9 +187,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-10-22 20:16",
+      "startDate": "2026-11-05 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-10-20 16:30",
+      "updated": "2026-11-05 11:38",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -193,6 +209,22 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": false,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 339033,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Weekly Sunnah Inspired Ijtima",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1d90d9-3283-66a2-a4e0-06fffcb44a79.jpg",
+      "video": null,
+      "startDate": "2026-11-05 11:39",
+      "endDate": "2026-11-05 20:15",
+      "updated": "2026-11-05 11:39",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
@@ -216,13 +248,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:09",
-    "11:51",
-    "14:46",
-    "16:39",
-    "18:34"
+    "05:20",
+    "11:50",
+    "14:34",
+    "16:24",
+    "18:23"
   ],
-  "shuruq": "07:04",
+  "shuruq": "07:17",
   "calendar": [
     {
       "1": [
@@ -3183,22 +3215,22 @@
         "07:00",
         "13:30",
         "14:45",
-        "16:01",
+        "16:00",
         "19:45"
       ],
       "2": [
         "07:00",
         "13:30",
         "14:45",
-        "16:02",
-        "19:45"
+        "16:01",
+        "18:30"
       ],
       "3": [
         "07:00",
         "13:30",
         "14:45",
         "16:03",
-        "19:45"
+        "18:30"
       ],
       "4": [
         "07:00",
@@ -3238,16 +3270,16 @@
       "9": [
         "07:00",
         "13:30",
-        "14:45",
+        "15:00",
         "16:11",
-        "19:45"
+        "18:45"
       ],
       "10": [
         "07:00",
         "13:30",
         "15:00",
         "16:13",
-        "19:45"
+        "18:45"
       ],
       "11": [
         "07:00",
@@ -3287,16 +3319,16 @@
       "16": [
         "07:00",
         "13:30",
-        "15:00",
+        "15:15",
         "16:22",
-        "19:45"
+        "19:00"
       ],
       "17": [
         "07:00",
         "13:30",
         "15:15",
         "16:24",
-        "19:45"
+        "19:00"
       ],
       "18": [
         "07:00",
@@ -3338,47 +3370,47 @@
         "13:30",
         "15:15",
         "16:35",
-        "19:45"
+        "19:15"
       ],
       "24": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:37",
-        "19:45"
+        "19:15"
       ],
       "25": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:38",
         "19:45"
       ],
       "26": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:40",
         "19:45"
       ],
       "27": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:42",
         "19:45"
       ],
       "28": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:44",
         "19:45"
       ],
       "29": [
         "07:00",
         "13:30",
-        "15:30",
+        "15:15",
         "16:46",
         "19:45"
       ],

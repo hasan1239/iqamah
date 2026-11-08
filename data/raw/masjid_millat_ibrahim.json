@@ -116,6 +116,15 @@
     }
   ],
   "events": [],
+  "flash": {
+    "content": "أللَّهُمَّ صَلِّ عَلَى مُحَمَّد وَعَلَی آلِ مُحَمَّدٍ‌‎.",
+    "uuid": "311dcd8c-a00b-4965-9abc-1fe061b4dc97",
+    "expire": null,
+    "startDate": null,
+    "endDate": null,
+    "color": "#FFFFFF",
+    "orientation": "rtl"
+  },
   "aidPrayerTime": "08:00",
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
@@ -126,13 +135,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:17",
+    "05:29",
     "11:49",
-    "14:07",
-    "16:36",
-    "18:13"
+    "13:57",
+    "16:24",
+    "18:03"
   ],
-  "shuruq": "07:00",
+  "shuruq": "07:13",
   "calendar": [
     {
       "1": [

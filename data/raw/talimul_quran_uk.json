@@ -10,7 +10,7 @@
     "9",
     "8",
     "8",
-    "9"
+    "10"
   ],
   "hijriDateEnabled": true,
   "hijriDateForceTo30": false,
@@ -34,8 +34,8 @@
   "randomHadithIntervalDisabling": "",
   "temperatureEnabled": false,
   "temperatureUnit": "C",
-  "backgroundColor": "#3e475a",
-  "theme": "spring",
+  "backgroundColor": "#103c32",
+  "theme": "winter",
   "hadithLang": "ar",
   "wakeForFajrTime": null,
   "iqamaEnabled": true,
@@ -83,7 +83,7 @@
   "announcements": [],
   "events": [],
   "flash": {
-    "content": "Seerah Programme - Every Saturday after Maghrib salah | Tafseerul Quran - Every Sunday after Maghrib salah",
+    "content": "Visit our website: www.talimulquranuk.co.uk",
     "uuid": "750596a5-90f9-4291-8741-6cd6bcbb5ac6",
     "expire": null,
     "startDate": null,
@@ -94,20 +94,20 @@
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
   "aidPrayerTime3": null,
-  "jumua": "12:45",
+  "jumua": "12:40",
   "jumua2": "13:20",
   "jumua3": null,
   "jumuaAsDuhr": false,
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:14",
+    "05:24",
     "11:49",
-    "14:45",
-    "16:37",
-    "18:05"
+    "14:34",
+    "16:25",
+    "17:56"
   ],
-  "shuruq": "06:51",
+  "shuruq": "07:03",
   "calendar": [
     {
       "1": [

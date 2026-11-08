@@ -87,11 +87,11 @@
       "uuid": "2dd6dbea-0049-4bad-90a9-cbc558799d65",
       "title": "Raised funds",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/2dd6dbea-0049-4bad-90a9-cbc558799d65/message/1f1cb261-7804-6d40-acda-06ffe6b9feb3.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/2dd6dbea-0049-4bad-90a9-cbc558799d65/message/1f1d9f36-bd55-6328-8d2f-0a58a9feac02.png",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-21 15:56",
+      "updated": "2026-11-06 15:04",
       "duration": 30,
       "isMobile": false,
       "isDesktop": true,
@@ -110,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:14",
+    "05:24",
     "11:49",
-    "14:45",
-    "16:37",
-    "18:05"
+    "14:34",
+    "16:25",
+    "17:56"
   ],
-  "shuruq": "06:52",
+  "shuruq": "07:04",
   "calendar": [
     {
       "1": [

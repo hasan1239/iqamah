@@ -14,8 +14,8 @@
   ],
   "hijriDateEnabled": true,
   "hijriDateForceTo30": false,
-  "duaAfterAzanEnabled": true,
-  "duaAfterPrayerEnabled": true,
+  "duaAfterAzanEnabled": false,
+  "duaAfterPrayerEnabled": false,
   "adhanVoice": null,
   "adhanEnabledByPrayer": [
     "1",
@@ -30,7 +30,7 @@
   "blackScreenWhenPraying": true,
   "alwaysDisplayHhMmFormat": false,
   "iqamaDisplayTime": 5,
-  "randomHadithEnabled": true,
+  "randomHadithEnabled": false,
   "randomHadithIntervalDisabling": "",
   "temperatureEnabled": true,
   "temperatureUnit": "C",
@@ -45,14 +45,14 @@
   "displayQrCodeAndLogoOnAndroidTV": false,
   "adhanDuration": 150,
   "backgroundType": "motif",
-  "backgroundMotif": "24",
+  "backgroundMotif": "16",
   "timeDisplayFormat": "24",
   "displayingSabahImsak": false,
   "sabahImsakStartDate": null,
   "sabahImsakEndDate": null,
   "customAthan": null,
   "customAthanDuration": null,
-  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/24.jpg",
+  "backgroundUrl": "https://cdn.mawaqit.net/images/backend/background/16.jpg",
   "type": "MOSQUE",
   "partner": true,
   "name": "Muslim Youth Foundation",
@@ -81,7 +81,24 @@
   "parking": false,
   "otherInfo": null,
   "closed": null,
-  "announcements": [],
+  "announcements": [
+    {
+      "id": 338643,
+      "uuid": "b8bab985-4134-4cc2-954c-b2c8f56e3dab",
+      "title": "MYF Weekly Tafsir Clas",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b8bab985-4134-4cc2-954c-b2c8f56e3dab/message/1f1d6f09-363f-62e2-b640-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-11-02 19:06",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    }
+  ],
   "events": [],
   "aidPrayerTime": null,
   "aidPrayerTime2": null,
@@ -93,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:38",
+    "05:51",
     "11:58",
-    "14:08",
-    "16:39",
-    "18:03"
+    "13:58",
+    "16:26",
+    "17:52"
   ],
-  "shuruq": "07:08",
+  "shuruq": "07:21",
   "calendar": [
     {
       "1": [

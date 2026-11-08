@@ -148,13 +148,13 @@
     {
       "id": 336447,
       "uuid": "c2f433e9-720b-47da-a3c8-7573dec66b82",
-      "title": "Dhuhr Salah Timing Update",
-      "content": "From tomorrow, Sunday 26th October, Dhuhr Salah will be at 1:00 pm instead of 1:30 pm.\nDuring term time, Dhuhr Salah will be held at the Old Boys College.\nAt weekends and during school holidays, Dhuhr Salah will be held at the Masjid.\nSpace is available for sisters for all Salah's.\nThis arrangement will remain in place until further notice.",
+      "title": "Dhuhr Salah Timing",
+      "content": "Dhuhr Salah arrangements from 2nd November;\nDuring school term: At the Old Boys College.\nWeekends and school holidays: At the Masjid.\nTime: 1:00 pm\nSisters are welcome to attend all congregational prayers.\nPlease share.",
       "image": null,
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-10-24 17:49",
+      "updated": "2026-11-01 21:14",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -196,7 +196,7 @@
   ],
   "events": [],
   "flash": {
-    "content": "Winter Jummah Times – From Today 1st Jummah Reminder: 12:00 pm Khutbah/Jamaat: 12:35 pm 2nd Jummah Reminder: 1:05 pm Khutbah/Jamaat: 1:35 pm",
+    "content": "Dhuhr Salah arrangements from tomorrow. During school term: At the Old Boys College. Weekends and school holidays: At the Masjid. Time: 1:00 pm Sisters are welcome to attend all congregational prayers",
     "uuid": "c2f433e9-720b-47da-a3c8-7573dec66b82",
     "expire": null,
     "startDate": null,
@@ -214,13 +214,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:26",
+    "05:38",
     "11:56",
-    "14:47",
-    "16:37",
-    "18:08"
+    "14:36",
+    "16:25",
+    "17:58"
   ],
-  "shuruq": "07:03",
+  "shuruq": "07:16",
   "calendar": [
     {
       "1": [
@@ -5376,7 +5376,7 @@
       ],
       "7": [
         "06:00",
-        "12:00",
+        "13:00",
         "15:00",
         "16:30",
         "19:30"
@@ -5425,7 +5425,7 @@
       ],
       "14": [
         "06:15",
-        "12:00",
+        "13:00",
         "14:45",
         "16:19",
         "19:30"

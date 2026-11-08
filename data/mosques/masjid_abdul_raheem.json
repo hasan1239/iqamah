@@ -25,11 +25,11 @@
   },
   "quality": {
     "status": "needs_review",
-    "checked_at": "2026-11-01",
+    "checked_at": "2026-11-08",
     "row_count": 365,
     "warnings": [
       "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-      "Fajr jamaat is at or after sunrise on 216 days (2026-03-12 to 2026-10-13). Indicates a data error — Fajr jamaat must always be before sunrise."
+      "Fajr jamaat is at or after sunrise on 232 days (2026-03-05 to 2026-10-22). Indicates a data error — Fajr jamaat must always be before sunrise."
     ],
     "issues": [
       {
@@ -41,10 +41,17 @@
       {
         "type": "fajr_after_sunrise",
         "severity": "high",
-        "count": 216,
-        "first_date": "2026-03-12",
-        "last_date": "2026-10-13",
+        "count": 232,
+        "first_date": "2026-03-05",
+        "last_date": "2026-10-22",
         "affected_dates": [
+          "2026-03-05",
+          "2026-03-06",
+          "2026-03-07",
+          "2026-03-08",
+          "2026-03-09",
+          "2026-03-10",
+          "2026-03-11",
           "2026-03-12",
           "2026-03-13",
           "2026-03-14",
@@ -260,7 +267,16 @@
           "2026-10-10",
           "2026-10-11",
           "2026-10-12",
-          "2026-10-13"
+          "2026-10-13",
+          "2026-10-14",
+          "2026-10-15",
+          "2026-10-16",
+          "2026-10-17",
+          "2026-10-18",
+          "2026-10-19",
+          "2026-10-20",
+          "2026-10-21",
+          "2026-10-22"
         ],
         "action_taken": "none",
         "fix": "Investigate — likely a Mawaqit data bug for this masjid"
