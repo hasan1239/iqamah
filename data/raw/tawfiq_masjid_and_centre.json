@@ -163,22 +163,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 337625,
-      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
-      "title": "Night of Knowledge",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1d3d52-3711-6f50-ba30-0afff3d7064b.png",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-10-29 20:13",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 337697,
       "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
       "title": "Rise up!",
@@ -188,6 +172,22 @@
       "startDate": null,
       "endDate": null,
       "updated": "2026-10-30 02:37",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 340266,
+      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
+      "title": "Community outreach",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1dd9ad-dc01-6f7c-9403-06ffd827f7a1.jpg",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-11-11 06:41",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -215,13 +215,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:41",
-    "11:54",
-    "14:07",
-    "16:31",
-    "18:07"
+    "05:51",
+    "11:55",
+    "13:59",
+    "16:21",
+    "17:59"
   ],
-  "shuruq": "07:16",
+  "shuruq": "07:28",
   "calendar": [
     {
       "1": [

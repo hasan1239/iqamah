@@ -28,7 +28,7 @@
   "iqamaBip": false,
   "iqamaFullScreenCountdown": true,
   "blackScreenWhenPraying": true,
-  "alwaysDisplayHhMmFormat": false,
+  "alwaysDisplayHhMmFormat": true,
   "iqamaDisplayTime": 30,
   "randomHadithEnabled": false,
   "randomHadithIntervalDisabling": "0-1",
@@ -105,9 +105,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-11-05 20:16",
+      "startDate": "2026-11-12 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-11-05 11:38",
+      "updated": "2026-11-10 16:15",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -147,22 +147,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 336212,
-      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Special Ijtima",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1cf291-a878-69f2-8c00-06ffdb89bc85.jpg",
-      "video": null,
-      "startDate": "2026-10-23 22:31",
-      "endDate": "2026-10-24 20:00",
-      "updated": "2026-10-23 21:31",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": false,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "PORTRAIT"
-    },
-    {
       "id": 339033,
       "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
       "title": "Weekly Sunnah Inspired Ijtima",
@@ -175,6 +159,38 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 339939,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Qafilah -  Hudds to Sheffield",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dbb2a-c932-6c44-b801-06ffd827f7a1.jpg",
+      "video": null,
+      "startDate": "2026-11-08 20:25",
+      "endDate": "2026-11-29 15:30",
+      "updated": "2026-11-08 20:27",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 340187,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Week Sunnah Inspired Ijtima",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dd21f-95e8-609e-9350-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-10 16:15",
+      "endDate": "2026-11-12 20:15",
+      "updated": "2026-11-10 19:06",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": false,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
@@ -187,30 +203,14 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-11-05 20:16",
+      "startDate": "2026-11-12 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-11-05 11:38",
+      "updated": "2026-11-10 16:15",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
-    },
-    {
-      "id": 336212,
-      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Special Ijtima",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1cf291-a878-69f2-8c00-06ffdb89bc85.jpg",
-      "video": null,
-      "startDate": "2026-10-23 22:31",
-      "endDate": "2026-10-24 20:00",
-      "updated": "2026-10-23 21:31",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": false,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "PORTRAIT"
     },
     {
       "id": 339033,
@@ -225,6 +225,38 @@
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 339939,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Qafilah -  Hudds to Sheffield",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dbb2a-c932-6c44-b801-06ffd827f7a1.jpg",
+      "video": null,
+      "startDate": "2026-11-08 20:25",
+      "endDate": "2026-11-29 15:30",
+      "updated": "2026-11-08 20:27",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 340187,
+      "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
+      "title": "Week Sunnah Inspired Ijtima",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dd21f-95e8-609e-9350-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-10 16:15",
+      "endDate": "2026-11-12 20:15",
+      "updated": "2026-11-10 19:06",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": false,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
@@ -248,13 +280,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:20",
-    "11:50",
-    "14:34",
-    "16:24",
-    "18:23"
+    "05:33",
+    "11:52",
+    "14:23",
+    "16:12",
+    "18:13"
   ],
-  "shuruq": "07:17",
+  "shuruq": "07:31",
   "calendar": [
     {
       "1": [
@@ -3629,9 +3661,9 @@
       "29": [
         "00:00",
         "00:00",
-        "+15",
-        "+0",
-        "+15"
+        "16:00",
+        "17:45",
+        "19:50"
       ]
     },
     {
@@ -5158,14 +5190,14 @@
         "06:45",
         "13:30",
         "17:45",
-        "+0",
+        "18:44",
         "21:15"
       ],
       "3": [
         "06:45",
         "13:30",
         "17:45",
-        "+0",
+        "18:42",
         "21:15"
       ],
       "4": [
@@ -5556,21 +5588,21 @@
         "19:45"
       ],
       "28": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:57",
         "18:30"
       ],
       "29": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:56",
         "18:30"
       ],
       "30": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:55",
@@ -5579,28 +5611,28 @@
     },
     {
       "1": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:54",
         "19:45"
       ],
       "2": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:53",
         "19:45"
       ],
       "3": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:53",
         "19:45"
       ],
       "4": [
-        "07:15",
+        "07:00",
         "13:30",
         "14:45",
         "15:52",

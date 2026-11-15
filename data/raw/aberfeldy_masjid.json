@@ -100,12 +100,12 @@
   ],
   "events": [],
   "flash": {
-    "content": ":::: Last week, you donated £1,309.86 to the Masjid. If you’re a UK taxpayer, Gift Aid adds 25% at no cost. Press YES on the terminal & register once جزاك اللهُ خيراً",
+    "content": ":::: Last week, you donated £1,491.52 to the Masjid. If you’re a UK taxpayer, Gift Aid adds 25% at no cost. Press YES on the terminal & register once جزاك اللهُ خيراً",
     "uuid": "4a5c4e68-c484-418a-b85f-78205baf30e8",
-    "expire": 1794355200,
-    "startDate": "2026-11-06",
-    "endDate": "2026-11-11",
-    "color": "#21E6FF",
+    "expire": 1794960000,
+    "startDate": "2026-11-13",
+    "endDate": "2026-11-18",
+    "color": "#27FF2E",
     "orientation": "ltr"
   },
   "aidPrayerTime": null,
@@ -118,13 +118,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:24",
-    "11:49",
-    "13:57",
-    "16:25",
-    "17:56"
+    "05:35",
+    "11:50",
+    "13:49",
+    "16:14",
+    "17:47"
   ],
-  "shuruq": "07:03",
+  "shuruq": "07:16",
   "calendar": [
     {
       "1": [

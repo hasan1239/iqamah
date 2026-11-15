@@ -83,15 +83,15 @@
   "closed": null,
   "announcements": [
     {
-      "id": 338790,
+      "id": 341036,
       "uuid": "ad7a3511-531a-4d22-9ed9-4372968852e3",
       "title": "Masjid Relocation Project",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/ad7a3511-531a-4d22-9ed9-4372968852e3/message/1f1d7c83-c955-67fc-b732-06fffcb44a79.png",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/ad7a3511-531a-4d22-9ed9-4372968852e3/message/1f1dfb07-c7f8-6cda-8588-0affdb7d81a7.png",
       "video": null,
       "startDate": null,
       "endDate": null,
-      "updated": "2026-11-03 20:50",
+      "updated": "2026-11-13 22:20",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -110,13 +110,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:34",
-    "11:59",
-    "14:11",
-    "16:40",
-    "18:10"
+    "05:50",
+    "12:00",
+    "13:59",
+    "16:24",
+    "17:56"
   ],
-  "shuruq": "07:11",
+  "shuruq": "07:28",
   "calendar": [
     {
       "1": [

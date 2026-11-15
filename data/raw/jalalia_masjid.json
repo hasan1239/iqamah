@@ -29,7 +29,7 @@
   "iqamaFullScreenCountdown": true,
   "blackScreenWhenPraying": true,
   "alwaysDisplayHhMmFormat": false,
-  "iqamaDisplayTime": 30,
+  "iqamaDisplayTime": 15,
   "randomHadithEnabled": true,
   "randomHadithIntervalDisabling": "",
   "temperatureEnabled": true,
@@ -93,13 +93,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:40",
-    "12:07",
-    "14:45",
-    "16:36",
-    "18:14"
+    "05:53",
+    "12:08",
+    "14:35",
+    "16:26",
+    "18:05"
   ],
-  "shuruq": "07:20",
+  "shuruq": "07:33",
   "calendar": [
     {
       "1": [
