@@ -2269,8 +2269,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 183,
+      "checked_at": "2026-11-21",
+      "row_count": 185,
       "warnings": [],
       "issues": []
     },
@@ -2444,8 +2444,8 @@
     ],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 185,
+      "checked_at": "2026-11-21",
+      "row_count": 187,
       "warnings": [],
       "issues": []
     },
@@ -5034,7 +5034,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +16 min from the sun on 42 upcoming days (2026-11-20 to 2026-12-31)."
+        "Sunrise/Maghrib UNSAFE: typically +16 min from the sun on 41 upcoming days (2026-11-21 to 2026-12-31)."
       ],
       "issues": [
         {
@@ -5046,12 +5046,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 42,
-          "first_date": "2026-11-20",
+          "count": 41,
+          "first_date": "2026-11-21",
           "last_date": "2026-12-31",
           "typical_offset_min": 16,
           "affected_dates": [
-            "2026-11-20",
             "2026-11-21",
             "2026-11-22",
             "2026-11-23",
@@ -5095,7 +5094,6 @@
             "2026-12-31"
           ],
           "affected_offsets": [
-            16,
             16,
             16,
             15,
@@ -6068,8 +6066,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 185,
+      "checked_at": "2026-11-21",
+      "row_count": 187,
       "warnings": [],
       "issues": []
     },
@@ -6138,8 +6136,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 183,
+      "checked_at": "2026-11-21",
+      "row_count": 185,
       "warnings": [],
       "issues": []
     },
@@ -6721,8 +6719,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 183,
+      "checked_at": "2026-11-21",
+      "row_count": 185,
       "warnings": [],
       "issues": []
     },
@@ -7260,7 +7258,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +55 min from the sun on 42 upcoming days (2026-11-20 to 2026-12-31)."
+        "Sunrise/Maghrib UNSAFE: typically +55 min from the sun on 41 upcoming days (2026-11-21 to 2026-12-31)."
       ],
       "issues": [
         {
@@ -7272,12 +7270,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 42,
-          "first_date": "2026-11-20",
+          "count": 41,
+          "first_date": "2026-11-21",
           "last_date": "2026-12-31",
           "typical_offset_min": 55,
           "affected_dates": [
-            "2026-11-20",
             "2026-11-21",
             "2026-11-22",
             "2026-11-23",
@@ -7321,7 +7318,6 @@
             "2026-12-31"
           ],
           "affected_offsets": [
-            -57,
             -57,
             -57,
             -57,
@@ -7547,7 +7543,7 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-20",
+      "checked_at": "2026-11-21",
       "row_count": 67,
       "warnings": [],
       "issues": []
@@ -7582,8 +7578,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 185,
+      "checked_at": "2026-11-21",
+      "row_count": 187,
       "warnings": [],
       "issues": []
     },
@@ -10147,8 +10143,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 183,
+      "checked_at": "2026-11-21",
+      "row_count": 185,
       "warnings": [],
       "issues": []
     },
@@ -12414,7 +12410,7 @@
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
         "Fajr jamaat is at or after sunrise on 54 days (2026-05-22 to 2026-07-14). Indicates a data error — Fajr jamaat must always be before sunrise.",
-        "Sunrise/Maghrib UNSAFE: typically +237 min from the sun on 42 upcoming days (2026-11-20 to 2026-12-31)."
+        "Sunrise/Maghrib UNSAFE: typically +237 min from the sun on 41 upcoming days (2026-11-21 to 2026-12-31)."
       ],
       "issues": [
         {
@@ -12492,12 +12488,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 42,
-          "first_date": "2026-11-20",
+          "count": 41,
+          "first_date": "2026-11-21",
           "last_date": "2026-12-31",
           "typical_offset_min": 237,
           "affected_dates": [
-            "2026-11-20",
             "2026-11-21",
             "2026-11-22",
             "2026-11-23",
@@ -12541,7 +12536,6 @@
             "2026-12-31"
           ],
           "affected_offsets": [
-            227,
             228,
             229,
             230,
@@ -14777,8 +14771,8 @@
     "suppress_times": [],
     "quality": {
       "status": "ok",
-      "checked_at": "2026-11-19",
-      "row_count": 183,
+      "checked_at": "2026-11-21",
+      "row_count": 185,
       "warnings": [],
       "issues": []
     },
@@ -14937,7 +14931,7 @@
       "row_count": 365,
       "warnings": [
         "imsakNbMinBeforeFajr is 0 — sehri_ends equals fajr_start year-round. During Ramadan, users may expect Suhoor to end ~10 minutes earlier.",
-        "Sunrise/Maghrib UNSAFE: typically +140 min from the sun on 42 upcoming days (2026-11-20 to 2026-12-31)."
+        "Sunrise/Maghrib UNSAFE: typically +140 min from the sun on 41 upcoming days (2026-11-21 to 2026-12-31)."
       ],
       "issues": [
         {
@@ -14949,12 +14943,11 @@
         {
           "type": "sun_times_unsafe",
           "severity": "high",
-          "count": 42,
-          "first_date": "2026-11-20",
+          "count": 41,
+          "first_date": "2026-11-21",
           "last_date": "2026-12-31",
           "typical_offset_min": 140,
           "affected_dates": [
-            "2026-11-20",
             "2026-11-21",
             "2026-11-22",
             "2026-11-23",
@@ -14998,7 +14991,6 @@
             "2026-12-31"
           ],
           "affected_offsets": [
-            130,
             134,
             136,
             139,
