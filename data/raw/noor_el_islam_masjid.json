@@ -97,9 +97,74 @@
       "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 342142,
+      "uuid": "45238082-c95f-4d4d-9846-d59d8452cd74",
+      "title": "Youth Sessions",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/45238082-c95f-4d4d-9846-d59d8452cd74/message/1f1e411e-86ef-607e-bd67-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-19 12:11",
+      "endDate": "2026-11-29 23:12",
+      "updated": "2026-11-19 12:12",
+      "duration": 60,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": true,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 342145,
+      "uuid": "45238082-c95f-4d4d-9846-d59d8452cd74",
+      "title": "Lesson's",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/45238082-c95f-4d4d-9846-d59d8452cd74/message/1f1e4121-2e0d-6642-bef2-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-19 12:13",
+      "endDate": "2026-11-28 23:13",
+      "updated": "2026-11-19 12:13",
+      "duration": 60,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": true,
+      "tvOrientation": "PORTRAIT"
     }
   ],
-  "events": [],
+  "events": [
+    {
+      "id": 342142,
+      "uuid": "45238082-c95f-4d4d-9846-d59d8452cd74",
+      "title": "Youth Sessions",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/45238082-c95f-4d4d-9846-d59d8452cd74/message/1f1e411e-86ef-607e-bd67-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-19 12:11",
+      "endDate": "2026-11-29 23:12",
+      "updated": "2026-11-19 12:12",
+      "duration": 60,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": true,
+      "tvOrientation": "PORTRAIT"
+    },
+    {
+      "id": 342145,
+      "uuid": "45238082-c95f-4d4d-9846-d59d8452cd74",
+      "title": "Lesson's",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/45238082-c95f-4d4d-9846-d59d8452cd74/message/1f1e4121-2e0d-6642-bef2-0a58a9feac02.jpg",
+      "video": null,
+      "startDate": "2026-11-19 12:13",
+      "endDate": "2026-11-28 23:13",
+      "updated": "2026-11-19 12:13",
+      "duration": 60,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": true,
+      "tvOrientation": "PORTRAIT"
+    }
+  ],
   "flash": {
     "content": "The Prophet ﷺ said: “Avoid raising your voices in the mosque.” — Sunan al-Nasa’i, 713",
     "uuid": "45238082-c95f-4d4d-9846-d59d8452cd74",
@@ -119,13 +184,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:48",
+    "05:58",
     "12:30",
     "14:05",
-    "16:27",
+    "16:19",
     "18:20"
   ],
-  "shuruq": "07:29",
+  "shuruq": "07:40",
   "calendar": [
     {
       "1": [
@@ -2839,11 +2904,11 @@
         "18:20"
       ],
       "2": [
-        "06:14",
-        "07:56",
+        "06:13",
+        "07:55",
         "12:30",
         "14:05",
-        "16:10",
+        "16:11",
         "18:20"
       ],
       "3": [
@@ -2859,7 +2924,7 @@
         "07:58",
         "12:30",
         "14:05",
-        "16:09",
+        "16:10",
         "18:20"
       ],
       "5": [
@@ -2871,8 +2936,8 @@
         "18:20"
       ],
       "6": [
-        "06:19",
-        "08:01",
+        "06:18",
+        "08:00",
         "12:30",
         "14:05",
         "16:09",
@@ -2959,8 +3024,8 @@
         "18:20"
       ],
       "17": [
-        "06:31",
-        "08:12",
+        "06:30",
+        "08:11",
         "12:30",
         "14:05",
         "16:08",
@@ -3043,7 +3108,7 @@
         "08:16",
         "12:30",
         "14:05",
-        "16:14",
+        "16:13",
         "18:20"
       ],
       "28": [
@@ -3051,7 +3116,7 @@
         "08:16",
         "12:30",
         "14:05",
-        "16:15",
+        "16:14",
         "18:20"
       ],
       "29": [

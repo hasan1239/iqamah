@@ -105,9 +105,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-11-12 20:16",
+      "startDate": "2026-11-19 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-11-10 16:15",
+      "updated": "2026-11-17 11:48",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -179,18 +179,18 @@
       "tvOrientation": "PORTRAIT"
     },
     {
-      "id": 340187,
+      "id": 341787,
       "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Week Sunnah Inspired Ijtima",
+      "title": "Weekly Sunnah Inspired Ijtima - 19/11",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dd21f-95e8-609e-9350-0a58a9feac02.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1e27cf-24fa-6aa2-bc26-0affdb7d81a7.jpg",
       "video": null,
-      "startDate": "2026-11-10 16:15",
-      "endDate": "2026-11-12 20:15",
-      "updated": "2026-11-10 19:06",
+      "startDate": "2026-11-17 11:49",
+      "endDate": "2026-11-19 20:15",
+      "updated": "2026-11-17 11:51",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": false,
+      "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
@@ -203,9 +203,9 @@
       "content": null,
       "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f07232d-6c75-64c6-95ec-0e07864874f5.jpg",
       "video": null,
-      "startDate": "2026-11-12 20:16",
+      "startDate": "2026-11-19 20:16",
       "endDate": "2027-05-31 20:16",
-      "updated": "2026-11-10 16:15",
+      "updated": "2026-11-17 11:48",
       "duration": 30,
       "isMobile": true,
       "isDesktop": true,
@@ -245,18 +245,18 @@
       "tvOrientation": "PORTRAIT"
     },
     {
-      "id": 340187,
+      "id": 341787,
       "uuid": "b4f4831c-f0e4-451a-89b2-567158cf3bef",
-      "title": "Week Sunnah Inspired Ijtima",
+      "title": "Weekly Sunnah Inspired Ijtima - 19/11",
       "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1dd21f-95e8-609e-9350-0a58a9feac02.jpg",
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/b4f4831c-f0e4-451a-89b2-567158cf3bef/message/1f1e27cf-24fa-6aa2-bc26-0affdb7d81a7.jpg",
       "video": null,
-      "startDate": "2026-11-10 16:15",
-      "endDate": "2026-11-12 20:15",
-      "updated": "2026-11-10 19:06",
+      "startDate": "2026-11-17 11:49",
+      "endDate": "2026-11-19 20:15",
+      "updated": "2026-11-17 11:51",
       "duration": 30,
       "isMobile": true,
-      "isDesktop": false,
+      "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "PORTRAIT"
     }
@@ -280,13 +280,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:33",
-    "11:52",
-    "14:23",
-    "16:12",
-    "18:13"
+    "05:41",
+    "11:54",
+    "14:15",
+    "16:03",
+    "18:18"
   ],
-  "shuruq": "07:31",
+  "shuruq": "07:43",
   "calendar": [
     {
       "1": [

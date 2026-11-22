@@ -83,22 +83,6 @@
   "closed": null,
   "announcements": [
     {
-      "id": 340828,
-      "uuid": "7e60536c-cf81-4b7b-bccb-3093aec77bfe",
-      "title": "Friday Collection",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/7e60536c-cf81-4b7b-bccb-3093aec77bfe/message/1f1df4d7-8106-618c-a85f-06ffe0bb22d5.jpg",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-11-13 10:32",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 340829,
       "uuid": "7e60536c-cf81-4b7b-bccb-3093aec77bfe",
       "title": "No Food No Drink",
@@ -145,6 +129,22 @@
       "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 342115,
+      "uuid": "7e60536c-cf81-4b7b-bccb-3093aec77bfe",
+      "title": "Friday Collection",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/7e60536c-cf81-4b7b-bccb-3093aec77bfe/message/1f1e43bc-ac40-69f4-9927-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-11-19 17:08",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
@@ -167,13 +167,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:35",
-    "11:50",
-    "14:24",
-    "16:14",
-    "17:47"
+    "05:45",
+    "11:52",
+    "14:16",
+    "16:06",
+    "17:41"
   ],
-  "shuruq": "07:16",
+  "shuruq": "07:27",
   "calendar": [
     {
       "1": [

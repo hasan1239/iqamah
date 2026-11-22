@@ -131,22 +131,6 @@
       "tvOrientation": "LANDSCAPE"
     },
     {
-      "id": 329053,
-      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
-      "title": "Umrah with Tawfiq Masjid",
-      "content": null,
-      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1b5d5b-5623-675a-9f6a-0affcbabc201.png",
-      "video": null,
-      "startDate": null,
-      "endDate": null,
-      "updated": "2026-09-21 16:01",
-      "duration": 30,
-      "isMobile": true,
-      "isDesktop": true,
-      "isAnnouncementScreen": false,
-      "tvOrientation": "LANDSCAPE"
-    },
-    {
       "id": 332668,
       "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
       "title": "Thursdays Quran classes",
@@ -193,6 +177,22 @@
       "isDesktop": true,
       "isAnnouncementScreen": false,
       "tvOrientation": "LANDSCAPE"
+    },
+    {
+      "id": 342252,
+      "uuid": "c139397c-8c58-4b3f-8171-2d66e0d8862f",
+      "title": "Jummah 20th of November 2026",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/c139397c-8c58-4b3f-8171-2d66e0d8862f/message/1f1e446e-c3bd-667e-8c7e-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-11-19 18:27",
+      "duration": 30,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
     }
   ],
   "events": [],
@@ -215,13 +215,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:51",
-    "11:55",
-    "13:59",
-    "16:21",
-    "17:59"
+    "06:01",
+    "11:56",
+    "13:53",
+    "16:13",
+    "17:52"
   ],
-  "shuruq": "07:28",
+  "shuruq": "07:40",
   "calendar": [
     {
       "1": [

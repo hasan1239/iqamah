@@ -83,7 +83,7 @@
   "announcements": [],
   "events": [],
   "flash": {
-    "content": "Visit our website: www.talimulquranuk.co.uk",
+    "content": "The Life of Prophet Muhammad (صلى الله عليه وسلم) – Today after Maghrib Prayer",
     "uuid": "750596a5-90f9-4291-8741-6cd6bcbb5ac6",
     "expire": null,
     "startDate": null,
@@ -101,13 +101,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:35",
-    "11:50",
-    "14:24",
-    "16:14",
-    "17:47"
+    "05:45",
+    "11:52",
+    "14:16",
+    "16:06",
+    "17:41"
   ],
-  "shuruq": "07:16",
+  "shuruq": "07:27",
   "calendar": [
     {
       "1": [

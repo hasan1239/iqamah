@@ -81,7 +81,24 @@
   "parking": true,
   "otherInfo": "Masjid will be Open Daily From one Hour prior to Fajr Salah until One Hour After Fajr Salah. Also From 12.00 noon till one hour after Isha Salah.",
   "closed": null,
-  "announcements": [],
+  "announcements": [
+    {
+      "id": 342336,
+      "uuid": "32b83d5d-bf86-4bd1-b088-a7b60c57a638",
+      "title": "MAJ Janazah Workshop",
+      "content": null,
+      "image": "https://cdn.mawaqit.net/images/backend/mosque/32b83d5d-bf86-4bd1-b088-a7b60c57a638/message/1f1e4895-b2ca-6ba2-b4d6-0a58a9feac02.png",
+      "video": null,
+      "startDate": null,
+      "endDate": null,
+      "updated": "2026-11-20 02:23",
+      "duration": 55,
+      "isMobile": true,
+      "isDesktop": true,
+      "isAnnouncementScreen": false,
+      "tvOrientation": "LANDSCAPE"
+    }
+  ],
   "events": [],
   "flash": {
     "content": "Let's Make Our Masjid Debt Free!",
@@ -102,13 +119,13 @@
   "imsakNbMinBeforeFajr": 0,
   "hijriAdjustment": 0,
   "times": [
-    "05:42",
-    "11:52",
-    "13:51",
-    "16:16",
-    "17:43"
+    "05:53",
+    "11:53",
+    "13:45",
+    "16:08",
+    "17:36"
   ],
-  "shuruq": "07:20",
+  "shuruq": "07:32",
   "calendar": [
     {
       "1": [
